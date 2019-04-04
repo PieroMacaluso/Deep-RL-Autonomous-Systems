@@ -1,8 +1,10 @@
 # A Study Of Reinforcement Learning
-Stuff about my Master Thesis
+The official report of my Master Thesis in Computer Engineering at Politecnico di Torino.
+The project was developed at Eurecom (Biot, France) with prof. Pietro Michiardi (Eurecom) and prof. Elena Baralis (Politecnico di Torino) from March 2019 to TBD.
 ## Path of my Master Thesis
-- Studying the fundamentals of Reinforcement Learning throught watching **[v1](#video-lectures)** and reading some chapters from **[b1](#books)**.
-- Studying **[p1](#papers)** and **[p2](#papers)** in order to produce an initial working code of DDPG algorithm on a continuous and well-known environment on the OpenAI Gym environment.
+- Studying the fundamentals of Reinforcement Learning throught watching **[v1](#video-lectures)**, reading some chapters from **[b1](#books)** and doing some personal research.
+- Studying **[p1](#papers)** and **[p2](#papers)** in order to understand the algorithm to reproduce.
+- Producing an initial working code of DDPG algorithm on a continuous and well-known environment on the OpenAI Gym environment.
   - **Main aim:** try to implement the algorithm as generic as possible in order to mantain flexibility
   - **Possible developments**: Find out if it could be better to develop the code with **[D4PG (Deep Distributed Distributional Deterministic Policy Gradients) ](https://arxiv.org/pdf/1804.08617.pdf)** or **[SAC (Soft Actor-Critic) ](https://arxiv.org/pdf/1801.01290.pdf)**
 - Generalizing the code to work with CNN and images in an environment as similar as possible to the target one ([Anki Cozmo](https://www.anki.com/en-us/cozmo))
