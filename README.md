@@ -8,8 +8,8 @@ The project was developed at Eurecom (Biot, France) with prof. Pietro Michiardi 
   - **Main aim:** try to implement the algorithm as generic as possible in order to mantain flexibility
   - **Possible developments**: Find out if it could be better to develop the code with **[D4PG (Deep Distributed Distributional Deterministic Policy Gradients) ](https://arxiv.org/pdf/1804.08617.pdf)** or **[SAC (Soft Actor-Critic) ](https://arxiv.org/pdf/1801.01290.pdf)**
 - Generalizing the code to work with CNN and images in an environment as similar as possible to the target one ([Anki Cozmo](https://www.anki.com/en-us/cozmo))
-- TBD
-- ...
+- Implement the code on Anki Cozmo creating an interface between it and OpenAI Gym
+- ... ***TBD*** ...
  
   
 ## Video Lectures
