@@ -1,4 +1,3 @@
-import os
 import time
 
 import gym
@@ -18,13 +17,6 @@ class DDPG:
     """
     Deep Deterministic Policy Gradient.
     """
-    # TODO: Check Epsilon presence in DDPG
-    # TODO: Implement Evaluation of the Policy
-    # TODO: Implement Checkpoint of the Policy
-    
-    EPSILON_START = 0.99
-    EPSILON_END = 0.05
-    EPSILON_DECAY = 500
     
     def __init__(
             self,
@@ -124,6 +116,7 @@ class DDPG:
         self.checkpoint_dir = checkpoint_dir
     
     def test(self, count=10):
+        self.actor_net.eval()
         rewards = 0.0
         steps = 0
         for _ in range(count):
@@ -138,6 +131,7 @@ class DDPG:
                 steps += 1
                 if done:
                     break
+        self.actor_net.train()
         return rewards / count, steps / count
     
     def train(self):
