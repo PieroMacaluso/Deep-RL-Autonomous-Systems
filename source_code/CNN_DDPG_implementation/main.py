@@ -14,6 +14,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='State implementation of DDPG.',
                                      epilog="No example of usage")
     parser.add_argument('-simulation_actor', nargs=2, default=[False, ''], metavar=('boolean', 'path'))
+    parser.add_argument('-rec', nargs=1, default=False, metavar='boolean')
     parser.add_argument('-env', default='MountainCarContinuous-v0', type=str, help='Name of the Gym Environment')
     parser.add_argument('-noise', nargs=3, default=[0.0, 0.3, 0.15], metavar=('mu', 'sigma', 'theta'), type=float,
                         help='Ornstein Uhlenbeck process noise parameters')
@@ -36,17 +37,17 @@ def get_args():
 
 
 if __name__ == '__main__':
+    assert torch.cuda.is_available(), "CUDA is not available"
     args = get_args()
     if args.simulation_actor[0]:
         env = NormalizedActions(gym.make(args.env))
+        if args.rec:
+            env = gym.wrappers.Monitor(env, "recording")
         sim = Simulation(env, args.simulation_actor[1])
         sim.simulate()
         env.close()
     else:
         plt.ion()
-        
-        # if gpu is to be used
-        assert torch.cuda.is_available(), "CUDA is not available"
         
         env = NormalizedActions(gym.make(args.env))
         test_env = NormalizedActions(gym.make(args.env))
