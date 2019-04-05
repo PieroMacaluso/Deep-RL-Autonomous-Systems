@@ -5,7 +5,60 @@ This first version is not capable to elaborate images but only continuous enviro
 
 The next step will be the implementation of the same algorithm using images as input, which is a similar context to the one of the Anki Cozmo environment.
 
+## Data and Hyper-Parameter Used
+### Neural Network
+### Critic (Value) Neural Network
+```python
+CriticNN(
+  (linear1): Linear(in_features=3, out_features=256, bias=True)
+  (linear2): Linear(in_features=256, out_features=256, bias=True)
+  (linear3): Linear(in_features=256, out_features=1, bias=True)
+)
+```
+### Actor (Policy) Neural Network
+```python
+ActorNN(
+  (linear1): Linear(in_features=2, out_features=256, bias=True)
+  (linear2): Linear(in_features=256, out_features=256, bias=True)
+  (linear3): Linear(in_features=256, out_features=1, bias=True)
+)
+```
+### Ornstein Uhlenbeck process noise
+```python
+mu=0.0
+sigma=0.3
+theta=0.15
+```
+### DDPG
+```python
+# Decay of OUNoise
+eps_start=0.9
+eps_end=0.2
+eps_decay=1000
 
+# ReplayBuffer
+batch_size=32
+replay_min_size=10000
+replay_max_size=1000000
+
+# Simulation
+n_episode=1000
+episode_max_len=1000
+
+# Update
+discount=0.99
+critic_weight_decay=0.
+critic_update_method='adam'
+critic_lr=1e-3
+actor_weight_decay=0
+actor_update_method='adam'
+actor_lr=1e-4
+soft_target_tau=0.001
+n_updates_per_sample=1
+
+# Test
+eval_samples=10000
+```
 
 ## Plots
 These plots refers to one run of the DDPG algorithm using the **MountainCarContinuous-v0** environment provided by OpenAI Gym
