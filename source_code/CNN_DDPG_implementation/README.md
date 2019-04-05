@@ -1,4 +1,4 @@
-# Neural Network DDPG Implementation
+# Convolutional Neural Network DDPG Implementation (TBM)
 The first step towards the objective of the Master Thesis was the implementation of the algorithm in **[1]**.
 
 This first version is not capable to elaborate images but only continuous environments of OpenAI Gym such as **MountainCarContinuous-v0**. 
