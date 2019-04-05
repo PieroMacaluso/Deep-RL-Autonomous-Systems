@@ -96,7 +96,9 @@ class DDPG:
         
         self.critic_net = critic_nn(self.state_dim, self.action_dim).to(device)
         self.actor_net = actor_nn(self.state_dim, self.action_dim).to(device)
-        
+        print(self.critic_net)
+        print(self.actor_net)
+
         self.target_value_net = critic_nn(self.state_dim, self.action_dim).to(device)
         self.target_policy_net = actor_nn(self.state_dim, self.action_dim).to(device)
         
