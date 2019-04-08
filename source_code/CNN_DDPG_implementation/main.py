@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import torch
 
 from DDPG import DDPG
+from ImageWrapper import ImageWrapper
 from NormalizedActions import NormalizedActions
 from OUNoise import OUNoise
 from Simulation import Simulation
@@ -47,10 +48,10 @@ if __name__ == '__main__':
         sim.simulate()
         env.close()
     else:
-        plt.ion()
-        
-        env = NormalizedActions(gym.make(args.env))
-        test_env = NormalizedActions(gym.make(args.env))
+        env = ImageWrapper(96, NormalizedActions(gym.make(args.env)))
+        test_env = ImageWrapper(96, NormalizedActions(gym.make(args.env)))
+        # env = NormalizedActions(gym.make(args.env))
+        # test_env = NormalizedActions(gym.make(args.env))
         ou_noise = OUNoise(env.action_space, mu=args.noise[0], sigma=args.noise[1], theta=args.noise[2])
         
         ddpg = DDPG(env, test_env, exp_strategy=ou_noise,
