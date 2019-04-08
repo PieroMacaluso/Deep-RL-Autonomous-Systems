@@ -1,7 +1,6 @@
 import argparse
 
 import gym
-import matplotlib.pyplot as plt
 import torch
 
 from DDPG import DDPG
@@ -16,12 +15,12 @@ def get_args():
                                      epilog="No example of usage")
     parser.add_argument('-simulation_actor', nargs=2, default=[False, ''], metavar=('boolean', 'path'))
     parser.add_argument('-rec', nargs=1, default=False, metavar='boolean')
-    parser.add_argument('-env', default='MountainCarContinuous-v0', type=str, help='Name of the Gym Environment')
+    parser.add_argument('-env', default='CarRacing-v0', type=str, help='Name of the Gym Environment')
     parser.add_argument('-noise', nargs=3, default=[0.0, 0.3, 0.15], metavar=('mu', 'sigma', 'theta'), type=float,
                         help='Ornstein Uhlenbeck process noise parameters')
-    parser.add_argument('-eps', nargs=3, default=[0.9, 0.2, 200], metavar=('start', 'end', 'decay'), type=float,
+    parser.add_argument('-eps', nargs=3, default=[0.99, 0.5, 500], metavar=('start', 'end', 'decay'), type=float,
                         help='Epsilon Decay process to decay the noise')
-    parser.add_argument('-replay', nargs=3, default=[32, 10000, 1000000],
+    parser.add_argument('-replay', nargs=3, default=[64, 10000, 10000000],
                         metavar=('batch_size', 'replay_min_size', 'replay_max_size'), type=int,
                         help='Replay Buffer parameters')
     parser.add_argument('-sim', nargs=2, default=[1000, 1000],

@@ -6,11 +6,10 @@ import torch
 from tensorboardX import SummaryWriter
 from torch import optim, nn
 
-from NN import ActorNN, CriticNN
+from CNN import CriticCNN, ActorCNN
 from OUNoise import OUNoise
 from ReplayBuffer import ReplayBuffer
-
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+from StateBuffer import StateBuffer
 
 
 class DDPG:
@@ -18,32 +17,12 @@ class DDPG:
     Deep Deterministic Policy Gradient.
     """
     
-    def __init__(
-            self,
-            env: gym.Env,
-            test_env: gym.Env,
-            actor_nn=ActorNN,
-            critic_nn=CriticNN,
-            exp_strategy=OUNoise,
-            eps_start=0.9,
-            eps_end=0.2,
-            eps_decay=1000,
-            batch_size=32,
-            n_episode=1000,
-            episode_max_len=1000,
-            replay_min_size=10000,
-            replay_max_size=1000000,
-            discount=0.99,
-            critic_weight_decay=0.,
-            critic_update_method='adam',
-            critic_lr=1e-3,
-            actor_weight_decay=0,
-            actor_update_method='adam',
-            actor_lr=1e-4,
-            eval_samples=10000,
-            soft_target_tau=0.001,
-            n_updates_per_sample=1,
-            checkpoint_dir='./checkpoints/'):
+    def __init__(self, env: gym.Env, test_env: gym.Env, actor_nn=ActorCNN, critic_nn=CriticCNN, exp_strategy=OUNoise,
+                 eps_start=0.9, eps_end=0.2, eps_decay=1000, batch_size=32, n_episode=1000, episode_max_len=1000,
+                 replay_min_size=10000, replay_max_size=1000000, discount=0.99, critic_weight_decay=0.,
+                 critic_update_method='adam', critic_lr=1e-3, actor_weight_decay=0, actor_update_method='adam',
+                 actor_lr=1e-4, eval_samples=10000, soft_target_tau=0.001, n_updates_per_sample=1,
+                 checkpoint_dir='./checkpoints/'):
         """
         DDPG constructor
         
@@ -68,11 +47,13 @@ class DDPG:
         :param n_updates_per_sample: Number of Q function and policy updates per new sample obtained.
         :param checkpoint_dir: Checkpoint Directory in which we save our best Checkpoint
         """
-        
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.writer = SummaryWriter()
         self.env = env
         self.test_env = test_env
         self.state_dim = env.observation_space.shape[0]
+        self.h = env.observation_space.shape[1]
+        self.w = env.observation_space.shape[2]
         self.action_dim = env.action_space.shape[0]
         self.noise = exp_strategy
         self.batch_size = batch_size
@@ -86,13 +67,21 @@ class DDPG:
         self.eps_end = eps_end
         self.eps_decay = eps_decay
         
-        self.critic_net = critic_nn(self.state_dim, self.action_dim).to(device)
-        self.actor_net = actor_nn(self.state_dim, self.action_dim).to(device)
+        '''CNN'''
+        self.critic_net = critic_nn(self.state_dim, self.action_dim, self.h, self.w).to(self.device)
+        self.actor_net = actor_nn(self.state_dim, self.action_dim, self.h, self.w).to(self.device)
+        '''NN'''
+        # self.critic_net = critic_nn(self.state_dim, self.action_dim).to(self.device)
+        # self.actor_net = actor_nn(self.state_dim, self.action_dim).to(self.device)
         print(self.critic_net)
         print(self.actor_net)
-
-        self.target_value_net = critic_nn(self.state_dim, self.action_dim).to(device)
-        self.target_policy_net = actor_nn(self.state_dim, self.action_dim).to(device)
+        
+        '''CNN'''
+        self.target_value_net = critic_nn(self.state_dim, self.action_dim, self.h, self.w).to(self.device)
+        self.target_policy_net = actor_nn(self.state_dim, self.action_dim, self.h, self.w).to(self.device)
+        '''NN'''
+        # self.target_value_net = critic_nn(self.state_dim, self.action_dim).to(self.device)
+        # self.target_policy_net = actor_nn(self.state_dim, self.action_dim).to(self.device)
         
         for target_param, param in zip(self.target_value_net.parameters(), self.critic_net.parameters()):
             target_param.data.copy_(param.data)
@@ -123,7 +112,7 @@ class DDPG:
             t = 0
             state = self.test_env.reset()
             while t < self.episode_max_len:
-                action = self.actor_net.get_action(state, device)
+                action = self.actor_net.get_action(state, self.device)
                 next_state, reward, done, _ = self.env.step(action)
                 # self.env.render()
                 state = next_state
@@ -143,7 +132,10 @@ class DDPG:
         frame_idx = 0
         best_reward = None
         while episode < self.n_episode:
-            state = self.env.reset()
+            
+            old = self.env.reset()
+            state = StateBuffer(5, old)
+            print(state.get_state())
             # TODO: Check if this reset is OK
             self.noise.reset()
             episode_reward = 0
@@ -152,19 +144,19 @@ class DDPG:
             running_vloss = 0
             step = 0
             while step < self.episode_max_len:
-                action = self.actor_net.get_action(state, device)
+                st = state.get_state()
+                action = self.actor_net.get_action(st, self.device)
                 eps = self.eps_start - (self.eps_start - self.eps_end) * min(1.0, episode / self.eps_decay)
                 action = self.noise.get_action(action, eps)
-                next_state, reward, done, _ = self.env.step(action)
+                current, reward, done, _ = self.env.step(action)
+                state.push(current)
                 # self.env.render()
-                
-                self.replay_buffer.push(state, action, reward, next_state, done)
+                self.replay_buffer.push(st, action, reward, state.get_state(), done)
                 if len(self.replay_buffer) > self.batch_size:
                     pl, vl = self.update()
                     running_ploss += (pl - running_ploss) / (upgrade_steps + 1)
                     running_vloss += (vl - running_vloss) / (upgrade_steps + 1)
                 
-                state = next_state
                 episode_reward += reward
                 step += 1
                 frame_idx += 1
@@ -175,7 +167,7 @@ class DDPG:
                 if done:
                     episode += 1
                     break
-            
+            print(f"Episode {episode}")
             rewards.append(episode_reward)
             running_episode_reward += (episode_reward - running_episode_reward) / (episode + 1)
             if len(rewards) < 100:
@@ -196,11 +188,11 @@ class DDPG:
     def update(self):
         state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
         
-        state = torch.FloatTensor(state).to(device)
-        next_state = torch.FloatTensor(next_state).to(device)
-        action = torch.FloatTensor(action).to(device)
-        reward = torch.FloatTensor(reward).unsqueeze(1).to(device)
-        done = torch.FloatTensor(np.float32(done)).unsqueeze(1).to(device)
+        state = torch.FloatTensor(state).to(self.device)
+        next_state = torch.FloatTensor(next_state).to(self.device)
+        action = torch.FloatTensor(action).to(self.device)
+        reward = torch.FloatTensor(reward).unsqueeze(1).to(self.device)
+        done = torch.FloatTensor(np.float32(done)).unsqueeze(1).to(self.device)
         
         policy_loss = self.critic_net(state, self.actor_net(state))
         policy_loss = -policy_loss.mean()
@@ -231,7 +223,7 @@ class DDPG:
             )
         
         return policy_loss.item(), value_loss.item()
-
+    
     def evaluation(self, best_reward, frame_idx):
         ts = time.time()
         rewards, steps = self.test()
