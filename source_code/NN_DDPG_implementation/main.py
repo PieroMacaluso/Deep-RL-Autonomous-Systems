@@ -17,7 +17,7 @@ def get_args():
     # OUNoise (mu=0.0, sigma=0.3, theta=0.15)
     parser.add_argument('-noise', nargs=3, default=[0.0, 0.3, 0.15], metavar=('mu', 'sigma', 'theta'), type=float,
                         help='Ornstein Uhlenbeck process noise parameters')
-    parser.add_argument('-eps', nargs=3, default=[0.99, 0.2, 500], metavar=('start', 'end', 'decay'), type=float,
+    parser.add_argument('-eps', nargs=3, default=[0.9, 0.2, 200], metavar=('start', 'end', 'decay'), type=float,
                         help='Epsilon Decay process to decay the noise')
     parser.add_argument('-replay', nargs=3, default=[32, 10000, 1000000],
                         metavar=('batch_size', 'replay_min_size', 'replay_max_size'), type=int,

@@ -8,7 +8,7 @@ from torch import optim, nn
 
 from NN import ActorNN, CriticNN
 from OUNoise import OUNoise
-from ReplayBuffer import ReplayBuffer
+from PRB import PrioritizedReplayMemory
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -80,7 +80,7 @@ class AgentDDPG:
         self.episode_max_len = episode_max_len
         self.replay_min_size = replay_min_size
         self.replay_max_size = replay_max_size
-        self.replay_buffer = ReplayBuffer(self.replay_max_size)
+        self.replay_buffer = PrioritizedReplayMemory(self.replay_max_size)
         self.discount = discount
         self.eps_start = eps_start
         self.eps_end = eps_end
@@ -119,6 +119,27 @@ class AgentDDPG:
         self.checkpoint_dir = checkpoint_dir
 
         self.episode = 0
+
+    def append_sample(self, state, action, reward, next_state, done):
+        states = torch.FloatTensor(state).to(device).unsqueeze(0)
+        next_states = torch.FloatTensor(next_state).to(device).unsqueeze(0)
+        actions = torch.FloatTensor(action).to(device).unsqueeze(0)
+        rewards = torch.FloatTensor(np.array(reward)).unsqueeze(0).to(device)
+        dones = torch.FloatTensor(np.array(np.float32(done))).unsqueeze(0).to(device)
+    
+        # TD ERROR CRITIC #
+        # Get predicted next-state actions and Q values from target models
+        with torch.no_grad():
+            actions_next = self.target_policy_net(next_states)
+            actions_next = torch.max(torch.min(actions_next, self.action_high), self.action_low)
+            q_targets_next = self.target_value_net(next_states, actions_next).detach()
+            # Compute Q targets for current states (y_i)
+            q_targets = rewards + (self.discount * q_targets_next * (1.0 - dones))
+            # Compute critic loss
+            q_expected = self.critic_net(states, actions)
+            error = np.abs((q_expected - q_targets).item())
+    
+        self.replay_buffer.add(error, (state, action, reward, next_state, done))
 
     def test(self, count=10):
         """
@@ -208,9 +229,10 @@ class AgentDDPG:
             while step < self.episode_max_len:
                 action = self.act(state)
                 next_state, reward, done = self.step(action)
-                self.replay_buffer.push(state, action, reward, next_state, done)
+                self.replay_buffer.push((state, action, reward, next_state, done))
+                # self.append_sample(state, action, reward, next_state, done)
 
-                if len(self.replay_buffer) > self.replay_min_size:
+                if frame_idx > self.batch_size:
                     experience = self.replay_buffer.sample(self.batch_size)
                     pl, vl = self.learn(experience, self.discount)
 
@@ -259,8 +281,9 @@ class AgentDDPG:
         :return:
         """
         # TODO: check CLAMP or CLIP on everything
-        state, action, reward, next_state, done = experience
-
+        mini_batch, idxs, is_weights = self.replay_buffer.sample(self.batch_size)
+        state, action, reward, next_state, done = map(np.stack, zip(*mini_batch))
+        
         # Preparation of the experience
         states = torch.FloatTensor(state).to(device)
         next_states = torch.FloatTensor(next_state).to(device)
@@ -277,7 +300,11 @@ class AgentDDPG:
         q_targets = rewards + (gamma * q_targets_next * (1.0 - done))
         # Compute critic loss
         q_expected = self.critic_net(states, actions)
-        critic_loss = self.critic_loss(q_expected, q_targets)
+        errors = (q_expected - q_targets)
+        critic_loss = (0.5 * errors.pow(2)).squeeze() * is_weights
+        critic_loss = critic_loss.mean()
+        # UPDATE PRIORITY REPLAY #
+        self.replay_buffer.update_priorities(idxs, errors.detach().squeeze().abs().cpu().numpy().tolist())
         # Minimize the loss
         self.critic_opt.zero_grad()
         critic_loss.backward()
@@ -296,6 +323,10 @@ class AgentDDPG:
         # UPDATE TARGET NETWORK #
         self.soft_update(self.critic_net, self.target_value_net, self.soft_target_tau)
         self.soft_update(self.actor_net, self.target_policy_net, self.soft_target_tau)
+
+        # for i in range(self.batch_size):
+        #     idx = idxs[i]
+        #     self.replay_buffer.update_priorities(idx, np.abs(errors[i].item()))
 
         return actor_loss.item(), critic_loss.item()
 
