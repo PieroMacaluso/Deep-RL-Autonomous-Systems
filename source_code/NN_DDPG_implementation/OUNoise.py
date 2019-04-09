@@ -55,7 +55,7 @@ class OUNoise(object):
         """
         ou_state = self.evolve_state()
         return_action = action_ + eps * ou_state
-        return np.clip(return_action, self.low, self.high)
+        return return_action
 
 
 if __name__ == '__main__':

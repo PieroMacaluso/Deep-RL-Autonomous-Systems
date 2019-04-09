@@ -1,7 +1,5 @@
 import torch
 import torch.nn.functional as F
-import torchvision.transforms as T
-from PIL import Image
 from torch import nn
 
 
@@ -42,14 +40,9 @@ class ActorNN(nn.Module):
         
         self.linear3.weight.data.uniform_(-init_w, init_w)
         self.linear3.bias.data.uniform_(-init_w, init_w)
-    
+
     def forward(self, state):
         x = F.relu(self.linear1(state))
         x = F.relu(self.linear2(x))
-        x = F.tanh(self.linear3(x))
+        x = nn.Tanh(self.linear3(x))
         return x
-    
-    def get_action(self, state, device):
-        state = torch.FloatTensor(state).unsqueeze(0).to(device)
-        action = self.forward(state)
-        return action.detach().cpu().numpy()[0, 0]
