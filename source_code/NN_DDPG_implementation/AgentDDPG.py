@@ -13,18 +13,11 @@ from ReplayBuffer import ReplayBuffer
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-class DDPG:
+class AgentDDPG:
     """
     Deep Deterministic Policy Gradient.
     """
-    # TODO: Check Epsilon presence in DDPG
-    # TODO: Implement Evaluation of the Policy
-    # TODO: Implement Checkpoint of the Policy
-    
-    EPSILON_START = 0.99
-    EPSILON_END = 0.05
-    EPSILON_DECAY = 500
-    
+
     def __init__(
             self,
             env: gym.Env,
@@ -35,10 +28,10 @@ class DDPG:
             eps_start=0.9,
             eps_end=0.2,
             eps_decay=1000,
-            batch_size=32,
+            batch_size=100,
             n_episode=1000,
             episode_max_len=1000,
-            replay_min_size=10000,
+            replay_min_size=100,
             replay_max_size=1000000,
             discount=0.99,
             critic_weight_decay=0.,
@@ -128,6 +121,12 @@ class DDPG:
         self.episode = 0
 
     def test(self, count=10):
+        """
+        Testing the actor on a random test set without using OUNoise.
+        
+        :param count: number of episode to test.
+        :return: averages of rewards and steps.
+        """
         rewards = 0.0
         steps = 0
         for _ in range(count):
@@ -145,10 +144,24 @@ class DDPG:
         return rewards / count, steps / count
 
     def reset(self):
+        """
+        Resets the environment and the Noise.
+        
+        :return: The initial state of the environment.
+        """
         self.noise.reset()
         return self.env.reset()
 
     def act(self, state, add_noise=True):
+        """
+        The ACT part of the code.
+        In this part the state is used to get the next action following the policy given by the actor net. Finally we add
+        noise to the resulting action and clip the action-values in the proper range.
+        
+        :param state: Environment State.
+        :param add_noise: it is True if is needed to add noise, False otherwise.
+        :return: The Action to be performed in the STEP part.
+        """
         state = torch.FloatTensor(state).unsqueeze(0).to(device)
     
         self.eps = self.eps_start - (self.eps_start - self.eps_end) * min(1.0, self.episode / self.eps_decay)
@@ -166,12 +179,24 @@ class DDPG:
         return action
 
     def step(self, action):
+        """
+        Given the action, perform the STEP part.
+        
+        :param action: action to be performed.
+        :return: next_state, reward and done flag.
+        """
         next_state, reward, done, _ = self.env.step(action)
         # self.env.render()
     
         return next_state, reward, done
     
     def train(self):
+        """
+        TRAIN part of the code. It is the main Agent.
+        It contains the main loop and the coordination among all the parts of the code.
+        
+        :return: Nothing
+        """
         self.episode = running_episode_reward_100 = running_episode_reward = frame_idx = 0
         best_reward = None
         rewards = []
@@ -184,26 +209,26 @@ class DDPG:
                 action = self.act(state)
                 next_state, reward, done = self.step(action)
                 self.replay_buffer.push(state, action, reward, next_state, done)
-    
+
                 if len(self.replay_buffer) > self.replay_min_size:
                     experience = self.replay_buffer.sample(self.batch_size)
                     pl, vl = self.learn(experience, self.discount)
-            
+
                     running_ploss += (pl - running_ploss) / (upgrade_steps + 1)
                     running_vloss += (vl - running_vloss) / (upgrade_steps + 1)
-    
+
                 state = next_state
                 episode_reward += reward
                 step += 1
                 frame_idx += 1
-    
+
                 if frame_idx % self.eval_samples == 0:
                     best_reward = self.evaluation(best_reward, frame_idx)
-    
+
                 if done:
                     self.episode += 1
                     break
-        
+
             rewards.append(episode_reward)
             running_episode_reward += (episode_reward - running_episode_reward) / (self.episode + 1)
             if len(rewards) < 100:
@@ -229,20 +254,20 @@ class DDPG:
             actor_target(state) -> action
             critic_target(state, action) -> Q-value
             
-        :param experience: (Tuple[torch.Tensor]) tuple of (s, a, r, s', done) tuples
-        :param gamma: (float) discount factor
+        :param experience: tuple of (s, a, r, s', done) tuples
+        :param gamma: discount factor
         :return:
         """
-        # TODO: CLAMP or CLIP everything
+        # TODO: check CLAMP or CLIP on everything
         state, action, reward, next_state, done = experience
-    
+
         # Preparation of the experience
         states = torch.FloatTensor(state).to(device)
         next_states = torch.FloatTensor(next_state).to(device)
         actions = torch.FloatTensor(action).to(device)
         rewards = torch.FloatTensor(reward).unsqueeze(1).to(device)
         done = torch.FloatTensor(np.float32(done)).unsqueeze(1).to(device)
-    
+
         # UPDATE CRITIC #
         # Get predicted next-state actions and Q values from target models
         actions_next = self.target_policy_net(next_states)
@@ -257,7 +282,7 @@ class DDPG:
         self.critic_opt.zero_grad()
         critic_loss.backward()
         self.critic_opt.step()
-    
+
         # UPDATE ACTOR #
         # Compute actor loss
         actions_pred = self.actor_net(states)
@@ -267,14 +292,21 @@ class DDPG:
         self.actor_opt.zero_grad()
         actor_loss.backward()
         self.actor_opt.step()
-    
+
         # UPDATE TARGET NETWORK #
         self.soft_update(self.critic_net, self.target_value_net, self.soft_target_tau)
         self.soft_update(self.actor_net, self.target_policy_net, self.soft_target_tau)
-    
+
         return actor_loss.item(), critic_loss.item()
 
     def evaluation(self, best_reward, frame_idx):
+        """
+        Evaluation of the model currently discovered.
+        
+        :param best_reward: The best reward found till now.
+        :param frame_idx: counter of the frame used till now.
+        :return: the new best reward
+        """
         ts = time.time()
         rewards, steps = self.test()
         print("Test done in %.2f sec, reward %.3f, steps %d" % (
@@ -297,16 +329,7 @@ class DDPG:
         :param local_net: PyTorch model (weights will be copied from)
         :param target_net: PyTorch model (weights will be copied to)
         :param tau: interpolation parameter
-        :return:
+        :return: nothing.
         """
-        """
-        Soft update model parameters.
-        θ_target = τ*θ_local + (1 - τ)*θ_target
-                Params
-                ======
-                    local_model: PyTorch model (weights will be copied from)
-                    target_model: PyTorch model (weights will be copied to)
-                    tau (float): interpolation parameter
-                """
         for target_param, local_param in zip(target_net.parameters(), local_net.parameters()):
             target_param.data.copy_(tau * local_param.data + (1.0 - tau) * target_param.data)
