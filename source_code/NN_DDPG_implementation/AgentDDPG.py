@@ -43,7 +43,9 @@ class AgentDDPG:
             eval_samples=10000,
             soft_target_tau=0.001,
             n_updates_per_sample=1,
-            checkpoint_dir='./checkpoints/'):
+            checkpoint_dir='./checkpoints/',
+            tensorboard_dir='./exp/',
+            run=0):
         """
         DDPG constructor
         
@@ -69,7 +71,9 @@ class AgentDDPG:
         :param checkpoint_dir: Checkpoint Directory in which we save our best Checkpoint
         """
 
-        self.writer = SummaryWriter()
+        self.writer_train = SummaryWriter(tensorboard_dir + 'run_' + str(run) + '/train/')
+        self.writer_test = SummaryWriter(tensorboard_dir + 'run_' + str(run) + '/test/')
+
         self.env = env
         self.test_env = test_env
         self.state_dim = env.observation_space.shape[0]
@@ -232,7 +236,7 @@ class AgentDDPG:
                 self.replay_buffer.push((state, action, reward, next_state, done))
                 # self.append_sample(state, action, reward, next_state, done)
 
-                if frame_idx > self.batch_size:
+                if frame_idx > self.replay_min_size:
                     experience = self.replay_buffer.sample(self.batch_size)
                     pl, vl = self.learn(experience, self.discount)
 
@@ -258,15 +262,15 @@ class AgentDDPG:
             else:
                 last_100 = rewards[-100:]
                 running_episode_reward_100 = np.array(last_100).mean()
-            self.writer.add_scalar('hp_decay/epsilon', self.eps, self.episode)
-            self.writer.add_scalar('reward/episode', episode_reward, self.episode)
-            self.writer.add_scalar('reward/running_mean', running_episode_reward, self.episode)
-            self.writer.add_scalar('reward/running_mean_last_100', running_episode_reward_100, self.episode)
-            self.writer.add_scalar('losses/actor_policy', running_ploss, self.episode)
-            self.writer.add_scalar('losses/critic_value', running_vloss, self.episode)
+            self.writer_train.add_scalar('hp_decay/epsilon', self.eps, self.episode)
+            self.writer_train.add_scalar('reward/episode', episode_reward, self.episode)
+            self.writer_train.add_scalar('reward/running_mean', running_episode_reward, self.episode)
+            self.writer_train.add_scalar('reward/running_mean_last_100', running_episode_reward_100, self.episode)
+            self.writer_train.add_scalar('losses/actor_policy', running_ploss, self.episode)
+            self.writer_train.add_scalar('losses/critic_value', running_vloss, self.episode)
         # export scalar data to JSON for external processing
-        self.writer.export_scalars_to_json("./all_scalars.json")
-        self.writer.close()
+        self.writer_train.export_scalars_to_json("./all_scalars.json")
+        self.writer_train.close()
 
     def learn(self, experience, gamma):
         """
@@ -342,8 +346,8 @@ class AgentDDPG:
         rewards, steps = self.test()
         print("Test done in %.2f sec, reward %.3f, steps %d" % (
             time.time() - ts, rewards, steps))
-        self.writer.add_scalar("test/reward_mean", rewards, frame_idx)
-        self.writer.add_scalar("test/steps_mean", steps, frame_idx)
+        self.writer_test.add_scalar("test/reward_mean", rewards, frame_idx)
+        self.writer_test.add_scalar("test/steps_mean", steps, frame_idx)
         if best_reward is None or best_reward < rewards:
             if best_reward is not None:
                 print("Best reward updated: %.3f -> %.3f" % (best_reward, rewards))
