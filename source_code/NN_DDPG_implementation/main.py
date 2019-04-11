@@ -29,7 +29,7 @@ def get_args():
     parser.add_argument('-update', nargs=3, default=[0.99, 0.001, 1],
                         metavar=('discount', 'soft_target_tau', 'n_updates_per_sample'),
                         type=float, help='Update phase')
-    parser.add_argument('-test', nargs=1, default=10000,
+    parser.add_argument('-test', nargs=1, default=10,
                         metavar='eval_samples', type=int, help='Testing phase')
     
     return parser.parse_args()
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     
     # if gpu is to be used
     assert torch.cuda.is_available(), "CUDA is not available"
-    for i in range(50):
+    for i in range(20):
         env = NormalizedActions(gym.make(args.env))
         test_env = NormalizedActions(gym.make(args.env))
         ou_noise = OUNoise(env.action_space, mu=args.noise[0], sigma=args.noise[1], theta=args.noise[2])
@@ -55,6 +55,6 @@ if __name__ == '__main__':
                          critic_weight_decay=args.critic[0], critic_update_method=args.critic[1],
                          critic_lr=args.critic[2],
                          discount=args.update[0], soft_target_tau=args.update[1], n_updates_per_sample=args.update[2],
-                         eval_samples=args.test, tensorboard_dir='./prioritized-100/', run=i)
+                         eval_samples=args.test, tensorboard_dir='./replay-100/', run=i)
         ddpg.train()
         env.close()
