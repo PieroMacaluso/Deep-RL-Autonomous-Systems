@@ -40,7 +40,7 @@ class AgentDDPG:
             actor_weight_decay=0,
             actor_update_method='adam',
             actor_lr=1e-4,
-            eval_samples=10000,
+            eval_samples=10,
             soft_target_tau=0.001,
             n_updates_per_sample=1,
             checkpoint_dir='./checkpoints/',
@@ -136,15 +136,19 @@ class AgentDDPG:
         for _ in range(count):
             t = 0
             state = self.test_env.reset()
+            done = False
             while t < self.episode_max_len:
                 action = self.act(state, add_noise=False)
-                next_state, reward, done = self.step(action)
+                next_state, reward, done, _ = self.test_env.step(action)
                 # self.env.render()
                 state = next_state
                 rewards += reward
-                steps += 1
+                t += 1
                 if done:
                     break
+            if not done:
+                t += 1
+            steps += t
         return rewards / count, steps / count
 
     def reset(self):
@@ -167,7 +171,7 @@ class AgentDDPG:
         :return: The Action to be performed in the STEP part.
         """
         state = torch.FloatTensor(state).unsqueeze(0).to(device)
-    
+
         self.eps = self.eps_start - (self.eps_start - self.eps_end) * min(1.0, self.episode / self.eps_decay)
         self.actor_net.eval()
         with torch.no_grad():
@@ -177,9 +181,9 @@ class AgentDDPG:
             action = self.noise.get_action(action, self.eps)
         else:
             action = self.noise.get_action(action, 0.0)
-    
+
         np.clip(action, self.env.action_space.low, self.env.action_space.high)
-    
+
         return action
 
     def step(self, action):
@@ -191,7 +195,7 @@ class AgentDDPG:
         """
         next_state, reward, done, _ = self.env.step(action)
         # self.env.render()
-    
+
         return next_state, reward, done
     
     def train(self):
@@ -204,11 +208,11 @@ class AgentDDPG:
         self.episode = running_episode_reward_100 = running_episode_reward = frame_idx = 0
         best_reward = None
         rewards = []
-    
+
         while self.episode < self.n_episode:
             episode_reward = upgrade_steps = running_ploss = running_vloss = step = 0
             state = self.reset()
-            
+            done = False
             while step < self.episode_max_len:
                 action = self.act(state)
                 next_state, reward, done = self.step(action)
@@ -226,26 +230,28 @@ class AgentDDPG:
                 step += 1
                 frame_idx += 1
 
-                if frame_idx % self.eval_samples == 0:
-                    best_reward = self.evaluation(best_reward, frame_idx)
-
                 if done:
                     self.episode += 1
                     break
+            if not done:
+                self.episode += 1
 
+            if self.episode % self.eval_samples == 0:
+                best_reward = self.evaluation(best_reward, self.episode)
+            
             rewards.append(episode_reward)
-            running_episode_reward += (episode_reward - running_episode_reward) / (self.episode + 1)
+            running_episode_reward += (episode_reward - running_episode_reward) / self.episode
             if len(rewards) < 100:
                 running_episode_reward_100 = running_episode_reward
             else:
                 last_100 = rewards[-100:]
                 running_episode_reward_100 = np.array(last_100).mean()
-            self.writer_train.add_scalar('hp_decay/epsilon', self.eps, self.episode)
+            self.writer_train.add_scalar('hp/epsilon', self.eps, self.episode)
+            self.writer_train.add_scalar('losses/actor_policy', running_ploss, self.episode)
+            self.writer_train.add_scalar('losses/critic_value', running_vloss, self.episode)
             self.writer_train.add_scalar('reward/episode', episode_reward, self.episode)
             self.writer_train.add_scalar('reward/running_mean', running_episode_reward, self.episode)
             self.writer_train.add_scalar('reward/running_mean_last_100', running_episode_reward_100, self.episode)
-            self.writer_train.add_scalar('losses/actor_policy', running_ploss, self.episode)
-            self.writer_train.add_scalar('losses/critic_value', running_vloss, self.episode)
         # export scalar data to JSON for external processing
         self.writer_train.export_scalars_to_json("./all_scalars.json")
         self.writer_train.close()
@@ -303,26 +309,29 @@ class AgentDDPG:
 
         return actor_loss.item(), critic_loss.item()
 
-    def evaluation(self, best_reward, frame_idx):
+    def evaluation(self, best_reward, episode):
         """
         Evaluation of the model currently discovered.
         
         :param best_reward: The best reward found till now.
-        :param frame_idx: counter of the frame used till now.
+        :param episode: counter of the frame used till now.
         :return: the new best reward
         """
         ts = time.time()
         rewards, steps = self.test()
         print("Test done in %.2f sec, reward %.3f, steps %d" % (
             time.time() - ts, rewards, steps))
-        self.writer_test.add_scalar("test/reward_mean", rewards, frame_idx)
-        self.writer_test.add_scalar("test/steps_mean", steps, frame_idx)
+        self.writer_test.add_scalar("test/reward_mean", rewards, episode)
+        self.writer_test.add_scalar("test/steps_mean", steps, episode)
         if best_reward is None or best_reward < rewards:
             if best_reward is not None:
                 print("Best reward updated: %.3f -> %.3f" % (best_reward, rewards))
-            fname = self.checkpoint_dir + "best_%+.3f_%d.pth" % (rewards, frame_idx)
+            fname_actor = self.checkpoint_dir + "best_actor_%+.3f_%d.pth" % (rewards, episode)
+            fname_critic = self.checkpoint_dir + "best_critic_%+.3f_%d.pth" % (rewards, episode)
+            
             # fname = os.path.join(self.checkpoint_dir, name)
-            torch.save(self.actor_net.state_dict(), fname)
+            torch.save(self.actor_net.state_dict(), fname_actor)
+            torch.save(self.critic_net.state_dict(), fname_critic)
             best_reward = rewards
         return best_reward
 

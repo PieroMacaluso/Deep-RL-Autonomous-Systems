@@ -44,5 +44,5 @@ class ActorNN(nn.Module):
     def forward(self, state):
         x = F.relu(self.linear1(state))
         x = F.relu(self.linear2(x))
-        x = nn.Tanh(self.linear3(x))
+        x = F.tanh(self.linear3(x))
         return x
