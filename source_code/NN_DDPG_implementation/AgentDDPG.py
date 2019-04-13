@@ -124,7 +124,7 @@ class AgentDDPG:
 
         self.episode = 0
 
-    def test(self, count=10):
+    def test(self, count=100):
         """
         Testing the actor on a random test set without using OUNoise.
         
