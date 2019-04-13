@@ -214,9 +214,8 @@ class AgentDDPG:
             state = self.reset()
             done = False
             while step < self.episode_max_len:
-                action = self.act(state)
-                next_state, reward, done = self.step(
-                    self.env.action_space.sample()) if self.episode < 10 else self.step(action)
+                action = self.env.action_space.sample() if self.episode < 10 else self.act(state)
+                next_state, reward, done = self.env.step(action) if self.episode < 10 else self.step(action)
                 self.replay_buffer.push(state, action, reward, next_state, done)
 
                 if frame_idx > self.replay_min_size:
