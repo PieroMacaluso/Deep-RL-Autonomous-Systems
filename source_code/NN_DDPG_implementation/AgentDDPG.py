@@ -145,7 +145,7 @@ class AgentDDPG:
     
         self.replay_buffer.add(error, (state, action, reward, next_state, done))
 
-    def test(self, count=10):
+    def test(self, count=100):
         """
         Testing the actor on a random test set without using OUNoise.
         
