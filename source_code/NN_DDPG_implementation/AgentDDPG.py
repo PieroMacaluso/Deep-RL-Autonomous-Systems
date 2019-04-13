@@ -282,8 +282,7 @@ class AgentDDPG:
         # UPDATE CRITIC #
         # Get predicted next-state actions and Q values from target models
         actions_next = self.target_policy_net(next_states)
-        actions_next = torch.max(torch.min(actions_next, self.action_high), self.action_low)
-        q_targets_next = self.target_value_net(next_states, actions_next).detach()
+        q_targets_next = self.target_value_net(next_states, actions_next.detach())
         # Compute Q targets for current states (y_i)
         q_targets = rewards + (gamma * q_targets_next * (1.0 - done))
         # Compute critic loss
@@ -297,9 +296,8 @@ class AgentDDPG:
         # UPDATE ACTOR #
         # Compute actor loss
         actions_pred = self.actor_net(states)
-        actions_pred = torch.max(torch.min(actions_pred, self.action_high), self.action_low)
         actor_loss = -self.critic_net(states, actions_pred).mean()
-        # Minimize the loss
+        # Maximize the expected return
         self.actor_opt.zero_grad()
         actor_loss.backward()
         self.actor_opt.step()
