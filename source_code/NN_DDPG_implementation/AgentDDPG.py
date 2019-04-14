@@ -130,7 +130,7 @@ class AgentDDPG:
         actions = torch.FloatTensor(action).to(device).unsqueeze(0)
         rewards = torch.FloatTensor(np.array(reward)).unsqueeze(0).to(device)
         dones = torch.FloatTensor(np.array(np.float32(done))).unsqueeze(0).to(device)
-    
+
         # TD ERROR CRITIC #
         # Get predicted next-state actions and Q values from target models
         with torch.no_grad():
@@ -142,7 +142,7 @@ class AgentDDPG:
             # Compute critic loss
             q_expected = self.critic_net(states, actions)
             error = np.abs((q_expected - q_targets).item())
-    
+
         self.replay_buffer.add(error, (state, action, reward, next_state, done))
 
     def test(self, count=100):
@@ -236,7 +236,10 @@ class AgentDDPG:
             done = False
             while step < self.episode_max_len:
                 action = self.env.action_space.sample() if self.episode < 10 else self.act(state)
-                next_state, reward, done = self.env.step(action) if self.episode < 10 else self.step(action)
+                if self.episode < 10:
+                    next_state, reward, done, _ = self.env.step(action)
+                else:
+                    next_state, reward, done = self.step(action)
                 self.replay_buffer.push((state, action, reward, next_state, done))
                 # self.append_sample(state, action, reward, next_state, done)
 
