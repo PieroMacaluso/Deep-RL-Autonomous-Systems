@@ -17,12 +17,12 @@ def get_args():
     # OUNoise (mu=0.0, sigma=0.3, theta=0.15)
     parser.add_argument('-noise', nargs=3, default=[0.0, 0.3, 0.15], metavar=('mu', 'sigma', 'theta'), type=float,
                         help='Ornstein Uhlenbeck process noise parameters')
-    parser.add_argument('-eps', nargs=3, default=[0.9, 0.2, 200], metavar=('start', 'end', 'decay'), type=float,
+    parser.add_argument('-eps', nargs=3, default=[0.9, 0.2, 300], metavar=('start', 'end', 'decay'), type=float,
                         help='Epsilon Decay process to decay the noise')
-    parser.add_argument('-replay', nargs=3, default=[100, 10000, 1000000],
+    parser.add_argument('-replay', nargs=3, default=[30, 2500, 1000000],
                         metavar=('batch_size', 'replay_min_size', 'replay_max_size'), type=int,
                         help='Replay Buffer parameters')
-    parser.add_argument('-sim', nargs=2, default=[300, 1000],
+    parser.add_argument('-sim', nargs=2, default=[300, 200],
                         metavar=('n_episode', 'episode_max_len'), type=int, help='Loop Simulation parameters')
     parser.add_argument('-actor', nargs=3, default=[0, 'adam', 1e-4], metavar=('weight_decay', 'update_method', 'lr'))
     parser.add_argument('-critic', nargs=3, default=[0, 'adam', 1e-4], metavar=('weight_decay', 'update_method', 'lr'))
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     
     # if gpu is to be used
     assert torch.cuda.is_available(), "CUDA is not available"
-    for i in range(20):
+    for i in range(3, 20):
         env = NormalizedActions(gym.make(args.env))
         test_env = NormalizedActions(gym.make(args.env))
         ou_noise = OUNoise(env.action_space, mu=args.noise[0], sigma=args.noise[1], theta=args.noise[2])
@@ -55,6 +55,6 @@ if __name__ == '__main__':
                          critic_weight_decay=args.critic[0], critic_update_method=args.critic[1],
                          critic_lr=args.critic[2],
                          discount=args.update[0], soft_target_tau=args.update[1], n_updates_per_sample=args.update[2],
-                         eval_samples=args.test, tensorboard_dir='./replay-100/', run=i)
+                         eval_samples=args.test, tensorboard_dir='./prioritized-100-acrobot/', run=i)
         ddpg.train()
         env.close()
