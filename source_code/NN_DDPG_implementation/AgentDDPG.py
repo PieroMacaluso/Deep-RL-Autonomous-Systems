@@ -177,6 +177,10 @@ class AgentDDPG:
         with torch.no_grad():
             action = self.actor_net(state).cpu().numpy()[0, 0]
         self.actor_net.train()
+        # TanH modulation and translation
+        mod = (self.env.action_space.high - self.env.action_space.low) / 2
+        tra = (self.env.action_space.high + self.env.action_space.low) / 2
+        action = mod * action + tra
         if add_noise:
             action = self.noise.get_action(action, self.eps)
         else:
@@ -215,7 +219,11 @@ class AgentDDPG:
             done = False
             while step < self.episode_max_len:
                 action = self.env.action_space.sample() if self.episode < 10 else self.act(state)
-                next_state, reward, done = self.env.step(action) if self.episode < 10 else self.step(action)
+
+                if self.episode < 10:
+                    next_state, reward, done, _ = self.env.step(action)
+                else:
+                    next_state, reward, done = self.step(action)
                 self.replay_buffer.push(state, action, reward, next_state, done)
 
                 if frame_idx > self.replay_min_size:
