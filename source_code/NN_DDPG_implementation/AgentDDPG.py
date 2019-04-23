@@ -178,9 +178,9 @@ class AgentDDPG:
             action = self.actor_net(state).cpu().numpy()[0, 0]
         self.actor_net.train()
         # TanH modulation and translation
-        mod = (self.env.action_space.high - self.env.action_space.low) / 2
-        tra = (self.env.action_space.high + self.env.action_space.low) / 2
-        action = mod * action + tra
+        # mod = (self.env.action_space.high - self.env.action_space.low) / 2
+        # tra = (self.env.action_space.high + self.env.action_space.low) / 2
+        # action = mod * action + tra
         if add_noise:
             action = self.noise.get_action(action, self.eps)
         else:

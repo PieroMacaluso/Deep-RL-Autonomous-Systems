@@ -31,7 +31,7 @@ def get_args():
     parser.add_argument('-update', nargs=3, default=[0.99, 0.001, 1],
                         metavar=('discount', 'soft_target_tau', 'n_updates_per_sample'),
                         type=float, help='Update phase')
-    parser.add_argument('-test', nargs=1, default=10,
+    parser.add_argument('-test', nargs=1, default=20,
                         metavar='eval_samples', type=int, help='Testing phase')
     
     return parser.parse_args()
@@ -67,6 +67,6 @@ if __name__ == '__main__':
                              critic_lr=args.critic[2],
                              discount=args.update[0], soft_target_tau=args.update[1],
                              n_updates_per_sample=args.update[2],
-                             eval_samples=args.test, tensorboard_dir='./pendulum-r-range/', run=i)
+                             eval_samples=args.test, tensorboard_dir='./prova/', run=i)
             ddpg.train()
             env.close()
