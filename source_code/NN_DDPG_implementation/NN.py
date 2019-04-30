@@ -3,6 +3,12 @@ import torch.nn.functional as F
 from torch import nn
 
 
+def weights_init_(m):
+    if isinstance(m, nn.Linear):
+        torch.nn.init.xavier_uniform_(m.weight, gain=1)
+        torch.nn.init.constant_(m.bias, 0)
+        
+
 class CriticNN(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_size=256):
         super(CriticNN, self).__init__()
@@ -28,5 +34,5 @@ class ActorNN(nn.Module):
     def forward(self, state):
         x = F.relu(self.linear1(state))
         x = F.relu(self.linear2(x))
-        x = F.relu(self.linear3(x))
+        x = torch.tanh(self.linear3(x))
         return x

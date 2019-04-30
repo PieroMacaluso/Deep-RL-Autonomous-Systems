@@ -140,7 +140,7 @@ class AgentDDPG:
             while t < self.episode_max_len:
                 action = self.act(state, add_noise=False)
                 next_state, reward, done, _ = self.test_env.step(action)
-                # self.env.render()
+                # self.test_env.render()
                 state = next_state
                 rewards += reward
                 t += 1
