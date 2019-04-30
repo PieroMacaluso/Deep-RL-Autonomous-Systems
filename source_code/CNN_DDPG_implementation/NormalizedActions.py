@@ -1,21 +1,34 @@
 import gym
-import numpy as np
 
 
 class NormalizedActions(gym.ActionWrapper):
     """
-    OpenAI Gym Wrapper to normalize the action in the range of the specific environment
+    OpenAI Gym Wrapper to normalize the action.
     """
     
     def action(self, action):
         """
-        :param action: action to be normalized
-        :return: action normalized
+        Transform the action normalized between [-1, 1] to the correct action-space bound of the environment.
+        mod -> range of the actions
+        tra -> center of the actions
+
+        :param action: action normalized in [-1, 1]
+        :return: action de-normalized in the environment space
         """
-        low_bound = self.action_space.low
-        upper_bound = self.action_space.high
+        mod = (self.action_space.high - self.action_space.low) / 2
+        tra = (self.action_space.high + self.action_space.low) / 2
+        action = action * mod + tra
+        # action = action * (self.action_space.high - self.action_space.low) + self.action_space.low
+        return action
+    
+    def _reverse_action(self, action):
+        """
+        Normalize the action between [-1, 1]
 
-        action = low_bound + (action + 1.0) * 0.5 * (upper_bound - low_bound)
-        action = np.clip(action, low_bound, upper_bound)
-
+        :param action: action in the action-space range
+        :return: action normalized in [-1, 1]
+        """
+        mod = (self.action_space.high - self.action_space.low) / 2
+        tra = (self.action_space.high + self.action_space.low) / 2
+        action = (action - tra) / mod
         return action
