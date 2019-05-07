@@ -1,0 +1,38 @@
+body {
+    background-image: linear-gradient(#ffd62e, #f9a832);
+    height: 100%;
+    width: 100%;
+    background-attachment: fixed;
+}
+
+.mainLogo {
+    height: 30px;
+}
+
+.universityLogo {
+    height: 50px;
+}
+.disabled {
+    opacity:0.4;
+    filter:alpha(opacity=40); /* For IE8 and earlier */
+}
+#cozmoImageId {
+    border: 5px solid whitesmoke;
+    border-radius: 0px 50px 50px 50px;
+}
+
+.keyboard{
+    width: 25%;
+}
+
+#w, #r{
+    margin-left: -25px;
+}
+#enter, #alt{
+    height: auto;
+    width: 40%;
+}
+#backspace, #shift{
+    height: auto;
+    width: 60%;
+}
