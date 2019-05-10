@@ -2,25 +2,25 @@
 The official report of my Master Thesis in Computer Engineering at Politecnico di Torino.
 The project was developed at Eurecom (Biot, France) with prof. Pietro Michiardi (Eurecom) and prof. Elena Baralis (Politecnico di Torino) from March 2019 to TBD.
 ## Path of my Master Thesis
-- **Fundamentals of Reinforcement Learning**
+- [x] **Fundamentals of Reinforcement Learning**
     - **Main Steps**
         - Studying the fundamentals using **[v1](#video-lectures)**, reading some chapters from **[b1](#books)** and doing some personal research.
-- **Deep Learning and PyTorch review**
+- [x] **Deep Learning and PyTorch review**
     - **Main Steps**
         - Reading some chapters from **[b2](#books)**, a practical guide through Deep Reinforcement Learning, OpenAI Gym and PyTorch.
-- **Deep Deterministic Policy Gradient (DDPG)**
+- [x] **Deep Deterministic Policy Gradient (DDPG)**
     - **Main Steps**
         - Studying **[p1](#papers)** and **[p2](#papers)** in order to understand the algorithm to reproduce.
         - Producing an initial working code of **DDPG algorithm** on a continuous and well-known environment on the OpenAI Gym environment using simple NNs.
         - Generalizing the code to work with CNN and images in an environment as similar as possible to the target one ([Anki Cozmo](https://www.anki.com/en-us/cozmo))
     - **Main aim:** try to implement the algorithm as generic as possible in order to mantain flexibility
-- **Soft Actor-Critic (SAC)**
+- [ ] **Soft Actor-Critic (SAC)**
     - **Main Steps**
         - Studying **[p4](#papers)** and **[p5](#papers)** in order to understand the algorithm to reproduce.
         - Producing an initial working code of **SAC algorithm** on a continuous and well-known environment on the OpenAI Gym environment using simple NNs.
         - Generalizing the code to work with CNN and images in an environment as similar as possible to the target one ([Anki Cozmo](https://www.anki.com/en-us/cozmo))
     - **Main aim:** try to implement the algorithm as generic as possible in order to mantain flexibility
-- **Implement the code on Anki Cozmo creating an interface between it and OpenAI Gym**
+- [ ] **Implement the code on Anki Cozmo creating an interface between it and OpenAI Gym**
     - **Main Steps**
         - Exploring documentation and example from [Cozmo SDK](https://github.com/anki/cozmo-python-sdk)
         - Producing an initial working environment for Anki Cozmo
