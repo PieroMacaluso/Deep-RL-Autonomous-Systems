@@ -7,9 +7,7 @@ import gym_cozmo
 
 def run(sdk_conn):
     robot = sdk_conn.wait_for_robot()
-    # self.robot.world.image_annotator.add_annotator('robotState', RobotStateDisplay)
     robot.enable_device_imu(True, True, True)
-    # robot.say_text("Hi!").wait_for_completed()
     
     # Turn on image receiving by the camera
     robot.camera.image_stream_enabled = True
@@ -21,11 +19,12 @@ def run(sdk_conn):
     state = env.reset()
     done = False
     total_reward = 0.0
-    ciao = False
     for i in range(10):
+        while env.is_human_controlled():
+            continue
         print(i)
         while True:
-            next_state, reward, done, _ = env.step([1, -1])
+            next_state, reward, done, _ = env.step(env.action_space.sample())
             if done:
                 break
     env.close()

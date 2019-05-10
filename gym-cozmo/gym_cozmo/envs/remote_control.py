@@ -135,6 +135,7 @@ def remap_to_range(x, x_min, x_max, out_min, out_max):
 class RemoteControlCozmo:
     
     def __init__(self, coz):
+        self.test_phase = False
         self.human_controlled = False
         self.to_be_discarded = False
         self.cozmo = coz
@@ -241,9 +242,14 @@ class RemoteControlCozmo:
             else:
                 self.human_controlled = False
                 self.to_be_discarded = False
-        if key_code == 8 and is_key_down:
+        if key_code == 8 and is_key_down and not self.human_controlled:
             self.to_be_discarded = True
             self.human_controlled = True
+        if key_code == ord('Q') and is_key_down:
+            if not self.test_phase and self.human_controlled:
+                self.test_phase = True
+            else:
+                self.test_phase = False
         
         if self.human_controlled:
             # Update desired speed / fidelity of actions based on shift/alt being held
@@ -638,7 +644,9 @@ def handle_updateCozmo():
         remote_control_cozmo.update()
         response_dict = {
             "human": remote_control_cozmo.human_controlled,
-            'discard': remote_control_cozmo.to_be_discarded
+            'discard': remote_control_cozmo.to_be_discarded,
+            "test_phase": remote_control_cozmo.test_phase,
+    
         }
         response = json.dumps(response_dict)
         return response

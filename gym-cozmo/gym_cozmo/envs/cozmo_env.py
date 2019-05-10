@@ -14,13 +14,13 @@ MAX_F_SPEED = 150
 MAX_T_SPEED = 100
 
 
-
 class CozmoEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     
     def __init__(self, robot: cozmo.robot.Robot):
         self.robot = robot
         self.rc = start(self.robot)
+        self.robot.set_robot_volume(0.1)
         self.reward = 0.0
         self.state = None
         self.lift = spaces.Box(low=0.0, high=1.0, shape=(1,), dtype=np.float32)
@@ -34,7 +34,7 @@ class CozmoEnv(gym.Env):
         step_reward = -1
         if action is not None:
             self.drive(action)
-            step_reward = 0.001 * action[0]
+            step_reward = 1 + 0.001 * action[0]
         
         self.state = self.get_image()
         
@@ -69,8 +69,8 @@ class CozmoEnv(gym.Env):
         self.start_position()
     
     def start_position(self):
-        self.set_head_angle(0.0)
-        self.set_lift_height(0.0)
+        self.set_head_angle(-20)
+        self.set_lift_height(self.lift.high)
     
     def get_image(self):
         observation = self.robot.world.latest_image.raw_image
@@ -91,6 +91,9 @@ class CozmoEnv(gym.Env):
     
     def say(self, message):
         self.robot.say_text(message).wait_for_completed()
-
+    
     def is_human_controlled(self):
         return self.rc.is_human_controlled()
+    
+    def is_test_phase(self):
+        return self.rc.test_phase;
