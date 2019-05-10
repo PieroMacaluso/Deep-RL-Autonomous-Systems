@@ -1,39 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="60d955be-8650-4ef5-a8b4-d9061020b642" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../gym_cozmo/envs/flask_helpers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gym_cozmo/envs/remote_control.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gym_cozmo/envs/static/css/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gym_cozmo/envs/static/img/cozmo-logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gym_cozmo/envs/static/img/eurecom.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gym_cozmo/envs/static/img/polito.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/image_wrapper.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/my_logging.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/normalized_actions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/replay_memory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sac.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/state_buffer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/hp/MountainCarContinuous-v0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/hp/Pendulum-v0_SAC_CNN.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/hp/Pendulum-v0_SAC_CNN_test.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/image_wrapper.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/my_logging.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/normalized_actions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/replay_memory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/sac.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/state_buffer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/utils.py" afterDir="false" />
+    <list default="true" id="60d955be-8650-4ef5-a8b4-d9061020b642" name="Default Changelist" comment="First Huge Commit of Cozmo-SAC">
+      <change afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/static/img/cozmo-gif.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/static/img/cozmo-pub.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../untitled/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gym_cozmo/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gym_cozmo/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gym_cozmo/envs/cozmo_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gym_cozmo/envs/cozmo_env.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/remote_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/remote_control.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/static/img/cozmo-logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/static/img/cozmo-logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,11 +22,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="241" column="35" lean-forward="true" selection-start-line="241" selection-start-column="35" selection-end-line="241" selection-end-column="35" />
+            <state relative-caret-position="198">
+              <caret line="49" column="17" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="17" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -58,17 +37,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sac.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="870">
-              <caret line="66" selection-start-line="66" selection-end-line="66" />
+            <state relative-caret-position="297">
+              <caret line="125" selection-start-line="125" selection-end-line="125" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+            <state relative-caret-position="164">
+              <caret line="176" column="37" selection-start-line="176" selection-start-column="22" selection-end-line="176" selection-end-column="37" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -77,19 +56,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../gym_cozmo/envs/cozmo_env.py">
+        <entry file="file://$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/remote_control.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="26" column="36" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/gym/core.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4095">
-              <caret line="277" selection-start-line="277" selection-end-line="277" />
+            <state relative-caret-position="1354">
+              <caret line="433" selection-start-line="433" selection-end-line="433" />
             </state>
           </provider>
         </entry>
@@ -97,8 +67,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/image_wrapper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="26" selection-start-line="26" selection-end-line="26" />
+            <state relative-caret-position="255">
+              <caret line="24" selection-start-line="24" selection-end-line="24" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -136,8 +106,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/replay_memory.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+            <state relative-caret-position="240">
+              <caret line="18" selection-start-line="18" selection-end-line="18" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -150,7 +120,13 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>ts</find>
+      <find>updates_per_step</find>
+      <find>batch_size</find>
     </findStrings>
+    <replaceStrings>
+      <replace>16, 32, , 2, 0</replace>
+      <replace>16, 32, 4, 2, 0</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -161,16 +137,8 @@
         <option value="$PROJECT_DIR$/replay_memory.py" />
         <option value="$PROJECT_DIR$/runs/2019-05-06_16-03-01_SAC/hp.json" />
         <option value="$PROJECT_DIR$/../gym_cozmo/envs/cozmo_env.py" />
-        <option value="$PROJECT_DIR$/model.py" />
         <option value="$PROJECT_DIR$/main.py" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
-        <option value="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" />
+        <option value="$PROJECT_DIR$/model.py" />
       </list>
     </option>
   </component>
@@ -193,6 +161,17 @@
               <item name="sac_cozmo" type="b2602c69:ProjectViewProjectNode" />
               <item name="sac_cozmo" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="sac_cozmo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sac_cozmo" type="462c0819:PsiDirectoryNode" />
+              <item name="runs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sac_cozmo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sac_cozmo" type="462c0819:PsiDirectoryNode" />
+              <item name="runs" type="462c0819:PsiDirectoryNode" />
+              <item name="2019-05-10_09-17-36_SAC" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -202,7 +181,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../.." />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -258,21 +237,34 @@
       <workItem from="1557141175494" duration="7626000" />
       <workItem from="1557218026572" duration="8189000" />
       <workItem from="1557254325506" duration="558000" />
+      <workItem from="1557257670388" duration="885000" />
+      <workItem from="1557411026204" duration="2595000" />
+      <workItem from="1557416608004" duration="158000" />
+      <workItem from="1557472124014" duration="1919000" />
     </task>
+    <task id="LOCAL-00001" summary="First Huge Commit of Cozmo-SAC">
+      <created>1557257801068</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1557257801068</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20059000" />
+    <option name="totallyTimeSpent" value="25616000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-6" width="1920" height="1049" extended-state="6" />
+    <frame x="0" y="31" width="1920" height="1049" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2603834" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27103302" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32997763" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32997763" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39932886" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -281,7 +273,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32885906" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.3277405" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -295,23 +287,22 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="First Huge Commit of Cozmo-SAC" />
+    <option name="LAST_COMMIT_MESSAGE" value="First Huge Commit of Cozmo-SAC" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/replay_memory.py</url>
-          <line>18</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>187</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/image_wrapper.py</url>
-          <line>26</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/image_wrapper.py</url>
-          <line>24</line>
-          <option name="timeStamp" value="9" />
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>185</line>
+          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -322,7 +313,7 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/sac_cozmo$main.coverage" NAME="main Coverage Results" MODIFIED="1557254374737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$main.coverage" NAME="main Coverage Results" MODIFIED="1557474039865" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
@@ -343,13 +334,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/cozmo/run.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7590">
-          <caret line="529" selection-start-line="529" selection-end-line="529" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/tensorboardX/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="183">
@@ -364,27 +348,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sac.py">
+    <entry file="file://$PROJECT_DIR$/../gym_cozmo/envs/cozmo_env.py" />
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="870">
-          <caret line="66" selection-start-line="66" selection-end-line="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../gym_cozmo/envs/cozmo_env.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="26" column="36" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
+        <state relative-caret-position="90">
+          <caret line="6" column="16" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -392,6 +360,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4095">
           <caret line="277" selection-start-line="277" selection-end-line="277" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/image_wrapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -418,30 +396,51 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/replay_memory.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+        <state relative-caret-position="240">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/image_wrapper.py">
+    <entry file="file://$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/remote_control.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" selection-start-line="26" selection-end-line="26" />
+        <state relative-caret-position="1354">
+          <caret line="433" selection-start-line="433" selection-end-line="433" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/cozmo/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="935">
+          <caret line="529" selection-start-line="529" selection-end-line="529" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sac.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="125" selection-start-line="125" selection-end-line="125" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="49" column="17" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="17" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="241" column="35" lean-forward="true" selection-start-line="241" selection-start-column="35" selection-end-line="241" selection-end-column="35" />
+        <state relative-caret-position="164">
+          <caret line="176" column="37" selection-start-line="176" selection-start-column="22" selection-end-line="176" selection-end-column="37" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>

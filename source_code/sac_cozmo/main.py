@@ -12,13 +12,14 @@ import gym_cozmo
 import math
 import numpy as np
 import torch
+from tensorboardX import SummaryWriter
+
 from image_wrapper import ImageWrapper
 from my_logging import Log
 from normalized_actions import NormalizedActions
 from replay_memory import ReplayMemory
 from sac import SAC
 from state_buffer import StateBuffer
-from tensorboardX import SummaryWriter
 
 
 class LoadFromFile(argparse.Action):
@@ -46,14 +47,14 @@ def initial_setup():
     alpha = 0.2
     autotune_entropy = True
     hidden_size = 256
-    img_size = 128
+    img_size = 84
     
     # Episode
-    warm_up_episode = 256
-    num_episode = 200
+    warm_up_episode = 1024
+    num_episode = 500
     max_num_step = 200
     max_num_run = 20
-    batch_size = 64
+    batch_size = 128
     replay_size = 1000000
     state_buffer_size = 1
     updates_per_step = 1
@@ -126,7 +127,6 @@ def run(sdk_conn):
         kwargs={'robot': robot})
     for i_run in range(args.max_num_run):
         logger.important(f"START TRAINING RUN {i_run}")
-        
         # Make the environment
         
         env = gym.make('CozmoDriver-v0')
@@ -158,6 +158,10 @@ def run(sdk_conn):
                 break
             while env.is_human_controlled():
                 continue
+            if env.is_test_phase():
+                test_phase(env, agent, i_episode, writer_test, args, logger, folder, i_run)
+                continue
+            logger.important(f"START EPISODE {i_episode}")
             ts = time.time()
             episode_reward = episode_steps = 0
             done = False
@@ -168,14 +172,14 @@ def run(sdk_conn):
             if cnn:
                 state_buffer = StateBuffer(args.state_buffer_size, state)
                 state = state_buffer.get_state()
-    
+            
             critic_1_loss_acc = critic_2_loss_acc = policy_loss_acc = ent_loss_acc = alpha_acc = 0
-    
+            
             while not done:
                 if cnn:
                     writer_train.add_image('episode_{}'.format(str(i_episode)), state_buffer.get_state(),
                                            episode_steps)
-                if len(memory) < args.warm_up_steps:
+                if len(memory) > args.warm_up_steps:
                     action = env.action_space.sample()
                 else:
                     action = agent.select_action(env, state)  # Sample action from policy
@@ -187,14 +191,14 @@ def run(sdk_conn):
                                 memory,
                                 args.batch_size,
                                 updates)
-                    
+                            
                             critic_1_loss_acc += critic_1_loss
                             critic_2_loss_acc += critic_2_loss
                             policy_loss_acc += policy_loss
                             ent_loss_acc += ent_loss
                             alpha_acc += alpha
                             updates += 1
-        
+                
                 next_state, reward, done, info = env.step(action)  # Step
                 if cnn:
                     state_buffer.push(next_state)
@@ -206,16 +210,16 @@ def run(sdk_conn):
                 # # (https://github.com/openai/spinningup/blob/master/spinup/algos/sac/sac.py)
                 mask = 1 if done else float(not done)
                 episode_replay.push(state, action, reward, next_state, mask)  # Append transition to memory
-        
+                
                 state = next_state
-    
-            print(len(memory))
-            print(len(episode_replay))
+            
+            # print(len(memory))
+            # print(len(episode_replay))
             if not info['undo']:
                 i_episode += 1
                 memory.push_memory(episode_replay)
-                print(len(memory))
-        
+                # print(len(memory))
+                
                 rewards.append(episode_reward)
                 running_episode_reward += (episode_reward - running_episode_reward) / i_episode
                 if len(rewards) < 100:
@@ -241,38 +245,36 @@ def run(sdk_conn):
                                                                                          round(time.time() - ts, 2),
                                                                                          str(datetime.timedelta(
                                                                                              seconds=time.time() - in_ts))))
-    
-    
-            if i_episode % args.eval_every == 0 and args.eval == True:
-                ts = time.time()
-                total_reward = 0
-                for _ in range(args.eval_episode):
-                    old = env.reset()
-                    state_buffer = StateBuffer(args.state_buffer_size, old)
-                    episode_reward = 0
-                    done = False
-                    while not done:
-                        state = state_buffer.get_state()
-                        action = agent.select_action(env, state, eval=True)
-                
-                        next_state, reward, done, _ = env.step(action)
-                        env.render()
-                        episode_reward += reward
-                
-                        state_buffer.push(next_state)
-                    total_reward += episode_reward
-        
-                writer_test.add_scalar('reward/test', total_reward / args.eval_episode, i_episode)
-        
-                logger.info("----------------------------------------")
-                logger.info(
-                    f"Test {args.eval_episode} ep.: {i_episode}, mean_r: {round(total_reward / args.eval_episode, 2)}"
-                    f", time_spent {round(time.time() - ts, 2)}s")
-                agent.save_model(args.env_name, "./runs/" + folder + f"run_{i_run}/", i_episode)
-                logger.info('Saving models...')
-                logger.info("----------------------------------------")
         
         env.close()
+
+
+def test_phase(env, agent, i_episode, writer_test, args, logger, folder, i_run):
+    ts = time.time()
+    total_reward = 0
+    old = env.reset()
+    state_buffer = StateBuffer(args.state_buffer_size, old)
+    episode_reward = 0
+    done = False
+    while not done:
+        state = state_buffer.get_state()
+        action = agent.select_action(env, state, eval=True)
+        
+        next_state, reward, done, _ = env.step(action)
+        episode_reward += reward
+        
+        state_buffer.push(next_state)
+    total_reward += episode_reward
+    
+    writer_test.add_scalar('reward/test', total_reward / args.eval_episode, i_episode)
+    
+    logger.info("----------------------------------------")
+    logger.info(
+        f"Test {args.eval_episode} ep.: {i_episode}, mean_r: {round(total_reward / args.eval_episode, 2)}"
+        f", time_spent {round(time.time() - ts, 2)}s")
+    agent.save_model(args.env_name, "./runs/" + folder + f"run_{i_run}/", i_episode)
+    logger.info('Saving models...')
+    logger.info("----------------------------------------")
 
 
 if __name__ == '__main__':
