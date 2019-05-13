@@ -14,7 +14,7 @@ def run(sdk_conn):
     gym_cozmo.register(
         id='CozmoDriver-v0',
         entry_point='gym_cozmo.envs:CozmoEnv',
-        kwargs={'robot': robot})
+        kwargs={'robot': robot, 'image_dim': 84})
     env = gym.make('CozmoDriver-v0')
     state = env.reset()
     done = False

@@ -1,6 +1,8 @@
 import cozmo
 import cozmo.robot as rb
+import cv2
 import gym
+import matplotlib.pyplot as plt
 import numpy as np
 from cozmo.util import Angle
 from gym import spaces
@@ -17,7 +19,8 @@ MAX_T_SPEED = 100
 class CozmoEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     
-    def __init__(self, robot: cozmo.robot.Robot):
+    def __init__(self, robot: cozmo.robot.Robot, image_dim):
+        self.image_dim = image_dim
         self.robot = robot
         self.rc = start(self.robot)
         self.robot.set_robot_volume(0.1)
@@ -27,7 +30,7 @@ class CozmoEnv(gym.Env):
         self.head = spaces.Box(low=rb.MIN_HEAD_ANGLE.degrees, high=rb.MAX_HEAD_ANGLE.degrees, shape=(1,),
                                dtype=np.float32)
         self.action_space = spaces.Box(np.array([0, -1]), np.array([+1, +1]), dtype=np.float32)
-        self.observation_space = spaces.Box(low=0, high=1, shape=(STATE_H, STATE_W), dtype=np.float32)
+        self.observation_space = spaces.Box(low=0, high=1, shape=(self.image_dim, self.image_dim), dtype=np.float32)
         self.say("All set!")
     
     def step(self, action: spaces.Box):
@@ -80,7 +83,9 @@ class CozmoEnv(gym.Env):
         # screen = observation
         # screen_height, screen_width = screen.shape
         screen = np.ascontiguousarray(screen, dtype=np.float32) / 255
-        # screen = cv2.resize(screen, (self.image_size, self.image_size))
+        # plt.imshow(screen)
+        screen = cv2.resize(screen, (self.image_dim, self.image_dim))
+        # screen = screen.transpose((2, 0, 1))
         return screen
     
     def drive(self, action):
