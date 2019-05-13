@@ -1,6 +1,27 @@
 # A Study Of Reinforcement Learning
 The official report of my Master Thesis in Computer Engineering at Politecnico di Torino.
 The project was developed at Eurecom (Biot, France) with prof. Pietro Michiardi (Eurecom) and prof. Elena Baralis (Politecnico di Torino) from March 2019 to TBD.
+## Table of Contents
+- **Reports**
+    - [Deep Deterministic Policy Gradient (DDPG)](report_DDPG)
+    - [Soft Actor-Critic (SAC)](report_SAC)
+    
+- **Source Code**
+    - DDPG Implementations
+        - [Neural Network](source_code/NN_DDPG_implementation)
+        - [Convolutional Neural Network](source_code/CNN_DDPG_implementation)
+    - SAC Implementations
+        - [Convolutional Neural Network](source_code/SAC_implementation)
+    - Cozmo Agents Implementations
+        - [SAC](source_code/sac_cozmo)
+
+- **OpenAI Environment**
+    - [gym-cozmo](gym-cozmo)
+    
+- **Master Thesis**
+    - [Thesis TeX](master_thesis)
+    - [Presentation TeX](presentation)
+    
 ## Path of my Master Thesis
 - [x] **Fundamentals of Reinforcement Learning**
     - **Main Steps**
