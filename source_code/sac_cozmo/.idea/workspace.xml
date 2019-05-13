@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="60d955be-8650-4ef5-a8b4-d9061020b642" name="Default Changelist" comment="First Huge Commit of Cozmo-SAC">
-      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/remote_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/remote_control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/test.py" afterDir="false" />
+    <list default="true" id="60d955be-8650-4ef5-a8b4-d9061020b642" name="Default Changelist" comment="Complete refactor of SAC_COZMO&#10;&#10;- The main is reduced to the declaration of env and agent with the start of training phase&#10;- Forget phase implemented&#10;- ImageWrapper no more used. TO BE DELETED">
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/bibliography.tex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/eurecom.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/first_chapter.tex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/latexmkrc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/master_thesis.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/master_thesis.tex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/preface.tex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/references.bib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/second_chapter.tex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/topcoman.sty" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/topfront.sty" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/toptesi-dottorale.sty" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/toptesi-magistrale.sty" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/toptesi-monografia.sty" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/toptesi-scudo.sty" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/toptesi-sss.sty" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/toptesi.cfg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/toptesi.cls" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/tex/toptesi.sty" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../master_thesis/third_chapter.tex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_wrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_wrapper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/replay_memory.py" beforeDir="false" afterPath="$PROJECT_DIR$/replay_memory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sac.py" beforeDir="false" afterPath="$PROJECT_DIR$/sac.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,118 +32,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="366">
-              <caret line="129" column="14" selection-start-line="129" selection-start-column="14" selection-end-line="129" selection-end-column="14" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/state_buffer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="47" selection-start-line="47" selection-end-line="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../CNN_DDPG_implementation/StateBuffer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="337">
-              <caret line="54" column="30" selection-start-line="54" selection-start-column="30" selection-end-line="54" selection-end-column="30" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/cozmo/run.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="529" selection-start-line="529" selection-end-line="529" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydevd_bundle/pydevd_resolver.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="81" selection-start-line="81" selection-end-line="81" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sac.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="180" column="34" selection-start-line="180" selection-start-column="34" selection-end-line="180" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/image_wrapper.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="26" selection-start-line="26" selection-end-line="26" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3105">
-              <caret line="228" column="6" selection-start-line="228" selection-start-column="6" selection-end-line="228" selection-end-column="6" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/my_logging.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/replay_memory.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="307">
-              <caret line="30" selection-start-line="30" selection-end-line="30" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -179,17 +82,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="sac_cozmo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="sac_cozmo" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="ProjectPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -287,7 +180,7 @@
       <workItem from="1557488707280" duration="8069000" />
       <workItem from="1557512868208" duration="482000" />
       <workItem from="1557566694135" duration="4133000" />
-      <workItem from="1557729451735" duration="14643000" />
+      <workItem from="1557729451735" duration="16827000" />
     </task>
     <task id="LOCAL-00001" summary="First Huge Commit of Cozmo-SAC">
       <created>1557257801068</created>
@@ -324,11 +217,25 @@
       <option name="project" value="LOCAL" />
       <updated>1557749474380</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Forget Phase Backend added to CozmoDriver">
+      <created>1557749513171</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1557749513171</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Complete refactor of SAC_COZMO&#10;&#10;- The main is reduced to the declaration of env and agent with the start of training phase&#10;- Forget phase implemented&#10;- ImageWrapper no more used. TO BE DELETED">
+      <created>1557749759760</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1557749759760</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57291000" />
+    <option name="totallyTimeSpent" value="59475000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="31" width="1920" height="1049" extended-state="6" />
@@ -338,7 +245,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.31991053" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.31991053" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39932886" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -368,7 +275,9 @@
     <MESSAGE value="Main of Cozmo-SAC improvement&#10;&#10;- Added a Test phase with key Q" />
     <MESSAGE value="Reward function reverted to the original formula (1 correct, 0 end of episode) in order to test it" />
     <MESSAGE value="getImage fixed&#10;&#10;- B/N Image with one channel&#10;- Image Size as parameter of the env" />
-    <option name="LAST_COMMIT_MESSAGE" value="getImage fixed&#10;&#10;- B/N Image with one channel&#10;- Image Size as parameter of the env" />
+    <MESSAGE value="Forget Phase Backend added to CozmoDriver" />
+    <MESSAGE value="Complete refactor of SAC_COZMO&#10;&#10;- The main is reduced to the declaration of env and agent with the start of training phase&#10;- Forget phase implemented&#10;- ImageWrapper no more used. TO BE DELETED" />
+    <option name="LAST_COMMIT_MESSAGE" value="Complete refactor of SAC_COZMO&#10;&#10;- The main is reduced to the declaration of env and agent with the start of training phase&#10;- Forget phase implemented&#10;- ImageWrapper no more used. TO BE DELETED" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -491,25 +400,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_logging.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3105">
-          <caret line="228" column="6" selection-start-line="228" selection-start-column="6" selection-end-line="228" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../CNN_DDPG_implementation/StateBuffer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="337">
@@ -544,16 +434,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/replay_memory.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="366">
@@ -580,6 +460,35 @@
           <caret line="26" selection-start-line="26" selection-end-line="26" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3105">
+          <caret line="228" column="6" selection-start-line="228" selection-start-column="6" selection-end-line="228" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_logging.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/replay_memory.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
