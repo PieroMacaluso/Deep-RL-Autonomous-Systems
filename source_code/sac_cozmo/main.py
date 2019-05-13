@@ -112,17 +112,17 @@ def run(sdk_conn):
     # Turn on image receiving by the camera
     robot.camera.image_stream_enabled = True
     in_ts = time.time()
+    
     # Setting up Hyper-Parameters
     args, folder, logger = initial_setup()
     logger.debug("Initial setup completed.")
+    
     # Create JSON of Hyper-Parameters for reproducibility
     with open("./runs/" + folder + "hp.json", 'w') as outfile:
         json.dump(vars(args), outfile)
-    cnn = args.pics
-    gym_cozmo.register(
-        id='CozmoDriver-v0',
-        entry_point='gym_cozmo.envs:CozmoEnv',
-        kwargs={'robot': robot, 'image_dim': args.img_size})
+        
+    # Initialize Environment
+    gym_cozmo.initialize(robot, args.img_size)
     env = gym.make('CozmoDriver-v0')
     
     # Setup the agent

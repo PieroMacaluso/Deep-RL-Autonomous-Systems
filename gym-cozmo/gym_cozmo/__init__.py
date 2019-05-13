@@ -1,6 +1,8 @@
 from gym.envs.registration import register
 
-register(
-    id='CozmoWithoutRobot-v0',
-    entry_point='gym_cozmo.envs:CozmoEnv'
-)
+
+def initialize(robot, img_size):
+    register(
+        id='CozmoDriver-v0',
+        entry_point='gym_cozmo.envs:CozmoEnv',
+        kwargs={'robot': robot, 'image_dim': img_size})
