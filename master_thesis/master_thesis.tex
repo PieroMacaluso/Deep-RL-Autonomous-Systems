@@ -1,0 +1,85 @@
+% !TEX encoding = UTF-8 Unicode
+% !TEX TS-program = pdflatex
+
+%%%%%%% La riga soprastante serve per configurare gli editor
+%%%%%%% TeXShop, TeXworks e TeXstudio per gestire questo file
+%%%%%%% con la codifica UFF-8.
+%%%%%%% Se si vuole usare un'altra codifica si veda sotto.
+%%%%%%%
+
+%%%%%%%  Esempio con molte opzioni
+%%%%%%% Le opzioni nella forma "chiave=valore" sono definite
+%%%%%%% perché la classe dalla versione 6.1.00 usa il pacchetto
+%%%%%%% xkeyval. Vedere sulla documentazione in inglese o
+%%%%%%% in italiano quali chiavi accettano valori.
+
+%%%%%%% L'opzione per il corpo accetta qualsiasi valore, anche fratto
+%%%%%%% (per esempio: corpo=11.5pt) e va sempre scritto con una
+%%%%%%% unità di misura. L'utente è pregato di non esagerare con
+%%%%%%% corpi normali minori di 9.5pt o maggiori di 13pt.
+%%%%%%%
+%%%%%%% Le opzioni per inputenc e fontenc vanno per prime.
+%%%%%%% Vengono ignorate se NON si compone con pdfLaTeX. Ma
+%%%%%%% questo è un esempio per pdfLaTeX.
+%%%%%%%
+
+\documentclass[%
+corpo=11pt,
+twoside,
+%    stile=classica,
+oldstyle,
+%    autoretitolo,
+tipotesi=magistrale,
+greek,
+evenboxes,
+]{toptesi}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Per la codifica d'entratasi può scegliere quella che si vuole,
+%%%%%% ma si consiglia di preferire utf8; in ogni caso non scegliere
+%%%%%% codifiche specifiche del sistema operativo.
+
+\usepackage[utf8]{inputenc}% codifica d'entrata
+\usepackage[T1]{fontenc}%    codifica dei font
+\usepackage{lmodern}%        scelta dei font
+
+% Vedere la documentazione toptesi-it.pdf per le
+% attenzioni che bisogna usare al fine di ottenere un file
+% veramente conforme alle norme per l'archiviabilità.
+
+
+\usepackage{hyperref}
+
+\hypersetup{%
+	pdfpagemode={UseOutlines},
+	bookmarksopen,
+	pdfstartview={FitH},
+	colorlinks,
+	linkcolor={blue},
+	citecolor={blue},
+	urlcolor={blue}
+}
+%
+%%%%%%% Esempio di composizione di tesi di laurea con PDFLATEX 
+%
+%
+% Per scrivere testo fasullo in "latinorum"
+\usepackage{lipsum}
+%
+
+%%%%%%% Definizioni locali
+\newtheorem{osservazione}{Osservazione}% Standard LaTeX
+\ExtendCaptions{english}{Abstract}{Acknowledgements}
+
+\begin{document}
+	\include{pre}
+	\mainmatter
+	\part{Reinforcement Learning Fundamentals}
+	\include{part_one/first_chapter}
+	\include{part_one/second_chapter}
+	\include{part_one/third_chapter}
+	\part{Deep Reinforcement Learning}
+	\include{part_two/first_chapter}
+	\include{part_two/second_chapter}
+	\include{part_two/third_chapter}
+	\include{bibliography}	
+\end{document}

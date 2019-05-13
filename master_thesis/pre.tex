@@ -1,0 +1,152 @@
+\errorcontextlines=9
+	\english
+	\iflanguage{english}{%
+		\retrofrontespizio{This work is subject to the Creative Commons Licence}
+		% \DottoratoIn{PhD Course in\space}
+		\CorsoDiLaureaIn{Master degree course in\space}
+		%\NomeMonografia{Bachelor Degree Final Work}
+		\TesiDiLaurea{Master Degree Thesis}
+		%\NomeDissertazione{PhD Dissertation}
+		%\InName{in}
+		\CandidateName{Candidate}% or Candidate
+		\AdvisorName{Supervisors}% or Supervisor
+		\TutorName{Tutor}
+		\NomeTutoreAziendale{Internship Tutor}
+		%\CycleName{cycle}
+		%\NomePrimoTomo{First volume}
+		%\NomeSecondoTomo{Second Volume}
+		%\NomeTerzoTomo{Third Volume}
+		%\NomeQuartoTomo{Fourth Volume}
+		%\logosede{logodue}% or comma separated list of logos
+		\TitoloListaCandidati{Candidate,Candidate,Candidates,Candidates}
+	}{}
+	%%%%%%% Questi comandi è meglio metterli dentro l'ambiente
+	%%%%%%% frontespizio o frontespizio*, oppure in un file di
+	%%%%%%% configurazione personale. Si veda la documentazione
+	%%%%%%% inglese o italiana.
+	%%%%%%% Comunque i presenti comandi servono per comporre la
+	%%%%%%% tesi con i moduli di estensione standard del pacchetto
+	%%%%%%% TOPtesi.
+	
+	\begin{ThesisTitlePage}
+		% Per cambiare la dicitura sopra la lista dei laureandi decommentare
+		% la riga seguente, cambina do le 4 parole in modo consistente
+		%
+		
+		%
+		% \ateneo{Politecnico di Torino}
+		%
+		% Non tutte le università hanno un nome proprio
+		%\nomeateneo{}
+		%
+		%\struttura[III]{Matematica, Fisica e~Scienze Naturali}
+		%\Materia{Remote sensing}
+		\titolo{A Study of Reinforcement Learning}% per la laurea quinquennale e il dottorato
+		\sottotitolo{Reinforcement Learning applied to Autonomous systems}% per la laurea quinquennale e il dottorato
+		%
+		%%%%%%% Corso degli studi
+		\corsodilaurea{Computer Engineering}% per la laurea
+		
+		%%%%%%% L'eventuale numero di matricola va fra parentesi quadre
+		%\show\Candidato
+		%\def\Candidato{Studente}
+		%\show\Candidato
+		\candidato{Piero \textsc{Macaluso}}[s252894] 
+		%\secondocandidato{Evangelista \textsc{Torricelli}}[123457]
+		
+		%%%%%%% Relatori o supervisori
+		%
+		\relatore{prof.~Elena Baralis}
+		\secondorelatore{prof.~Pietro Michiardi}
+		% 
+		%%%%%%% Per mettere altri relatori consultare toptesi-it.pdf
+		
+		%%%%%%% Tutore
+		% \tutoreaziendale{dott.\ ing.\ Giovanni Giacosa}
+		%\NomeTutoreAziendale{Supervisore aziendale\\Centro Ricerche FIAT}
+		
+		%%%%%%% Seduta dell'esame
+		%\sedutadilaurea{Agosto 1615}
+		%%%%%%%% oppure:
+		\sedutadilaurea{\textsc{Academic~year} 2018-2019}% 
+		
+		%%%%%%% Logo della sede
+		\logosede{logopolito,eurecom}% 
+	\end{ThesisTitlePage}
+	
+	
+	%%%%%%% Per cambiare l'offset per la rilegatura;
+	%%%%%%% meno offset c'e', meglio e'
+	%\setbindingcorrection{3mm}
+	
+
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%% Change the strings if you want a title page and a
+	%%%%%%% copyright page in another language
+	%%%%%%% Comment just the \iflanguage statement and the
+	%%%%%%% closing line of the language test if you want to
+	%%%%%%% make a global change instead of a conditional one.
+	%%%%%%% Comment the following indented lines if you don't
+	%%%%%%% care about the title page in English
+	\iflanguage{english}{%
+		\retrofrontespizio{This work is subject to the Creative Commons Licence}
+		% \DottoratoIn{PhD Course in\space}
+		\CorsoDiLaureaIn{Master degree course in\space}
+		%\NomeMonografia{Bachelor Degree Final Work}
+		\TesiDiLaurea{Master Degree Thesis}
+		%\NomeDissertazione{PhD Dissertation}
+		%\InName{in}
+		\CandidateName{Candidate}% or Candidate
+		\AdvisorName{Supervisors}% or Supervisor
+		\TutorName{Tutor}
+		\NomeTutoreAziendale{Internship Tutor}
+		%\CycleName{cycle}
+		%\NomePrimoTomo{First volume}
+		%\NomeSecondoTomo{Second Volume}
+		%\NomeTerzoTomo{Third Volume}
+		%\NomeQuartoTomo{Fourth Volume}
+		%\logosede{logodue}% or comma separated list of logos
+	}{}
+	
+	
+		
+		% Altro esperimento.
+		% Si veda la documentazione per verificare la differenza fra abstract
+		% e summary. Perciò se se ne usa uno, non si deve usare l'altro.
+		\english
+		\begin{abstract}
+			Autonomous systems attracted a lot of attention due to its potential to radically change mobility and transport. Recently, Reinforcement Learning has been shown to achieve super-human results at games, computer games, and to be a promising methodology for tasks with robotic manipulators. In this thesis, we argue that the generality of reinforcement learning makes it a useful framework to apply to autonomous driving, focusing on systems which address the ability to drive and navigate in the absence of maps and explicit rules, relying, just like humans do, on a comprehensive understanding of the immediate environment: for this reason we used a small robot to develop our experiments.
+			Further possible future developments could be Interpretability and "explainability" of the learned model.
+			
+		\end{abstract}
+		
+		% Fine dell'altro esperimento
+		%\sommario
+		
+		% \paginavuota % funziona anche senza specificare l'opzione classica
+		
+		\ringraziamenti
+		
+		
+		
+		\tablespagetrue\figurespagetrue % normalmente questa riga non serve ed e' commentata
+		\indici
+		
+		%%%%%%%% Altro esperimento con l'opzione classica
+		%%%%%%%% Non usare mai anche se qui lo si è fatto!
+		%%%%%%%% Oltretutto funziona solo se si è specificata la lingua greca fra le opzioni.
+		%%%%%%%% Commentare fra \ifclassica fino a \fi compresi. 
+		\ifclassica   
+		\begin{citazioni}
+			\textit{testo testo testo\\testo testo testo}
+			
+			[\textsc{G.\ Leopardi}, Operette Morali]\vspace{1em}
+			
+			\textgreek{>all'a p'anta <o k'eraunos d'' >oiak'izei}
+			
+			[\textsc{Eraclito}, fr.\ D-K 134]
+		\end{citazioni}
+		
+		\fi
+		%%%%%%%% fine esperimento
