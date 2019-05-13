@@ -27,6 +27,7 @@ import threading
 
 import cozmo
 import math
+
 from gym_cozmo.envs import flask_helpers
 
 try:
@@ -241,8 +242,7 @@ class RemoteControlCozmo:
                 self.human_controlled = True
             else:
                 self.human_controlled = False
-                self.to_be_discarded = False
-        if key_code == 8 and is_key_down and not self.human_controlled:
+        if key_code == 8 and is_key_down:
             self.to_be_discarded = True
             self.human_controlled = True
         if key_code == ord('Q') and is_key_down:
@@ -646,7 +646,7 @@ def handle_updateCozmo():
             "human": remote_control_cozmo.human_controlled,
             'discard': remote_control_cozmo.to_be_discarded,
             "test_phase": remote_control_cozmo.test_phase,
-    
+            
         }
         response = json.dumps(response_dict)
         return response

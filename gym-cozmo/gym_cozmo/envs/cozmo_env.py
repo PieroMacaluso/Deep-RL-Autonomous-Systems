@@ -10,8 +10,6 @@ from gym import spaces
 # Collect events until released
 from gym_cozmo.envs.remote_control import start
 
-STATE_H = 64
-STATE_W = 64
 MAX_F_SPEED = 150
 MAX_T_SPEED = 100
 
@@ -100,5 +98,12 @@ class CozmoEnv(gym.Env):
     def is_human_controlled(self):
         return self.rc.is_human_controlled()
     
+    def is_forget_enabled(self):
+        return_value = self.rc.is_episode_to_be_discarded()
+        return return_value
+    
     def is_test_phase(self):
-        return self.rc.test_phase;
+        return self.rc.test_phase
+    
+    def stop_all_motors(self):
+        self.robot.stop_all_motors()
