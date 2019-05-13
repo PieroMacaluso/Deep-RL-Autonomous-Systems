@@ -27,5 +27,10 @@ class ReplayMemory(object):
         state, action, reward, next_state, done = map(np.stack, zip(*batch))
         return state, action, reward, next_state, done
     
+    def forget_last(self, num_episode_to_forget):
+        for i in range(num_episode_to_forget):
+            self.position = (self.position - 1) % self.capacity
+            self.buffer.pop(self.position)
+    
     def __len__(self):
         return len(self.buffer)

@@ -20,10 +20,10 @@ class ImageWrapper(gym.ObservationWrapper):
     
     def observation(self, observation):
         # Returned screen requested by gym is HWC. Transpose it into torch order (CHW).\
-        # screen = self.env.render(mode='rgb_array')
+        screen = self.env.render(mode='rgb_array')
         # screen = rgb2gray(observation)
-        screen = observation
-        screen_height, screen_width = screen.shape
+        # screen = observation
+        # screen_height, screen_width = screen.shape
         screen = np.ascontiguousarray(screen, dtype=np.float32)  # /255
         screen = cv2.resize(screen, (self.image_size, self.image_size))
         return screen
