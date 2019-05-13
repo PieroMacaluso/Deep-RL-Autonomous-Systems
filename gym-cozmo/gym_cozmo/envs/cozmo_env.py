@@ -34,18 +34,18 @@ class CozmoEnv(gym.Env):
         step_reward = -1
         if action is not None:
             self.drive(action)
-            step_reward = 1 + 0.001 * action[0]
+            step_reward = 1  # 0.5 + 0.5 * action[0]
         
         self.state = self.get_image()
         
         if self.rc.is_human_controlled():
             self.robot.stop_all_motors()
             done = True
-            step_reward = -10 - 0.01 * action[0]
+            step_reward = 0  # -9 - action[0]
         else:
             done = False
         
-        return self.state, step_reward, done, {'undo': self.rc.is_episode_to_be_discarded()}
+        return self.state, step_reward, done, {}
     
     def reset(self):
         self.say("New Episode!")
