@@ -203,43 +203,62 @@
 	\end{align}
 	
 	\subsubsection{Learning Equations}
-	SAC algorithm learns a \textbf{policy} $\pi_\theta$, two Q-functions $Q_{\phi_1}$,  $Q_{\phi_2}$ and a value function $V_\psi$.
+	SAC algorithm learns a \textbf{policy} $\pi_\theta$, two Q-functions $Q_{\phi_1}$,  $Q_{\phi_2}$.
+	
+	The state-value function is emplicitly parametrized through the soft Q-function parameters and the connection is given by:
+	
+	\begin{align}
+	V^{\pi}(s) &= \mathbb{E}_{a \sim \pi}[Q^{\pi}(s,a)] + \alpha \mathcal{H} \left(\pi(\cdot|s)\right) \\
+	&= \mathbb{E}_{a \sim \pi}[Q^{\pi}(s,a) - \alpha \log \pi(a|s)] \\
+	& \approx Q^{\pi}(s,\tilde{a}) - \alpha \log \pi(\tilde{a}|s), \;\;\;\;\; \tilde{a} \sim \pi(\cdot|s).	
+	\end{align}
+	
+	In \cite{haarnoja2018soft} a function approximator for this function was introduced, but later \cite{haarnoja2018alg} the authors found it to be unnecessary.
 	
 	\paragraph{Learning Q}The Q-functions are learned by Mean Squared Bellman Error (MSBE) minimization, using a target value network to form the Bellman backups. They both use the same target and have loss functions:
 	
+	\begin{equation} \label{eq11:lossQ}
+	L(\phi_i, {\mathcal D}) = \mathbb{E}_{(s_t,a_t,r_t,s_{t+1},d_t) \sim \mathcal D}\left[ \Bigg( Q_{\phi_i}(s_t,a_t) - \left(r_t + \gamma (1 - d_t) V_{\bar{\phi_i}}(s_{t+1}) \right) \Bigg)^2 \right].
+	\end{equation}
+	where
 	\begin{equation}
-	L(\phi_i, {\mathcal D}) = \mathbb{E}_{(s,a,r,s',d) \sim \mathcal D}\left[ \Bigg( Q_{\phi_i}(s,a) - \left(r + \gamma (1 - d) V_{\psi_{\text{targ}}}(s') \right) \Bigg)^2 \right].
+	V_{\bar{\phi}}(s_{t+1}) = \min_{i=1,2}Q_{\bar{\phi}_i}(s_{t+1},a_{t+1}) - \alpha \log \pi_\theta(a_{t+1}|s_{t+1}), \;\;\;\;\; a_{t+1} \sim \pi_\theta(\cdot|s_{t+1})
 	\end{equation}
 	
 	
 	The target value network, like the target networks in DDPG, is obtained by polyak averaging the value network parameters over the course of training.
 	
-	\paragraph{Learning V} The value function is learned by exploiting a sample-based approximation of the connection  given by \vref{eq5:q_v_relation}. Let’s first rewrite the connection equation by using the definition of entropy to obtain:
 	
+	\paragraph{Learning the Policy} The policy should act to maximize the expected future return plus expected future entropy, for each state. That is, it should maximize $V^{\pi}(s)$, which can be expanded out (as before) into
+			\begin{equation}
+	E_{a \sim \pi}[Q^{\pi}(s,a) - \alpha \log \pi(a|s)]
+			\end{equation}
+	The optimization of the policy makes use of the reparameterization trick, in which a sample from $\pi_{\theta}(\cdot|s)$ is drawn by computing a deterministic function of state, policy parameters, and independent noise. To illustrate: following the authors of the SAC paper, we use a squashed Gaussian policy, which means that samples are obtained according to
+			\begin{equation}
+	\tilde{a}_{\theta}(s, \xi) = \tanh\left( \mu_{\theta}(s) + \sigma_{\theta}(s) \odot \xi \right), \;\;\;\;\; \xi \sim \mathcal{N}(0, I).
+			\end{equation}
+			
+	It is possible to rewrite the expectation over actions (pain point: the distribution depends on the policy parameters) into an expectation over noise (the distribution now has no dependence on parameters) thanks to the reparameterization trick:
 	
-	\begin{align}
-	V^{\pi}(s) &= \mathbb{E}_{a \sim \pi}[Q^{\pi}(s,a)] + \alpha \mathcal{H} \left(\pi(\cdot|s)\right) \\ &= \mathbb{E}_{a \sim \pi}[Q^{\pi}(s,a) - \alpha \log \pi(a|s)].
-	\end{align}
-	
-	The RHS
-	
-	
-	For this reason, SAC exploits \textbf{Clipped Double-Q Learning} used also by \textbf{Twin Delayed DDPG (TD3)}. It learns two Q-functions instead of one, and uses the smaller of the two Q-values to form the targets in the Bellman error loss functions.
+				\begin{equation}
+	\mathbb{E}_{a \sim \pi_{\theta}}[{Q^{\pi_{\theta}}(s,a) - \alpha \log \pi_{\theta}(a|s)}] = \mathbb{E}_{\xi \sim \mathcal{N}}[{Q^{\pi_{\theta}}(s,\tilde{a}_{\theta}(s,\xi)) - \alpha \log \pi_{\theta}(\tilde{a}_{\theta}(s,\xi)|s)}]
+				\end{equation}
+				
+	To get the policy loss, the final step is to substitute $Q^{\pi_{\theta}}$ with one of our function approximators. As suggested from the authors of \cite{haarnoja2018alg}, $\min_{i=1,2}Q_{\phi_i}(s_t, \tilde{a}_{\theta}(s, \xi))$ is used. The policy is thus optimized according to
+					\begin{equation} \label{eq16:policy_opt}
+	\max_{\theta} \mathbb{E}_{s \sim \mathcal{D}, \xi \sim \mathcal{N}}[{\alpha \log \pi_{\theta}(\tilde{a}_{\theta}(s,\xi)|s) - \min_{i=1,2}Q_{\phi_i}(s_t, \tilde{a}_{\theta}(s, \xi)) }],
+					\end{equation}
+	which is almost the same as the DDPG and TD3 policy optimization, except for the stochasticity and entropy term.
 	
 	
 	The implementation of these updates can be found in \vref{lst:update}.
-	\lstinputlisting[linerange={281-306},firstnumber=281,label={lst:update},caption={Updating Critic, Actor and Target Networks}]{code/AgentDDPG.py}
+	\lstinputlisting[float,linerange={108-152},firstnumber=108,label={lst:update},caption={Update Phase SAC}]{code/AgentSAC.py}
 
 	
 	
 	\subsubsection{Replay Buffers} Most optimization algorithms assume that the samples are \textbf{independently and identically distributed (i.i.d)}, but data produced sequentially exploring the environment can not satisfy this assumption. To solve this problem, a Replay Buffer can be used: it is a set $\mathcal D$ of $N$ recent experiences $(s_t, a_t, r_t, s_{t+1}, d_t)$ from which the algorithm will randomly sample a subset of $M\ll N$ experiences (mini-batch) at each iteration.
 	
 	The replay buffer should be large enough to contain a wide range of experiences in order to have stable algorithm behavior, but it may not always be good to keep everything. Using only the very-most recent data leads to overfitting, while using too much experience may slow down the learning process.
-	
-	The first approach is to select the mini-batch sampling uniformly among all the entries in the Replay Buffer.
-	A more complex approach is the one using a \textbf{Prioritized Buffer Replay} \cite{schaul2015prioritized} where the samples with high expected learning progress are replayed more frequently. This prioritization can lead to a loss of diversity, which can be alleviated by \textbf{stochastic prioritization}, and a bias that can be corrected by \textbf{importance sampling}.
-	
-	In \vref{results} the results of the two approaches will be analyzed.
 	
 	\subsubsection{Target Networks} 
 	\begin{figure}[!h]
@@ -270,45 +289,38 @@
 		\caption{Actor and Critic Networks}
 		\label{fig:actor_critic}
 	\end{figure}
-	In DDPG we have 4 neural networks: the \textbf{local Actor}, the \textbf{local Critic}, the \textbf{target Actor} and the \textbf{target Critic}. The aim of Actor networks is to approximate the \textbf{Policy} while the Critic networks approximate the \textbf{Q-Value}.
+	In SAC we have 5 neural networks: the \textbf{local stochastic Policy Network}, the \textbf{2 local Q-Networks}, the \textbf{2 target Q-Network}.
 	
-	Initially Actors and Critics have the same randomly initialized weights. Then the local Actor (the current policy) starts to propose actions to the Agent, given the current state, starting to populate the Replay Buffer of experiences.
+	Initially Policy (Actor) and Q-Networks (Critics) have randomly initialized weights. Then the local Actor (the current policy) starts to propose actions to the Agent, given the current state, starting to populate the Replay Buffer of experiences.
 	
-	When the Replay Buffer is big enough, the algorithm starts to sample randomly a mini-batch of experiences for each timestep $t$. This mini-batch is used to update the local Critic minimizing the Mean Squared Loss between the local Q-value and the target one (\vref{eq9:loss}) and to update the actor policy using the sampled policy gradient (\vref{eq8:mean_gradient}).
-	
-	\begin{equation}\label{eq9:loss}
-	L = \frac{1}{N} \sum_i(y_i -Q(s_i, a_i|\theta^Q))^2
-	\end{equation}\label{eq10:gradient}
-	where $y_i$ is given by \vref{eq5:yt}.
+	When the Replay Buffer is big enough, the algorithm starts to sample randomly a mini-batch of experiences for each timestep $t$. This mini-batch is used to update the local Critics (\vref{eq11:lossQ}) and to update the actor policy (\vref{eq16:policy_opt}).
 	
 	We can imagine the target networks as the \textit{labels} of supervised learning.
 	
 	Also the target networks are updated in this \textit{learning step}. A mere copy of the local weights is not an efficient solution, because it is prone to divergence. For this reason, a "soft" target updates is used. It is given by \[\theta' \leftarrow \tau\theta' \leftarrow \tau \theta + (1-\tau)\theta'\] with $t \ll 1$.
 	
-	The pseudo-code of this procedure is shown in \vref{ddpgalg}
+	The pseudo-code of this procedure is shown in \vref{sacalg}
 	
 	\subsubsection{Exploration vs. Exploitation} 
-	In Reinforcement learning for discrete action spaces, exploration is done selecting a random action (e.g.\ epsilon-greedy). For continuous action spaces, exploration is done adding noise to the action itself. In \cite{lillicrap2015continuous}, the authors use Ornstein-Uhlenbeck Process \cite{uhlenbeck1930theory} to add noise to the action output $
-	a_t = \mu(s_t|\theta^\mu) + \mathcal{N}$. After that the action is clipped in the correct range.
+	SAC algorithm trains a stochastic policy using \textbf{entropy regularization}, and explores in an \textbf{on-policy} way. $\alpha$ is the entropy regularization coefficient which is the one that explicitly controls the exploration-exploitation tradeoff. Higher $\alpha$ corresponds to more exploration, while lower $\alpha$ corresponds to more exploitation.
+	
+	This is one of the most important parameter in the algorithm and it may vary from environment to environment. For this reason, it could require a careful tuning in order to find the one which leads to the stablest and highest-reward learning.
+	
+	During the tests, the stochasticity is removed by using the mean action instead of a sample from the distribution. This tends to improve performance over the original stochastic policy, allowing us to see how well the policy exploits what it has learned.
 	 
 	\subsection{Steps made}
-	The initial step was trying to implement the algorithm in \cite{lillicrap2015continuous} using two simple environment provided by OpenAI Gym: \textit{MountainCarContinuous-v0} and \textit{Pendulum-v0}. In this report we will use only shallow Neural Networks implemented as shown in \vref{fig:actor_critic_schema}, because the state is represented directly by the data of the observation.
+	The initial step was trying to implement the algorithm in \cite{haarnoja2018alg} using OpenAI Gym environment \textit{Pendulum-v0}.
 	
-	The next goal will be to apply a Convolutional Neural Network (CNN) to states represented by a set of RGB images of the same environments.
-	
-	In this report the algorithm was implemented using a simple Replay Buffer and a Prioritized one in order to understand better the efficiency and the differences. In \vref{results} is possible to observe the results and the comparison of these two approach.
+	First, we used Neural Networks to compare the results with DDPG of the previous report and finally we decided to apply a Convolutional Neural Network (CNN) to states represented by a set of RGB images of the same environment. 
 	
 	\subsubsection{Hyper Parameters}
 	The aim of this section is to describe the Hyper Parameters of DDPG.
 	
 	\begin{description}
-		\item[Epsilon (\texttt{eps\_start}, \texttt{eps\_end}, \texttt{eps\_decay})] it is described by the function \[\epsilon = \epsilon_{\text{start}} - (\epsilon_{\text{start}} -\epsilon_{\text{end}})\min(1.0, \frac{e}{\epsilon_{\text{decay}}})\] where $e$ is the current episode number. It is used to decrease the impact of the noise on the actions in function of the number of episode. When it reaches the \texttt{eps\_end}, it will become a constant.
+		\item[Alpha (\texttt{alpha})] it is the entropy regulation parameter.
 		
 		% \texttt{default: [eps\_start = 0.9, eps\_end = 0.2, eps\_decay = max\_episode]}
 		
-		\item[Noise (\texttt{mu}, \texttt{sigma}, \texttt{theta})] these are the Ornstein-Uhlenbeck Process Noise parameters.
-		
-		% \texttt{default: [mu = 0.0, sigma = 0.3, theta = 0.15]}
 		
 		\item[Replay (\texttt{batch\_size}, \texttt{replay\_min\_size}, \texttt{replay\_max\_size})] \texttt{batch\_size} is the dimension of the mini-batch sampled by the memory. The learning process starts when the replay memory contains at least \texttt{replay\_min\_size} transitions and it starts to overwrite old transitions when it reaches \texttt{replay\_max\_size}.
 		
@@ -318,7 +330,7 @@
 		
 		% \texttt{default: [n\_episode = 300-500, episode\_max\_len = 300-1000]}
 		
-		\item[Neural Networks (\texttt{weight\_decay}, \texttt{update\_method}, \texttt{lr})] set of parameter for each network. The first parameter is always set to 0 and never used. The second one is always set to Adaptive Moment Estimation (ADAM), while the third is the learning rate and it is usually set to \texttt{1e-3} or \texttt{1e-4}.
+		\item[Convolutional Neural Networks (\texttt{weight\_decay}, \texttt{update\_method}, \texttt{lr})] set of parameter for each network. The first parameter is always set to 0 and never used. The second one is always set to Adaptive Moment Estimation (ADAM), while the third is the learning rate and it is usually set to \texttt{1e-3} or \texttt{1e-4}.
 		
 		% \texttt{default: [weight\_decay = 0, update\_method = 'adam', lr = 1e-3,1e-4]}
 		
@@ -336,158 +348,89 @@
 	\SetAlgoLined
 	\DontPrintSemicolon
 	\LinesNumbered
-	\KwIn{Initial policy parameters $\theta$, Q-function parameters $\phi_1$, $\phi_2$, V-function parameters $\psi$, empty replay buffer $\mathcal{D}$}
-	Set target parameters equal to main parameters $\psi_{targ} \leftarrow \psi$\;
+	\KwIn{Initialize policy parameter $\theta$, Q-function parameters $\phi_1,\phi_2$\;}
+	Initialize target network weights $\bar{\phi_1 }\leftarrow \phi_1,\bar{\phi_2 } \leftarrow \phi_2$\;
+	Initialize an empty replay buffer $\mathcal{D}$\;
 	\Repeat{\text{convergence}}{
-		Observe state $s$ and select action $a \sim \pi_\theta(\cdot|s)$\;
-		Execute $a$ in the environment\;
-		Observe next state $s'$, reward $r$ and done signal $d$\;
-		Store $(s,a,r,s',d)$ in replay buffer $\mathcal{D}$\;
-		If $s'$ is terminal, reset the environment state.\;
+		Observe state $s_t$ and select action $a_t \sim \pi_\theta(\cdot|s_t)$\;
+		Execute $a_t$ in the environment\;
+		Observe next state $s_{t+1}$, reward $r_t$ and done signal $d_t$\;
+		Store $(s_t,a_t,r_t,s_{t+1},d_t)$ in replay buffer $\mathcal{D}$\;
+		If $s_{t+1}$ is terminal, reset the environment state.\;
 		\If{size of $\mathcal{D} >$ warm\_up\_threshold}{
 			\For{j in range(\#updates\_per\_step)}{
-				Ramdomly sample a batch of transitions, $B = {(s,a,r,s',d)}$ from $\mathcal{D}$\;
-				Compute targets for Q and V functions:
-				\begin{align}
-				y_q(r,s',d) &= r +\gamma(1-d)V_{\psi_{targ}}(s')\\
-				y_v(s) &= \min_{i=1,2}{Q_{\phi_i}(s, \tilde{a})-\alpha \log{\pi_\theta(\tilde{a}|s)}, \quad \tilde{a} \sim \pi_\theta (\cdot|s)}
-				\end{align}\;
+				Randomly sample a batch of transitions, $B = {(s_t,a_t,r_t,s_{t+1},d_t)}$ from $\mathcal{D}$\;
+				Compute targets for Q functions:
+				\[
+				y_q(r_t,s_{t+1},d_t) = r_t +\gamma(1-d_t)V_{\bar{\phi}}(s_{t+1})
+				\]
+				where
+				\[
+				V_{\bar{\phi}}(s_{t+1}) = \min_{i=1,2}Q_{\bar{\phi}_i}(s_{t+1},a_{t+1}) - \alpha \log \pi_\theta(a_{t+1}|s_{t+1}), \;\;\;\;\; a_{t+1} \sim \pi_\theta(\cdot|s_{t+1})\]\;	
 				Update Q-functions by one step of gradient descent using
 				\[
-				\nabla_{\phi_i}\frac{1}{|B|}\sum_{(s,a,r,s',d) \in B} (Q_{\phi,i}(s,a) - y_q(r,s',d))^2 \qquad \text{for } i = 1, 2
-				\]\;
-				Update V-function by one step of gradient descent using
-				\[
-				\nabla_{\psi}\frac{1}{|B|}\sum_{s \in B} (V_\psi(s)-y_v(s))^2
+				J_Q({\phi_i}) = \mathbb{E}_{(s_t,a_t,r_t,s_{t+1},d_t) \sim B} \bigg[\frac{1}{2}(Q_{\phi_i}(s_t,a_t) - y_q(r_t,s_{t+1},d_t))^2\bigg] \qquad \text{for } i = 1, 2
 				\]\;
 				Update policy by one step of gradient ascent using
 				\[
-				\nabla_{\theta}\frac{1}{|B|}\sum_{s \in B} \Bigg(Q_{\phi,1}(s, \tilde{a_\theta(s)}) - \alpha \log{\pi_\theta(\tilde{a_\theta(s)}|s)}\Bigg)
-				\],
-				where $a_\theta(s)$ is a sample from $\pi_\theta(\cdot|s)$ which is differentiable wrt $\theta$ via the reparametrization trick.\;
-				Update target value network with:
+				J_\pi(\theta) = \mathbb{E}_{s_t \sim B, \xi \sim \mathcal{N}(0, I)} \bigg[\alpha \log{\pi_\theta(\tilde{a}_{\theta}(s, \xi)|s_t)} - \min_{i=1,2}Q_{\phi_i}(s_t, \tilde{a}_{\theta}(s, \xi))\bigg]
+				\]
+				where $a_t = \tilde{a}_{\theta}(s, \xi)$ which is differentiable wrt $\theta$ via the reparametrization trick.\;
+				Update target Q-networks with:
 				\[
-				\psi_{targ} \leftarrow \tau \psi_{targ} + (1-\tau)\psi
+				\bar{\phi_i} \leftarrow \tau \phi_i + (1-\tau)\bar{\phi_i}, \qquad \text{for } i = 1, 2
 				\]
 				}
 			}
 	}
+	\KwOut{Optimized policy parameter $\theta$ and Q-function parameters $\phi_1,\phi_2$\;}
 	
 	\caption{Soft Actor-Critic}
 	\label{sacalg}
 \end{algorithm}
-\begin{figure}[!h]
-	\begin{center}
-		\begin{tikzpicture}
-		[node distance=1.5cm]
-		\node[object] (state)  {State $s_t$};
-		\node[element, below of=state] (linear1){\texttt{ReLu(Linear(in=$S$, out=256))}
-		};
-		\node[element, below of=linear1] (linear2){\texttt{ReLu(Linear(in=256, out=256))}
-		};
-		\node[element, below of=linear2] (linear3){\texttt{Tanh(Linear(in=256, out=$A$))}
-		};
-		\node[object, below of=linear3] (action){ Action $a_t$};
-		
-		\draw[arrow] (state) -- (linear1);
-		\draw[arrow] (linear1) -- (linear2);
-		\draw[arrow] (linear2) -- (linear3);
-		\draw[arrow] (linear3) -- (action);
-		\end{tikzpicture}
-		\begin{tikzpicture}
-		[node distance=1.5cm]
-		\node[object, left of=action] (state)  {State $s_t$ };
-		\node[object, right of=state] (action)  {Action $a_t$};
-		\node[element, below= of $(state)!0.5!(action)$] (linear1){\texttt{ReLu(Linear(in=$S+A$, out=256))}
-		};
-		\node[element, below of=linear1] (linear2){\texttt{ReLu(Linear(in=256, out=256))}
-		};
-		\node[element, below of=linear2] (linear3){\texttt{Linear(in=256, out=1)}
-		};
-		\node[object, below of=linear3] (value){ Q-value $q_t$};
-		
-		\draw[arrow] (state) -- (linear1);
-		\draw[arrow] (action) -- (linear1);
-		\draw[arrow] (linear1) -- (linear2);
-		\draw[arrow] (linear2) -- (linear3);
-		\draw[arrow] (linear3) -- (value);
-		%\draw [draw, -latex',thick] (3.east) -- ++(2,0) node(lowerright){} |- (state.east);
-		
-		\end{tikzpicture}
-	\end{center}		
-	\caption{Actor and Critic Networks: $S$ is the length of the array of states, while $A$ is the length of the array of actions.}
-	\label{fig:actor_critic_schema}
-\end{figure}
+%\begin{figure}[!h]
+%	\begin{center}
+%		\begin{tikzpicture}
+%		[node distance=1.5cm]
+%		\node[object] (state)  {State $s_t$};
+%		\node[element, below of=state] (linear1){\texttt{ReLu(Linear(in=$S$, out=256))}
+%		};
+%		\node[element, below of=linear1] (linear2){\texttt{ReLu(Linear(in=256, out=256))}
+%		};
+%		\node[element, below of=linear2] (linear3){\texttt{Tanh(Linear(in=256, out=$A$))}
+%		};
+%		\node[object, below of=linear3] (action){ Action $a_t$};
+%		
+%		\draw[arrow] (state) -- (linear1);
+%		\draw[arrow] (linear1) -- (linear2);
+%		\draw[arrow] (linear2) -- (linear3);
+%		\draw[arrow] (linear3) -- (action);
+%		\end{tikzpicture}
+%		\begin{tikzpicture}
+%		[node distance=1.5cm]
+%		\node[object, left of=action] (state)  {State $s_t$ };
+%		\node[object, right of=state] (action)  {Action $a_t$};
+%		\node[element, below= of $(state)!0.5!(action)$] (linear1){\texttt{ReLu(Linear(in=$S+A$, out=256))}
+%		};
+%		\node[element, below of=linear1] (linear2){\texttt{ReLu(Linear(in=256, out=256))}
+%		};
+%		\node[element, below of=linear2] (linear3){\texttt{Linear(in=256, out=1)}
+%		};
+%		\node[object, below of=linear3] (value){ Q-value $q_t$};
+%		
+%		\draw[arrow] (state) -- (linear1);
+%		\draw[arrow] (action) -- (linear1);
+%		\draw[arrow] (linear1) -- (linear2);
+%		\draw[arrow] (linear2) -- (linear3);
+%		\draw[arrow] (linear3) -- (value);
+%		%\draw [draw, -latex',thick] (3.east) -- ++(2,0) node(lowerright){} |- (state.east);
+%		
+%		\end{tikzpicture}
+%	\end{center}		
+%	\caption{Actor and Critic Networks: $S$ is the length of the array of states, while $A$ is the length of the array of actions.}
+%	\label{fig:actor_critic_schema}
+%\end{figure}
 	\section{OpenAI Gym Environments}
-	\subsection{MountainCarContinuous-v0} 
-	\subsubsection{Description}
-	An underpowered car must climb a one-dimensional hill to reach a target. The action (engine force applied) is a continuous value. 
-	The target is on top of a hill on the right-hand side of the car. If the car reaches it or goes beyond, the episode terminates. On the left-hand side, there is another hill. Climbing this hill can be used to gain potential energy and accelerate towards the target. On top of this second hill, the car cannot go further than a position equal to -1, as if there was a wall. Hitting this limit does not generate a penalty.
-	%\begin{figure}[ht!]
-	%	\centering
-	%	\includegraphics[height=0.2\paperwidth]{img/mountaincar.png}
-	%	\caption{Frame of MountainCarContinuous-v0 environment}
-	%	\label{fig:mountaincar}
-	%\end{figure}
-	\paragraph{Observation}
-	Type: Box(2)
-	\begin{table}[!h]
-		\centering
-		% \caption{MountainCarContinuous-v0 Observation}
-		\label{mountain_observation}
-		\begin{tabular}{@{}lllll@{}}
-			\toprule
-			Index	& Observation		& Min 		& Max 		\\ \midrule
-			0			& Car Position	 	&  $-1.2$	& $+0.6$ 	\\
-			1			& Car Velocity	 	&  $-0.07$		& $+0.07$ \\
-			\bottomrule
-		\end{tabular}
-	\end{table}
-	\paragraph{Actions}
-	Type: Box(1)
-	\begin{table}[!h]
-		\centering
-		% \caption{MountainCarContinuous-v0 Actions }
-		\label{mountain_action}
-		\begin{tabular}{@{}lllll@{}}
-			\toprule
-			Index	& Action	& Min 		& Max 		\\ \midrule
-			0			& Push car to the left (negative value) or to the right (positive value)&  $-1$	& $+1$ 	\\
-			\bottomrule
-		\end{tabular}
-	\end{table}
-	\paragraph{Reward}
-	The reward for each timestep $t$ is given by $r_t = d_t*100 - a_t^2*0.1$
-	where $d_t$ is the done flag and $a_t$ is the continuous value of the action taken.
-	
-	This reward function raises an exploration challenge, because if the agent does not reach the target soon enough, it will figure out that it is better not to move, and won't find the target anymore.
-	
-	\paragraph{Starting State}
-	Position between -0.6 and -0.4, null velocity.
-	\paragraph{Episode Termination}
-	Position equal to 0.5.
-	\paragraph{Solved Requirements}
-	Get a reward over 90.
-	
-		\subsubsection{Hyper-Parameters Used}
-	\begin{table}[!h]
-		\centering
-		% \caption{MountainCarContinuous-v0 Actions }
-		\label{mountain_action}
-		\begin{tabular}{@{}lllllll@{}}
-			\toprule
-		Type			&Parameter			& Value	& Parameter				& Value  & Parameter			&  Value 	\\		\midrule
-		Epsilon & \texttt{eps\_start}	& $0.9$	&  \texttt{eps\_end}	& $0.2$ & \texttt{eps\_decay} 	& $300$		\\
-		Noise & \texttt{mu}	& $0.0$	&  \texttt{sigma}	& $0.3$ & \texttt{theta} 	& $0.15$		\\
-		Replay & \texttt{batch\_size}	& $100|32$	&  \texttt{replay\_min\_size}	& $10^4$ & \texttt{replay\_max\_size} 	& $10^6$		\\
-		Episode & \texttt{n\_episode}	& $300$	&  \texttt{episode\_max\_len}	& $1000$ & 	& 		\\
-		Networks & \texttt{weight\_decay}	& $0.0$	&  \texttt{update\_method}	& 'adam' & \texttt{lr} 	& $1e^{-4}$		\\
-		Update & \texttt{discount}	& $0.99$	&  \texttt{soft\_target\_tau}	& $0.001$ & \texttt{n\_updates\_per\_step} 	& $1$		\\
-		Test & \texttt{n\_tests}	& $100$	&  \texttt{every\_n\_episode}	& $10$ &  	& 	\\
-		\bottomrule
-		\end{tabular}
-	\end{table}
-	
 	\subsection{Pendulum-v0} 
 	\subsubsection{Description}
 	The inverted pendulum swingup problem is a classic problem in the control literature. In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up so it stays upright.
@@ -580,410 +523,8 @@
 		\end{tabular}
 	\end{table}
 	
-	\subsection{MountainCarContinuous-v0} \label{mountain}
-	\subsubsection{Uniform Replay Memory} 
-	\begin{figure}[h]
-		\begin{tikzpicture}
-		\begin{axis}[axis on top, 
-		xmin=1,
-		xmax=300,
-		ymin=-50,
-		ymax=100,
-		height=\textheight*0.40,
-		set layers=standard,
-		cycle list name=train,
-		grid=both,
-		grid style={solid,gray!30!white},
-		% axis lines=middle,
-		xlabel=Episode,
-		ylabel style={align=center}, ylabel=Reward Value,
-		%legend style={at={(0.98,0.2)},anchor=east},
-		legend pos=south east,
-		 extra y ticks = {90},
-		 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-		 		/pgf/number format/.cd,precision=10
-		}},
-		% x label style={at={(axis description cs:0.5,0)},anchor=north},
-		%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-		]
-		
-		\addplot table[x=Step,y=Value, col sep=comma] {plot/replayBuffer/mountain-v0/train/episode/mean.csv};
-		\addlegendentry{Mean $\mu$ Reward Episode};
-		
-		\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plot/replayBuffer/mountain-v0/train/episode/mean.csv};
-		
-		\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plot/replayBuffer/mountain-v0/train/episode/mean.csv};
-		
-		\addplot [fill=train_color_3] fill between[of=upper and lower];
-		\addlegendentry{Area $[min, max]$};
-		
-		\addplot [name path=upper1,draw=none, area legend, forget plot] table[x=Step,y expr=\thisrow{Value}+\thisrow{Error}, col sep=comma] {plot/replayBuffer/mountain-v0/train/episode/mean.csv};
-		
-		\addplot [name path=lower1,draw=none, area legend, forget plot] table[x=Step,y expr=\thisrow{Value}-\thisrow{Error}, col sep=comma] {plot/replayBuffer/mountain-v0/train/episode/mean.csv};
-		
-		\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
-		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
-
-		
-		
-		\end{axis}
-		\end{tikzpicture}
-		\caption{Mean, Standard Deviation Range and Min-Max range of the reward of each episode over 20 runs. }
-		\label{fig:mountain_r_train_episode}
-	\end{figure}
-	\begin{figure}[h]
-		\begin{tikzpicture}
-		\begin{axis}[axis on top, 
-		xmin=1,
-		xmax=300,
-		ymin=-50,
-		ymax=100,
-		height=\textheight*0.40,
-		set layers=standard,
-		cycle list name=train,
-		grid=both,
-		grid style={solid,gray!30!white},
-		% axis lines=middle,
-		xlabel=Episode,
-		ylabel style={align=center}, ylabel=Reward Value,
-		%legend style={at={(0.98,0.2)},anchor=east},
-		legend pos=south east,
-		extra y ticks = {90},
-		 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-		 		/pgf/number format/.cd,precision=10
-		}},
-		% x label style={at={(axis description cs:0.5,0)},anchor=north},
-		%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-		]
-		
-		\addplot table[x=Step,y=Value, col sep=comma] {plot/replayBuffer/mountain-v0/train/meanLast100/mean.csv};
-		%\addlegendentry{Mean Reward of last 100 episode};
-		
-		\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plot/replayBuffer/mountain-v0/train/meanLast100/mean.csv};
-		
-		\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plot/replayBuffer/mountain-v0/train/meanLast100/mean.csv};
-		
-		\addplot [fill=train_color_3] fill between[of=upper and lower];
-		
-		\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}+\thisrow{Error}, col sep=comma] {plot/replayBuffer/mountain-v0/train/meanLast100/mean.csv};
-		
-		\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}-\thisrow{Error}, col sep=comma] {plot/replayBuffer/mountain-v0/train/meanLast100/mean.csv};
-		
-		\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
-		
-		\addlegendentry{Mean $\mu$ Reward Last 100};
-		\addlegendentry{Area $[min, max]$};
-		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
-		\end{axis}
-		\end{tikzpicture}
-		\caption{Mean, Standard Deviation Range and Min-Max range of the running reward mean of the last 100 episodes for each episode over 20 runs.}
-		\label{fig:mountain_r_train_mean}
-	\end{figure}
-	\begin{figure}[h]
-		\begin{tikzpicture}
-		\begin{axis}[axis on top, 
-		xmin=10,
-		xmax=300,
-		ymin=-50,
-		ymax=100,
-		height=\textheight*0.40,
-		set layers=standard,
-		cycle list name=test,
-		grid=both,
-		grid style={solid,gray!30!white},
-		% axis lines=middle,
-		xlabel=Episode,
-		ylabel style={align=center}, ylabel=Reward Value,
-		%legend style={at={(0.98,0.2)},anchor=east},
-		legend pos=south east,
-		 extra y ticks = {90},
-		 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-		 		/pgf/number format/.cd,precision=10
-		}},
-		% x label style={at={(axis description cs:0.5,0)},anchor=north},
-		%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-		]
-		
-		\addplot table[x=Step,y=Value, col sep=comma, fill=test_color_1] {plot/replayBuffer/mountain-v0/test/rewardMean/mean.csv};
-		%\addlegendentry{Mean Reward of last 100 episode};
-		
-		\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plot/replayBuffer/mountain-v0/test/rewardMean/mean.csv};
-		
-		\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plot/replayBuffer/mountain-v0/test/rewardMean/mean.csv};
-		
-		\addplot [fill=test_color_3] fill between[of=upper and lower];
-		
-		\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}+\thisrow{Error}, col sep=comma] {plot/replayBuffer/mountain-v0/test/rewardMean/mean.csv};
-		
-		\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}-\thisrow{Error}, col sep=comma] {plot/replayBuffer/mountain-v0/test/rewardMean/mean.csv};
-		
-		\addplot [fill=test_color_2] fill between[of=upper1 and lower1];
-		
-		\addlegendentry{Mean $\mu$ Test Reward};
-		\addlegendentry{Area $[min, max]$};
-		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
-		
-		
-		\end{axis}
-		\end{tikzpicture}
-		\caption{Mean, Standard Deviation Range and Min-Max range of reward mean of the test phase (every 10 episodes) over 20 runs.}
-		\label{fig:mountain_r_test}
-	\end{figure}
-	\begin{figure}[h]
-		\begin{tikzpicture}
-		\begin{axis}[axis on top, 
-		xmin=10,
-		xmax=300,
-		ymin=0,
-		ymax=1000,
-		height=\textheight*0.40,
-		set layers=standard,
-		cycle list name=test,
-		grid=both,
-		grid style={solid,gray!30!white},
-		% axis lines=middle,
-		xlabel=Episode,
-		ylabel style={align=center}, ylabel=Reward Value,
-		%legend style={at={(0.98,0.2)},anchor=east},
-		legend pos=north east,
-		%extra y ticks = {90},
-		%extra y tick style={grid=major, grid style={solid,green},y tick label style={
-		%		/pgf/number format/.cd,precision=10
-		%}},
-		% x label style={at={(axis description cs:0.5,0)},anchor=north},
-		%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-		]
-		
-		\addplot table[x=Step,y=Value, col sep=comma, fill=test_color_1] {plot/replayBuffer/mountain-v0/test/steps/mean.csv};
-		%\addlegendentry{Mean Reward of last 100 episode};
-		
-		\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plot/replayBuffer/mountain-v0/test/steps/mean.csv};
-		
-		\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plot/replayBuffer/mountain-v0/test/steps/mean.csv};
-		
-		\addplot [fill=test_color_3] fill between[of=upper and lower];
-		
-		\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}+\thisrow{Error}, col sep=comma] {plot/replayBuffer/mountain-v0/test/steps/mean.csv};
-		
-		\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}-\thisrow{Error}, col sep=comma] {plot/replayBuffer/mountain-v0/test/steps/mean.csv};
-		
-		\addplot [fill=test_color_2] fill between[of=upper1 and lower1];
-		
-		\addlegendentry{Mean $\mu$ Test Step};
-		\addlegendentry{Area $[min, max]$};
-		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
-		
-		
-		\end{axis}
-		\end{tikzpicture}
-		\caption{Mean, Standard Deviation Range and Min-Max range of the number of steps in the test phase (every 10 episodes) over 20 runs.}
-		\label{fig:mountain_r_test_step}
-	\end{figure}
-	\FloatBarrier
-	\subsubsection{Prioritized Replay Memory} 
-	In this case the size of the mini-batch was reduced from 100 to 32 in order to make the learning faster.
-	\begin{figure}[H]
-		\begin{tikzpicture}
-		\begin{axis}[axis on top, 
-		xmin=1,
-		xmax=300,
-		ymin=-50,
-		ymax=100,
-		height=\textheight*0.40,
-		set layers=standard,
-		cycle list name=train,
-		grid=both,
-		grid style={solid,gray!30!white},
-		% axis lines=middle,
-		xlabel=Episode,
-		ylabel style={align=center}, ylabel=Reward Value,
-		%legend style={at={(0.98,0.2)},anchor=east},
-		legend pos=south east,
-		extra y ticks = {90},
-		extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				/pgf/number format/.cd,precision=10
-		}},
-		% x label style={at={(axis description cs:0.5,0)},anchor=north},
-		%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-		]
-		
-		\addplot table[x=Step,y=Value, col sep=comma] {plot/prioritized/mountain-v0/train/episode/mean.csv};
-		\addlegendentry{Mean $\mu$ Reward Episode};
-		
-		\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plot/prioritized/mountain-v0/train/episode/mean.csv};
-		
-		\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plot/prioritized/mountain-v0/train/episode/mean.csv};
-		
-		\addplot [fill=train_color_3] fill between[of=upper and lower];
-		\addlegendentry{Area $[min, max]$};
-		
-		\addplot [name path=upper1,draw=none, area legend, forget plot] table[x=Step,y expr=\thisrow{Value}+\thisrow{Error}, col sep=comma] {plot/prioritized/mountain-v0/train/episode/mean.csv};
-		
-		\addplot [name path=lower1,draw=none, area legend, forget plot] table[x=Step,y expr=\thisrow{Value}-\thisrow{Error}, col sep=comma] {plot/prioritized/mountain-v0/train/episode/mean.csv};
-		
-		\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
-		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
-		
-		
-		
-		\end{axis}
-		\end{tikzpicture}
-		\caption{Mean, Standard Deviation Range and Min-Max range of the reward of each episode over 20 runs. }
-		\label{fig:mountain_p_train_episode}
-	%\end{figure}
-	%\begin{figure}[h]
-		\begin{tikzpicture}
-		\begin{axis}[axis on top, 
-		xmin=1,
-		xmax=300,
-		ymin=-50,
-		ymax=100,
-		height=\textheight*0.40,
-		set layers=standard,
-		cycle list name=train,
-		grid=both,
-		grid style={solid,gray!30!white},
-		% axis lines=middle,
-		xlabel=Episode,
-		ylabel style={align=center}, ylabel=Reward Value,
-		%legend style={at={(0.98,0.2)},anchor=east},
-		legend pos=south east,
-		extra y ticks = {90},
-		extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				/pgf/number format/.cd,precision=10
-		}},
-		% x label style={at={(axis description cs:0.5,0)},anchor=north},
-		%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-		]
-		
-		\addplot table[x=Step,y=Value, col sep=comma] {plot/prioritized/mountain-v0/train/meanLast100/mean.csv};
-		%\addlegendentry{Mean Reward of last 100 episode};
-		
-		\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plot/prioritized/mountain-v0/train/meanLast100/mean.csv};
-		
-		\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plot/prioritized/mountain-v0/train/meanLast100/mean.csv};
-		
-		\addplot [fill=train_color_3] fill between[of=upper and lower];
-		
-		\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}+\thisrow{Error}, col sep=comma] {plot/prioritized/mountain-v0/train/meanLast100/mean.csv};
-		
-		\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}-\thisrow{Error}, col sep=comma] {plot/prioritized/mountain-v0/train/meanLast100/mean.csv};
-		
-		\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
-		
-		\addlegendentry{Mean $\mu$ Reward Last 100};
-		\addlegendentry{Area $[min, max]$};
-		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
-		\end{axis}
-		
-		\end{tikzpicture}
-		\caption{Mean, Standard Deviation Range and Min-Max range of the running reward mean of the last 100 episodes for each episode over 20 runs.}
-		\label{fig:mountain_p_train_mean}
-		\end{figure}
-		\begin{figure}[h]
-		\begin{tikzpicture}
-		\begin{axis}[axis on top, 
-		xmin=10,
-		xmax=300,
-		ymin=-50,
-		ymax=100,
-		height=\textheight*0.4,
-		set layers=standard,
-		cycle list name=test,
-		grid=both,
-		grid style={solid,gray!30!white},
-		% axis lines=middle,
-		xlabel=Episode,
-		ylabel style={align=center}, ylabel=Reward Value,
-		%legend style={at={(0.98,0.2)},anchor=east},
-		legend pos=south east,
-		extra y ticks = {90},
-		extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				/pgf/number format/.cd,precision=10
-		}},
-		% x label style={at={(axis description cs:0.5,0)},anchor=north},
-		%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-		]
-		
-		\addplot table[x=Step,y=Value, col sep=comma, fill=test_color_1] {plot/prioritized/mountain-v0/test/rewardMean/mean.csv};
-		%\addlegendentry{Mean Reward of last 100 episode};
-		
-		\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plot/prioritized/mountain-v0/test/rewardMean/mean.csv};
-		
-		\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plot/prioritized/mountain-v0/test/rewardMean/mean.csv};
-		
-		\addplot [fill=test_color_3] fill between[of=upper and lower];
-		
-		\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}+\thisrow{Error}, col sep=comma] {plot/prioritized/mountain-v0/test/rewardMean/mean.csv};
-		
-		\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}-\thisrow{Error}, col sep=comma] {plot/prioritized/mountain-v0/test/rewardMean/mean.csv};
-		
-		\addplot [fill=test_color_2] fill between[of=upper1 and lower1];
-		
-		\addlegendentry{Mean $\mu$ Test Reward};
-		\addlegendentry{Area $[min, max]$};
-		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
-		
-		
-		\end{axis}
-		\end{tikzpicture}
-		\caption{Mean, Standard Deviation Range and Min-Max range of reward mean of the test phase (every 10 episodes) over 20 runs.}
-		\label{fig:mountain_p_test}
-	\end{figure}
-	\begin{figure}[!h]
-		\begin{tikzpicture}
-		\begin{axis}[axis on top, 
-		xmin=10,
-		xmax=300,
-		ymin=0,
-		ymax=1000,
-		height=\textheight*0.45,
-		set layers=standard,
-		cycle list name=test,
-		grid=both,
-		grid style={solid,gray!30!white},
-		% axis lines=middle,
-		xlabel=Episode,
-		ylabel style={align=center}, ylabel=Reward Value,
-		%legend style={at={(0.98,0.2)},anchor=east},
-		legend pos=north east,
-		%extra y ticks = {90},
-		%extra y tick style={grid=major, grid style={solid,green},y tick label style={
-		%		/pgf/number format/.cd,precision=10
-		%}},
-		% x label style={at={(axis description cs:0.5,0)},anchor=north},
-		%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-		]
-		
-		\addplot table[x=Step,y=Value, col sep=comma, fill=test_color_1] {plot/prioritized/mountain-v0/test/steps/mean.csv};
-		%\addlegendentry{Mean Reward of last 100 episode};
-		
-		\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plot/prioritized/mountain-v0/test/steps/mean.csv};
-		
-		\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plot/prioritized/mountain-v0/test/steps/mean.csv};
-		
-		\addplot [fill=test_color_3] fill between[of=upper and lower];
-		
-		\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}+\thisrow{Error}, col sep=comma] {plot/prioritized/mountain-v0/test/steps/mean.csv};
-		
-		\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Value}-\thisrow{Error}, col sep=comma] {plot/prioritized/mountain-v0/test/steps/mean.csv};
-		
-		\addplot [fill=test_color_2] fill between[of=upper1 and lower1];
-		
-		\addlegendentry{Mean $\mu$ Test Step};
-		\addlegendentry{Area $[min, max]$};
-		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
-		
-		
-		\end{axis}
-		\end{tikzpicture}
-		\caption{Mean, Standard Deviation Range and Min-Max range of the number of steps in the test phase (every 10 episodes) over 20 runs.}
-		\label{fig:mountain_p_test_step}
-	\end{figure}
-	\FloatBarrier
-	
 	\subsection{Pendulum-v0}
-	In this case the graph about the steps taken in the test phase is not useful, because all episodes took all 200 steps.
+	
 	\subsubsection{DDPG with Uniform Replay Memory} 
 	\begin{figure}[H]
 		\begin{tikzpicture}
@@ -992,7 +533,7 @@
 		xmax=200,
 		ymin=-1800,
 		ymax=0,
-		height=\textheight*0.37,
+		height=\textheight*0.26,
 		set layers=standard,
 		cycle list name=train,
 		grid=both,
@@ -1041,7 +582,7 @@
 		xmax=200,
 		ymin=-1600,
 		ymax=0,
-		height=\textheight*0.37,
+		height=\textheight*0.26,
 		set layers=standard,
 		cycle list name=train,
 		grid=both,
@@ -1090,7 +631,7 @@
 		xmax=200,
 		ymin=-1800,
 		ymax=0,
-		height=\textheight*0.40,
+		height=\textheight*0.26,
 		set layers=standard,
 		cycle list name=test,
 		grid=both,
@@ -1142,7 +683,7 @@
 		xmax=200,
 		ymin=-1800,
 		ymax=0,
-		height=\textheight*0.42,
+		height=\textheight*0.26,
 		set layers=standard,
 		cycle list name=train,
 		grid=both,
@@ -1191,7 +732,7 @@
 		xmax=200,
 		ymin=-1600,
 		ymax=0,
-		height=\textheight*0.42,
+		height=\textheight*0.26,
 		set layers=standard,
 		cycle list name=train,
 		grid=both,
@@ -1241,7 +782,7 @@
 		xmax=200,
 		ymin=-1800,
 		ymax=0,
-		height=\textheight*0.42,
+		height=\textheight*0.26,
 		set layers=standard,
 		cycle list name=test,
 		grid=both,
@@ -1293,7 +834,7 @@
 		xmax=200,
 		ymin=-1800,
 		ymax=0,
-		height=\textheight*0.42,
+		height=\textheight*0.26,
 		set layers=standard,
 		cycle list name=train,
 		grid=both,
@@ -1342,7 +883,7 @@
 		xmax=200,
 		ymin=-1600,
 		ymax=0,
-		height=\textheight*0.42,
+		height=\textheight*0.26,
 		set layers=standard,
 		cycle list name=train,
 		grid=both,
@@ -1392,7 +933,7 @@
 		xmax=200,
 		ymin=-1800,
 		ymax=0,
-		height=\textheight*0.42,
+		height=\textheight*0.26,
 		set layers=standard,
 		cycle list name=test,
 		grid=both,
@@ -1439,16 +980,11 @@
 	\newpage
 	\section{Comments} \label{final}
 	
-	Analyzing the graphs, it is clear that the results in moving from the Replay Buffer to the Prioritized Buffer are not as impressive as it was expected.
+	Analyzing the graphs, it is clear that the results in moving from DDPG to SAC are really impressive as anticipated in the paper \cite{haarnoja2018alg}.
 	
-	The results obtained are almost the same or slightly better, on the other hand the execution time increases: for this reason the number of element extracted from the mini-batch at each episode was decreased.
-	
-	In the \textit{MountainCarContinuous-v0} environment, the mean on the last 100 episodes shown in \vref{fig:mountain_p_train_mean} is not better than \vref{fig:mountain_r_train_mean}, especially around 150th episode. But above the 260th episode the results are more stable and efficient.
-	Also comparing the graphs of test phase, the results do not strongly improve.
-	
-	In the \textit{Pendulum-v0} environment the situation is overall the same, without any important improvement. In some cases the Uniform Replay Buffer seems more efficient in the first part, while the Prioritized one seems more stable in the last episodes.
-	
-	The aim of the Prioritized Buffer is to give more importance to surprising results. For this reason, I think that having worse results in the first part of the training (0-100 episodes) is normal and it is part of the algorithm. I expected impressive results in the last part, but unfortunately I obtained only slightly better results.
+	The results obtained are better than the ones of DDPG, on the other hand the execution time increases: for this reason the number of element extracted from the mini-batch at each episode was decreased.
+
+	The aim of SAC auto-tuning is to learn the best value of $\alpha$ without hard-coded values. It reaches good results, but slightly worse than the plain SAC, but I think that this is an acceptable compromise
 	
 	I think that the problem may be caused by some bugs in the implementation of this part.
 		
