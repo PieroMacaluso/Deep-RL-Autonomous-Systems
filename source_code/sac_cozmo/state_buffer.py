@@ -9,7 +9,18 @@ from image_wrapper import ImageWrapper
 
 
 class StateBuffer:
+    """
+    State Buffer is a simple way to store, manipulate a series of images (states) and use it in CNNs.
+    """
     def __init__(self, capacity, initial_state):
+        """
+        Initialize the StateBuffer by instantiating the buffer of specified capacity.
+        It fills all the buffer with initial_state.
+        it is assumed that the images are all the same size.
+        
+        :param capacity: max capacity of the Buffer
+        :param initial_state: initial state
+        """
         self.get_state = self._get_all
         self.capacity = capacity
         # self.c = initial_state.shape[0]
@@ -29,12 +40,22 @@ class StateBuffer:
         # self.position = (self.position + 1) % self.capacity
 
     def push(self, state_):
+        """
+        Push a state into the StateBuffer.
+        :param state_: state to be pushed
+        :return: nothing
+        """
         if len(self.buffer) < self.capacity:
             self.buffer.append(None)
         self.buffer[self.position] = state_
         self.position = (self.position + 1) % self.capacity
         
     def get_tensor(self):
+        """
+        Produce the tensor input of all images in the buffer.
+        In the code is mainly used to plot images in TensorboardX
+        :return: Tensor : state
+        """
         state_ = None
         pos_i = 0
         for i in range(self.capacity):
@@ -48,6 +69,10 @@ class StateBuffer:
         return state_
         
     def _get_all(self):
+        """
+        Used as get_state, it returns the buffer of StateBuffer in a np.array
+        :return: np.array state
+        """
         state_ = np.empty((self.capacity, self.h, self.w))
         pos_i = 0
         for i in range(self.capacity):
@@ -57,6 +82,10 @@ class StateBuffer:
         return state_
     
     def _get_mean(self):
+        """
+        Used as get_state, it returns one images that is the mean of all the images in the State buffer
+        :return: np.array: mean state
+        """
         state_ = None
         for i in range(self.capacity):
             pos = (self.position + i) % self.capacity
@@ -66,10 +95,11 @@ class StateBuffer:
                 state_ += self.buffer[pos]
         return state_ / self.capacity
     
-    def _get_diff(self):
-        return self.buffer[1] - self.buffer[0]
-    
     def __len__(self):
+        """
+        Returns the length of the buffer
+        :return: length of the StateBuffer
+        """
         return len(self.buffer)
 
 
