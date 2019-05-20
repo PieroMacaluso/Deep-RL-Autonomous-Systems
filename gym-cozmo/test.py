@@ -11,10 +11,7 @@ def run(sdk_conn):
     
     # Turn on image receiving by the camera
     robot.camera.image_stream_enabled = True
-    gym_cozmo.register(
-        id='CozmoDriver-v0',
-        entry_point='gym_cozmo.envs:CozmoEnv',
-        kwargs={'robot': robot, 'image_dim': 84})
+    gym_cozmo.initialize(robot, 84)
     env = gym.make('CozmoDriver-v0')
     state = env.reset()
     done = False

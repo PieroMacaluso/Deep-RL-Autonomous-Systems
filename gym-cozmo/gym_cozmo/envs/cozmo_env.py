@@ -1,8 +1,9 @@
+import time
+
 import cozmo
 import cozmo.robot as rb
 import cv2
 import gym
-import matplotlib.pyplot as plt
 import numpy as np
 from cozmo.util import Angle
 from gym import spaces
@@ -19,6 +20,7 @@ class CozmoEnv(gym.Env):
     
     def __init__(self, robot: cozmo.robot.Robot, image_dim):
         self.image_dim = image_dim
+        self.last_time = 0
         self.robot = robot
         self.rc = start(self.robot)
         self.robot.set_robot_volume(0.1)
@@ -32,10 +34,12 @@ class CozmoEnv(gym.Env):
         self.say("All set!")
     
     def step(self, action: spaces.Box):
+        now_time = time.time()
         step_reward = -1
         if action is not None:
             self.drive(action)
-            step_reward = 1  # 0.5 + 0.5 * action[0]
+            step_reward = (now_time - self.last_time) * action[0] * MAX_F_SPEED
+            self.last_time = now_time
         
         self.state = self.get_image()
         
@@ -49,10 +53,11 @@ class CozmoEnv(gym.Env):
         return self.state, step_reward, done, {}
     
     def reset(self):
-        self.say("New Episode!")
+        # self.say("New Episode!")
         self.start_position()
         self.reward = 0.0
         self.state = self.get_image()
+        self.last_time = time.time()
         return self.state
     
     def render(self, mode='human', close=False):
@@ -74,6 +79,7 @@ class CozmoEnv(gym.Env):
         self.set_lift_height(self.lift.high)
     
     def get_image(self):
+        
         observation = self.robot.world.latest_image.raw_image
         # Returned screen requested by gym is HWC. Transpose it into torch order (CHW).\
         # screen = self.env.render(mode='rgb_array')
@@ -101,6 +107,9 @@ class CozmoEnv(gym.Env):
     def is_forget_enabled(self):
         return_value = self.rc.is_episode_to_be_discarded()
         return return_value
+    
+    def reset_forget(self):
+        self.rc.reset_forget()
     
     def is_test_phase(self):
         return self.rc.test_phase

@@ -228,10 +228,10 @@ class RemoteControlCozmo:
         return self.human_controlled
     
     def is_episode_to_be_discarded(self):
-        if self.to_be_discarded:
-            self.to_be_discarded = False
-            return True
-        return False
+        return self.to_be_discarded
+    
+    def reset_forget(self):
+        self.to_be_discarded = False
     
     def handle_key(self, key_code, is_shift_down, is_ctrl_down, is_alt_down, is_key_down):
         '''Called on any key press or release
