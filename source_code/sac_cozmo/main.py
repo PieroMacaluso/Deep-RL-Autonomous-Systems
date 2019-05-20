@@ -9,25 +9,16 @@ import cozmo
 import gym
 import gym_cozmo
 import math
-import numpy as np
-import torch
-from tensorboardX import SummaryWriter
 
-from image_wrapper import ImageWrapper
 from my_logging import Log
-from replay_memory import ReplayMemory
 from sac import SAC
-from state_buffer import StateBuffer
-
-
-class LoadFromFile(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        with values as f:
-            parser.parse_args(f.read().split(), namespace)
 
 
 def initial_setup():
-    """Default parameters"""
+    """
+    Initialization of default parameters and parsing of command line arguments
+    :return: arguments, name of the main folder of the experiment and logger.
+    """
     # Environment
     env_name = "CozmoDriver-v0"
     seed = math.floor(time.time())
@@ -42,20 +33,19 @@ def initial_setup():
     gamma = 0.99
     tau = 0.005
     lr = 0.0003
-    alpha = 0.2
-    autotune_entropy = True
+    alpha = 0.1
+    autotune_entropy = False
     hidden_size = 256
-    img_size = 84
+    img_size = 100
     
     # Episode
-    warm_up_steps = 1024
-    num_episode = 500
-    max_num_step = 200
+    warm_up_steps = 10
+    num_episode = 2000
     max_num_run = 20
-    batch_size = 128
-    replay_size = 1000000
+    batch_size = 64
+    replay_size = 30000
     state_buffer_size = 1
-    updates_per_step = 1
+    updates_per_episode = 600
     target_update = 1
     
     parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')
@@ -72,10 +62,9 @@ def initial_setup():
     parser.add_argument('--seed', type=int, default=seed, metavar='N', help='Specify a Seed')
     parser.add_argument('--batch_size', type=int, default=batch_size, metavar='N', help='Batch size')
     parser.add_argument('--max_num_run', type=int, default=max_num_run, metavar='N', help='Max number of runs')
-    parser.add_argument('--max_num_step', type=int, default=max_num_step, metavar='N', help='Max number of steps')
     parser.add_argument('--num_episode', type=int, default=num_episode, metavar='N', help='Max #episode per run')
     parser.add_argument('--hidden_size', type=int, default=hidden_size, metavar='N', help='Hidden size NN')
-    parser.add_argument('--updates_per_step', type=int, default=updates_per_step, metavar='N',
+    parser.add_argument('--updates_per_episode', type=int, default=updates_per_episode, metavar='N',
                         help='#updates for each step')
     parser.add_argument('--warm_up_steps', type=int, default=warm_up_steps, metavar='N', help='Warm-Up steps')
     parser.add_argument('--target_update', type=int, default=target_update, metavar='N', help='Target updates / update')
@@ -89,9 +78,9 @@ def initial_setup():
     parser.add_argument('--load_from_json', type=str, default=None, help='Load From File')
     args = parser.parse_args()
     
-    folder_ = '{}_SAC/'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
-    os.mkdir("./runs/" + folder_)
-    logger_ = Log("./runs/" + folder_)
+    folder_ = './runs/{}_SAC_CozmoDriver-v0/'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+    os.mkdir(folder_)
+    logger_ = Log(folder_)
     if args.load_from_json is not None:
         try:
             argparse_dict = vars(args)
@@ -106,6 +95,12 @@ def initial_setup():
 
 
 def run(sdk_conn):
+    """
+    Container of the main loop. It is necessary to work with Cozmo. This is called by the cozmo.connect presents in the
+    main loop of this file
+    :param sdk_conn: SDK connection to Anki Cozmo
+    :return: nothing
+    """
     robot = sdk_conn.wait_for_robot()
     robot.enable_device_imu(True, True, True)
     
@@ -118,9 +113,9 @@ def run(sdk_conn):
     logger.debug("Initial setup completed.")
     
     # Create JSON of Hyper-Parameters for reproducibility
-    with open("./runs/" + folder + "hp.json", 'w') as outfile:
+    with open(folder + "hp.json", 'w') as outfile:
         json.dump(vars(args), outfile)
-        
+    
     # Initialize Environment
     gym_cozmo.initialize(robot, args.img_size)
     env = gym.make('CozmoDriver-v0')

@@ -6,27 +6,18 @@ from torch.distributions import Normal
 LOG_SIG_MAX = 2
 LOG_SIG_MIN = -20
 epsilon = 1e-6
-IMAGE_SIZE = 100
+IMAGE_SIZE = 84
 
 
 def conv2d_size_out(size, data):
     """
     Number of Linear input connections depends on output of conv2d layers and
     therefore the input image size, so compute it.
-    Data is a dictionary.
-    :param size: size of the input of the convolution
-    :param data: details about convolutional layers.
-    :return:
-    """
-    """
-    
     :param size:
     :param kernel_size: default 3
     :param stride: default 2
     :param padding: default 0
     :return:
-    """
-    """
     """
     res = size
     for layer_name in data:
@@ -67,7 +58,7 @@ class ValueNetworkCNN(nn.Module):
         self.conv2, self.bn2 = convolutional(conv['conv2'])
         
         self.linear1 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv2'][1], hidden_dim)
-        # self.linear2 = nn.Linear(hidden_dim, hidden_dim)
+        self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         self.linear3 = nn.Linear(hidden_dim, 1)
         
         self.apply(weights_init_)
@@ -77,7 +68,7 @@ class ValueNetworkCNN(nn.Module):
         x = F.relu(self.bn2(self.conv2(x)))
         x = x.view(x.shape[0], -1)
         x = F.relu(self.linear1(x))
-        # x = F.relu(self.linear2(x))
+        x = F.relu(self.linear2(x))
         x = self.linear3(x)
         return x
 
@@ -85,28 +76,34 @@ class ValueNetworkCNN(nn.Module):
 class QNetworkCNN(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_dim):
         super(QNetworkCNN, self).__init__()
-        
+
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
-            'conv1': [num_inputs, 16, 8, 4, 0],
-            'conv2': [16, 32, 4, 2, 0]
+            'conv1': [num_inputs, 16, 3, 2, 0],
+            'conv2': [16, 16, 3, 2, 0],
+            'conv3': [16, 16, 3, 2, 0],
+            'conv4': [16, 32, 3, 2, 0],
         }
         
         self.conv1, self.bn1 = convolutional(conv['conv1'])
         self.conv2, self.bn2 = convolutional(conv['conv2'])
-        self.conv3, self.bn3 = convolutional(conv['conv1'])
-        self.conv4, self.bn4 = convolutional(conv['conv2'])
+        self.conv3, self.bn3 = convolutional(conv['conv3'])
+        self.conv4, self.bn4 = convolutional(conv['conv4'])
+        self.conv5, self.bn5 = convolutional(conv['conv1'])
+        self.conv6, self.bn6 = convolutional(conv['conv2'])
+        self.conv7, self.bn7 = convolutional(conv['conv3'])
+        self.conv8, self.bn8 = convolutional(conv['conv4'])
         
         # Q1 architecture
-        self.linear1 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv2'][1] + num_actions,
+        self.linear1 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv4'][1] + num_actions,
                                  hidden_dim)
-        # self.linear2 = nn.Linear(hidden_dim, hidden_dim)
+        self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         self.linear3 = nn.Linear(hidden_dim, 1)
         
         # Q2 architecture
-        self.linear4 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv2'][1] + num_actions,
+        self.linear4 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv4'][1] + num_actions,
                                  hidden_dim)
-        # self.linear5 = nn.Linear(hidden_dim, hidden_dim)
+        self.linear5 = nn.Linear(hidden_dim, hidden_dim)
         self.linear6 = nn.Linear(hidden_dim, 1)
         
         self.apply(weights_init_)
@@ -114,19 +111,25 @@ class QNetworkCNN(nn.Module):
     def forward(self, state, action):
         x1 = F.relu(self.bn1(self.conv1(state)))
         x1 = F.relu(self.bn2(self.conv2(x1)))
+        x1 = F.relu(self.bn3(self.conv3(x1)))
+        x1 = F.relu(self.bn4(self.conv4(x1)))
+
         x1 = x1.view(x1.shape[0], -1)
         xu1 = torch.cat([x1, action], 1)
         
         x1 = F.relu(self.linear1(xu1))
-        # x1 = F.relu(self.linear2(x1))
+        x1 = F.relu(self.linear2(x1))
         x1 = self.linear3(x1)
         
-        x2 = F.relu(self.bn3(self.conv3(state)))
-        x2 = F.relu(self.bn4(self.conv4(x2)))
+        x2 = F.relu(self.bn5(self.conv5(state)))
+        x2 = F.relu(self.bn6(self.conv6(x2)))
+        x2 = F.relu(self.bn7(self.conv7(x2)))
+        x2 = F.relu(self.bn8(self.conv8(x2)))
+
         x2 = x2.view(x2.shape[0], -1)
         xu2 = torch.cat([x2, action], 1)
         x2 = F.relu(self.linear4(xu2))
-        # x2 = F.relu(self.linear5(x2))
+        x2 = F.relu(self.linear5(x2))
         x2 = self.linear6(x2)
         
         return x1, x2
@@ -138,15 +141,19 @@ class GaussianPolicyCNN(nn.Module):
         
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
-            'conv1': [num_inputs, 16, 8, 4, 0],
-            'conv2': [16, 32, 4, 2, 0]
+            'conv1': [num_inputs, 16, 3, 2, 0],
+            'conv2': [16, 16, 3, 2, 0],
+            'conv3': [16, 16, 3, 2, 0],
+            'conv4': [16, 32, 3, 2, 0],
         }
         
         self.conv1, self.bn1 = convolutional(conv['conv1'])
         self.conv2, self.bn2 = convolutional(conv['conv2'])
+        self.conv3, self.bn3 = convolutional(conv['conv3'])
+        self.conv4, self.bn4 = convolutional(conv['conv4'])
         
-        self.linear1 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv2'][1], hidden_dim)
-        # self.linear2 = nn.Linear(hidden_dim, hidden_dim)
+        self.linear1 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv4'][1], hidden_dim)
+        self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         
         self.mean_linear = nn.Linear(hidden_dim, num_actions)
         self.log_std_linear = nn.Linear(hidden_dim, num_actions)
@@ -156,9 +163,12 @@ class GaussianPolicyCNN(nn.Module):
     def forward(self, state):
         x = F.relu(self.bn1(self.conv1(state)))
         x = F.relu(self.bn2(self.conv2(x)))
+        x = F.relu(self.bn3(self.conv3(x)))
+        x = F.relu(self.bn4(self.conv4(x)))
+
         x = x.view(x.shape[0], -1)
         x = F.relu(self.linear1(x))
-        # x = F.relu(self.linear2(x))
+        x = F.relu(self.linear2(x))
         mean = self.mean_linear(x)
         log_std = self.log_std_linear(x)
         log_std = torch.clamp(log_std, min=LOG_SIG_MIN, max=LOG_SIG_MAX)
@@ -191,7 +201,7 @@ class DeterministicPolicyCNN(nn.Module):
         
         self.linear1 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv2'][1], hidden_dim)
         self.linear2 = nn.Linear(hidden_dim, hidden_dim)
-        
+
         self.mean = nn.Linear(hidden_dim, num_actions)
         # TODO: fix this
         self.noise = torch.Tensor(num_actions).to("cuda:0")
