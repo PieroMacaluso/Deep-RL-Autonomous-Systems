@@ -9,6 +9,8 @@ from cozmo.util import Angle
 from gym import spaces
 
 # Collect events until released
+from gym.utils import seeding
+
 from gym_cozmo.envs.remote_control import start
 
 MAX_F_SPEED = 150
@@ -19,10 +21,11 @@ class CozmoEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     
     def __init__(self, robot: cozmo.robot.Robot, image_dim):
+        self.seed()
         self.image_dim = image_dim
         self.last_time = 0
         self.robot = robot
-        self.rc = start(self.robot)
+        self.rc, self.thread = start(self.robot)
         self.robot.set_robot_volume(0.1)
         self.reward = 0.0
         self.state = None
@@ -59,6 +62,10 @@ class CozmoEnv(gym.Env):
         self.state = self.get_image()
         self.last_time = time.time()
         return self.state
+    
+    def seed(self, seed=None):
+        self.np_random, seed = seeding.np_random(seed)
+        return [seed]
     
     def render(self, mode='human', close=False):
         pass
@@ -107,6 +114,9 @@ class CozmoEnv(gym.Env):
     def is_forget_enabled(self):
         return_value = self.rc.is_episode_to_be_discarded()
         return return_value
+    
+    def is_save_and_close(self):
+        return self.rc.is_save_and_close()
     
     def reset_forget(self):
         self.rc.reset_forget()

@@ -1,0 +1,677 @@
+<!doctype html>
+<head>
+    <title>Cozmo Reinforcement Learning Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<button type="button" class="btn btn-primary" style="display: none" id="modal-button" data-toggle="modal"
+        data-target="#exampleModal" data-backdrop="static" data-keyboard="false">
+    Launch demo modal
+</button>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cozmo Learning session finished</h5>
+            </div>
+            <div class="modal-body">
+                Close this window to avoid problems and restart the script to start a new learning session!
+            </div>
+        </div>
+    </div>
+</div>
+
+<header class="navbar sticky-top navbar-expand-lg navbar-dark bg-anki navbar-expand flex-column flex-md-row bd-navbar">
+    <a class="navbar-brand mb-1" href="#">
+        <img id="cozmoLogo" class=" mr-2"
+             src="{{ url_for('static', filename='img/cozmo-logo.png') }}"
+             alt="Cozmo Logo">
+        Reinforcement Learning Dashboard
+
+
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex ">
+            <li class="nav-item">
+                <a class="nav-link p-2" href="https://github.com/pieromacaluso/A-Study-Of-Reinforcement-Learning"
+                   target="_blank" rel="noopener"
+                   aria-label="GitHub">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="navbar-nav-svg" viewBox="0 0 512 499.36" role="img"
+                         focusable="false"><title>GitHub</title>
+                        <path fill="currentColor" fill-rule="evenodd"
+                              d="M256 0C114.64 0 0 114.61 0 256c0 113.09 73.34 209 175.08 242.9 12.8 2.35 17.47-5.56 17.47-12.34 0-6.08-.22-22.18-.35-43.54-71.2 15.49-86.2-34.34-86.2-34.34-11.64-29.57-28.42-37.45-28.42-37.45-23.27-15.84 1.73-15.55 1.73-15.55 25.69 1.81 39.21 26.38 39.21 26.38 22.84 39.12 59.92 27.82 74.5 21.27 2.33-16.54 8.94-27.82 16.25-34.22-56.84-6.43-116.6-28.43-116.6-126.49 0-27.95 10-50.8 26.35-68.69-2.63-6.48-11.42-32.5 2.51-67.75 0 0 21.49-6.88 70.4 26.24a242.65 242.65 0 0 1 128.18 0c48.87-33.13 70.33-26.24 70.33-26.24 14 35.25 5.18 61.27 2.55 67.75 16.41 17.9 26.31 40.75 26.31 68.69 0 98.35-59.85 120-116.88 126.32 9.19 7.9 17.38 23.53 17.38 47.41 0 34.22-.31 61.83-.31 70.23 0 6.85 4.61 14.81 17.6 12.31C438.72 464.97 512 369.08 512 256.02 512 114.62 397.37 0 256 0z"></path>
+                    </svg>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link p-2" href="http://localhost:6006"
+                   target="_blank" rel="noopener"
+                   aria-label="TensorBoard">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" fill-rule="evenodd"
+                         viewBox="12.5 12.5 75 75" class="navbar-nav-svg" role="img">
+                        <path  fill="currentColor" fill-rule="evenodd"
+                              d="M22.2,65.7c-0.3,0-0.6-0.1-0.8-0.3c-0.7-0.5-0.9-1.4-0.4-2.1L37,39.2c0.2-0.4,0.6-0.6,1-0.7c0.4-0.1,0.9,0.1,1.2,0.3   l22.2,18.9L76.6,35c0.5-0.7,1.4-0.9,2.1-0.4c0.7,0.5,0.9,1.4,0.4,2.1L63,60.8c-0.2,0.4-0.6,0.6-1,0.7s-0.9-0.1-1.2-0.3L38.6,42.2   L23.4,65C23.1,65.4,22.7,65.7,22.2,65.7z"/>
+                        <circle fill="currentColor" cx="22.2" cy="64.2" r="6.5"/>
+                        <circle fill="currentColor" cx="61.6" cy="59.7" r="6.5"/>
+                        <circle fill="currentColor" cx="38.5" cy="40.1" r="6.5"/>
+                        <circle fill="currentColor" cx="77.8" cy="35.8" r="6.5"/>
+                    </svg>
+                </a>
+            </li>
+
+
+        </ul>
+
+
+    </div>
+
+</header>
+
+<div class="container-fluid p-3">
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <h4 class="card-header bg-cozmo text-center text-white">Reinforcement Flow</h4>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Commands to manage episode and enable human remote
+                        control</h6>
+                    <div class="card-text">
+                        <div class="row">
+                            <div class="center-block text-center col-5 p-2">
+                                <img id="enter" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/enter.svg') }}" alt="ENTER"><br>
+                            </div>
+                            <div class="center-block text-center col-7 p-2 m-auto">
+                                Start/Stop Episode
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="center-block text-center col-5 p-2">
+                                <img id="backspace" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/backspace.svg') }}"
+                                     alt="BACKSPACE"><br>
+                            </div>
+                            <div class="center-block text-center col-7 p-2 m-auto">
+                                Stop and Forget last episode
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="center-block text-center col-5 p-2">
+                                <img id="q" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/q.svg') }}"
+                                     alt="Q"><br>
+                            </div>
+                            <div class="center-block text-center col-7 p-2 m-auto">
+                                Toggle Test Phase
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="center-block text-center col-5 p-2">
+                                <img id="c" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/c.svg') }}"
+                                     alt="Q"><br>
+                            </div>
+                            <div class="center-block text-center col-7 p-2 m-auto">
+                                Toggle Save'n'Close Phase
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted">Commands to restore the correct position of Cozmo</h6>
+                    <div class="card-text">
+                        <div class="row">
+                            <div class="center-block text-center col-5 p-2">
+                                <img id="w" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/w.svg') }}" alt="W"><br>
+                                <img id="a" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/a.svg') }}" alt="A">
+                                <img id="s" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/s.svg') }}" alt="S">
+                                <img id="d" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/d.svg') }}" alt="D">
+                            </div>
+                            <div class="center-block text-center col-7 align-middle p-2 m-auto">
+                                Drive Forwards<br>Left / Back / Right
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="center-block text-center col-5 p-2">
+                                <img id="r" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/r.svg') }}" alt="R">
+                                <img id="t" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/t.svg') }}" alt="T"><br>
+                                <img id="f" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/f.svg') }}" alt="F">
+                                <img id="g" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/g.svg') }}" alt="G">
+                            </div>
+                            <div class="center-block text-center col-7 align-middle p-2 m-auto">
+                                Move <span class="text-danger">LIFT</span>/<span class="text-success">HEAD</span> up and
+                                down
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="center-block text-center col-5 p-2">
+                                <img id="shift" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/shift.svg') }}" alt="SHIFT">
+                            </div>
+                            <div class="center-block text-center col-7 align-middle p-2 m-auto">
+                                Hold to Move Faster (Driving, Head and Lift)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="center-block text-center col-5 p-2">
+                                <img id="alt" class="keyboard"
+                                     src="{{ url_for('static', filename='svg/keyboard/alt.svg') }}" alt="ALT">
+                            </div>
+                            <div class="center-block text-center col-7 align-middle p-2 m-auto">
+                                Hold to Move Slower (Driving, Head and Lift)
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <!--                <h4 class="card-header bg-cozmo text-center text-white">Image</h4>-->
+                <img class="card-img-top" src="cozmoImage" id="cozmoImageId" alt="cozmoImage"
+                     alt="Card image cap">
+
+            </div>
+            <div id="info" class="card  mb-4">
+                <h4 class="card-header bg-cozmo text-center text-white">Info</h4>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <th scope="row">Phase</th>
+                            <td id="phaseId">Mark</td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">Episode</th>
+                            <td id="humanId">Jacob</td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">Discarded</th>
+                            <td id="discardedId">Larry</td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">Save and Close</th>
+                            <td id="saveCloseId">Close</td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="col-md-2">
+            <div id="other info" class="card  mb-4">
+                <h4 class="card-header bg-cozmo text-center text-white">Other Info</h4>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <th scope="row">Phase</th>
+                            <td id="x1">Mark</td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">Episode</th>
+                            <td id="x2">Jacob</td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">Discarded</th>
+                            <td id="x3">Larry</td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+            <div class="card  mb-4">
+                <h4 class="card-header bg-cozmo text-centerdd text-white ">A Study of Reinforcement Learning</h4>
+                <div class="card-body">
+                    <img id="politoLogo" class="img-fluid col-4"
+                         src="{{ url_for('static', filename='img/polito.png') }}"
+                         alt="Cozmo Logo">
+                    <img id="eurecomLogo" class="img-fluid col-5"
+                         src="{{ url_for('static', filename='img/eurecom.png') }}"
+                         alt="Cozmo Logo">
+                    <p>
+                    </p>
+                    <p>
+                        A Master Thesis by Piero Macaluso.
+                    </p>
+                    <p>
+                        <b>Supervisors:</b><br>
+                        Prof. Elena Baralis, Politecnico di Torino (Torino, Italy)
+                        Prof. Pietro Michiardi, Eurecom (Biot, France)
+                    </p>
+
+
+                </div>
+
+            </div>
+            <div class="card  mb-4">
+                <img class="card-img-top" src="{{ url_for('static', filename='img/cozmo-gif.gif') }}"
+                     alt="Card image cap" style="filter: brightness(0.3)">
+                <div class="card-img-overlay text-white text-center align-middle">
+                    <h4 class="card-title">
+                        Anki Cozmo
+                    </h4>
+                    <div class="card-text">
+                        <p>
+                            Developed using <a class="card-link" href="https://anki.com/en-us/cozmo.html">Anki Cozmo
+                            Robot</a><br>and its <a class="card-link"
+                                                    href="https://github.com/anki/cozmo-python-sdk">Open Source SDK</a>
+                        </p>
+                        <p>
+                            <a class="card-link" href="https://www.change.org/p/saveanki-savevector-savecozmo">#SaveAnki
+                                | #SaveVector |
+                                #SaveCozmo</a>
+                        </p>
+
+                    </div>
+                    <div class="card-body">
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    var gLastClientX = -1
+    var gLastClientY = -1
+    var gIsMouseLookEnabled = "{{mouse}}"
+    var gAreDebugAnnotationsEnabled = "{{debug}}"
+    var gIsHeadlightEnabled = false
+    var gIsFreeplayEnabled = false
+    var gIsDeviceGyroEnabled = false
+    var gUserAgent = window.navigator.userAgent;
+    var gIsMicrosoftBrowser = gUserAgent.indexOf('MSIE ') > 0 || gUserAgent.indexOf('Trident/') > 0 || gUserAgent.indexOf('Edge/') > 0;
+    var gSkipFrame = false;
+    var count = 0;
+
+    if (gIsMicrosoftBrowser) {
+        document.getElementById("cozmoImageMicrosoftWarning").style.display = "block";
+    }
+
+    function postHttpRequest(url, dataSet) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.send(JSON.stringify(dataSet));
+    }
+
+    function updateCozmo() {
+        if (gIsMicrosoftBrowser && !gSkipFrame) {
+            // IE doesn't support MJPEG, so we need to ping the server for more images.
+            // Though, if this happens too frequently, the controls will be unresponsive.
+            gSkipFrame = true;
+            document.getElementById("cozmoImageId").src = "cozmoImage?" + (new Date()).getTime();
+        } else if (gSkipFrame) {
+            gSkipFrame = false;
+        }
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                if (xhr.responseText == '' && count == 1) {
+                    console.log("button")
+                    document.getElementById("modal-button").click();
+                    count++;
+                    return;
+                } else if (xhr.responseText != '' && count < 2) {
+                    count = 1;
+                    console.log("normal")
+                    var data = JSON.parse(xhr.responseText);
+                    if (data.human && data.test_phase) {
+                        document.getElementById("humanId").innerHTML = "Stopped"
+                        document.getElementById("humanId").style.color = 'red'
+                        document.getElementById("phaseId").innerHTML = "Test"
+                        document.getElementById("phaseId").style.color = 'green'
+
+                    } else if (data.human) {
+                        document.getElementById("humanId").innerHTML = "Stopped"
+                        document.getElementById("humanId").style.color = 'red'
+                        document.getElementById("phaseId").innerHTML = "Train"
+                        document.getElementById("phaseId").style.color = 'blue'
+
+                    } else if (data.test_phase) {
+                        document.getElementById("humanId").innerHTML = "Started"
+                        document.getElementById("humanId").style.color = 'green'
+                        document.getElementById("phaseId").innerHTML = "Test"
+                        document.getElementById("phaseId").style.color = 'green'
+
+                    } else {
+                        document.getElementById("humanId").innerHTML = "Started"
+                        document.getElementById("humanId").style.color = 'green'
+                        document.getElementById("phaseId").innerHTML = "Train"
+                        document.getElementById("phaseId").style.color = 'blue'
+
+                    }
+                    if (data.discard) {
+                        document.getElementById("discardedId").innerHTML = "TRUE"
+                        document.getElementById("discardedId").style.color = 'red'
+                    } else {
+                        document.getElementById("discardedId").innerHTML = "FALSE"
+                        document.getElementById("discardedId").style.color = 'green'
+                    }
+
+                    if (data.close) {
+                        document.getElementById("saveCloseId").innerHTML = "TRUE"
+                        document.getElementById("saveCloseId").style.color = 'red'
+                    } else {
+                        document.getElementById("saveCloseId").innerHTML = "FALSE"
+                        document.getElementById("saveCloseId").style.color = 'green'
+                    }
+                }
+
+            }
+        }
+
+        xhr.open("POST", "updateCozmo", true);
+        xhr.send(null);
+        setTimeout(updateCozmo, 60);
+    }
+
+    setTimeout(updateCozmo, 60);
+
+    function updateButtonEnabledText(button, isEnabled) {
+        button.firstChild.data = isEnabled ? "Enabled" : "Disabled";
+    }
+
+    function onMouseLookButtonClicked(button) {
+        gIsMouseLookEnabled = !gIsMouseLookEnabled;
+        updateButtonEnabledText(button, gIsMouseLookEnabled);
+        isMouseLookEnabled = gIsMouseLookEnabled
+        postHttpRequest("setMouseLookEnabled", {isMouseLookEnabled})
+    }
+
+    function updateDebugAnnotationButtonEnabledText(button, isEnabled) {
+        switch (gAreDebugAnnotationsEnabled) {
+            case 0:
+                button.firstChild.data = "Disabled";
+                break;
+            case 1:
+                button.firstChild.data = "Enabled (vision)";
+                break;
+            case 2:
+                button.firstChild.data = "Enabled (all)";
+                break;
+            default:
+                button.firstChild.data = "ERROR";
+                break;
+        }
+    }
+
+    function onDebugAnnotationsButtonClicked(button) {
+        gAreDebugAnnotationsEnabled += 1;
+        if (gAreDebugAnnotationsEnabled > 2) {
+            gAreDebugAnnotationsEnabled = 0
+        }
+
+        updateDebugAnnotationButtonEnabledText(button, gAreDebugAnnotationsEnabled)
+
+        areDebugAnnotationsEnabled = gAreDebugAnnotationsEnabled
+        postHttpRequest("setAreDebugAnnotationsEnabled", {areDebugAnnotationsEnabled})
+    }
+
+    function onHeadlightButtonClicked(button) {
+        gIsHeadlightEnabled = !gIsHeadlightEnabled;
+        updateButtonEnabledText(button, gIsHeadlightEnabled);
+        isHeadlightEnabled = gIsHeadlightEnabled
+        postHttpRequest("setHeadlightEnabled", {isHeadlightEnabled})
+    }
+
+    function onFreeplayButtonClicked(button) {
+        gIsFreeplayEnabled = !gIsFreeplayEnabled;
+        updateButtonEnabledText(button, gIsFreeplayEnabled);
+        isFreeplayEnabled = gIsFreeplayEnabled
+        postHttpRequest("setFreeplayEnabled", {isFreeplayEnabled})
+    }
+
+    function onDeviceGyroButtonClicked(button) {
+        gIsDeviceGyroEnabled = !gIsDeviceGyroEnabled;
+        updateButtonEnabledText(button, gIsDeviceGyroEnabled);
+        isDeviceGyroEnabled = gIsDeviceGyroEnabled
+        postHttpRequest("setDeviceGyroEnabled", {isDeviceGyroEnabled})
+    }
+
+    // updateButtonEnabledText(document.getElementById("mouseLookId"), gIsMouseLookEnabled);
+    // updateButtonEnabledText(document.getElementById("headlightId"), gIsHeadlightEnabled);
+    // updateDebugAnnotationButtonEnabledText(document.getElementById("debugAnnotationsId"), gAreDebugAnnotationsEnabled);
+    // updateButtonEnabledText(document.getElementById("freeplayId"), gIsFreeplayEnabled);
+    // updateButtonEnabledText(document.getElementById("deviceGyroId"), gIsDeviceGyroEnabled);
+
+    function handleDropDownSelect(selectObject) {
+        selectedIndex = selectObject.selectedIndex
+        itemName = selectObject.name
+        postHttpRequest("dropDownSelect", {selectedIndex, itemName});
+    }
+
+    function opacityKeyManager(e, actionType) {
+        var keyCode = (e.keyCode ? e.keyCode : e.which);
+        var hasShift = (e.shiftKey ? 1 : 0)
+        var hasCtrl = (e.ctrlKey ? 1 : 0)
+        var hasAlt = (e.altKey ? 1 : 0)
+
+        if (keyCode == 13 && actionType == "keydown") // Enter
+        {
+            document.getElementById("enter").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("enter").style.opacity = 1
+        }
+
+        if (keyCode == 8 && actionType == "keydown") // Enter
+        {
+            document.getElementById("backspace").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("backspace").style.opacity = 1
+        }
+        if (keyCode == 81 && actionType == "keydown") // Enter
+        {
+            document.getElementById("q").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("q").style.opacity = 1
+        }
+
+        if (keyCode == 67 && actionType == "keydown") // Enter
+        {
+            document.getElementById("c").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("c").style.opacity = 1
+        }
+
+        if (keyCode == 87 && actionType == "keydown") // Enter
+        {
+            document.getElementById("w").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("w").style.opacity = 1
+        }
+
+
+        if (keyCode == 65 && actionType == "keydown") // Enter
+        {
+            document.getElementById("a").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("a").style.opacity = 1
+        }
+        if (keyCode == 83 && actionType == "keydown") // Enter
+        {
+            document.getElementById("s").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("s").style.opacity = 1
+        }
+        if (keyCode == 68 && actionType == "keydown") // Enter
+        {
+            document.getElementById("d").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("d").style.opacity = 1
+        }
+        if (keyCode == 82 && actionType == "keydown") // Enter
+        {
+            document.getElementById("r").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("r").style.opacity = 1
+        }
+        if (keyCode == 70 && actionType == "keydown") // Enter
+        {
+            document.getElementById("f").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("f").style.opacity = 1
+        }
+        if (keyCode == 84 && actionType == "keydown") // Enter
+        {
+            document.getElementById("t").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("t").style.opacity = 1
+        }
+        if (keyCode == 71 && actionType == "keydown") // Enter
+        {
+            document.getElementById("g").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("g").style.opacity = 1
+        }
+        if (keyCode == 16 && actionType == "keydown") // Enter
+        {
+            document.getElementById("shift").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("shift").style.opacity = 1
+        }
+        if (keyCode == 18 && actionType == "keydown") // Enter
+        {
+            document.getElementById("alt").style.opacity = 0.5
+        } else if (actionType == "keyup") {
+            document.getElementById("alt").style.opacity = 1
+        }
+
+
+    }
+
+    function handleKeyActivity(e, actionType) {
+        var keyCode = (e.keyCode ? e.keyCode : e.which);
+        var hasShift = (e.shiftKey ? 1 : 0)
+        var hasCtrl = (e.ctrlKey ? 1 : 0)
+        var hasAlt = (e.altKey ? 1 : 0)
+        opacityKeyManager(e, actionType);
+
+        if (actionType == "keyup") {
+            if (keyCode == 76) // 'L'
+            {
+                // Simulate a click of the headlight button
+                onHeadlightButtonClicked(document.getElementById("headlightId"))
+            } else if (keyCode == 79) // 'O'
+            {
+                // Simulate a click of the debug annotations button
+                onDebugAnnotationsButtonClicked(document.getElementById("debugAnnotationsId"))
+            } else if (keyCode == 80) // 'P'
+            {
+                // Simulate a click of the debug annotations button
+                onFreeplayButtonClicked(document.getElementById("freeplayId"))
+            } else if (keyCode == 81) // 'Q'
+            {
+                // Simulate a click of the mouse look button
+                onMouseLookButtonClicked(document.getElementById("mouseLookId"))
+            } else if (keyCode == 89) // 'Y'
+            {
+                // Simulate a click of the device gyro button
+                onDeviceGyroButtonClicked(document.getElementById("deviceGyroId"))
+            }
+        }
+
+        postHttpRequest(actionType, {keyCode, hasShift, hasCtrl, hasAlt})
+    }
+
+    function handleMouseActivity(e, actionType) {
+        var clientX = e.clientX / document.body.clientWidth  // 0..1 (left..right)
+        var clientY = e.clientY / document.body.clientHeight // 0..1 (top..bottom)
+        var isButtonDown = e.which && (e.which != 0) ? 1 : 0
+        var deltaX = (gLastClientX >= 0) ? (clientX - gLastClientX) : 0.0
+        var deltaY = (gLastClientY >= 0) ? (clientY - gLastClientY) : 0.0
+        gLastClientX = clientX
+        gLastClientY = clientY
+
+        postHttpRequest(actionType, {clientX, clientY, isButtonDown, deltaX, deltaY})
+    }
+
+    function close_window() {
+        if (confirm("Close Window?")) {
+            close();
+        }
+    }
+
+    function handleTextInput(textField) {
+        textEntered = textField.value
+        postHttpRequest("sayText", {textEntered})
+    }
+
+    document.addEventListener("keydown", function (e) {
+        handleKeyActivity(e, "keydown")
+    });
+    document.addEventListener("keyup", function (e) {
+        handleKeyActivity(e, "keyup")
+    });
+
+    // document.addEventListener("mousemove",   function(e) { handleMouseActivity(e, "mousemove") } );
+
+    function stopEventPropagation(event) {
+        if (event.stopPropagation) {
+            event.stopPropagation();
+        } else {
+            event.cancelBubble = true
+        }
+    }
+
+    // document.getElementById("sayTextId").addEventListener("keydown", function(event) {
+    //     stopEventPropagation(event);
+    // } );
+    // document.getElementById("sayTextId").addEventListener("keyup", function(event) {
+    //     stopEventPropagation(event);
+    // } );
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

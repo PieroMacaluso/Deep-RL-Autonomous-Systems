@@ -111,7 +111,7 @@ def create_default_image(image_width, image_height, do_gradient=False):
     return image
 
 
-flask_app = Flask(__name__)
+flask_app: Flask = Flask(__name__)
 Bootstrap(flask_app)
 remote_control_cozmo = None
 _default_camera_image = create_default_image(320, 240)
@@ -136,6 +136,7 @@ def remap_to_range(x, x_min, x_max, out_min, out_max):
 class RemoteControlCozmo:
     
     def __init__(self, coz):
+        self.save_and_close = False
         self.test_phase = False
         self.human_controlled = False
         self.to_be_discarded = False
@@ -230,8 +231,17 @@ class RemoteControlCozmo:
     def is_episode_to_be_discarded(self):
         return self.to_be_discarded
     
+    def is_save_and_close(self):
+        return self.save_and_close
+    
     def reset_forget(self):
         self.to_be_discarded = False
+    
+    def shutdown_server(self):
+        func = request.environ.get('werkzeug.server.shutdown')
+        if func is None:
+            raise RuntimeError('Not running with the Werkzeug Server')
+        func()
     
     def handle_key(self, key_code, is_shift_down, is_ctrl_down, is_alt_down, is_key_down):
         '''Called on any key press or release
@@ -250,6 +260,12 @@ class RemoteControlCozmo:
                 self.test_phase = True
             else:
                 self.test_phase = False
+        
+        if key_code == ord('C') and is_key_down:
+            if not self.save_and_close:
+                self.save_and_close = True
+            else:
+                self.save_and_close = False
         
         if self.human_controlled:
             # Update desired speed / fidelity of actions based on shift/alt being held
@@ -646,11 +662,16 @@ def handle_updateCozmo():
             "human": remote_control_cozmo.human_controlled,
             'discard': remote_control_cozmo.to_be_discarded,
             "test_phase": remote_control_cozmo.test_phase,
-            
+            'close': remote_control_cozmo.save_and_close,
+    
         }
         response = json.dumps(response_dict)
         return response
     return ""
+
+
+def shutdown_server():
+    flask_helpers.shutdown_flask(request)
 
 
 def getRemoteControl():
@@ -663,8 +684,10 @@ def start(robot):
     
     # Turn on image receiving by the camera
     robot.camera.image_stream_enabled = True
-    threading.Thread(target=flask_helpers.run_flask, args={flask_app}).start()
-    return remote_control_cozmo
+    x = threading.Thread(target=flask_helpers.run_flask, args={flask_app})
+    x.setDaemon(True)
+    x.start()
+    return remote_control_cozmo, x
 
 
 def run(sdk_conn):

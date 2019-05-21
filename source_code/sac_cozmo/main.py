@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import json
+import logging
 import os
 import sys
 import time
@@ -9,6 +10,7 @@ import cozmo
 import gym
 import gym_cozmo
 import math
+from tensorboard import program
 
 from my_logging import Log
 from sac import SAC
@@ -76,10 +78,16 @@ def initial_setup():
     parser.add_argument('--img_size', type=int, default=img_size, metavar='N', help='Size of image (HW)')
     
     parser.add_argument('--load_from_json', type=str, default=None, help='Load From File')
-    args = parser.parse_args()
+    parser.add_argument('--restore', type=str, default=None, help='Folder of experiment to restore')
     
-    folder_ = './runs/{}_SAC_CozmoDriver-v0/'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
-    os.mkdir(folder_)
+    args = parser.parse_args()
+    if args.restore:
+        folder_ = args.restore
+        restore = True
+    else:
+        folder_ = './runs/{}_SAC_CozmoDriver-v0/'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+        restore = False
+        os.mkdir(folder_)
     logger_ = Log(folder_)
     if args.load_from_json is not None:
         try:
@@ -90,8 +98,33 @@ def initial_setup():
         except FileNotFoundError:
             logger_.error("File not Valid")
             exit(1)
+    elif args.restore:
+        try:
+            argparse_dict = vars(args)
+            with open(args.restore + "hp.json") as data_file:
+                data = json.load(data_file)
+            argparse_dict.update(data)
+        except FileNotFoundError:
+            logger_.error("File not Valid")
+            exit(1)
     
-    return args, folder_, logger_
+    return args, folder_, logger_, restore
+
+
+class TensorBoardTool:
+    
+    def __init__(self, dir_path):
+        self.dir_path = dir_path
+    
+    def run(self):
+        # Remove http messages
+        log = logging.getLogger('werkzeug').setLevel(logging.ERROR)
+        # Start tensorboard server
+        tb = program.TensorBoard()
+        tb.configure(argv=[None, '--logdir', self.dir_path, '--host', 'localhost'])
+        url = tb.launch()
+        sys.stdout.write('TensorBoard at %s \n' % url)
+        return url
 
 
 def run(sdk_conn):
@@ -101,6 +134,7 @@ def run(sdk_conn):
     :param sdk_conn: SDK connection to Anki Cozmo
     :return: nothing
     """
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     robot = sdk_conn.wait_for_robot()
     robot.enable_device_imu(True, True, True)
     
@@ -109,7 +143,9 @@ def run(sdk_conn):
     in_ts = time.time()
     
     # Setting up Hyper-Parameters
-    args, folder, logger = initial_setup()
+    args, folder, logger, restore = initial_setup()
+    tb_tool = TensorBoardTool(folder)
+    tb_tool.run()
     logger.debug("Initial setup completed.")
     
     # Create JSON of Hyper-Parameters for reproducibility
@@ -122,11 +158,13 @@ def run(sdk_conn):
     
     # Setup the agent
     agent = SAC(args.state_buffer_size, env.action_space, env, args, folder, logger)
-    agent.train(args.max_num_run)
+    agent.train(args.max_num_run, restore)
+    env.close()
+    logger.important("Program closed correctly!")
 
 
 if __name__ == '__main__':
-    cozmo.setup_basic_logging()
+    # cozmo.setup_basic_logging()
     try:
         cozmo.connect(run)
     except KeyboardInterrupt as e:

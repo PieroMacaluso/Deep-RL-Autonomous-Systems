@@ -16,7 +16,7 @@ def run(sdk_conn):
     state = env.reset()
     done = False
     total_reward = 0.0
-    for i in range(10):
+    for i in range(1):
         while env.is_human_controlled():
             continue
         print(i)

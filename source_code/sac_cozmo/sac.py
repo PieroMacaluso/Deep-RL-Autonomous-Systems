@@ -1,6 +1,7 @@
 import copy
 import datetime
 import os
+import pickle
 import time
 
 import numpy as np
@@ -18,7 +19,6 @@ from utils import soft_update, hard_update
 
 class SAC(object):
     def __init__(self, num_inputs, action_space, env, args, folder, logger):
-        
         self.env = env
         self.seed = args.seed
         self.device = torch.device("cuda" if args.cuda else "cpu")
@@ -158,9 +158,27 @@ class SAC(object):
         
         return qf1_loss.item(), qf2_loss.item(), policy_loss.item(), alpha_loss.item(), alpha_tlogs.item()
     
-    def train(self, num_run=1):
+    def train(self, num_run=1, restore=False):
+        memory = None
+        start_episode = 0
+        start_updates = 0
+        start_run = 0
+        if restore:
+            # TODO: Not tested deeply yet
+            with open(self.folder + "i_episode.pkl", "rb") as pickle_out:
+                start_episode = pickle.load(pickle_out)
+            with open(self.folder + "i_run.pkl", "rb") as pickle_out:
+                start_run = pickle.load(pickle_out)
+            with open(self.folder + "memory.pkl", "rb") as pickle_out:
+                memory = pickle.load(pickle_out)
+            with open(self.folder + "updates.pkl", "rb") as pickle_out:
+                start_updates = pickle.load(pickle_out)
+            self.restore_model()
+        
         in_ts = time.time()
-        for i_run in range(num_run):
+        for i_run in range(start_run, num_run):
+            if self.env.is_save_and_close():
+                break
             self.logger.important(f"START TRAINING RUN {i_run}")
             
             # Set Seed for repeatability
@@ -175,12 +193,14 @@ class SAC(object):
             writer_test = SummaryWriter(log_dir=self.folder + 'run_' + str(i_run) + '/test')
             
             # Setup Replay Memory
-            memory = ReplayMemory(self.replay_size)
+            if not restore:
+                memory = ReplayMemory(self.replay_size)
             backup_memory = copy.deepcopy(memory)
             # TRAINING LOOP
-            total_numsteps = updates = running_episode_reward = running_episode_reward_100 = 0
+            updates = start_updates
+            total_numsteps = running_episode_reward = running_episode_reward_100 = 0
             rewards = []
-            i_episode = 0
+            i_episode = start_episode
             last_episode_steps = 0
             episode_reward = episode_steps = timing = total_timing = 0
             while True:
@@ -201,7 +221,7 @@ class SAC(object):
                     print(len(memory))
                     # memory.forget_last(last_episode_steps)
                     self.logger.info("Last Episode Forgotten")
-                elif i_episode != 0:
+                elif i_episode != start_episode:
                     ep_print = i_episode - 1
                     rewards.append(episode_reward)
                     running_episode_reward += (episode_reward - running_episode_reward) / (ep_print + 1)
@@ -226,6 +246,23 @@ class SAC(object):
                     # Wait for the human to leave the command
                     while self.env.is_human_controlled():
                         continue
+                
+                if self.env.is_save_and_close():
+                    self.logger.important("Saving context...")
+                    self.logger.info("To restart from here set this flag: --restore " + self.folder)
+                    # Save Replay, net weights, hp, i_episode and i_run
+                    with open(self.folder + "memory.pkl", "wb") as pickle_out:
+                        pickle.dump(memory, pickle_out, pickle.HIGHEST_PROTOCOL)
+                    with open(self.folder + "i_episode.pkl", "wb") as pickle_out:
+                        pickle.dump(i_episode, pickle_out)
+                    with open(self.folder + "i_run.pkl", "wb") as pickle_out:
+                        pickle.dump(i_run, pickle_out)
+                    with open(self.folder + "updates.pkl", "wb") as pickle_out:
+                        pickle.dump(updates, pickle_out)
+                    self.backup_model()
+                    self.logger.important("Save completed!")
+
+                    break
                 
                 # Limit of episode/run reached. Let's start a new RUN
                 if i_episode > self.num_episode:
@@ -258,11 +295,9 @@ class SAC(object):
                     if episode_steps < self.warm_up_steps:
                         # Warm_up phase -> Completely random choice of an action
                         action = self.env.action_space.sample()
-                        print("random " + action)
                     else:
                         # Training phase -> Action sampled from policy
                         action = self.select_action(state)
-                        print("net " + action)
                     if len(memory) > self.batch_size:  # and not self.env.is_forget_enabled():
                         updates = self.learning_phase(1, memory, updates, writer_learn)
                     
@@ -287,8 +322,7 @@ class SAC(object):
                 i_episode += 1
                 timing = time.time() - ts
                 total_timing = time.time() - in_ts
-            
-            # self.env.close()
+            start_episode = 0
     
     def do_one_test(self):
         old = self.env.reset()
