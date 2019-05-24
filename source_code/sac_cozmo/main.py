@@ -17,16 +17,16 @@ from sac import SAC
 
 
 def initial_setup():
-    """
-    Initialization of default parameters and parsing of command line arguments
-    :return: arguments, name of the main folder of the experiment and logger.
+    """Initialization of default parameters and parsing of command line
+    arguments :return: arguments, name of the main folder of the experiment and
+    logger.
     """
     # Environment
     env_name = "CozmoDriver-v0"
     seed = math.floor(time.time())
     
     # Evaluation
-    eval = True
+    eval = False
     eval_every = 10
     eval_episode = 2
     
@@ -35,17 +35,18 @@ def initial_setup():
     gamma = 0.99
     tau = 0.005
     lr = 0.0003
-    alpha = 0.1
-    autotune_entropy = False
+    alpha = 0.2
+    autotune_entropy = True
     hidden_size = 256
     img_size = 100
     
     # Episode
-    warm_up_steps = 10
+    warm_up_episodes = 10
     num_episode = 2000
     max_num_run = 20
     batch_size = 64
     replay_size = 30000
+    min_replay_size = 128
     state_buffer_size = 1
     updates_per_episode = 600
     target_update = 1
@@ -68,9 +69,11 @@ def initial_setup():
     parser.add_argument('--hidden_size', type=int, default=hidden_size, metavar='N', help='Hidden size NN')
     parser.add_argument('--updates_per_episode', type=int, default=updates_per_episode, metavar='N',
                         help='#updates for each step')
-    parser.add_argument('--warm_up_steps', type=int, default=warm_up_steps, metavar='N', help='Warm-Up steps')
+    parser.add_argument('--warm_up_episodes', type=int, default=warm_up_episodes, metavar='N', help='Warm-Up steps')
     parser.add_argument('--target_update', type=int, default=target_update, metavar='N', help='Target updates / update')
     parser.add_argument('--replay_size', type=int, default=replay_size, metavar='N', help='Size of replay buffer')
+    parser.add_argument('--min_replay_size', type=int, default=min_replay_size, metavar='N',
+                        help='Min Size of replay buffer')
     parser.add_argument('--state_buffer_size', type=int, default=state_buffer_size, metavar='N',
                         help='Size of state buffer')
     parser.add_argument('--cuda', action="store_true", help='run on CUDA')
@@ -112,32 +115,44 @@ def initial_setup():
 
 
 class TensorBoardTool:
+    """Class used to initialize and start TensorBoardX."""
     
-    def __init__(self, dir_path):
+    def __init__(self, dir_path: str):
+        
+        """Constructor. :param dir_path: path of TensorBoardX experiment files
+        :type dir_path: str
+
+        Args:
+            dir_path (str):
+        """
         self.dir_path = dir_path
     
-    def run(self):
+    def run(self) -> str:
+        """Run TensorBoardX using the args specified in the code. :return: str -
+        :type return
+        """
         # Remove http messages
         log = logging.getLogger('werkzeug').setLevel(logging.ERROR)
         # Start tensorboard server
         tb = program.TensorBoard()
-        tb.configure(argv=[None, '--logdir', self.dir_path, '--host', 'localhost'])
+        tb.configure(argv=[None, '--logdir', self.dir_path, '--host', 'localhost', '--samples_per_plugin', 'images=2000'
+                                                                                                           ''])
         url = tb.launch()
         sys.stdout.write('TensorBoard at %s \n' % url)
         return url
 
 
-def run(sdk_conn):
-    """
-    Container of the main loop. It is necessary to work with Cozmo. This is called by the cozmo.connect presents in the
-    main loop of this file
-    :param sdk_conn: SDK connection to Anki Cozmo
-    :return: nothing
+def run(sdk_conn: cozmo.conn):
+    """Container of the main loop. It is necessary to work with Cozmo. This is
+    called by the cozmo.connect presents in the main loop of this file :param
+    sdk_conn: SDK connection to Anki Cozmo :return: nothing
+
+    Args:
+        sdk_conn (cozmo.conn):
     """
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     robot = sdk_conn.wait_for_robot()
     robot.enable_device_imu(True, True, True)
-    
     # Turn on image receiving by the camera
     robot.camera.image_stream_enabled = True
     in_ts = time.time()

@@ -10,13 +10,14 @@ IMAGE_SIZE = 100
 
 
 def conv2d_size_out(size, data):
-    """
-    Number of Linear input connections depends on output of conv2d layers and
-    therefore the input image size, so compute it.
-    Data is a dictionary.
-    :param size: size of the input of the convolution
-    :param data: details about convolutional layers.
-    :return:
+    """Number of Linear input connections depends on output of conv2d layers and
+    therefore the input image size, so compute it. Data is a dictionary. :param
+    size: size of the input of the convolution :param data: details about
+    convolutional layers. :return:
+
+    Args:
+        size:
+        data:
     """
     """
     
@@ -38,12 +39,20 @@ def conv2d_size_out(size, data):
 
 # Initialize Policy weights
 def weights_init_(m):
+    """
+    Args:
+        m:
+    """
     if isinstance(m, nn.Linear):
         torch.nn.init.xavier_uniform_(m.weight, gain=1)
         torch.nn.init.constant_(m.bias, 0)
 
 
 def convolutional(data):
+    """
+    Args:
+        data:
+    """
     layer = nn.Conv2d(data[0], data[1], kernel_size=data[2], stride=data[3], padding=data[4])
     norm = nn.BatchNorm2d(data[1])
     weights_init_(layer)
@@ -55,6 +64,11 @@ def convolutional(data):
 
 class ValueNetworkCNN(nn.Module):
     def __init__(self, num_inputs, hidden_dim):
+        """
+        Args:
+            num_inputs:
+            hidden_dim:
+        """
         super(ValueNetworkCNN, self).__init__()
         
         conv = {
@@ -67,23 +81,33 @@ class ValueNetworkCNN(nn.Module):
         self.conv2, self.bn2 = convolutional(conv['conv2'])
         
         self.linear1 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv2'][1], hidden_dim)
-        # self.linear2 = nn.Linear(hidden_dim, hidden_dim)
+        self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         self.linear3 = nn.Linear(hidden_dim, 1)
         
         self.apply(weights_init_)
     
     def forward(self, state):
+        """
+        Args:
+            state:
+        """
         x = F.relu(self.bn1(self.conv1(state)))
         x = F.relu(self.bn2(self.conv2(x)))
         x = x.view(x.shape[0], -1)
         x = F.relu(self.linear1(x))
-        # x = F.relu(self.linear2(x))
+        x = F.relu(self.linear2(x))
         x = self.linear3(x)
         return x
 
 
 class QNetworkCNN(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_dim):
+        """
+        Args:
+            num_inputs:
+            num_actions:
+            hidden_dim:
+        """
         super(QNetworkCNN, self).__init__()
         
         conv = {
@@ -100,25 +124,30 @@ class QNetworkCNN(nn.Module):
         # Q1 architecture
         self.linear1 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv2'][1] + num_actions,
                                  hidden_dim)
-        # self.linear2 = nn.Linear(hidden_dim, hidden_dim)
+        self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         self.linear3 = nn.Linear(hidden_dim, 1)
         
         # Q2 architecture
         self.linear4 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv2'][1] + num_actions,
                                  hidden_dim)
-        # self.linear5 = nn.Linear(hidden_dim, hidden_dim)
+        self.linear5 = nn.Linear(hidden_dim, hidden_dim)
         self.linear6 = nn.Linear(hidden_dim, 1)
         
         self.apply(weights_init_)
     
     def forward(self, state, action):
+        """
+        Args:
+            state:
+            action:
+        """
         x1 = F.relu(self.bn1(self.conv1(state)))
         x1 = F.relu(self.bn2(self.conv2(x1)))
         x1 = x1.view(x1.shape[0], -1)
         xu1 = torch.cat([x1, action], 1)
         
         x1 = F.relu(self.linear1(xu1))
-        # x1 = F.relu(self.linear2(x1))
+        x1 = F.relu(self.linear2(x1))
         x1 = self.linear3(x1)
         
         x2 = F.relu(self.bn3(self.conv3(state)))
@@ -126,7 +155,7 @@ class QNetworkCNN(nn.Module):
         x2 = x2.view(x2.shape[0], -1)
         xu2 = torch.cat([x2, action], 1)
         x2 = F.relu(self.linear4(xu2))
-        # x2 = F.relu(self.linear5(x2))
+        x2 = F.relu(self.linear5(x2))
         x2 = self.linear6(x2)
         
         return x1, x2
@@ -134,6 +163,12 @@ class QNetworkCNN(nn.Module):
 
 class GaussianPolicyCNN(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_dim):
+        """
+        Args:
+            num_inputs:
+            num_actions:
+            hidden_dim:
+        """
         super(GaussianPolicyCNN, self).__init__()
         
         conv = {
@@ -146,7 +181,7 @@ class GaussianPolicyCNN(nn.Module):
         self.conv2, self.bn2 = convolutional(conv['conv2'])
         
         self.linear1 = nn.Linear(conv2d_size_out(IMAGE_SIZE, conv) * conv2d_size_out(IMAGE_SIZE, conv) * conv['conv2'][1], hidden_dim)
-        # self.linear2 = nn.Linear(hidden_dim, hidden_dim)
+        self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         
         self.mean_linear = nn.Linear(hidden_dim, num_actions)
         self.log_std_linear = nn.Linear(hidden_dim, num_actions)
@@ -154,17 +189,25 @@ class GaussianPolicyCNN(nn.Module):
         self.apply(weights_init_)
     
     def forward(self, state):
+        """
+        Args:
+            state:
+        """
         x = F.relu(self.bn1(self.conv1(state)))
         x = F.relu(self.bn2(self.conv2(x)))
         x = x.view(x.shape[0], -1)
         x = F.relu(self.linear1(x))
-        # x = F.relu(self.linear2(x))
+        x = F.relu(self.linear2(x))
         mean = self.mean_linear(x)
         log_std = self.log_std_linear(x)
         log_std = torch.clamp(log_std, min=LOG_SIG_MIN, max=LOG_SIG_MAX)
         return mean, log_std
     
     def sample(self, state):
+        """
+        Args:
+            state:
+        """
         mean, log_std = self.forward(state)
         std = log_std.exp()
         normal = Normal(mean, std)
@@ -179,6 +222,12 @@ class GaussianPolicyCNN(nn.Module):
 
 class DeterministicPolicyCNN(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_dim):
+        """
+        Args:
+            num_inputs:
+            num_actions:
+            hidden_dim:
+        """
         super(DeterministicPolicyCNN, self).__init__()
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
@@ -199,6 +248,10 @@ class DeterministicPolicyCNN(nn.Module):
         self.apply(weights_init_)
     
     def forward(self, state):
+        """
+        Args:
+            state:
+        """
         x = F.relu(self.bn1(self.conv1(state)))
         x = F.relu(self.bn2(self.conv2(x)))
         x = x.view(x.shape[0], -1)
@@ -208,6 +261,10 @@ class DeterministicPolicyCNN(nn.Module):
         return mean
     
     def sample(self, state):
+        """
+        Args:
+            state:
+        """
         mean = self.forward(state)
         noise = self.noise.normal_(0., std=0.1)
         noise = noise.clamp(-0.25, 0.25)
@@ -220,6 +277,11 @@ class DeterministicPolicyCNN(nn.Module):
 
 class ValueNetworkNN(nn.Module):
     def __init__(self, num_inputs, hidden_dim):
+        """
+        Args:
+            num_inputs:
+            hidden_dim:
+        """
         super(ValueNetworkNN, self).__init__()
         
         self.linear1 = nn.Linear(num_inputs, hidden_dim)
@@ -229,6 +291,10 @@ class ValueNetworkNN(nn.Module):
         self.apply(weights_init_)
     
     def forward(self, state):
+        """
+        Args:
+            state:
+        """
         x = F.relu(self.linear1(state))
         x = F.relu(self.linear2(x))
         x = self.linear3(x)
@@ -237,6 +303,12 @@ class ValueNetworkNN(nn.Module):
 
 class QNetworkNN(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_dim):
+        """
+        Args:
+            num_inputs:
+            num_actions:
+            hidden_dim:
+        """
         super(QNetworkNN, self).__init__()
         
         # Q1 architecture
@@ -252,6 +324,11 @@ class QNetworkNN(nn.Module):
         self.apply(weights_init_)
     
     def forward(self, state, action):
+        """
+        Args:
+            state:
+            action:
+        """
         xu = torch.cat([state, action], 1)
         
         x1 = F.relu(self.linear1(xu))
@@ -267,6 +344,12 @@ class QNetworkNN(nn.Module):
 
 class GaussianPolicyNN(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_dim):
+        """
+        Args:
+            num_inputs:
+            num_actions:
+            hidden_dim:
+        """
         super(GaussianPolicyNN, self).__init__()
         
         self.linear1 = nn.Linear(num_inputs, hidden_dim)
@@ -278,6 +361,10 @@ class GaussianPolicyNN(nn.Module):
         self.apply(weights_init_)
     
     def forward(self, state):
+        """
+        Args:
+            state:
+        """
         x = F.relu(self.linear1(state))
         x = F.relu(self.linear2(x))
         mean = self.mean_linear(x)
@@ -286,6 +373,10 @@ class GaussianPolicyNN(nn.Module):
         return mean, log_std
     
     def sample(self, state):
+        """
+        Args:
+            state:
+        """
         mean, log_std = self.forward(state)
         std = log_std.exp()
         normal = Normal(mean, std)
@@ -300,6 +391,12 @@ class GaussianPolicyNN(nn.Module):
 
 class DeterministicPolicyNN(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_dim):
+        """
+        Args:
+            num_inputs:
+            num_actions:
+            hidden_dim:
+        """
         super(DeterministicPolicyNN, self).__init__()
         self.linear1 = nn.Linear(num_inputs, hidden_dim)
         self.linear2 = nn.Linear(hidden_dim, hidden_dim)
@@ -308,12 +405,20 @@ class DeterministicPolicyNN(nn.Module):
         self.noise = torch.Tensor(num_actions)
     
     def forward(self, state):
+        """
+        Args:
+            state:
+        """
         x = F.relu(self.linear1(state))
         x = F.relu(self.linear2(x))
         mean = torch.tanh(self.mean(x))
         return mean
     
     def sample(self, state):
+        """
+        Args:
+            state:
+        """
         mean = self.forward(state)
         noise = self.noise.normal_(0., std=0.1)
         noise = noise.clamp(-0.25, 0.25)

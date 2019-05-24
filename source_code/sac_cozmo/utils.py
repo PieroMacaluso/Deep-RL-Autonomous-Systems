@@ -3,6 +3,12 @@ import torch
 
 
 def create_log_gaussian(mean, log_std, t):
+    """
+    Args:
+        mean:
+        log_std:
+        t:
+    """
     quadratic = -((0.5 * (t - mean) / (log_std.exp())).pow(2))
     l = mean.shape
     log_z = log_std
@@ -12,6 +18,12 @@ def create_log_gaussian(mean, log_std, t):
 
 
 def logsumexp(inputs, dim=None, keepdim=False):
+    """
+    Args:
+        inputs:
+        dim:
+        keepdim:
+    """
     if dim is None:
         inputs = inputs.view(-1)
         dim = 0
@@ -23,10 +35,21 @@ def logsumexp(inputs, dim=None, keepdim=False):
 
 
 def soft_update(target, source, tau):
+    """
+    Args:
+        target:
+        source:
+        tau:
+    """
     for target_param, param in zip(target.parameters(), source.parameters()):
         target_param.data.copy_(target_param.data * (1.0 - tau) + param.data * tau)
 
 
 def hard_update(target, source):
+    """
+    Args:
+        target:
+        source:
+    """
     for target_param, param in zip(target.parameters(), source.parameters()):
         target_param.data.copy_(param.data)
