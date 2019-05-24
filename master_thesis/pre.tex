@@ -5,9 +5,9 @@
 		% \DottoratoIn{PhD Course in\space}
 		\StrutturaDidattica{Department of }
 		\struttura{Control and Computer Engineering}
-		\CorsoDiLaureaIn{Master degree course in\space}
+		\CorsoDiLaureaIn{Master of Science in\space}
 		%\NomeMonografia{Bachelor Degree Final Work}
-		\TesiDiLaurea{Master Degree Thesis}
+		\TesiDiLaurea{Master Thesis}
 		%\NomeDissertazione{PhD Dissertation}
 		%\InName{in}
 		\CandidateName{Candidate}% or Candidate
@@ -31,28 +31,12 @@
 	%%%%%%% TOPtesi.
 	
 	\begin{ThesisTitlePage}
-		% Per cambiare la dicitura sopra la lista dei laureandi decommentare
-		% la riga seguente, cambina do le 4 parole in modo consistente
-		%
-		
-		%
 		\ateneo{Politecnico di Torino}
-		%
-		% Non tutte le università hanno un nome proprio
-		%\nomeateneo{}
-		%
-		%\struttura[III]{Matematica, Fisica e~Scienze Naturali}
-		%\Materia{Remote sensing}
-		\titolo{Deep Reinforcement Learning algorithms for autonomous systems}% per la laurea quinquennale e il dottorato
-		\sottotitolo{Design and implementation of a control system for an autonomous driving task with a small robot, exploiting state-of-the-art Model-Free Deep Reinforcement Learning algorithms}% per la laurea quinquennale e il dottorato
-		%
+		\titolo{Deep Reinforcement Learning algorithms for autonomous systems}
+		\sottotitolo{Design and implementation of a control system for an autonomous driving task of a small robot, exploiting state-of-the-art Model-Free Deep Reinforcement Learning algorithms}
 		%%%%%%% Corso degli studi
-		\corsodilaurea{Computer Engineering}% per la laurea
-		
+		\corsodilaurea{Computer Engineering (Software Career)}
 		%%%%%%% L'eventuale numero di matricola va fra parentesi quadre
-		%\show\Candidato
-		%\def\Candidato{Studente}
-		%\show\Candidato
 		\candidato{Piero \textsc{Macaluso}}[s252894] 
 		%\secondocandidato{Evangelista \textsc{Torricelli}}[123457]
 		
@@ -60,20 +44,13 @@
 		%
 		\relatore{prof.~Elena Baralis}
 		\secondorelatore{prof.~Pietro Michiardi}
-		% 
-		%%%%%%% Per mettere altri relatori consultare toptesi-it.pdf
-		
-		%%%%%%% Tutore
-		% \tutoreaziendale{dott.\ ing.\ Giovanni Giacosa}
-		%\NomeTutoreAziendale{Supervisore aziendale\\Centro Ricerche FIAT}
 		
 		%%%%%%% Seduta dell'esame
-		%\sedutadilaurea{Agosto 1615}
+%		\sedutadilaurea{\textsc{October} 2019}
 		%%%%%%%% oppure:
-		\sedutadilaurea{\textsc{Academic~year} 2018-2019}% 
-		
+		\sedutadilaurea{\textsc{Academic~year} \todomacaluso{2019-2020}}% 
 		%%%%%%% Logo della sede
-		\logosede{logopolito,eurecom}% 
+		\logosede{logopolito}% 
 	\end{ThesisTitlePage}
 	
 	
@@ -81,58 +58,43 @@
 	%%%%%%% meno offset c'e', meglio e'
 	%\setbindingcorrection{3mm}
 	
-
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%%%%%%% Change the strings if you want a title page and a
-	%%%%%%% copyright page in another language
-	%%%%%%% Comment just the \iflanguage statement and the
-	%%%%%%% closing line of the language test if you want to
-	%%%%%%% make a global change instead of a conditional one.
-	%%%%%%% Comment the following indented lines if you don't
-	%%%%%%% care about the title page in English
-	\iflanguage{english}{%
-		\retrofrontespizio{This work is subject to the Creative Commons Licence}
-		% \DottoratoIn{PhD Course in\space}
-		\CorsoDiLaureaIn{Master degree course in\space}
-		%\NomeMonografia{Bachelor Degree Final Work}
-		\TesiDiLaurea{Master Degree Thesis}
-		%\NomeDissertazione{PhD Dissertation}
-		%\InName{in}
-		\CandidateName{Candidate}% or Candidate
-		\AdvisorName{Supervisors}% or Supervisor
-		\TutorName{Tutor}
-		\NomeTutoreAziendale{Internship Tutor}
-		%\CycleName{cycle}
-		%\NomePrimoTomo{First volume}
-		%\NomeSecondoTomo{Second Volume}
-		%\NomeTerzoTomo{Third Volume}
-		%\NomeQuartoTomo{Fourth Volume}
-		%\logosede{logodue}% or comma separated list of logos
-	}{}
-	
-	
+		\sommario
 		
-		% Altro esperimento.
-		% Si veda la documentazione per verificare la differenza fra abstract
-		% e summary. Perciò se se ne usa uno, non si deve usare l'altro.
-		\english
-		\begin{abstract}
-			Autonomous systems attracted a lot of attention due to its potential to radically change mobility and transport. Recently, Reinforcement Learning has been shown to achieve super-human results at games, computer games, and to be a promising methodology for tasks with robotic manipulators. In this thesis, we argue that the generality of reinforcement learning makes it a useful framework to apply to autonomous driving, focusing on systems which address the ability to drive and navigate in the absence of maps and explicit rules, relying, just like humans do, on a comprehensive understanding of the immediate environment: for this reason we used a small robot to develop our experiments.
-			Further possible future developments could be Interpretability and "explainability" of the learned model.
+		\todomacaluso{Abstract must be checked and revised if necessary}	
+		
+			Autonomous systems, and in particular self-driving for unsupervised robots and vehicles (e.g., self-driving cars) is a topic that has attracted a lot of attention from both the research community and industry, due to its potential to radically change mobility and transport. In general, most approaches to date focus on formal logic methods, which define driving behavior in annotated geometric maps. This can be difficult to scale, as it relies heavily on an external mapping infrastructure rather than using and understanding the local scene.
 			
-		\end{abstract}
+			In order to make autonomous driving a truly ubiquitous technology, in this thesis we focus on systems which address the ability to drive and navigate in the absence of maps and explicit rules, relying – just like humans do – on a comprehensive understanding of the immediate environment while following simple high-level directions (e.g.\ turn-by-turn route commands). Recent work in this area has demonstrated that this is possible on rural country roads, using GPS for coarse localization and LIDAR to understand the local scene. 
+			
+			Recently, Reinforcement Learning (RL) – a machine learning subfield focused on solving Markov Decision Problems (MDP), where an agent learns to select actions in an environment in an attempt to maximize some reward function – has been shown to achieve super-human results at games such as Go or chess, to be particularly suited for simulated environments like computer games, and to be a promising methodology for simple tasks with robotic manipulators. In this thesis, we argue that the generality of reinforcement learning makes it a useful framework to apply to autonomous driving. 
+			
+\todomacaluso{
+			We design and implement a control system for an autonomous driving task with a small robot, exploiting state-of-the-art model-free Deep RL algorithms and discussing possible ways to make them data efficient.
+			As such the main tasks of this Thesis focus on the following aspects:
+		Formalize the problem of autonomous driving as an MDP, explain how to design the various elements of this problem to make it simpler to solve, whilst keeping it general and extensible; 
+		Show that a canonical RL algorithm (e.g., deep deterministic policy gradients [8]) can rapidly learn a simple autonomous driving task in a simulation environment; 
+		Discuss the system set-up required to make learning to drive efficient and safe on a real-world autonomous robot. In particular, we will focus on the Anki Cozmo robotic system [9];
+		Learn to drive a real-world autonomous robotic system in a few episodes (that is, to achieve an efficient learning methodology) with a continuous deep reinforcement learning algorithm, using only “on-board” computation. 
+		Additional, research-oriented topics that will be investigated in this Thesis proposal are concerned with interpretability and “explainability” of the learned model, such that it becomes possible to understand and explain why some actions (e.g., those leading to an accident) have been taken, and to relate this understanding to the foundations of the learning process (e.g., which data samples where used to take a decision).
+		In more practical terms, the Thesis proposal can be broken down as follows. First, a detailed literature review is required: this project aims at reproducing, and building upon the results discussed in a recent technical report [10]. To this end, the work in [10] and the references therein should be studied with care. In addition to conceptual challenges, this Thesis proposal also exhibit several engineering challenges: the original work in [10] leverages a real-world car, whereas this project relies on a simpler and more cost-effective approach based on a small robotic system [9]. As a first step, the design and implementation of a reinforcement learning algorithm can be done using the python-based robot API [9]. As a second step, the idea is to integrate the python-based robot API with the python-based OpenAI Gym framework [11]: here, the ultimate goal is to provide a unified environment to develop and test alternative reinforcement learning algorithms (which is what OpenAI Gym has been built for) that interact with real-world systems instead of computer games.
+		In conclusion, the expected output of this Thesis project is as follows:
+		Produce technical reports covering the scientific literature studied during the Thesis period;
+		Produce technical reports and eventually a research paper to be submitted to a specialized workshop or conference in the domain of machine learning in general, and reinforcement learning in particular;
+		Produce high-quality source code in python, using well known libraries when necessary (e.g., PyTorch), and relying on external tools such as git repositories;
+		Produce high-quality code documentation to foster experimental reproducibility.
+	}
 		
-		% Fine dell'altro esperimento
-		%\sommario
 		
 		% \paginavuota % funziona anche senza specificare l'opzione classica
 		
+		\printglossaries
+		
 		\ringraziamenti
 		
+		\todomacaluso{Acknowledgements must be prepared!}	
 		
 		
-		\tablespagetrue\figurespagetrue % normalmente questa riga non serve ed e' commentata
+%		\tablespagetrue\figurespagetrue % normalmente questa riga non serve ed e' commentata
 		\indici
 		
 		%%%%%%%% Altro esperimento con l'opzione classica

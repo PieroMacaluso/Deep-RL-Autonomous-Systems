@@ -24,14 +24,16 @@
 %%%%%%%
 
 \documentclass[%
-corpo=11pt,
-twoside,
+cucitura,
+12pt,
+%twoside,
 %    stile=classica,
-oldstyle,
+%oldstyle,
 %    autoretitolo,
 tipotesi=magistrale,
-greek,
-evenboxes,
+%greek,
+%evenboxes
+numerazioneromana
 ]{toptesi}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Per la codifica d'entratasi può scegliere quella che si vuole,
@@ -41,6 +43,8 @@ evenboxes,
 \usepackage[utf8]{inputenc}% codifica d'entrata
 \usepackage[T1]{fontenc}%    codifica dei font
 \usepackage{lmodern}%        scelta dei font
+
+
 
 % Vedere la documentazione toptesi-it.pdf per le
 % attenzioni che bisogna usare al fine di ottenere un file
@@ -58,10 +62,14 @@ evenboxes,
 	citecolor={blue},
 	urlcolor={blue}
 }
-%
-%%%%%%% Esempio di composizione di tesi di laurea con PDFLATEX 
-%
-%
+% Questo è utile per evidenziare le cose "dubbie e da correggere"
+% Poi si elimina il comando cosi' non restano \boh{} in giro
+\newcommand{\michiardi}[1]{\textcolor{red}{(Michiardi P.) #1}}
+\newcommand{\macaluso}[1]{\textcolor{red}{(Macaluso P.) #1}}
+
+\newcommand{\todomichiardi}[1]{\textcolor{red}{TODO (Michiardi P.): #1}}
+\newcommand{\todomacaluso}[1]{\textcolor{red}{TODO (Macaluso P.): #1}}
+
 % Per scrivere testo fasullo in "latinorum"
 \usepackage{lipsum}
 %
@@ -69,6 +77,23 @@ evenboxes,
 %%%%%%% Definizioni locali
 \newtheorem{osservazione}{Osservazione}% Standard LaTeX
 \ExtendCaptions{english}{Abstract}{Acknowledgements}
+
+\usepackage{glossaries}
+
+\makeglossaries
+
+\newglossaryentry{latex}
+{
+	name=latex,
+	description={Is a mark up language specially suited 
+		for scientific documents}
+}
+
+\newglossaryentry{maths}
+{
+	name=mathematics,
+	description={Mathematics is what mathematicians do}
+}
 
 \begin{document}
 	\include{pre}
