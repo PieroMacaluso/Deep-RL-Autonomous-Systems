@@ -68,15 +68,17 @@ class SAC(object):
         self.logger = logger
         
         self.replay_size = args.replay_size
+        self.min_replay_size = args.min_replay_size
         self.num_episode = args.num_episode
         self.pics = args.pics
         self.state_buffer_size = args.state_buffer_size
-        self.warm_up_steps = args.warm_up_steps
+        self.warm_up_episodes = args.warm_up_episodes
         self.batch_size = args.batch_size
         self.updates_per_episode = args.updates_per_episode
         self.eval_episode = args.eval_episode
         self.env_name = args.env_name
         self.entropy_backup = None
+        self.scale_reward = 1
     
     def select_action(self, state, eval=False):
         state = torch.FloatTensor(state).to(self.device).unsqueeze(0)
@@ -113,7 +115,7 @@ class SAC(object):
             next_state_action, next_state_log_pi, _ = self.policy.sample(next_state_batch)
             qf1_next_target, qf2_next_target = self.critic_target(next_state_batch, next_state_action)
             min_qf_next_target = torch.min(qf1_next_target, qf2_next_target) - self.alpha * next_state_log_pi
-            next_q_value = reward_batch + mask_batch * self.gamma * min_qf_next_target
+            next_q_value = self.scale_reward *reward_batch + mask_batch * self.gamma * min_qf_next_target
         
         # Two Q-functions to mitigate positive bias in the policy improvement step
         qf1, qf2 = self.critic(state_batch, action_batch)
@@ -214,6 +216,7 @@ class SAC(object):
                 
                 # Let's forget (if it is the case)
                 if self.env.is_forget_enabled():
+                    # print('forget')
                     print(len(memory))
                     self.restore_model()
                     self.env.reset_forget()
@@ -223,6 +226,7 @@ class SAC(object):
                     self.logger.info("Last Episode Forgotten")
                 elif i_episode != start_episode:
                     ep_print = i_episode - 1
+                    self.print_nets(writer_train, ep_print)
                     rewards.append(episode_reward)
                     running_episode_reward += (episode_reward - running_episode_reward) / (ep_print + 1)
                     if len(rewards) < 100:
@@ -242,6 +246,7 @@ class SAC(object):
                 
                 # Let's test (if it is the case)
                 while self.env.is_test_phase():
+                    # print('test')
                     self.test_phase(writer_test, i_run, i_episode)
                     # Wait for the human to leave the command
                     while self.env.is_human_controlled():
@@ -261,7 +266,7 @@ class SAC(object):
                         pickle.dump(updates, pickle_out)
                     self.backup_model()
                     self.logger.important("Save completed!")
-
+                    
                     break
                 
                 # Limit of episode/run reached. Let's start a new RUN
@@ -285,21 +290,31 @@ class SAC(object):
                 if self.pics:
                     state_buffer = StateBuffer(self.state_buffer_size, state)
                     state = state_buffer.get_state()
-                
+                updates_episode = 0
                 # Start of the episode
                 while not done:
                     if self.pics:
                         writer_train.add_image('episode_{}'
                                                .format(str(i_episode)), state_buffer.get_tensor(), episode_steps)
                     
-                    if episode_steps < self.warm_up_steps:
+                    if i_episode < self.warm_up_episodes:
                         # Warm_up phase -> Completely random choice of an action
                         action = self.env.action_space.sample()
+                        # print('random')
                     else:
                         # Training phase -> Action sampled from policy
                         action = self.select_action(state)
-                    if len(memory) > self.batch_size:  # and not self.env.is_forget_enabled():
+                        # print('policy')
+                    if len(memory) > self.min_replay_size:  # and not self.env.is_forget_enabled():
+                        # print('real_update')
                         updates = self.learning_phase(1, memory, updates, writer_learn)
+                        updates_episode +=1
+                    else:
+                        # print('fake update')
+                        # TODO: Find other ways or make it directly dependent from the time of learning phase
+                        # This value must be fine tuned by hand (not so elegant)
+                        time.sleep(0.05)
+                        
                     
                     # Make the action and get the new context
                     next_state, reward, done, info = self.env.step(action)
@@ -312,10 +327,12 @@ class SAC(object):
                     mask = 1 if done else float(not done)
                     
                     # Push the transition in the memory
+                    # print('push')
                     memory.push(state, action, reward, next_state, mask)
                     state = next_state
-                # while len(memory) > self.batch_size and updates < (i_episode+1)*200:
-                #     updates = self.learning_phase(1, memory, updates, writer_learn)
+                while len(memory) > self.batch_size and updates_episode < 100:
+                    updates = self.learning_phase(1, memory, updates, writer_learn)
+                    updates_episode += 1
                 # self.logger.info("#TotalUpdates={})"
                 #                  .format(updates))
                 last_episode_steps = episode_steps
@@ -323,6 +340,8 @@ class SAC(object):
                 timing = time.time() - ts
                 total_timing = time.time() - in_ts
             start_episode = 0
+            # Disable restore phase after the restored run
+            restore = False
     
     def do_one_test(self):
         old = self.env.reset()
@@ -433,3 +452,16 @@ class SAC(object):
         #                  .format(updates_per_episode,
         #                          round(time.time() - time_update, 2)))
         return updates
+    
+    def print_nets(self, writer_train: SummaryWriter, ep_print: int):
+        for k, v in self.policy.state_dict().items():
+            if k.endswith('bias') or k.endswith('weight'):
+                writer_train.add_histogram('policy/' + k, v, global_step=ep_print)
+        for k, v in self.critic.state_dict().items():
+            if k.endswith('bias') or k.endswith('weight'):
+                writer_train.add_histogram('critic/' + k, v, global_step=ep_print)
+        for k, v in self.critic_target.state_dict().items():
+            if k.endswith('bias') or k.endswith('weight'):
+                writer_train.add_histogram('critic_target/' + k, v, global_step=ep_print)
+        
+        pass
