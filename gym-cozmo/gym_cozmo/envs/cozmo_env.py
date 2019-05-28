@@ -7,7 +7,6 @@ import gym
 import numpy as np
 from cozmo.util import Angle
 from gym import spaces
-
 # Collect events until released
 from gym.utils import seeding
 
@@ -21,6 +20,8 @@ class CozmoEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     
     def __init__(self, robot: cozmo.robot.Robot, image_dim):
+        self.choice_time = 0.1
+        self.last_action = None
         self.seed()
         self.image_dim = image_dim
         self.last_time = 0
@@ -34,22 +35,27 @@ class CozmoEnv(gym.Env):
                                dtype=np.float32)
         self.action_space = spaces.Box(np.array([0, -1]), np.array([+1, +1]), dtype=np.float32)
         self.observation_space = spaces.Box(low=0, high=1, shape=(self.image_dim, self.image_dim), dtype=np.float32)
-        self.say("All set!")
+        # self.say("All set!")
     
     def step(self, action: spaces.Box):
         now_time = time.time()
         step_reward = -1
         if action is not None:
             self.drive(action)
-            step_reward = (now_time - self.last_time) * action[0] * MAX_F_SPEED
+            step_reward = action[0] * MAX_F_SPEED * self.choice_time
             self.last_time = now_time
         
-        self.state = self.get_image()
+        # Wait for the action to be executed
+        time.sleep(self.choice_time)
+        
+        self.state = None
+        while (self.state is None):
+            self.state = self.get_image()
         
         if self.rc.is_human_controlled():
             self.robot.stop_all_motors()
             done = True
-            step_reward = 0  # -9 - action[0]
+            step_reward = 0
         else:
             done = False
         
@@ -86,8 +92,10 @@ class CozmoEnv(gym.Env):
         self.set_lift_height(self.lift.high)
     
     def get_image(self):
-        
         observation = self.robot.world.latest_image.raw_image
+
+        while observation is None:
+            observation = self.robot.world.latest_image.raw_image
         # Returned screen requested by gym is HWC. Transpose it into torch order (CHW).\
         # screen = self.env.render(mode='rgb_array')
         screen = observation.convert("L")
