@@ -9,6 +9,7 @@ import torch
 import torch.nn.functional as F
 from tensorboardX import SummaryWriter
 from torch.optim import Adam
+from torch.optim.lr_scheduler import StepLR
 
 from model import GaussianPolicyCNN, QNetworkCNN, DeterministicPolicyCNN
 from model import GaussianPolicyNN, QNetworkNN, DeterministicPolicyNN
@@ -25,6 +26,7 @@ class SAC(object):
         self.gamma = args.gamma
         self.tau = args.tau
         self.alpha = args.alpha
+        self.learning_rate = 1
         
         self.policy_type = args.policy
         self.target_update = args.target_update
@@ -41,7 +43,8 @@ class SAC(object):
             self.deterministic_policy = DeterministicPolicyNN
         
         self.critic = self.q_network(num_inputs, action_space.shape[0], args.hidden_size).to(device=self.device)
-        self.critic_optim = Adam(self.critic.parameters(), lr=args.lr)
+        self.critic_optim = Adam(self.critic.parameters(), lr=self.learning_rate)
+        self.scheduler_critic = StepLR(self.critic_optim, 1, gamma=0.99)
         logger.debug(self.critic)
         
         self.critic_target = self.q_network(num_inputs, action_space.shape[0], args.hidden_size).to(self.device)
@@ -52,17 +55,20 @@ class SAC(object):
             if self.autotune_entropy:
                 self.target_entropy = -torch.prod(torch.Tensor(action_space.shape).to(self.device)).item()
                 self.log_alpha = torch.zeros(1, requires_grad=True, device=self.device)
-                self.alpha_optim = Adam([self.log_alpha], lr=args.lr)
+                self.alpha_optim = Adam([self.log_alpha], lr=self.learning_rate)
+                self.scheduler_alpha = StepLR(self.alpha_optim, 1, gamma=0.99)
             
             self.policy = self.gaussian_policy(num_inputs, action_space.shape[0], args.hidden_size).to(self.device)
-            self.policy_optim = Adam(self.policy.parameters(), lr=args.lr)
+            self.policy_optim = Adam(self.policy.parameters(), lr=self.learning_rate)
+            self.scheduler_policy = StepLR(self.policy_optim, 1, gamma=0.99)
             logger.debug(self.policy)
         
         else:
             self.alpha = 0
             self.autotune_entropy = False
             self.policy = self.deterministic_policy(num_inputs, action_space.shape[0], args.hidden_size).to(self.device)
-            self.policy_optim = Adam(self.policy.parameters(), lr=args.lr)
+            self.policy_optim = Adam(self.policy.parameters(), lr=self.learning_rate)
+            self.scheduler_policy = StepLR(self.policy_optim, 1, gamma=0.99)
         
         self.folder = folder
         self.logger = logger
@@ -79,6 +85,9 @@ class SAC(object):
         self.env_name = args.env_name
         self.entropy_backup = None
         self.scale_reward = 1
+        self.choice_time = 0.15
+        # TODO: add a moving average of this value
+        self.mean_time_update = 0.05
     
     def select_action(self, state, eval=False):
         state = torch.FloatTensor(state).to(self.device).unsqueeze(0)
@@ -115,7 +124,7 @@ class SAC(object):
             next_state_action, next_state_log_pi, _ = self.policy.sample(next_state_batch)
             qf1_next_target, qf2_next_target = self.critic_target(next_state_batch, next_state_action)
             min_qf_next_target = torch.min(qf1_next_target, qf2_next_target) - self.alpha * next_state_log_pi
-            next_q_value = self.scale_reward *reward_batch + mask_batch * self.gamma * min_qf_next_target
+            next_q_value = self.scale_reward * reward_batch + mask_batch * self.gamma * min_qf_next_target
         
         # Two Q-functions to mitigate positive bias in the policy improvement step
         qf1, qf2 = self.critic(state_batch, action_batch)
@@ -226,7 +235,8 @@ class SAC(object):
                     self.logger.info("Last Episode Forgotten")
                 elif i_episode != start_episode:
                     ep_print = i_episode - 1
-                    self.print_nets(writer_train, ep_print)
+                    # TODO: fix print nets
+                    # self.print_nets(writer_train, ep_print)
                     rewards.append(episode_reward)
                     running_episode_reward += (episode_reward - running_episode_reward) / (ep_print + 1)
                     if len(rewards) < 100:
@@ -305,19 +315,31 @@ class SAC(object):
                         # Training phase -> Action sampled from policy
                         action = self.select_action(state)
                         # print('policy')
-                    if len(memory) > self.min_replay_size:  # and not self.env.is_forget_enabled():
-                        # print('real_update')
-                        updates = self.learning_phase(1, memory, updates, writer_learn)
-                        updates_episode +=1
-                    else:
-                        # print('fake update')
-                        # TODO: Find other ways or make it directly dependent from the time of learning phase
-                        # This value must be fine tuned by hand (not so elegant)
-                        time.sleep(0.05)
-                        
+
+                    assert action.shape == self.env.action_space.shape
+                    assert action is not None
+                    # TODO: problem with histograms!
+                    writer_train.add_histogram('action_speed/episode_{}'
+                                               .format(str(i_episode)), torch.tensor(action[0]), episode_steps)
+                    writer_train.add_histogram('action_turn/episode_{}'
+                                               .format(str(i_episode)), torch.tensor(action[1]), episode_steps)
                     
-                    # Make the action and get the new context
+                    # Make the action
                     next_state, reward, done, info = self.env.step(action)
+                    
+                    # # Learn or wait
+                    # if len(memory) > self.min_replay_size:  # and not self.env.is_forget_enabled():
+                    #     # print('real_update')
+                    #     n_up = np.math.floor(self.choice_time / self.mean_time_update)
+                    #     updates = self.learning_phase(n_up, memory, updates, writer_learn)
+                    #     updates_episode += n_up
+                    # else:
+                    #     # print('fake update')
+                    #     # TODO: Find other ways or make it directly dependent from the time of learning phase
+                    #     # This value must be fine tuned by hand (not so elegant)
+                    #     time.sleep(self.choice_time)
+                    
+                    # Save the step
                     if self.pics:
                         state_buffer.push(next_state)
                         next_state = state_buffer.get_state()
@@ -328,23 +350,34 @@ class SAC(object):
                     
                     # Push the transition in the memory
                     # print('push')
-                    memory.push(state, action, reward, next_state, mask)
+                    if episode_steps > 5:
+                        memory.push(state, action, reward, next_state, mask)
                     state = next_state
-                while len(memory) > self.batch_size and updates_episode < 100:
-                    updates = self.learning_phase(1, memory, updates, writer_learn)
-                    updates_episode += 1
+                print("Memory {}/{}".format(len(memory), self.replay_size))
+                if len(memory) > self.min_replay_size and updates_episode < self.updates_per_episode:
+                    updates = self.learning_phase(self.updates_per_episode - updates_episode, memory, updates,
+                                                  writer_learn)
+                    updates_episode += self.updates_per_episode - updates_episode
                 # self.logger.info("#TotalUpdates={})"
                 #                  .format(updates))
+                self.scheduler_alpha.step()
+                self.scheduler_critic.step()
+                self.scheduler_policy.step()
+                print("{} {} {}"
+                      .format(self.scheduler_policy.get_lr(), self.scheduler_critic.get_lr(),
+                              self.scheduler_alpha.get_lr()))
                 last_episode_steps = episode_steps
                 i_episode += 1
                 timing = time.time() - ts
                 total_timing = time.time() - in_ts
-            start_episode = 0
-            # Disable restore phase after the restored run
-            restore = False
-    
-    def do_one_test(self):
-        old = self.env.reset()
+                start_episode = 0
+                # Disable restore phase after the restored run
+                restore = False
+        
+        def do_one_test(self):
+            
+            old = self.env.reset()
+        
         state_buffer = StateBuffer(self.state_buffer_size, old)
         episode_reward = 0
         done = False
@@ -446,11 +479,14 @@ class SAC(object):
             writer_learn.add_scalar('loss/policy', policy_loss, updates)
             writer_learn.add_scalar('loss/entropy_loss', ent_loss, updates)
             writer_learn.add_scalar('entropy_temperature/alpha', alpha, updates)
+            writer_learn.add_scalar('entropy_temperature/learning_rate', torch.tensor(self.scheduler_policy.get_lr()),
+                                    updates)
+            
             updates += 1
         # print(updates)
-        # self.logger.info("Update (up. {})took {}s"
-        #                  .format(updates_per_episode,
-        #                          round(time.time() - time_update, 2)))
+        self.logger.info("Update (up. {})took {}s"
+                         .format(updates_per_episode,
+                                 round(time.time() - time_update, 2)))
         return updates
     
     def print_nets(self, writer_train: SummaryWriter, ep_print: int):

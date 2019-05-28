@@ -41,14 +41,14 @@ def initial_setup():
     img_size = 100
     
     # Episode
-    warm_up_episodes = 10
-    num_episode = 2000
-    max_num_run = 20
-    batch_size = 64
+    warm_up_episodes = 5
+    num_episode = 500
+    max_num_run = 5
+    batch_size = 4
     replay_size = 30000
-    min_replay_size = 128
+    min_replay_size = 64
     state_buffer_size = 1
-    updates_per_episode = 600
+    updates_per_episode = 100
     target_update = 1
     
     parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')
