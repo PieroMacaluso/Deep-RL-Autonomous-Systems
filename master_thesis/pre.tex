@@ -33,7 +33,7 @@
 	\begin{ThesisTitlePage}
 		\ateneo{Politecnico di Torino}
 		\titolo{Deep Reinforcement Learning algorithms for autonomous systems}
-		\sottotitolo{Design and implementation of a control system for an autonomous driving task of a small robot, exploiting state-of-the-art Model-Free Deep Reinforcement Learning algorithms}
+		\sottotitolo{Design and implementation of a control system for autonomous driving task of a small robot, exploiting state-of-the-art Model-Free Deep Reinforcement Learning algorithms}
 		%%%%%%% Corso degli studi
 		\corsodilaurea{Computer Engineering (Software Career)}
 		%%%%%%% L'eventuale numero di matricola va fra parentesi quadre
@@ -66,20 +66,23 @@
 			
 			In order to make autonomous driving a truly ubiquitous technology, in this thesis we focus on systems which address the ability to drive and navigate in the absence of maps and explicit rules, relying – just like humans do – on a comprehensive understanding of the immediate environment while following simple high-level directions (e.g.\ turn-by-turn route commands). Recent work in this area has demonstrated that this is possible on rural country roads, using GPS for coarse localization and LIDAR to understand the local scene. 
 			
-			Recently, Reinforcement Learning (RL) – a machine learning subfield focused on solving Markov Decision Problems (MDP), where an agent learns to select actions in an environment in an attempt to maximize some reward function – has been shown to achieve super-human results at games such as Go or chess, to be particularly suited for simulated environments like computer games, and to be a promising methodology for simple tasks with robotic manipulators. In this thesis, we argue that the generality of reinforcement learning makes it a useful framework to apply to autonomous driving. 
+			Recently, \gls{rl} – a machine learning subfield focused on solving Markov Decision Problems (MDP), where an agent learns to select actions in an environment in an attempt to maximize some reward function – has been shown to achieve super-human results at games such as Go or chess, to be particularly suited for simulated environments like computer games, and to be a promising methodology for simple tasks with robotic manipulators.
+			
+			In this thesis, we argue that the generality of \gls{rl} makes it a useful framework to apply to autonomous driving. 
+			For this reason we design and implement a control system for an autonomous driving task with a small robot, exploiting state-of-the-art model-free Deep \gls{rl} algorithms and discussing possible ways to make them data efficient.
 			
 \todomacaluso{
-			We design and implement a control system for an autonomous driving task with a small robot, exploiting state-of-the-art model-free Deep RL algorithms and discussing possible ways to make them data efficient.
+			We design and implement a control system for an autonomous driving task with a small robot, exploiting state-of-the-art model-free Deep \gls{rl} algorithms and discussing possible ways to make them data efficient.
 			As such the main tasks of this Thesis focus on the following aspects:
 		Formalize the problem of autonomous driving as an MDP, explain how to design the various elements of this problem to make it simpler to solve, whilst keeping it general and extensible; 
-		Show that a canonical RL algorithm (e.g., deep deterministic policy gradients [8]) can rapidly learn a simple autonomous driving task in a simulation environment; 
+		Show that a canonical \gls{rl} algorithm (e.g., deep deterministic policy gradients [8]) can rapidly learn a simple autonomous driving task in a simulation environment; 
 		Discuss the system set-up required to make learning to drive efficient and safe on a real-world autonomous robot. In particular, we will focus on the Anki Cozmo robotic system [9];
-		Learn to drive a real-world autonomous robotic system in a few episodes (that is, to achieve an efficient learning methodology) with a continuous deep reinforcement learning algorithm, using only “on-board” computation. 
+		Learn to drive a real-world autonomous robotic system in a few episodes (that is, to achieve an efficient learning methodology) with a continuous deep \gls{rl} algorithm, using only “on-board” computation. 
 		Additional, research-oriented topics that will be investigated in this Thesis proposal are concerned with interpretability and “explainability” of the learned model, such that it becomes possible to understand and explain why some actions (e.g., those leading to an accident) have been taken, and to relate this understanding to the foundations of the learning process (e.g., which data samples where used to take a decision).
-		In more practical terms, the Thesis proposal can be broken down as follows. First, a detailed literature review is required: this project aims at reproducing, and building upon the results discussed in a recent technical report [10]. To this end, the work in [10] and the references therein should be studied with care. In addition to conceptual challenges, this Thesis proposal also exhibit several engineering challenges: the original work in [10] leverages a real-world car, whereas this project relies on a simpler and more cost-effective approach based on a small robotic system [9]. As a first step, the design and implementation of a reinforcement learning algorithm can be done using the python-based robot API [9]. As a second step, the idea is to integrate the python-based robot API with the python-based OpenAI Gym framework [11]: here, the ultimate goal is to provide a unified environment to develop and test alternative reinforcement learning algorithms (which is what OpenAI Gym has been built for) that interact with real-world systems instead of computer games.
+		In more practical terms, the Thesis proposal can be broken down as follows. First, a detailed literature review is required: this project aims at reproducing, and building upon the results discussed in a recent technical report [10]. To this end, the work in [10] and the references therein should be studied with care. In addition to conceptual challenges, this Thesis proposal also exhibit several engineering challenges: the original work in [10] leverages a real-world car, whereas this project relies on a simpler and more cost-effective approach based on a small robotic system [9]. As a first step, the design and implementation of a \gls{rl} algorithm can be done using the python-based robot API [9]. As a second step, the idea is to integrate the python-based robot API with the python-based OpenAI Gym framework [11]: here, the ultimate goal is to provide a unified environment to develop and test alternative \gls{rl} algorithms (which is what OpenAI Gym has been built for) that interact with real-world systems instead of computer games.
 		In conclusion, the expected output of this Thesis project is as follows:
 		Produce technical reports covering the scientific literature studied during the Thesis period;
-		Produce technical reports and eventually a research paper to be submitted to a specialized workshop or conference in the domain of machine learning in general, and reinforcement learning in particular;
+		Produce technical reports and eventually a research paper to be submitted to a specialized workshop or conference in the domain of machine learning in general, and \gls{rl} in particular;
 		Produce high-quality source code in python, using well known libraries when necessary (e.g., PyTorch), and relying on external tools such as git repositories;
 		Produce high-quality code documentation to foster experimental reproducibility.
 	}

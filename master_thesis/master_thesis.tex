@@ -79,25 +79,18 @@ numerazioneromana
 \ExtendCaptions{english}{Abstract}{Acknowledgements}
 
 \usepackage{glossaries}
-
 \makeglossaries
-
-\newglossaryentry{latex}
-{
-	name=latex,
-	description={Is a mark up language specially suited 
-		for scientific documents}
-}
-
-\newglossaryentry{maths}
-{
-	name=mathematics,
-	description={Mathematics is what mathematicians do}
-}
+%\setacronymstyle{long-short}
+\newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{nn}{NN}{Neural Network}
+\newacronym{rl}{RL}{Reinforcement Learning}
+\newacronym{sac}{SAC}{Soft Actor-Critic}
+\newacronym{ddpg}{DDPG}{Deep Deterministic Policy Gradient}
 
 \begin{document}
 	\include{pre}
 	\mainmatter
+	\include{introduction}
 	\part{Reinforcement Learning Fundamentals}
 	\include{part_one/first_chapter}
 	\include{part_one/second_chapter}
