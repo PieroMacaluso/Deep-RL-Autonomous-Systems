@@ -45,7 +45,7 @@ class SAC(object):
         self.gamma = args.gamma
         self.tau = args.tau
         self.alpha = args.alpha
-        self.learning_rate = 0.1
+        self.learning_rate = args.lr
         
         self.policy_type = args.policy
         self.target_update = args.target_update
@@ -122,7 +122,6 @@ class SAC(object):
         state = torch.FloatTensor(state).to(self.device).unsqueeze(0)
         if not eval:
             action, _, _ = self.policy.sample(state)
-            print(action)
         else:
             _, _, action = self.policy.sample(state)
         action = action.detach().cpu().numpy()
@@ -267,8 +266,7 @@ class SAC(object):
                     self.logger.info("Last Episode Forgotten")
                 elif i_episode != start_episode:
                     ep_print = i_episode - 1
-                    # TODO: fix print nets
-                    # self.print_nets(writer_train, ep_print)
+                    self.print_nets(writer_train, ep_print)
                     rewards.append(episode_reward)
                     running_episode_reward += (episode_reward - running_episode_reward) / (ep_print + 1)
                     if len(rewards) < 100:
@@ -333,6 +331,7 @@ class SAC(object):
                     state_buffer = StateBuffer(self.state_buffer_size, state)
                     state = state_buffer.get_state()
                 updates_episode = 0
+                
                 # Start of the episode
                 while not done:
                     if self.pics:
@@ -342,17 +341,14 @@ class SAC(object):
                     if i_episode < self.warm_up_episodes:
                         # Warm_up phase -> Completely random choice of an action
                         action = self.env.action_space.sample()
-                        # print('random')
                     else:
-                        print(state)
                         # Training phase -> Action sampled from policy
                         action = self.select_action(state)
-                        # print('policy')
 
                     assert action.shape == self.env.action_space.shape
                     assert action is not None
                     # TODO: problem with histograms!
-                    print(action)
+                    # print(action)
                     writer_train.add_histogram('action_speed/episode_{}'
                                                .format(str(i_episode)), torch.tensor(action[0]), episode_steps)
                     writer_train.add_histogram('action_turn/episode_{}'
@@ -360,18 +356,6 @@ class SAC(object):
                     
                     # Make the action
                     next_state, reward, done, info = self.env.step(action)
-                    
-                    # # Learn or wait
-                    # if len(memory) > self.min_replay_size:  # and not self.env.is_forget_enabled():
-                    #     # print('real_update')
-                    #     n_up = np.math.floor(self.choice_time / self.mean_time_update)
-                    #     updates = self.learning_phase(n_up, memory, updates, writer_learn)
-                    #     updates_episode += n_up
-                    # else:
-                    #     # print('fake update')
-                    #     # TODO: Find other ways or make it directly dependent from the time of learning phase
-                    #     # This value must be fine tuned by hand (not so elegant)
-                    #     time.sleep(self.choice_time)
                     
                     # Save the step
                     if self.pics:
@@ -525,7 +509,7 @@ class SAC(object):
     
     def print_nets(self, writer_train: SummaryWriter, ep_print: int):
         for k, v in self.policy.state_dict().items():
-            print(k)
+            # print(k)
             if (k.endswith('bias') or k.endswith('weight')) and (k.startswith('conv') or k.startswith('conv')):
                 writer_train.add_histogram('policy/' + k, v, global_step=ep_print)
         for k, v in self.critic.state_dict().items():
