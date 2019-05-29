@@ -16,10 +16,12 @@ from my_logging import Log
 from sac import SAC
 
 
-def initial_setup():
-    """Initialization of default parameters and parsing of command line
-    arguments :return: arguments, name of the main folder of the experiment and
-    logger.
+def initial_setup() -> (argparse.Namespace, str, Log, bool):
+    """
+    Initialization of default parameters and parsing of command line arguments.
+    
+    :return: arguments, name of the main folder of the experiment and logger.
+    :rtype: (argparse.Namespace, str, Log, bool)
     """
     # Environment
     env_name = "CozmoDriver-v0"
@@ -41,12 +43,12 @@ def initial_setup():
     img_size = 100
     
     # Episode
-    warm_up_episodes = 5
+    warm_up_episodes = 1
     num_episode = 500
     max_num_run = 5
     batch_size = 4
     replay_size = 30000
-    min_replay_size = 64
+    min_replay_size = 4
     state_buffer_size = 1
     updates_per_episode = 100
     target_update = 1
@@ -115,22 +117,28 @@ def initial_setup():
 
 
 class TensorBoardTool:
-    """Class used to initialize and start TensorBoardX."""
+    """
+    Class used to initialize and start TensorBoardX.
+    """
     
     def __init__(self, dir_path: str):
-        
-        """Constructor. :param dir_path: path of TensorBoardX experiment files
-        :type dir_path: str
-
-        Args:
-            dir_path (str):
         """
+        Constructor
+        
+        :param dir_path: path of TensorBoardX experiment files
+        :type dir_path:  str
+        """
+        
         self.dir_path = dir_path
     
     def run(self) -> str:
-        """Run TensorBoardX using the args specified in the code. :return: str -
-        :type return
         """
+        Run TensorBoardX using the args specified in the code.
+        
+        :return: url
+        :rtype: str
+        """
+        
         # Remove http messages
         log = logging.getLogger('werkzeug').setLevel(logging.ERROR)
         # Start tensorboard server
@@ -143,24 +151,27 @@ class TensorBoardTool:
 
 
 def run(sdk_conn: cozmo.conn):
-    """Container of the main loop. It is necessary to work with Cozmo. This is
-    called by the cozmo.connect presents in the main loop of this file :param
-    sdk_conn: SDK connection to Anki Cozmo :return: nothing
-
-    Args:
-        sdk_conn (cozmo.conn):
     """
+    Container of the main loop. It is necessary to work with Cozmo. This is called by the cozmo.connect
+    presents in the main loop of this file.
+    
+    :param sdk_conn: SDK connection to Anki Cozmo
+    :type sdk_conn: cozmo.conn
+    :return: nothing
+    :rtype: nothing
+    """
+    gettrace = getattr(sys, 'gettrace', None)
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     robot = sdk_conn.wait_for_robot()
     robot.enable_device_imu(True, True, True)
     # Turn on image receiving by the camera
     robot.camera.image_stream_enabled = True
-    in_ts = time.time()
     
     # Setting up Hyper-Parameters
     args, folder, logger, restore = initial_setup()
-    tb_tool = TensorBoardTool(folder)
-    tb_tool.run()
+    if gettrace is None:
+        tb_tool = TensorBoardTool(folder)
+        tb_tool.run()
     logger.debug("Initial setup completed.")
     
     # Create JSON of Hyper-Parameters for reproducibility
@@ -169,7 +180,7 @@ def run(sdk_conn: cozmo.conn):
     
     # Initialize Environment
     gym_cozmo.initialize(robot, args.img_size)
-    env = gym.make('CozmoDriver-v0')
+    env = gym.make(args.env_name)
     
     # Setup the agent
     agent = SAC(args.state_buffer_size, env.action_space, env, args, folder, logger)

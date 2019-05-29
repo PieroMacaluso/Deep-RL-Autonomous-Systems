@@ -19,14 +19,33 @@ from utils import soft_update, hard_update
 
 
 class SAC(object):
+    """
+    This is the class of SAC Cozmo. It can be used as a starting draft to build your own implementation of SAC on Cozmo.
+    """
+    # TODO: complete documentation of SAC
     def __init__(self, num_inputs, action_space, env, args, folder, logger):
+        """
+        This is the initialization function of the class. The function receives as input a lot of parameters
+        :param num_inputs:
+        :type num_inputs:
+        :param action_space:
+        :type action_space:
+        :param env:
+        :type env:
+        :param args:
+        :type args:
+        :param folder:
+        :type folder:
+        :param logger:
+        :type logger:
+        """
         self.env = env
         self.seed = args.seed
         self.device = torch.device("cuda" if args.cuda else "cpu")
         self.gamma = args.gamma
         self.tau = args.tau
         self.alpha = args.alpha
-        self.learning_rate = 1
+        self.learning_rate = 0.1
         
         self.policy_type = args.policy
         self.target_update = args.target_update
@@ -42,14 +61,16 @@ class SAC(object):
             self.gaussian_policy = GaussianPolicyNN
             self.deterministic_policy = DeterministicPolicyNN
         
+        # Initialize Critic Network
         self.critic = self.q_network(num_inputs, action_space.shape[0], args.hidden_size).to(device=self.device)
         self.critic_optim = Adam(self.critic.parameters(), lr=self.learning_rate)
         self.scheduler_critic = StepLR(self.critic_optim, 1, gamma=0.99)
-        logger.debug(self.critic)
-        
         self.critic_target = self.q_network(num_inputs, action_space.shape[0], args.hidden_size).to(self.device)
         hard_update(self.critic_target, self.critic)
         
+        logger.debug(self.critic)
+        
+        # Initialize Actor Network
         if self.policy_type == "Gaussian":
             # Target Entropy = −dim(A) (e.g. , -6 for HalfCheetah-v2) as given in the paper
             if self.autotune_entropy:
@@ -70,6 +91,7 @@ class SAC(object):
             self.policy_optim = Adam(self.policy.parameters(), lr=self.learning_rate)
             self.scheduler_policy = StepLR(self.policy_optim, 1, gamma=0.99)
         
+        
         self.folder = folder
         self.logger = logger
         
@@ -85,18 +107,28 @@ class SAC(object):
         self.env_name = args.env_name
         self.entropy_backup = None
         self.scale_reward = 1
-        self.choice_time = 0.15
-        # TODO: add a moving average of this value
-        self.mean_time_update = 0.05
     
-    def select_action(self, state, eval=False):
+    def select_action(self, state: np.array, eval=False):
+        """
+        Select the action based on the current state and the current policy network.
+        
+        :param state: state of the environment
+        :type state: np.array
+        :param eval: True if we are in the test phase, False otherwise
+        :type eval: bool
+        :return: Array with the action proposed by the policy network
+        :rtype: np.array
+        """
         state = torch.FloatTensor(state).to(self.device).unsqueeze(0)
         if not eval:
             action, _, _ = self.policy.sample(state)
+            print(action)
         else:
             _, _, action = self.policy.sample(state)
         action = action.detach().cpu().numpy()
         action = action[0]
+        assert not np.isnan(action).all()
+        # The next 3 lines of code are used to
         mod = (self.env.action_space.high - self.env.action_space.low) / 2
         tra = (self.env.action_space.high + self.env.action_space.low) / 2
         action = action * mod + tra
@@ -312,6 +344,7 @@ class SAC(object):
                         action = self.env.action_space.sample()
                         # print('random')
                     else:
+                        print(state)
                         # Training phase -> Action sampled from policy
                         action = self.select_action(state)
                         # print('policy')
@@ -319,6 +352,7 @@ class SAC(object):
                     assert action.shape == self.env.action_space.shape
                     assert action is not None
                     # TODO: problem with histograms!
+                    print(action)
                     writer_train.add_histogram('action_speed/episode_{}'
                                                .format(str(i_episode)), torch.tensor(action[0]), episode_steps)
                     writer_train.add_histogram('action_turn/episode_{}'
@@ -491,13 +525,14 @@ class SAC(object):
     
     def print_nets(self, writer_train: SummaryWriter, ep_print: int):
         for k, v in self.policy.state_dict().items():
-            if k.endswith('bias') or k.endswith('weight'):
+            print(k)
+            if (k.endswith('bias') or k.endswith('weight')) and (k.startswith('conv') or k.startswith('conv')):
                 writer_train.add_histogram('policy/' + k, v, global_step=ep_print)
         for k, v in self.critic.state_dict().items():
-            if k.endswith('bias') or k.endswith('weight'):
+            if (k.endswith('bias') or k.endswith('weight')) and (k.startswith('conv') or k.startswith('conv')):
                 writer_train.add_histogram('critic/' + k, v, global_step=ep_print)
         for k, v in self.critic_target.state_dict().items():
-            if k.endswith('bias') or k.endswith('weight'):
+            if (k.endswith('bias') or k.endswith('weight')) and (k.startswith('conv') or k.startswith('conv')):
                 writer_train.add_histogram('critic_target/' + k, v, global_step=ep_print)
         
         pass
