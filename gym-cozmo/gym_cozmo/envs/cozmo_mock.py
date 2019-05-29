@@ -84,7 +84,7 @@ class CozmoMock(gym.Env):
         pass
     
     def get_image(self):
-        screen = np.zeros((self.image_dim, self.image_dim))
+        screen = np.ones((self.image_dim, self.image_dim))
         return screen
     
     def drive(self, action):
