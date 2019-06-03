@@ -64,7 +64,7 @@ class SAC(object):
         # Initialize Critic Network
         self.critic = self.q_network(num_inputs, action_space.shape[0], args.hidden_size).to(device=self.device)
         self.critic_optim = Adam(self.critic.parameters(), lr=self.learning_rate)
-        self.scheduler_critic = StepLR(self.critic_optim, 1, gamma=0.99)
+        # self.scheduler_critic = StepLR(self.critic_optim, 1, gamma=0.99)
         self.critic_target = self.q_network(num_inputs, action_space.shape[0], args.hidden_size).to(self.device)
         hard_update(self.critic_target, self.critic)
         
@@ -77,11 +77,11 @@ class SAC(object):
                 self.target_entropy = -torch.prod(torch.Tensor(action_space.shape).to(self.device)).item()
                 self.log_alpha = torch.zeros(1, requires_grad=True, device=self.device)
                 self.alpha_optim = Adam([self.log_alpha], lr=self.learning_rate)
-                self.scheduler_alpha = StepLR(self.alpha_optim, 1, gamma=0.99)
+                # self.scheduler_alpha = StepLR(self.alpha_optim, 1, gamma=0.99)
             
             self.policy = self.gaussian_policy(num_inputs, action_space.shape[0], args.hidden_size).to(self.device)
             self.policy_optim = Adam(self.policy.parameters(), lr=self.learning_rate)
-            self.scheduler_policy = StepLR(self.policy_optim, 1, gamma=0.99)
+            # self.scheduler_policy = StepLR(self.policy_optim, 1, gamma=0.99)
             logger.debug(self.policy)
         
         else:
@@ -89,7 +89,7 @@ class SAC(object):
             self.autotune_entropy = False
             self.policy = self.deterministic_policy(num_inputs, action_space.shape[0], args.hidden_size).to(self.device)
             self.policy_optim = Adam(self.policy.parameters(), lr=self.learning_rate)
-            self.scheduler_policy = StepLR(self.policy_optim, 1, gamma=0.99)
+            # self.scheduler_policy = StepLR(self.policy_optim, 1, gamma=0.99)
         
         
         self.folder = folder
@@ -378,12 +378,12 @@ class SAC(object):
                     updates_episode += self.updates_per_episode - updates_episode
                 # self.logger.info("#TotalUpdates={})"
                 #                  .format(updates))
-                self.scheduler_alpha.step()
-                self.scheduler_critic.step()
-                self.scheduler_policy.step()
-                print("{} {} {}"
-                      .format(self.scheduler_policy.get_lr(), self.scheduler_critic.get_lr(),
-                              self.scheduler_alpha.get_lr()))
+                # self.scheduler_alpha.step()
+                # self.scheduler_critic.step()
+                # self.scheduler_policy.step()
+                # print("{} {} {}"
+                #       .format(self.scheduler_policy.get_lr(), self.scheduler_critic.get_lr(),
+                #               self.scheduler_alpha.get_lr()))
                 last_episode_steps = episode_steps
                 i_episode += 1
                 timing = time.time() - ts
@@ -392,10 +392,8 @@ class SAC(object):
                 # Disable restore phase after the restored run
                 restore = False
         
-        def do_one_test(self):
-            
-            old = self.env.reset()
-        
+    def do_one_test(self):
+        old = self.env.reset()
         state_buffer = StateBuffer(self.state_buffer_size, old)
         episode_reward = 0
         done = False
@@ -497,7 +495,7 @@ class SAC(object):
             writer_learn.add_scalar('loss/policy', policy_loss, updates)
             writer_learn.add_scalar('loss/entropy_loss', ent_loss, updates)
             writer_learn.add_scalar('entropy_temperature/alpha', alpha, updates)
-            writer_learn.add_scalar('entropy_temperature/learning_rate', torch.tensor(self.scheduler_policy.get_lr()),
+            writer_learn.add_scalar('entropy_temperature/learning_rate', torch.tensor(self.learning_rate),
                                     updates)
             
             updates += 1

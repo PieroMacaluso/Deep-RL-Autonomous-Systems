@@ -38,9 +38,10 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     tau = 0.005
     lr = 0.0003
     alpha = 0.2
-    autotune_entropy = True
+    autotune_entropy = False
     hidden_size = 256
-    img_size = 100
+    img_h = 140
+    img_w = 320
     
     # Episode
     warm_up_episodes = 5
@@ -50,7 +51,7 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     replay_size = 30000
     min_replay_size = 64
     state_buffer_size = 1
-    updates_per_episode = 50
+    updates_per_episode = 100
     target_update = 1
     
     parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')
@@ -80,8 +81,8 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
                         help='Size of state buffer')
     parser.add_argument('--cuda', action="store_true", help='run on CUDA')
     parser.add_argument('--pics', action="store_true", help='run on Image')
-    parser.add_argument('--img_size', type=int, default=img_size, metavar='N', help='Size of image (HW)')
-    
+    parser.add_argument('--img_h', type=int, default=img_h, metavar='N', help='Size of image (H)')
+    parser.add_argument('--img_w', type=int, default=img_w, metavar='N', help='Size of image (W)')
     parser.add_argument('--load_from_json', type=str, default=None, help='Load From File')
     parser.add_argument('--restore', type=str, default=None, help='Folder of experiment to restore')
     
@@ -161,6 +162,10 @@ def run(sdk_conn: cozmo.conn):
     :rtype: nothing
     """
     gettrace = getattr(sys, 'gettrace', None)
+    if gettrace is not None and gettrace():
+        debug = True
+    else:
+        debug = False
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     robot = sdk_conn.wait_for_robot()
     robot.enable_device_imu(True, True, True)
@@ -169,7 +174,7 @@ def run(sdk_conn: cozmo.conn):
     
     # Setting up Hyper-Parameters
     args, folder, logger, restore = initial_setup()
-    if gettrace is None:
+    if not debug:
         tb_tool = TensorBoardTool(folder)
         tb_tool.run()
     logger.debug("Initial setup completed.")
@@ -179,7 +184,7 @@ def run(sdk_conn: cozmo.conn):
         json.dump(vars(args), outfile)
     
     # Initialize Environment
-    gym_cozmo.initialize(robot, args.img_size)
+    gym_cozmo.initialize(robot, args.img_h, args.img_w)
     env = gym.make(args.env_name)
     
     # Setup the agent
