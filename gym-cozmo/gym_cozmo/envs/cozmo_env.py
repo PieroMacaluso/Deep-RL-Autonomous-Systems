@@ -18,11 +18,12 @@ MAX_T_SPEED = 100
 class CozmoEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     
-    def __init__(self, robot: cozmo.robot.Robot, image_dim):
+    def __init__(self, robot: cozmo.robot.Robot, img_h, img_w):
         self.choice_time = 0.1
         self.last_action = None
         self.seed()
-        self.image_dim = image_dim
+        self.img_h = img_h
+        self.img_w = img_w
         self.last_time = 0
         self.robot = robot
         self.rc, self.thread = start(self.robot)
@@ -33,7 +34,7 @@ class CozmoEnv(gym.Env):
         self.head = spaces.Box(low=rb.MIN_HEAD_ANGLE.degrees, high=rb.MAX_HEAD_ANGLE.degrees, shape=(1,),
                                dtype=np.float32)
         self.action_space = spaces.Box(np.array([0, -1]), np.array([+1, +1]), dtype=np.float32)
-        self.observation_space = spaces.Box(low=0, high=1, shape=(self.image_dim, self.image_dim), dtype=np.float32)
+        self.observation_space = spaces.Box(low=0, high=1, shape=(self.img_h, self.img_w), dtype=np.float32)
         # self.say("All set!")
     
     def step(self, action: spaces.Box):
@@ -85,7 +86,7 @@ class CozmoEnv(gym.Env):
         self.start_position()
     
     def start_position(self):
-        self.set_head_angle(-20)
+        self.set_head_angle(0)
         self.set_lift_height(self.lift.high)
     
     def get_image(self):
@@ -95,12 +96,13 @@ class CozmoEnv(gym.Env):
             observation = self.robot.world.latest_image.raw_image
         # Returned screen requested by gym is HWC. Transpose it into torch order (CHW).\
         # screen = self.env.render(mode='rgb_array')
-        screen = observation.convert("L")
+        observation = observation.convert("L")
         # screen = observation
         # screen_height, screen_width = screen.shape
-        screen = np.ascontiguousarray(screen, dtype=np.float32) / 255
+        screen = np.ascontiguousarray(observation, dtype=np.float32) / 255
         # plt.imshow(screen)
-        screen = cv2.resize(screen, (self.image_dim, self.image_dim))
+        screen = screen[-140:, :]
+        screen = cv2.resize(screen, (self.img_w, self.img_h))
         # screen = screen.transpose((2, 0, 1))
         return screen
     

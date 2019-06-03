@@ -1,4 +1,5 @@
 import sys
+import matplotlib.pyplot as plt
 import time
 
 import cozmo
@@ -12,12 +13,14 @@ def run(sdk_conn):
     
     # Turn on image receiving by the camera
     robot.camera.image_stream_enabled = True
-    gym_cozmo.initialize(robot, 84)
-    env = gym.make('CozmoDriver-v0')
+    gym_cozmo.initialize(robot, 140, 320)
+    env = gym.make('CozmoMock-v0')
     state = env.reset()
     done = False
     total_reward = 0.0
     next_state, reward, done, _ = env.step([1, 0])
+    plt.imshow(next_state)
+    plt.show()
     next_state, reward, done, _ = env.step([1, 0])
     next_state, reward, done, _ = env.step([1, 0])
     next_state, reward, done, _ = env.step([1, 0])
