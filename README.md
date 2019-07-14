@@ -1,6 +1,9 @@
 # A Study Of Reinforcement Learning
 The official report of my Master Thesis in Computer Engineering at Politecnico di Torino.
 The project was developed at Eurecom (Biot, France) with prof. Pietro Michiardi (Eurecom) and prof. Elena Baralis (Politecnico di Torino) from March 2019 to TBD.
+
+- [Ideas](IDEAS.md)
+
 ## Table of Contents
 - **Reports**
     - [Deep Deterministic Policy Gradient (DDPG)](report_DDPG)
