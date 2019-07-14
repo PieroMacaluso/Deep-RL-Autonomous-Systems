@@ -23,3 +23,8 @@ as input to the problem. This can then lead him to learn anything in an uncontro
 from the chairs in the background or from the shoes of the people walking.
 In order to reduce this problem we could insert a margin between the road and the end of the carpet, but, above all, 
 insert a wall at the end of it that could allow Cozmo, at least in the phase of its training, to focus on the lane.
+
+
+### Useful Links
+- [Build Your Track AWS DeepRacer](https://docs.aws.amazon.com/deepracer/latest/developerguide/deepracer-build-your-track.html)
+- [LinkedIn Article about DeepRacer](https://www.linkedin.com/pulse/ive-students-meet-aws-deepracer-wong-chun-yin-cyrus-%E9%BB%83%E4%BF%8A%E5%BD%A5-/)
