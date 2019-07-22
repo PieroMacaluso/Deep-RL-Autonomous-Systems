@@ -28,3 +28,13 @@ insert a wall at the end of it that could allow Cozmo, at least in the phase of 
 ### Useful Links
 - [Build Your Track AWS DeepRacer](https://docs.aws.amazon.com/deepracer/latest/developerguide/deepracer-build-your-track.html)
 - [LinkedIn Article about DeepRacer](https://www.linkedin.com/pulse/ive-students-meet-aws-deepracer-wong-chun-yin-cyrus-%E9%BB%83%E4%BF%8A%E5%BD%A5-/)
+
+## Simulator
+
+I think it may be useful to spend a few days looking for a simple and fastest method to design a simple simulator. The simulator will have to provide a  simple landscape with colours similar to those from the physical path.
+
+Acceleration should be a value between `[0,1]` while steering between `[-1, 1]`. It would also be interesting to automate the car's exit from the road, starting a new episode from the beginning.
+
+It would be useful to validate and test the values of hyper-parameters before proceeding with the experiment physically.
+
+I will try crash courses to see if it could be feasible with Unity.
