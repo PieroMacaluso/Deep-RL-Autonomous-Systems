@@ -44,6 +44,11 @@ numerazioneromana
 \usepackage[T1]{fontenc}%    codifica dei font
 \usepackage{lmodern}%        scelta dei font
 
+\usepackage{amsmath}
+\usepackage{varioref}
+\usepackage{hyperref} 
+\usepackage{cleveref}
+
 
 
 % Vedere la documentazione toptesi-it.pdf per le
@@ -70,6 +75,7 @@ numerazioneromana
 \newcommand{\todomichiardi}[1]{\textcolor{red}{TODO (Michiardi P.): #1}}
 \newcommand{\todomacaluso}[1]{\textcolor{red}{TODO (Macaluso P.): #1}}
 
+
 % Per scrivere testo fasullo in "latinorum"
 \usepackage{lipsum}
 %
@@ -80,18 +86,42 @@ numerazioneromana
 
 \usepackage{glossaries}
 \makeglossaries
+% Black for all glossaries entries
+\renewcommand*{\glstextformat}[1]{\textcolor{black}{#1}}
 %\setacronymstyle{long-short}
 \newacronym{cnn}{CNN}{Convolutional Neural Network}
 \newacronym{nn}{NN}{Neural Network}
+\newacronym{dl}{DL}{Deep Learning}
 \newacronym{rl}{RL}{Reinforcement Learning}
 \newacronym{sac}{SAC}{Soft Actor-Critic}
 \newacronym{ddpg}{DDPG}{Deep Deterministic Policy Gradient}
+\newacronym{iid}{i.i.d.}{indipendend and identically distributed}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning} 
+\tikzset{
+	%Define standard arrow tip
+	>=stealth',
+	%Define style for boxes
+	punkt/.style={
+		rectangle,
+		rounded corners,
+		draw=black, very thick,
+		text width=8em,
+		minimum height=2em,
+		text centered},
+	% Define arrow style
+	pil/.style={
+		->,
+		thick,
+		shorten <=2pt,
+		shorten >=2pt,}
+}
 
 \begin{document}
 	\include{pre}
 	\mainmatter
 	\include{introduction}
-	\part{Reinforcement Learning Fundamentals}
 	\include{part_one/first_chapter}
 	\include{part_one/second_chapter}
 	\include{part_one/third_chapter}

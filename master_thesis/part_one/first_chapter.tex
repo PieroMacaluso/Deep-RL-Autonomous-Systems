@@ -1,5 +1,73 @@
-\chapter{Key Concept of Reinforcement Learning}
+\chapter{Reinforcement Learning}
 
-\section{General Concepts}
-\cite{brockman2016openai}
-\lipsum[10-20]
+\glsdisp{rl}{Reinforcement Learning} is an area of Machine Learning that is experiencing a period of great fervor in the world of research, fomented by recent progress in \glsdisp{dl}{Deep Learning}. It is considered as the third paradigm of Machine Learning alongside supervised and unsupervised learning.
+
+Recently it has known a remarkable development and interests in video games: it managed to beat world champions at the game of Go \cite{silver2016mastering} with super human results and to master numerous Atari video games \cite{mnih2013playing}. Decisions, actions and consequences make video games a simulated reality on which to exploit and test Reinforcement Learning algorithms.
+
+It is important to realize that the essence behind \gls{rl} is the science of decision making. This fact makes it interesting and general for many research fields ranging from Engineering, Computer Science, Mathematics, Economics, to Psychology and Neuroscience.
+
+Before discussing the results of this thesis, it is good to clarify everything that today represents the state of the art in order to better understand the universe behind this new paradigm.
+
+For this reason, this chapter is entirely dedicated to this: the first section begins with the definition of the notation used and with the theoretical foundations behind \gls{rl}, then in the second section it moves on to a careful discussion of the most important algorithms paying more attention to those used during the thesis project.
+
+The elaboration of this chapter is inspired by \cite{silver2015lectures} and by \cite{sutton2018reinforcement}.
+
+\section{Elements of Reinforcement Learning}
+
+In this thesis we will use the commonly used notation of reinforcement learning where sets of elements are represented by uppercase letters and the specific instance of a set is defined by a lowercase letter. Some entities are related to a specific timestep $t$, for this reason it will be used as subscript (e.g. $x_t$).
+
+\subsection{Definitions}
+
+Reinforcement Learning is a computational approach to \textbf{Sequential Decision Making} which refers to problems that can not be resolved with a single action, but need a larger horizon, a sequence of actions to be solved. In this context \gls{rl} algorithms learns how to improve and maximise a future reward from interactions between two main components: the agent and the environment. 
+
+The \textbf{agent} is the entity that interacts with the environment by making decisions based on what it can observe from the state of the environment that surrounds it. The decisions taken by the agent are represented by \textbf{actions} ($a_t$). The agent has no control over the environment, but actions are the only means by which it can modify and influence the environment.
+
+The \textbf{environment} represents all the things that are outside the agent. At every actions received by the agent, it emits an \textbf{observation} of the environment and a \textbf{reward}, a key aspect of \gls{rl}.
+
+The \textbf{reward} $R_t$ is a scalar feedback signal that defines the objective of \gls{rl} problem. This signal allows the agent to be able to distinguish positive events from negative ones in order to reinforce and improve its behaviour. It is important to notice that the reward is \textbf{local}, it describes only the value of latest action. Furthemore, actions may have long term consequences and the reward may be delayed. As it happens with human beings' decisions, receiving a conspicuous reward at a specific timestep does not exclude the possibility to receive a small reward immediately afterwards and sometimes it may be better to sacrifice immediate reward to gain more rewards later.
+
+
+In this context there are a lot of features that make \gls{rl} different from supervised and unsupervised learning.
+
+Firstly, there is \textbf{no supervisor}: when the agent has to decide what action to take there is no entity that can tell him what the optimal decision is in that specific moment. The agents receives only a reward signal which may be received with delay with respect to the moment in which the next action has to be performed.
+
+This led us to another important difference: the \textbf{importance of time}: all actions taken by the agent are linked by their sequentiality. In this context, datas are no more \gls{iid}.
+
+Taking all arguments into account, the main goal of the agent is to \textbf{maximise} the expected cumulative reward: this describes the \textbf{reward hypothesis} underlying the \gls{rl} problem. 
+
+
+Another key concept in \gls{rl} is the \textbf{state} ($s_t$). It represents a summary of information that the agent uses to select the next action. Formally, it is a function of the \textbf{history} the sequence of observation, actions and rewards at timestep $t$ as shown in \vref{eq2.1:history}.
+
+\begin{equation}\label{eq2.1:history}
+h_T = o_1, r_1, a_1, \dots, a_{t-1}, o_{t}, r_t, \;\;\;\;\; s_t = f(h_t)
+\end{equation}
+
+The state described above is called also \textit{agent state} $s_t^a$, while the private state of the environment is called \textit{environment state} $s_t^e$. This distinction is useful for distinguishing \textbf{fully observable environments} where $o_t = s_t^e = s_t^a$, from \textbf{partially observable environments} where $s_t^e \neq s_t^a$.
+
+In the first case the agent is able to observe the environment state directly, while in the second one it has access to partial information about the state of the environment.
+
+\todomacaluso{Continua qui parlando di MDPs}
+
+
+
+
+
+The relations among all entities can be summed up in \vref{fig:interactionsAE}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+	%nodes
+	\node[punkt] (agent) {Agent};
+	\node[punkt, below=2cm of agent] (env) {Environment};
+	\draw[pil, -> ]   (env.west) to [bend left=60] node[auto]{State $s_t$} (agent.west);
+	\draw[pil, -> ]   (env) to node[auto]{Reward $r_t$} (agent);
+	\draw[pil, -> ]   (agent.east) to [bend left=60] node[auto]{Action $a_t$} (env.east);
+	\end{tikzpicture}
+	\caption[Interactions between Agent and Environment]{Interactions between Agent and Environment}
+	\label{fig:interactionsAE}
+\end{figure}
+
+
+
+

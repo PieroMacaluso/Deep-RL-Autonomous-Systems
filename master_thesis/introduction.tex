@@ -1,0 +1,48 @@
+\chapter{Introduction}
+
+\section{Motivation}
+
+Autonomous systems, and in particular self-driving for unsupervised robots and vehicles (e.g.\ self-driving cars) is a topic that has attracted a lot of attention from both the research community and industry, due to its potential to radically change mobility and transport. In general, most approaches to date focus on formal logic methods, which define driving behavior in annotated geometric maps. This can be difficult to scale, as it relies heavily on an external mapping infrastructure rather than using and understanding the local scene.
+
+In order to make autonomous driving a truly ubiquitous technology, in this thesis we focus on systems which address the ability to drive and navigate in the absence of maps and explicit rules, relying – just like humans do – on a comprehensive understanding of the immediate environment while following simple high-level directions (e.g.\ turn-by-turn route commands). Recent work in this area has demonstrated that this is possible on rural country roads, using GPS for coarse localization and LIDAR to understand the local scene. 
+
+Recently, \gls{rl} – a machine learning subfield focused on solving Markov Decision Problems (MDP), where an agent learns to select actions in an environment in an attempt to maximize some reward function – has been shown to achieve super-human results at games such as Go or chess, to be particularly suited for simulated environments like computer games, and to be a promising methodology for simple tasks with robotic manipulators.
+
+In this thesis, we argue that the generality of \gls{rl} makes it a useful framework to apply to autonomous driving. 
+For this reason we design and implement a control system for an autonomous driving task with a small robot, exploiting state-of-the-art model-free Deep \gls{rl} algorithms and discussing possible ways to make them data efficient.
+
+\section{Structure of the thesis}
+The aim of this section is to describe the main structure of the thesis.
+
+\subsubsection*{Chapter 1 - Introduction} The current chapter contains the motivation of this work and the structure of the thesis.
+
+\subsubsection*{Chapter 2 - Reinforcement Learning Fundamentals}
+The aim of this chapter is to present a description as detailed as possible about \gls{rl} state-of-the-art in order to provide the reader with useful tools to enter in this research field.
+\todomacaluso{Da qui in poi questo capitolo è da fare}
+\subsubsection*{Chapter 3 - Tools and Frameworks} 
+This chapter explains briefly what are the main tools, frameworks and languages used in the thesis.
+\todomacaluso{Continue this list}
+\begin{description}
+	\item[OpenAI Gym] a framework that is proposed as toolkit for developing and comparing \gls{rl} algorithms.
+	\item [Anki Cozmo] Cozmo looks like a simple toy at first sight, but it hides an infinite potential under the hood, which make it a perfect candidate for the purposes of this thesis.
+\end{description}
+
+\subsubsection*{Chapter 4 - Design of the control system}
+
+\subsubsection*{Chapter 5 - Algorithms for Autonomous Systems} 
+
+
+\subsubsection*{Chapter 5 - Experiments} 
+This is the most important chapter. It shows all the results obtained during the numerous experiments with comments and speculations about them.
+
+\subsubsection*{Chapter 6 - Conclusions} 
+A summary of the results obtained from experiments with a specific part dedicated to future improvements.
+
+
+
+\section{Hardware and Software}
+In this section I want to list all software tools and hardware used, providing a quick introduction.
+
+\begin{itemize}
+	\item 
+\end{itemize}
