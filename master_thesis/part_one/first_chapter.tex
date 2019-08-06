@@ -8,13 +8,13 @@ It is essential to realise that the heart of \gls{rl} is the science of decision
 Before discussing the results of this thesis, it is good to clarify everything that today represents the state-of-the-art in order to understand the universe behind this new paradigm better.
 The exploration of this field of research is the main aim of this chapter: the first section begins with the definition of the notation used and with the theoretical foundations behind \gls{rl}, then in the second section it moves on to a careful discussion of the most important algorithms paying more attention to those used during the thesis project.
 
-The elaboration of this chapter is inspired by \cite{silver2015lectures} and by \cite{sutton2018reinforcement}.
+The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement} and \cite{openai2018spinningup}.
 
 \section{Elements of Reinforcement Learning}
 
 This thesis is written using the conventional notation of reinforcement learning where uppercase letters (e.g. $\mathcal{A}$) describe sets of elements, while lowercase letters (e.g. $a$) represent the specific instance of a set. Some entities are related to a specific timestep $t$ and, for this reason, added as subscript (e.g. $a_t$).
 
-\subsection{Definitions}
+\subsection{The Reinforcement Learning Problem}
 
 Reinforcement Learning is a computational approach to \textbf{Sequential Decision Making}. It is useful with problems that are unsolvable with a single action but need a sequence of actions, a broader horizon, to be solved. In this context, \gls{rl} algorithms learn how to improve and maximise a future reward from interactions between two main components: the \textit{agent} and the \textit{environment}. 
 
@@ -23,6 +23,8 @@ The \textbf{agent} is the entity that interacts with the environment by making d
 Usually, the agent has a set of actions it can take, which is called \textbf{action space}.
 Some environments have \textbf{discrete} action spaces, where only a finite number of moves are available (e.g. $\mathcal{A} = [\text{North}, \text{South}, \text{East}, \text{West}]$ choosing the direction to take in a bidimensional maze). On the other side, there are \textbf{continuous} action spaces where actions are vectors of real values.
 This distinction is fundamental to choose the algorithm to use because not all of them could be compatible with both types: according to the needs of the specific case, it may be necessary to modify the algorithm.
+
+The sequence of state and action is named trajectory ($\tau$): it is helpful to represent an episode.
 
 The \textbf{environment} represents all the things that are outside the agent. At every action received by the agent, it emits a \textbf{reward}, an essential aspect of \gls{rl}, and an \textbf{observation} of the environment.
 
@@ -47,7 +49,7 @@ where $\gamma$ is a \textit{discount factor}. Not only the fact that animal/huma
 The other data emitted by the environment is the \textbf{observation} ($o_t$) that is related to the \textbf{state} ($s_t$). It represents a summary of information that the agent uses to select the next action, while the \textit{state} is a function of the \textbf{history} the sequence of observation, actions and rewards at timestep $t$ as shown in \vref{eq:history}.
 
 \begin{equation}\label{eq:history}
-h_T = o_1, r_1, a_1, \dots, a_{t-1}, o_{t}, r_t, \;\;\;\;\; s_t = f(h_t)
+h_t = o_1, r_1, a_1, \dots, a_{t-1}, o_{t}, r_t, \;\;\;\;\; s_t = f(h_t)
 \end{equation}
 
 The state described above is also called \textit{agent state} $s_t^a$, while the private state of the environment is called \textit{environment state} $s_t^e$. This distinction is useful for distinguishing \textbf{fully observable environments} where $o_t = s_t^e = s_t^a$, from \textbf{partially observable environments} where $s_t^e \neq s_t^a$.
@@ -73,41 +75,106 @@ Beyond the fact that this chapter will focus on \textit{fully observable environ
 Furthermore, a state is called \textit{informational state} (or \textit{Markov state}) when it contains all data and information about its history. Formally, a state is a \textbf{Markov state} if and only if satisfies \vref{eq:markov_state}.
 
 \begin{equation} \label{eq:markov_state}
-	\mathbb{P}[S_{t+1}| S_t] = \mathbb{P}[S_{t+1} | S_1, \dots, S_t]
+	\mathbb{P}[s_{t+1}| s_t] = \mathbb{P}[s_{t+1} | s_1, \dots, s_t]
 \end{equation}
 
  It means that the state contains all data and information the agent needs to know to make decisions: the whole history is not useful anymore because it is inside the state. The environment state $s_t^e$ is a Markov state.
  
- \subsection{The RL problem}
- With all the definitions shown so far it is possible to formalise the type of problems on which \gls{rl} can be applied: the \textbf{\gls{mdp}}, a mathematic framework to model the decision process. Its main application fields are optimization and dynamic programming.
+ With all the definitions shown so far, it is possible to formalise the type of problems on which \gls{rl} can unleash all its features: the \textbf{\glsdisp{mdp}{Markov Decision Process}}, a mathematic framework to model decision processes. Its main application fields are optimization and dynamic programming.
  
  An \gls{mdp} is defined by 
 
- \begin{gather*} \label{eq:mdp}
+ \begin{equation}\label{eq:mdp}
+ \begin{gathered} 
  <\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma>\\
  \begin{aligned}
  	\text{where}\hspace{10pt} \mathcal{S} & \text{ is a finite set of states} \\
  	\mathcal{A} & \text{ a finite set of actions} \\
- 	\mathcal{P} & \text{ a state transition probability matrix}
- 	& \mathcal{P}_{ss'}^a = \mathbb{P}[S_{t+1}&= s' | S_t = s, A_t = a]\\
+ 	\mathcal{P} & \text{ a state transition probability matrix}\;\;
+ 	 \mathcal{P}_{ss'}^a = \mathbb{P}[s_{t+1}= s' | s_t = s, a_t = a]\\
  	\mathcal{R} & \text{ a reward function}
- 	 	& \mathcal{R}_{s}^a = \mathbb{E}[R_{t+1}&= s' | S_t = s, A_t = a] \\
+ 	 	\;\; \mathcal{R}_{s}^a = \mathbb{E}[r_{t+1} | s_t = s, a_t = a] \\
  	 \gamma & \text{ a discount factor such that } \gamma \in [0,1]
  \end{aligned}
- \end{gather*}
+ \end{gathered}
+ \end{equation}
 
 
 The main goal of an \gls{mdp} is to select the best action to take, given a state, in order to collect the best reward. 
 
-\todomacaluso{restart from here}
+\subsection{Bellman Equation}
 
-In this quick overview of the main unit of \gls{rl} the components that may compose the agent, the brain of the \gls{rl} problem can not be missing: they are the \textit{policy}, the \textit{value function} and the \textit{model}.
+In this quick overview of the main unit of \gls{rl} the components that may compose the agent, the brain of the \gls{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
 
-A \textbf{policy} is the core of \gls{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from state to actions.  The \textit{policy} is by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
+A \textbf{model} is composed by information about the environment. These data must not be confused with \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.
 
-A \textbf{value function} represents what is the expected reward that the agent can expect to collect in the future, starting from the current state. The reward signal represents only a local value of the reward, while the value function provides a wider view on the future reward: it can be considered as a prediction of rewards.
+A \textbf{policy} is the core of \gls{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from states to actions.  The \textit{policy} is represented by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
 
-A \textbf{model} is composed by information about the environment. These data must not be confused with \textit{states} and \textit{observations}: it make possible to infer knowledge about how the environment act and react.
+In this perspective, it is evident that the central goal of RL is to learn an \textbf{optimal policy $\pi^*$}. The optimal policy is a policy which can show agent what the most profitable way to achieve the maximum return is, what is the best action to do in a specific situation. In order to learn the nature of the optimal policy, \gls{rl} exploits value functions.
+
+A \textbf{value function} represents what is the expected reward that the agent can presume to collect in the future, starting from the current state. The reward signal represents only a local value of the reward, while the value function provides a broader view of future rewards: it is a sort of \textit{prediction of rewards}.
+
+It is possible to delineate two main value functions: the \textit{state value} function and the \textit{action value} function.
+
+\begin{itemize}
+	\item The \textbf{State Value Function} $V^\pi(s)$ is the expected return starting from the state $s$ and always acting according to policy $\pi$.
+	\begin{equation} \label{eq:statevalue}
+		V^\pi(s) = \mathbb{E}_{\tau \sim \pi}[g_t | s_0 = s]
+	\end{equation}
+	\item The \textbf{Action Value Function} $Q^\pi(s)$ is the expected return starting from the state $s$, taking an action $a$ and then always acting according to policy $\pi$.
+	\begin{equation} \label{eq:actionvalue}
+	Q^\pi(s, a) = \mathbb{E}_{\tau \sim \pi}[g_t | s_0 = s, a_0 = a]
+	\end{equation}
+\end{itemize}
+
+
+Both these functions satisfy recursive relationships thanks to the most relevant equation of RL: the \textbf{Bellman equation}. Indeed, the value function is decomposable in the immediate reward $r_t$ and the discounted state value of the next state. It is possible to obtain the result in \vref{eq:decompvalue} by writing expectations explicitly.
+\begin{align}\label{eq:decompvalue}
+	\begin{split}
+	V^\pi(s) &= \mathbb{E}[g_t | s_t = s] \\
+	&= \mathbb{E}[r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots | s_t = s] \\
+	&= \mathbb{E}[r_{t+1} + \gamma g_{t+1} | s_t = s] \\
+	&= \sum_{a \in \mathcal{A}}\pi(a|s_t)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s_t, a)\big[r + \gamma\mathbb{E}[g_{t+1}| s_{t+1} = s']\big]\\
+	&= \sum_{a \in \mathcal{A}}\pi(a|s_t)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s_t, a)\big[r + \gamma V^\pi(s')\big]
+	\end{split}
+\end{align}
+
+Besides, it is possible to obtain the Bellman Equation solution in \vref{eq:bellmanstate} working with matrix notation.
+\begin{align} \label{eq:bellmanstate}
+	\begin{split}
+	V^\pi &= \mathcal{R}^\pi + \gamma \mathcal{P}^\pi V^\pi \\
+	(I - \gamma\mathcal{P}^\pi)V^\pi &= \mathcal{R}^\pi \\
+	V^\pi &= (I - \gamma\mathcal{P}^\pi)^{-1}\mathcal{R}^\pi
+	\end{split}
+\end{align}
+
+It is further possible to derive the Bellman Equation for Action-Value function using the same procedure described above. Summing up, the function thus obtained can be formally defined as shown in \vref{eq:bellman}.
+\begin{align} \label{eq:bellman}
+	\begin{split}
+V^\pi(s_t) &= \mathbb{E}_{a_t \sim \pi, s_{t+1} \sim E}[r(s_t, a_t) + \gamma V^\pi(s_{t+1})] \\
+Q^\pi(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \mathbb{E}_{ a_{t+1} \sim \pi}[Q^\pi(s_{t+1}, a_{t+1})]]
+\end{split}
+\end{align}
+where $s_{t+1}\sim \mathit{E}$ means that the next state is sampled from the environment $E$ and $a_{t+1}\sim \pi$ shows that the next action is taken following the policy $\pi$. $r(s_t, a_t)$ is a placeholder function to represent the reward given the starting state and the action taken.
+
+As discussed above, the goal is to find the optimal policy $\pi^*$ to exploit. It can be done using the optimal value functions defined in \vref{eq:optbellman}. 
+\begin{align} \label{eq:optbellman}
+\begin{split}
+V^*(s_t) &= \max_{a} \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a) + \gamma V^\pi(s_{t+1})] \\
+Q^*(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \max_{a'}[Q^\pi(s_{t+1}, a')]]
+\end{split}
+\end{align}
+
+These function can be valuable by specifying a partial ordering over policies such that $\pi \ge \pi' \text{ if } V_\pi \ge V_{\pi'},\forall s \in \mathcal{S}$.
+This definition is helpful to enounce the \textbf{Sanity Theorem}. It asserts that for any \gls{mdp} there exists an optimal policy $\pi^*$ that is better than or equal to all other policies, $\pi^* \ge \pi, \forall \pi$, but also that all optimal policies achieve the optimal state value function and the optimal action-value function.
+
+The solution of the Bellman Optimality  Equation is not linear anymore: in general, there is no closed-form solution, and for this reason, there are many iterative methods.
+
+
+
+
+
+
 
 
 
