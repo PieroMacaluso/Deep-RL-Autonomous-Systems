@@ -1,37 +1,39 @@
 \chapter{Reinforcement Learning}
 
-\glsdisp{rl}{Reinforcement Learning} is an area of Machine Learning that is experiencing a period of great fervor in the world of research, fomented by recent progress in \glsdisp{dl}{Deep Learning} opening the doors to function approximation with \gls{nn} and \gls{cnn}. It is based on the idea that the learning process can be built through a sequence of trial and error where the \textit{agent}, the main actor in \gls{rl} could discover what is positive or negative thanks to a \textit{reward signal}, just like human beings and animals do in the real world. It is considered as the third paradigm of Machine Learning alongside supervised and unsupervised learning.
+\glsdisp{rl}{Reinforcement Learning} is a field of Machine Learning that is experiencing a period of great fervour in the world of research, fomented by recent progress in \glsdisp{dl}{Deep Learning} opening the doors to function approximation with \gls{nn} and \gls{cnn}. It represents the third paradigm of Machine Learning alongside supervised and unsupervised learning. The idea behind \gls{rl} is that the learning process consists in a sequence of trial and error where the \textit{agent}, the main actor in \gls{rl} could discover what is positive or negative thanks to a \textit{reward signal}, just like human beings and animals do in the real world. 
 
-Recently it has known a remarkable development and interests in video games: it managed to beat world champions at the game of Go \cite{silver2016mastering} and Dota with super human results and to master numerous Atari video games \cite{mnih2013playing} from raw pixels. Decisions, actions and consequences make video games a simulated reality on which to exploit and test the power of \gls{rl} algorithms.
-It is important to realize that the essence behind \gls{rl} is the science of decision making. This fact makes it interesting and general for many research fields ranging from Engineering, Computer Science, Mathematics, Economics, to Psychology and Neuroscience.
+Recently it has known a remarkable development and interests in video games: it managed to beat world champions at the game of Go \cite{silver2016mastering} and Dota with superhuman results and to master numerous Atari video games \cite{mnih2013playing} from raw pixels. Decisions, actions and consequences make video games a simulated reality on which to exploit and test the power of \gls{rl} algorithms.
+It is essential to realise that the heart of \gls{rl} is the science of decision making. This fact makes it compelling and general for many research fields ranging from Engineering, Computer Science, Mathematics, Economics, to Psychology and Neuroscience.
 
-Before discussing the results of this thesis, it is good to clarify everything that today represents the state of the art in order to better understand the universe behind this new paradigm.
-For this reason, this chapter is entirely dedicated to this: the first section begins with the definition of the notation used and with the theoretical foundations behind \gls{rl}, then in the second section it moves on to a careful discussion of the most important algorithms paying more attention to those used during the thesis project.
+Before discussing the results of this thesis, it is good to clarify everything that today represents the state-of-the-art in order to understand the universe behind this new paradigm better.
+The exploration of this field of research is the main aim of this chapter: the first section begins with the definition of the notation used and with the theoretical foundations behind \gls{rl}, then in the second section it moves on to a careful discussion of the most important algorithms paying more attention to those used during the thesis project.
 
 The elaboration of this chapter is inspired by \cite{silver2015lectures} and by \cite{sutton2018reinforcement}.
 
 \section{Elements of Reinforcement Learning}
 
-This thesis is written using the common notation of reinforcement learning where sets of elements are represented by uppercase letters and the specific instance of a set is defined by a lowercase letter. Some entities are related to a specific timestep $t$, for this reason it will be used as subscript (e.g. $x_t$).
+This thesis is written using the conventional notation of reinforcement learning where uppercase letters (e.g. $\mathcal{A}$) describe sets of elements, while lowercase letters (e.g. $a$) represent the specific instance of a set. Some entities are related to a specific timestep $t$ and, for this reason, added as subscript (e.g. $a_t$).
 
 \subsection{Definitions}
 
-Reinforcement Learning is a computational approach to \textbf{Sequential Decision Making} which refers to problems that can not be resolved with a single action, but need a larger horizon, a sequence of actions to be solved. In this context \gls{rl} algorithms learns how to improve and maximise a future reward from interactions between two main components: the agent and the environment. 
+Reinforcement Learning is a computational approach to \textbf{Sequential Decision Making}. It is useful with problems that are unsolvable with a single action but need a sequence of actions, a broader horizon, to be solved. In this context, \gls{rl} algorithms learn how to improve and maximise a future reward from interactions between two main components: the \textit{agent} and the \textit{environment}. 
 
-The \textbf{agent} is the entity that interacts with the environment by making decisions based on what it can observe from the state of the environment that surrounds it. The decisions taken by the agent are represented by \textbf{actions} ($a_t$). The agent has no control over the environment, but actions are the only means by which it can modify and influence the environment.
+The \textbf{agent} is the entity that interacts with the environment by making decisions based on what it can observe from the state of the surrounding situation. The decisions taken by the agent consist of \textbf{actions} ($a_t$).  The agent has no control over the environment, but actions are the only means by which it can modify and influence the environment.
 
-The \textbf{environment} represents all the things that are outside the agent. At every actions received by the agent, it emits a \textbf{reward}, a key aspect of \gls{rl}, and an \textbf{observation} of the environment.
+Usually, the agent has a set of actions it can take, which is called \textbf{action space}.
+Some environments have \textbf{discrete} action spaces, where only a finite number of moves are available (e.g. $\mathcal{A} = [\text{North}, \text{South}, \text{East}, \text{West}]$ choosing the direction to take in a bidimensional maze). On the other side, there are \textbf{continuous} action spaces where actions are vectors of real values.
+This distinction is fundamental to choose the algorithm to use because not all of them could be compatible with both types: according to the needs of the specific case, it may be necessary to modify the algorithm.
 
-The \textbf{reward} $R_t$ is a scalar feedback signal that defines the objective of \gls{rl} problem. This signal allows the agent to be able to distinguish positive events from negative ones in order to reinforce and improve its behaviour. It is important to notice that the reward is \textbf{local}, it describes only the value of latest action. Furthemore, actions may have long term consequences and the reward may be delayed. As it happens with human beings' decisions, receiving a conspicuous reward at a specific timestep does not exclude the possibility to receive a small reward immediately afterwards and sometimes it may be better to sacrifice immediate reward to gain more rewards later.
+The \textbf{environment} represents all the things that are outside the agent. At every action received by the agent, it emits a \textbf{reward}, an essential aspect of \gls{rl}, and an \textbf{observation} of the environment.
+
+The \textbf{reward} $r_t$ is a scalar feedback signal that defines the objective of the \gls{rl} problem. This signal allows the agent to be able to distinguish positive actions from negative ones in order to reinforce and improve its behaviour. Significantly, the reward is \textbf{local}: it describes only the value of the latest action. Furthermore, actions may have long term consequences, delaying the reward. As it happens with human beings' decisions, receiving a conspicuous reward at a specific time step does not exclude the possibility to receive a small reward immediately afterwards and sometimes it may be better to sacrifice immediate reward to gain more rewards later.
 
 
-In this context there are a lot of features that make \gls{rl} different from supervised and unsupervised learning.
+In this context, many features make \gls{rl} different from supervised and unsupervised learning.
+Firstly, there is \textbf{no supervisor}: when the agent has to decide what action to take, there is no entity that can tell him what the optimal decision is in that specific moment. The agent receives only a reward signal which may delay compared to the moment in which it has to perform the next action. 
+This fact led us to another significant difference: the \textbf{importance of time}. Their sequentiality links all actions taken by the agent. In this context, data are no more \gls{iid}.
 
-Firstly, there is \textbf{no supervisor}: when the agent has to decide what action to take there is no entity that can tell him what the optimal decision is in that specific moment. The agents receives only a reward signal which may be received with delay with respect to the moment in which the next action has to be performed.
-
-This led us to another important difference: the \textbf{importance of time}: all actions taken by the agent are linked by their sequentiality. In this context, datas are no more \gls{iid}.
-
-Taking all arguments into account, the main goal of the agent is to \textbf{maximise} the cumulative reward called \textit{return}.
+The primary purpose of the agent is to \textbf{maximise} the cumulative reward called \textit{return}.
 
 The \textbf{return $g_t$} is the total discounted reward starting from timestep $t$ defined by \vref{eq:return}
 
@@ -39,19 +41,19 @@ The \textbf{return $g_t$} is the total discounted reward starting from timestep 
 	g_t = r_{t+1} + \gamma r_{t+2} + \dots = \sum_{k=0}^{\infty} \gamma^k r_{t+k+1}, \;\;\;\gamma \in [0,1]
 \end{equation}
 
-where $\gamma$ is a \textit{discount factor}. The presence of this factor is motivated by the fact that animal/human behaviour shows preference for immediate rewards rather than for the future ones, but it is also mathematically necessary: an infinite-horizon sum of rewards may not converge to a finite value. Indeed, the return function is a \textit{geometric series}, so, if $\gamma \in [0,1)$, the series converges to a finite value.
+where $\gamma$ is a \textit{discount factor}. Not only the fact that animal/human behaviour shows a preference for immediate rewards rather than for the future ones motivates the presence of this factor, but it is also mathematically necessary: an infinite-horizon sum of rewards may not converge to a finite value. Indeed, the return function is a \textit{geometric series}, so, if $\gamma \in [0,1)$, the series converges to a finite value.
 
 
-The other data emitted by the environment is the \textbf{observation} ($o_t$) that is correlated to the \textbf{state} ($s_t$). It represents a summary of information that the agent uses to select the next action, while the \textit{state} is a function of the \textbf{history} the sequence of observation, actions and rewards at timestep $t$ as shown in \vref{eq:history}.
+The other data emitted by the environment is the \textbf{observation} ($o_t$) that is related to the \textbf{state} ($s_t$). It represents a summary of information that the agent uses to select the next action, while the \textit{state} is a function of the \textbf{history} the sequence of observation, actions and rewards at timestep $t$ as shown in \vref{eq:history}.
 
 \begin{equation}\label{eq:history}
 h_T = o_1, r_1, a_1, \dots, a_{t-1}, o_{t}, r_t, \;\;\;\;\; s_t = f(h_t)
 \end{equation}
 
-The state described above is called also \textit{agent state} $s_t^a$, while the private state of the environment is called \textit{environment state} $s_t^e$. This distinction is useful for distinguishing \textbf{fully observable environments} where $o_t = s_t^e = s_t^a$, from \textbf{partially observable environments} where $s_t^e \neq s_t^a$.
-In the first case the agent is able to observe the environment state directly, while in the second one it has access to partial information about the state of the environment.
+The state described above is also called \textit{agent state} $s_t^a$, while the private state of the environment is called \textit{environment state} $s_t^e$. This distinction is useful for distinguishing \textbf{fully observable environments} where $o_t = s_t^e = s_t^a$, from \textbf{partially observable environments} where $s_t^e \neq s_t^a$.
+In the first case, the agent can observe the environment state directly, while in the second one, it has access to partial information about the state of the environment.
 
-Beyond the fact that this chapter will focus on \textit{fully observable environments}, the distinction between \textit{state} and \textit{observation} is often blurred and, conventionally, the input of the \textit{agent} is composed by the \textit{reward} and the \textit{state} as shown in \vref{fig:interactionsAE}.
+Beyond the fact that this chapter will focus on \textit{fully observable environments}, the distinction between \textit{state} and \textit{observation} is often unclear and, conventionally, the input of the \textit{agent} is composed by the \textit{reward} and the \textit{state} as shown in \vref{fig:interactionsAE}.
 
 \begin{figure}
 	\centering
@@ -74,11 +76,12 @@ Furthermore, a state is called \textit{informational state} (or \textit{Markov s
 	\mathbb{P}[S_{t+1}| S_t] = \mathbb{P}[S_{t+1} | S_1, \dots, S_t]
 \end{equation}
 
- It means that the state contains all data and information the agent needs to know to make decisions and that the whole history can be ignored as contained in it. The environment state $s_t^e$ is a Markov state.
+ It means that the state contains all data and information the agent needs to know to make decisions: the whole history is not useful anymore because it is inside the state. The environment state $s_t^e$ is a Markov state.
  
- With definitions shown so far we can go on to formalize the type of problems on which \gls{rl} can be applied: the \textbf{\gls{mdp}}.
-
- A \gls{mdp} is defined by 
+ \subsection{The RL problem}
+ With all the definitions shown so far it is possible to formalise the type of problems on which \gls{rl} can be applied: the \textbf{\gls{mdp}}, a mathematic framework to model the decision process. Its main application fields are optimization and dynamic programming.
+ 
+ An \gls{mdp} is defined by 
 
  \begin{gather*} \label{eq:mdp}
  <\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma>\\
@@ -94,9 +97,11 @@ Furthermore, a state is called \textit{informational state} (or \textit{Markov s
  \end{gather*}
 
 
+The main goal of an \gls{mdp} is to select the best action to take, given a state, in order to collect the best reward. 
+
 \todomacaluso{restart from here}
 
-In this quick overview of the main unit of \gls{rl} the components that may be compose the agent, the brain of the \gls{rl} problem can not be missing: they are the \textit{policy}, the \textit{value function} and the \textit{model}.
+In this quick overview of the main unit of \gls{rl} the components that may compose the agent, the brain of the \gls{rl} problem can not be missing: they are the \textit{policy}, the \textit{value function} and the \textit{model}.
 
 A \textbf{policy} is the core of \gls{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from state to actions.  The \textit{policy} is by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
 
