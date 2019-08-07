@@ -1,12 +1,12 @@
 \chapter{Reinforcement Learning}
 
-\glsdisp{rl}{Reinforcement Learning} is a field of Machine Learning that is experiencing a period of great fervour in the world of research, fomented by recent progress in \glsdisp{dl}{Deep Learning} opening the doors to function approximation with \gls{nn} and \gls{cnn}. It represents the third paradigm of Machine Learning alongside supervised and unsupervised learning. The idea behind \gls{rl} is that the learning process consists in a sequence of trial and error where the \textit{agent}, the main actor in \gls{rl} could discover what is positive or negative thanks to a \textit{reward signal}, just like human beings and animals do in the real world. 
+\acrfull{rl} is a field of Machine Learning that is experiencing a period of great fervour in the world of research, fomented by recent progress in \acrfull{dl} opening the doors to function approximation with \acrfull{nn} and \acrfull{cnn}. It represents the third paradigm of Machine Learning alongside supervised and unsupervised learning. The idea behind \acrshort{rl} is that the learning process consists in a sequence of trial and error where the \textit{agent}, the main actor in \acrshort{rl} could discover what is positive or negative thanks to a \textit{reward signal}, just like human beings and animals do in the real world. 
 
-Recently it has known a remarkable development and interests in video games: it managed to beat world champions at the game of Go \cite{silver2016mastering} and Dota with superhuman results and to master numerous Atari video games \cite{mnih2013playing} from raw pixels. Decisions, actions and consequences make video games a simulated reality on which to exploit and test the power of \gls{rl} algorithms.
-It is essential to realise that the heart of \gls{rl} is the science of decision making. This fact makes it compelling and general for many research fields ranging from Engineering, Computer Science, Mathematics, Economics, to Psychology and Neuroscience.
+Recently it has known a remarkable development and interests in video games: it managed to beat world champions at the game of Go \cite{silver2016mastering} and Dota with superhuman results and to master numerous Atari video games \cite{mnih2013playing} from raw pixels. Decisions, actions and consequences make video games a simulated reality on which to exploit and test the power of \acrshort{rl} algorithms.
+It is essential to realise that the heart of \acrshort{rl} is the science of decision making. This fact makes it compelling and general for many research fields ranging from Engineering, Computer Science, Mathematics, Economics, to Psychology and Neuroscience.
 
 Before discussing the results of this thesis, it is good to clarify everything that today represents the state-of-the-art in order to understand the universe behind this new paradigm better.
-The exploration of this field of research is the main aim of this chapter: the first section begins with the definition of the notation used and with the theoretical foundations behind \gls{rl}, then in the second section it moves on to a careful discussion of the most important algorithms paying more attention to those used during the thesis project.
+The exploration of this field of research is the main aim of this chapter: the first section begins with the definition of the notation used and with the theoretical foundations behind \acrshort{rl}, then in the second section it moves on to a careful discussion of the most important algorithms paying more attention to those used during the thesis project.
 
 The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement} and \cite{openai2018spinningup}.
 
@@ -16,7 +16,7 @@ This thesis is written using the conventional notation of reinforcement learning
 
 \subsection{The Reinforcement Learning Problem}
 
-Reinforcement Learning is a computational approach to \textbf{Sequential Decision Making}. It is useful with problems that are unsolvable with a single action but need a sequence of actions, a broader horizon, to be solved. In this context, \gls{rl} algorithms learn how to improve and maximise a future reward from interactions between two main components: the \textit{agent} and the \textit{environment}. 
+Reinforcement Learning is a computational approach to \textbf{Sequential Decision Making}. It is useful with problems that are unsolvable with a single action but need a sequence of actions, a broader horizon, to be solved. In this context, \acrshort{rl} algorithms learn how to improve and maximise a future reward from interactions between two main components: the \textit{agent} and the \textit{environment}. 
 
 The \textbf{agent} is the entity that interacts with the environment by making decisions based on what it can observe from the state of the surrounding situation. The decisions taken by the agent consist of \textbf{actions} ($a_t$).  The agent has no control over the environment, but actions are the only means by which it can modify and influence the environment.
 
@@ -26,14 +26,14 @@ This distinction is fundamental to choose the algorithm to use because not all o
 
 The sequence of state and action is named trajectory ($\tau$): it is helpful to represent an episode.
 
-The \textbf{environment} represents all the things that are outside the agent. At every action received by the agent, it emits a \textbf{reward}, an essential aspect of \gls{rl}, and an \textbf{observation} of the environment.
+The \textbf{environment} represents all the things that are outside the agent. At every action received by the agent, it emits a \textbf{reward}, an essential aspect of \acrshort{rl}, and an \textbf{observation} of the environment.
 
-The \textbf{reward} $r_t$ is a scalar feedback signal that defines the objective of the \gls{rl} problem. This signal allows the agent to be able to distinguish positive actions from negative ones in order to reinforce and improve its behaviour. Significantly, the reward is \textbf{local}: it describes only the value of the latest action. Furthermore, actions may have long term consequences, delaying the reward. As it happens with human beings' decisions, receiving a conspicuous reward at a specific time step does not exclude the possibility to receive a small reward immediately afterwards and sometimes it may be better to sacrifice immediate reward to gain more rewards later.
+The \textbf{reward} $r_t$ is a scalar feedback signal that defines the objective of the \acrshort{rl} problem. This signal allows the agent to be able to distinguish positive actions from negative ones in order to reinforce and improve its behaviour. Significantly, the reward is \textbf{local}: it describes only the value of the latest action. Furthermore, actions may have long term consequences, delaying the reward. As it happens with human beings' decisions, receiving a conspicuous reward at a specific time step does not exclude the possibility to receive a small reward immediately afterwards and sometimes it may be better to sacrifice immediate reward to gain more rewards later.
 
 
-In this context, many features make \gls{rl} different from supervised and unsupervised learning.
+In this context, many features make \acrshort{rl} different from supervised and unsupervised learning.
 Firstly, there is \textbf{no supervisor}: when the agent has to decide what action to take, there is no entity that can tell him what the optimal decision is in that specific moment. The agent receives only a reward signal which may delay compared to the moment in which it has to perform the next action. 
-This fact led us to another significant difference: the \textbf{importance of time}. Their sequentiality links all actions taken by the agent. In this context, data are no more \gls{iid}.
+This fact led us to another significant difference: the \textbf{importance of time}. Their sequentiality links all actions taken by the agent. In this context, data are no more \acrfull{iid}.
 
 The primary purpose of the agent is to \textbf{maximise} the cumulative reward called \textit{return}.
 
@@ -80,9 +80,9 @@ Furthermore, a state is called \textit{informational state} (or \textit{Markov s
 
  It means that the state contains all data and information the agent needs to know to make decisions: the whole history is not useful anymore because it is inside the state. The environment state $s_t^e$ is a Markov state.
  
- With all the definitions shown so far, it is possible to formalise the type of problems on which \gls{rl} can unleash all its features: the \textbf{\glsdisp{mdp}{Markov Decision Process}}, a mathematic framework to model decision processes. Its main application fields are optimization and dynamic programming.
+ With all the definitions shown so far, it is possible to formalise the type of problems on which \acrshort{rl} can unleash all its features: the \textbf{\acrfull{mdp}}, a mathematic framework to model decision processes. Its main application fields are optimization and dynamic programming.
  
- An \gls{mdp} is defined by 
+ An \acrshort{mdp} is defined by 
 
  \begin{equation}\label{eq:mdp}
  \begin{gathered} 
@@ -100,17 +100,17 @@ Furthermore, a state is called \textit{informational state} (or \textit{Markov s
  \end{equation}
 
 
-The main goal of an \gls{mdp} is to select the best action to take, given a state, in order to collect the best reward. 
+The main goal of an \acrshort{mdp} is to select the best action to take, given a state, in order to collect the best reward. 
 
 \subsection{Bellman Equation}
 
-In this quick overview of the main unit of \gls{rl} the components that may compose the agent, the brain of the \gls{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
+In this quick overview of the main unit of \acrshort{rl} the components that may compose the agent, the brain of the \acrshort{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
 
 A \textbf{model} is composed by information about the environment. These data must not be confused with \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.
 
-A \textbf{policy} is the core of \gls{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from states to actions.  The \textit{policy} is represented by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
+A \textbf{policy} is the core of \acrshort{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from states to actions.  The \textit{policy} is represented by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
 
-In this perspective, it is evident that the central goal of RL is to learn an \textbf{optimal policy $\pi^*$}. The optimal policy is a policy which can show agent what the most profitable way to achieve the maximum return is, what is the best action to do in a specific situation. In order to learn the nature of the optimal policy, \gls{rl} exploits value functions.
+In this perspective, it is evident that the central goal of RL is to learn an \textbf{optimal policy $\pi^*$}. The optimal policy is a policy which can show agent what the most profitable way to achieve the maximum return is, what is the best action to do in a specific situation. In order to learn the nature of the optimal policy, \acrshort{rl} exploits value functions.
 
 A \textbf{value function} represents what is the expected reward that the agent can presume to collect in the future, starting from the current state. The reward signal represents only a local value of the reward, while the value function provides a broader view of future rewards: it is a sort of \textit{prediction of rewards}.
 
@@ -166,9 +166,11 @@ Q^*(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \max_{a'}[Q^\pi
 \end{align}
 
 These function can be valuable by specifying a partial ordering over policies such that $\pi \ge \pi' \text{ if } V_\pi \ge V_{\pi'},\forall s \in \mathcal{S}$.
-This definition is helpful to enounce the \textbf{Sanity Theorem}. It asserts that for any \gls{mdp} there exists an optimal policy $\pi^*$ that is better than or equal to all other policies, $\pi^* \ge \pi, \forall \pi$, but also that all optimal policies achieve the optimal state value function and the optimal action-value function.
+This definition is helpful to enounce the \textbf{Sanity Theorem}. It asserts that for any \acrshort{mdp} there exists an optimal policy $\pi^*$ that is better than or equal to all other policies, $\pi^* \ge \pi, \forall \pi$, but also that all optimal policies achieve the optimal state value function and the optimal action-value function.
 
 The solution of the Bellman Optimality  Equation is not linear anymore: in general, there is no closed-form solution, and for this reason, there are many iterative methods.
+
+\section{Taxonomy of RL Algorithms}
 
 
 

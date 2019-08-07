@@ -86,20 +86,10 @@ numerazioneromana
 \newtheorem{osservazione}{Osservazione}% Standard LaTeX
 \ExtendCaptions{english}{Abstract}{Acknowledgements}
 
-\usepackage{glossaries}
+\usepackage[acronym, toc]{glossaries}
 
-% Black for all glossaries entries
-\renewcommand*{\glstextformat}[1]{\textcolor{black}{#1}}
 \makeglossaries
-%\setacronymstyle{long-short}
-\newacronym{cnn}{CNN}{Convolutional Neural Network}
-\newacronym{nn}{NN}{Neural Network}
-\newacronym{dl}{DL}{Deep Learning}
-\newacronym{rl}{RL}{Reinforcement Learning}
-\newacronym{sac}{SAC}{Soft Actor-Critic}
-\newacronym{ddpg}{DDPG}{Deep Deterministic Policy Gradient}
-\newacronym{iid}{i.i.d.}{indipendent and identically distributed}
-\newacronym{mdp}{MDP}{Markov decision process}
+\input{other/glossary.tex}
 
 \usepackage{tikz}
 \usetikzlibrary{arrows,positioning} 
@@ -126,12 +116,13 @@ numerazioneromana
 	\include{pre}
 	\mainmatter
 	\include{introduction}
-	\include{part_one/first_chapter}
-	\include{part_one/second_chapter}
-	\include{part_one/third_chapter}
-	\part{Deep Reinforcement Learning}
-	\include{part_two/first_chapter}
-	\include{part_two/second_chapter}
-	\include{part_two/third_chapter}
-	\include{bibliography}	
+	\include{chapters/first_chapter}
+	\include{chapters/second_chapter}
+	\include{chapters/third_chapter}
+	\include{chapters/fourth_chapter}
+	\include{chapters/fifth_chapter}
+	\clearpage
+	\printglossary[type=\acronymtype]
+	\include{bibliography}
+
 \end{document}
