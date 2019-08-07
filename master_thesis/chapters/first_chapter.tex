@@ -106,7 +106,7 @@ The main goal of an \acrshort{mdp} is to select the best action to take, given a
 
 In this quick overview of the main unit of \acrshort{rl} the components that may compose the agent, the brain of the \acrshort{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
 
-A \textbf{model} is composed by information about the environment. These data must not be confused with \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.
+\todomacaluso{A \textbf{model} is composed by information about the environment. These data must not be confused with \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.}
 
 A \textbf{policy} is the core of \acrshort{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from states to actions.  The \textit{policy} is represented by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
 
@@ -127,8 +127,8 @@ It is possible to delineate two main value functions: the \textit{state value} f
 	\end{equation}
 \end{itemize}
 
-
-Both these functions satisfy recursive relationships thanks to the most relevant equation of RL: the \textbf{Bellman equation}. Indeed, the value function is decomposable in the immediate reward $r_t$ and the discounted state value of the next state. It is possible to obtain the result in \vref{eq:decompvalue} by writing expectations explicitly.
+Both these functions satisfy recursive relationships thanks to the most relevant equation of RL: the \textbf{Bellman equation}.
+This equation expresses the relationship between the value of a state and the values of its successor states. Indeed, the value function is decomposable in the immediate reward $r_t$ and the discounted state value of the next state. It is possible to obtain the result in \vref{eq:decompvalue} by writing expectations explicitly.
 \begin{align}\label{eq:decompvalue}
 	\begin{split}
 	V^\pi(s) &= \mathbb{E}[g_t | s_t = s] \\
@@ -165,15 +165,68 @@ Q^*(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \max_{a'}[Q^\pi
 \end{split}
 \end{align}
 
-These function can be valuable by specifying a partial ordering over policies such that $\pi \ge \pi' \text{ if } V_\pi \ge V_{\pi'},\forall s \in \mathcal{S}$.
+Value functions allow defining a partial ordering over policies such that \[\pi \ge \pi' \text{ if } V_\pi \ge V_{\pi'},\forall s \in \mathcal{S}\]
 This definition is helpful to enounce the \textbf{Sanity Theorem}. It asserts that for any \acrshort{mdp} there exists an optimal policy $\pi^*$ that is better than or equal to all other policies, $\pi^* \ge \pi, \forall \pi$, but also that all optimal policies achieve the optimal state value function and the optimal action-value function.
 
 The solution of the Bellman Optimality  Equation is not linear anymore: in general, there is no closed-form solution, and for this reason, there are many iterative methods.
 
-\section{Taxonomy of RL Algorithms}
+\subsection{Approaches of Reinforcement Learning}
 
+It is possible to explain the main strategies in RL to solve problems using \textit{policy}, \textit{model} and \textit{value function} defined previously.
 
+Every agent has a specific application field which depends on the different approach it supports.
+Understanding differences among these approaches is useful to understand better what type of algorithm satisfies better the needs of a specific context.
 
+The distinctions presented in this part are just a part of the complete set because this section aims to describe the most crucial distinctions that are useful in the context of the thesis without claiming to be exhaustive.
+
+\subsubsection{Model-Free vs Model-Based}
+
+One of the most crucial aspects of an RL algorithm is the question of whether the agent has access to (or learns) a model of the environment. A model of the environment enables the agent to predict state transitions and rewards.
+
+A method is \textbf{model-free} when it does not build a model of the environment. All the actions made by the agent results from direct observation of the current situation in which the agent is. It takes the observation, does computations on them and then select the best action to take.
+
+This last representation is in contrast with \textbf{model-based} methods. In this case, the agent tries to build a model of the surrounding environment in order to infer information useful to predict what the next observation or reward would be.
+
+Both groups of methods have strong and weak sides.
+Ordinarily, \textit{model-based} methods show their potential in a deterministic environment (e.g. board game with rules). In these contexts, the presence of the model enables the agent to plan by reasoning ahead, to recognise what would result from a specific decision before taking action. The agent can extract all this knowledge and learn an optimal policy to follow. However, this opportunity is not always achievable: the model may be partially or entirely unavailable, and the agent would have to learn the model from its experience. Learning a model is radically complex and may lead to various hurdles to overcome: for instance, the agent can exploit the bias present in the model, producing an agent which is not able to generalise in real environments.
+
+On the other hand, model-free methods tend to be more straightforward to train and tune because it is usually hard to build models of a heterogeneous environment. Furthermore, model-free methods are more popular and have been more extensively developed and tested than model-based methods.
+
+\subsubsection{Policy-Based vs Value-Based}
+
+The use of policy or value function as the central part of the method represents another essential distinction between RL algorithms.
+
+The approximation of the policy of the agent is the base of \textbf{policy-based} methods. The representation of the policy is usually a probability distribution over available actions. This method points to optimise the behaviour of the agent directly and, because of its on-policy nature, may ask manifold observations from the environment: this fact makes this method not so sample-efficient.
+
+On the opposite side, methods could be \textbf{value-based}. In this case, the agent is still involved in finding the optimal behaviour to follow, but indirectly. It is not interested anymore about the probability distribution of actions. Its main objective is to determine the value of all actions available, choosing the best value. The main difference from the policy-based method is that this method can benefit from other sources, such as old policy data or replay buffer.
+
+\subsubsection{On-Policy vs Off-Policy}
+
+It is possible to classify this method also by different types of policy usage.
+
+An \textbf{off-policy} method can use a different source of valuable data for the learning process instead of the direct experience of the current policy. This feature allows the agent to use, for instance, large experience buffers of past episodes. In this context, these buffers are usually randomly sampled in order to make the data closer to being independent and identically distributed (i.i.d): random extraction guarantees this fact.
+
+On the other hand, \textbf{on-policy} methods profoundly depend on the training data to be sampled according to the current policy.
+
+\subsection{Dynamic Programming}
+
+\subsection{Monte Carlo}
+
+\subsection{\acrshort{td} Learning method}
+
+\subsection{Function Approximation}
+
+\section{Deep Reinforcement Learning}
+
+\subsection{Taxonomy of Deep RL Algorithm}
+
+After the quick overview of the basics of RL terminology and notation provided in the previous section, it is possible to explore more in-depth the universe behind the algorithms of modern Deep RL. Because of the nature of this work, the focus of this section will be on the types of algorithms used in the thesis, without leaving out a quick overview of other types of algorithms most used today in Deep RL.
+
+\subsection{\acrfull{ddpg}}
+
+\subsection{\acrfull{sac}}
+
+\section{Summary}
 
 
 
