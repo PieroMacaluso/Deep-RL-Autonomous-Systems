@@ -1,0 +1,30 @@
+\appendix
+
+\chapter{}
+\section{Bellman Equation} \label{appendix:bellmaneq}
+
+\todomacaluso{Check correctness and completeness}
+
+The value function is decomposable in the immediate reward $r_t$ and the discounted state value of the next state. It is possible to obtain the result in \vref{eq:decompvalue} by writing expectations explicitly.
+\begin{align}\label{eq:decompvalue}
+\begin{split}
+V^\pi(s) &= \mathbb{E}[g_t | s_t = s] \\
+&= \mathbb{E}[r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots | s_t = s] \\
+&= \mathbb{E}[r_{t+1} + \gamma g_{t+1} | s_t = s] \\
+&= \sum_{a \in \mathcal{A}}\pi(a|s_t)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s_t, a)\big[r + \gamma\mathbb{E}[g_{t+1}| s_{t+1} = s']\big]\\
+&= \sum_{a \in \mathcal{A}}\pi(a|s_t)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s_t, a)\big[r + \gamma V^\pi(s')\big]
+\end{split}
+\end{align}
+
+This equation expresses the relationship between the value of a state and the values of its successor states. It is further possible to derive the Bellman Equation for Action-Value function using the same procedure described above.
+
+The resulting formulas are shown in \vref{eq:bellman}.
+
+Furthermore, it is possible to obtain the Bellman Equation solution in \vref{eq:bellmanstate} working with matrix notation.
+\begin{align} \label{eq:bellmanstate}
+\begin{split}
+V^\pi &= \mathcal{R}^\pi + \gamma \mathcal{P}^\pi V^\pi \\
+(I - \gamma\mathcal{P}^\pi)V^\pi &= \mathcal{R}^\pi \\
+V^\pi &= (I - \gamma\mathcal{P}^\pi)^{-1}\mathcal{R}^\pi
+\end{split}
+\end{align}
