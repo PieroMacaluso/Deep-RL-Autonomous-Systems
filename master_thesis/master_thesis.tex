@@ -93,17 +93,19 @@ numerazioneromana
 \input{other/glossary.tex}
 
 \usepackage{tikz}
-\usetikzlibrary{arrows,positioning} 
+\usetikzlibrary{arrows,positioning}
+\usetikzlibrary{calc} % for manimulation of coordinates
 \tikzset{
 	%Define standard arrow tip
 	>=stealth',
 	%Define style for boxes
+	mylabel/.style={text width=7em, text centered},
 	punkt/.style={
 		rectangle,
 		rounded corners,
 		draw=black, very thick,
 		text width=8em,
-		minimum height=2em,
+		minimum height=2.5em,
 		text centered},
 	% Define arrow style
 	pil/.style={

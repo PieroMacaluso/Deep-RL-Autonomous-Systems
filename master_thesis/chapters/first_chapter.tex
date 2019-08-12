@@ -61,12 +61,29 @@ Beyond the fact that this chapter will focus on fully observable environments, t
 \begin{figure}
 	\centering
 	\begin{tikzpicture}
-	%nodes
+	% node Agent
 	\node[punkt] (agent) {Agent};
+	% node Environment
 	\node[punkt, below=2cm of agent] (env) {Environment};
-	\draw[pil, -> ]   (env.west) to [bend left=60] node[auto]{State $s_t$} (agent.west);
-	\draw[pil, -> ]   (env) to node[auto]{Reward $r_t$} (agent);
-	\draw[pil, -> ]   (agent.east) to [bend left=60] node[auto]{Action $a_t$} (env.east);
+	% node a_t
+	\node[mylabel, below right=0.75cm and 0cm of agent] (action) {$a_t$};
+	% node s_t
+	\node[mylabel, below left=0.75cm and 0.8cm of agent] (state) {$s_t$};
+	% node r_t
+	\node[mylabel, below left=0.75cm and -0.2cm of agent] (reward) {$r_t$};
+	% node s_t+1
+	\node[mylabel, above left=-1.2cm and -1cm of env] (state) {$s_{t+1}$};
+	% node r_t+1
+	\node[mylabel,above left=-.45cm and -1cm of env] (reward1) {$r_{t+1}$};
+	
+	
+	
+	\draw[pil]   (agent.east) -- ($(agent.east) + (1.2cm,0cm)$)  |-  (env.east);
+	\draw[pil]   ($(env.west) + (0,-0.1cm)$) -- ($(env.west) + (-1.2cm,-0.1cm)$);
+	\draw[pil]   ($(env.west) + (-1.2cm,-0.1cm)$) -- ($(env.west) + (-2cm,-0.1cm)$) |-($(agent.west) + (0,0.1cm)$);
+	\draw[pil]   ($(env.west) + (0,+0.1cm)$) -- ($(env.west) + (-1.2cm,+0.1cm)$);
+	\draw[pil]   ($(env.west) + (-1.2cm,+0.1cm)$) -- ($(env.west) + (-1.8cm,+0.1cm)$) |-($(agent.west) + (0,-0.1cm)$);
+	\draw[dashed]  ($(env.west) - (1.2cm,-0.5cm)$) -- ($(env.west) - (1.2cm,0.5cm)$);
 	\end{tikzpicture}
 	\caption[Interaction loop between Agent and Environment]{Interaction loop between Agent and Environment}
 	\label{fig:interactionsAE}
