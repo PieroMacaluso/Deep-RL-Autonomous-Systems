@@ -10,11 +10,13 @@ It is essential to realise that the heart of \acrshort{rl} is the science of dec
 
 Before discussing the results of this thesis, it is good to clarify everything that today represents the state-of-the-art in order to understand the universe behind this new paradigm better. Indeed, the exploration of this field of research is the main aim of this chapter: the first section begins with the definition of the notation used and with the theoretical foundations behind \acrshort{rl}, then in the second section it moves  progressively towards what is Deep \acrshort{rl} through a careful discussion of the most important algorithms paying more attention to those used during the thesis project.
 
-The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement} and \cite{openai2018spinningup}.
+The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement}, \cite{openai2018spinningup}, \cite{lapan2018deep}.
 
 \section{Elements of Reinforcement Learning}
 
-This thesis is written using the conventional notation of reinforcement learning where uppercase letters (e.g. $\mathcal{A}$) describe sets of elements, while lowercase letters (e.g. $a$) represent the specific instance of a set. Some entities are related to a specific timestep $t$ and, for this reason, added as subscript (e.g. $a_t$).
+In all bibliography books and papers about RL, it is likely to find different choices about notation used. For this reason, this thesis is written using one of the conventional notation of \acrshort{rl}, trying to be as coherent as possible through all reported demonstrations.
+
+As a general guideline, this exposition uses uppercase letters (e.g. $\mathcal{A}$) to describe sets of elements, while lowercase letters (e.g. $a$) to represent the specific instance of a set. Some entities are related to a specific timestep $t$ and, for this reason, added as subscript (e.g. $a_t$).
 
 \subsection{The Reinforcement Learning Problem}
 
@@ -58,6 +60,7 @@ In the first case, the agent can observe the environment state directly, while i
 
 Beyond the fact that this chapter will focus on fully observable environments, the distinction between state and observation is often unclear and, conventionally, the input of the agent is composed by the reward and the state as shown in \vref{fig:interactionsAE}.
 
+
 \begin{figure}
 	\centering
 	\begin{tikzpicture}
@@ -70,25 +73,24 @@ Beyond the fact that this chapter will focus on fully observable environments, t
 	% node s_t
 	\node[mylabel, below left=0.75cm and 0.8cm of agent] (state) {$s_t$};
 	% node r_t
-	\node[mylabel, below left=0.75cm and -0.2cm of agent] (reward) {$r_t$};
+	\node[mylabel, below left=0.75cm and -0.3cm of agent] (reward) {$r_t$};
 	% node s_t+1
-	\node[mylabel, above left=-1.2cm and -1cm of env] (state) {$s_{t+1}$};
+	\node[mylabel, above left=-1.3cm and -1cm of env] (state) {$s_{t+1}$};
 	% node r_t+1
-	\node[mylabel,above left=-.45cm and -1cm of env] (reward1) {$r_{t+1}$};
+	\node[mylabel,above left=-.3cm and -1cm of env] (reward1) {$r_{t+1}$};
 	
 	
 	
 	\draw[pil]   (agent.east) -- ($(agent.east) + (1.2cm,0cm)$)  |-  (env.east);
-	\draw[pil]   ($(env.west) + (0,-0.1cm)$) -- ($(env.west) + (-1.2cm,-0.1cm)$);
-	\draw[pil]   ($(env.west) + (-1.2cm,-0.1cm)$) -- ($(env.west) + (-2cm,-0.1cm)$) |-($(agent.west) + (0,0.1cm)$);
-	\draw[pil]   ($(env.west) + (0,+0.1cm)$) -- ($(env.west) + (-1.2cm,+0.1cm)$);
-	\draw[pil]   ($(env.west) + (-1.2cm,+0.1cm)$) -- ($(env.west) + (-1.8cm,+0.1cm)$) |-($(agent.west) + (0,-0.1cm)$);
+	\draw[pil]   ($(env.west) + (0,-0.2cm)$) -- ($(env.west) + (-1.2cm,-0.2cm)$);
+	\draw[pil]   ($(env.west) + (-1.2cm,-0.2cm)$) -- ($(env.west) + (-2cm,-0.2cm)$) |-($(agent.west) + (0,0.2cm)$);
+	\draw[pil]   ($(env.west) + (0,+0.2cm)$) -- ($(env.west) + (-1.2cm,+0.2cm)$);
+	\draw[pil]   ($(env.west) + (-1.2cm,+0.2cm)$) -- ($(env.west) + (-1.6cm,+0.2cm)$) |-($(agent.west) + (0,-0.2cm)$);
 	\draw[dashed]  ($(env.west) - (1.2cm,-0.5cm)$) -- ($(env.west) - (1.2cm,0.5cm)$);
 	\end{tikzpicture}
-	\caption[Interaction loop between Agent and Environment]{Interaction loop between Agent and Environment}
+	\caption[Interaction loop between Agent and Environment]{Interaction loop between Agent and Environment. The reward and the state resulting from taking an action become the input of the next iteration.}
 	\label{fig:interactionsAE}
 \end{figure}
-
 
 Furthermore, a state is called \textit{informational state} (or \textit{Markov state}) when it contains all data and information about its history. Formally, a state is a Markov state if and only if satisfies \vref{eq:markov_state}.
 
@@ -101,7 +103,6 @@ Furthermore, a state is called \textit{informational state} (or \textit{Markov s
  With all the definitions shown so far, it is possible to formalise the type of problems on which \acrshort{rl} can unleash all its features: the \acrfull{mdp}, a mathematic framework to model decision processes. Its main application fields are optimization and dynamic programming.
  
  An \acrshort{mdp} is defined by 
-
  \begin{equation}\label{eq:mdp}
  \begin{gathered} 
  <\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma>\\
@@ -124,7 +125,7 @@ The main goal of an \acrshort{mdp} is to select the best action to take, given a
 
 In this quick overview of the main unit of \acrshort{rl} the components that may compose the agent, the brain of the \acrshort{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
 
-\todomacaluso{A \textit{model} is composed by information about the environment. These data must not be confused with \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.}
+A \textit{model} is composed by information about the environment. These data must not be confused with \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.
 
 A \textit{policy} is the core of \acrshort{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from states to actions.  The \textit{policy} is represented by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
 
@@ -173,7 +174,7 @@ The solution of Bellman Optimality Equation is not linear and, in general, there
 It is possible to explain the main strategies in RL to solve problems using \textit{policy}, \textit{model} and \textit{value function} defined previously.
 
 Every agent has a specific application field which depends on the different approach it supports.
-Understanding differences among these approaches is useful to understand better what type of algorithm satisfies better the needs of a specific context.
+Understanding differences among these approaches is useful to adequately understand what type of algorithm satisfies better the needs of a specific context.
 
 The distinctions presented in this part are just a part of the complete set because this section aims to describe the most crucial distinctions that are useful in the context of the thesis without claiming to be exhaustive.
 
@@ -206,13 +207,49 @@ An \textit{off-policy} method can use a different source of valuable data for th
 
 On the other hand, \textit{on-policy} methods profoundly depend on the training data to be sampled according to the current policy.
 
-\todomacaluso{Restart from here}
 
 \subsection{Dynamic Programming}
 
+Dynamic programming is one of the approaches used to solve \acrshort{rl} problems. Formally, it is a general method to solve complex problems by breaking them into sub-problems that are more convenient to solve. After solving all sub-problems, it is possible to sum them up in order to obtain the final solution to the whole original problem.
+
+This technique provides a practical framework to solve MDP problems and to observe what is the best result achievable from it, but it assumes to have full knowledge about the specific problem. For this reason, it applies primarily to model-based problems.
+
+This thesis will not focus on this type of approach, so this section aims to present only the basic concept of \textit{policy iteration} and \textit{value iteration} which are worth quoting: the fourth chapter of \cite{sutton2018reinforcement} provides further details about this section.
+
+\subsubsection{Policy Iteration}
+
+The policy iteration aims to find the optimal policy by directly manipulating the starting policy. However, before proceeding with this process, a proper evaluation of the current policy is essential. This procedure can be done iteratively following \vref{policy_evaluation}.
+
+$\theta$ is the parameter that defines the accuracy: the more the value is closer to $0$, the more the evaluation would be precise.
+\begin{algorithm}
+	\SetAlgoLined
+	\DontPrintSemicolon
+	\LinesNumbered
+	\KwIn{$\pi$ the policy to be evaluated; a small threshold $\theta$ which defines the accuracy of the estimation\;}
+	Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily except that $V(terminal) = 0$\;
+	\Repeat{$\Delta \le \theta$}{
+		$\Delta \leftarrow 0$\;
+		\For{each $s \in \mathcal{S}$}{
+			v $\leftarrow$ $V(s)$\;
+			$V(s) \leftarrow \sum_{a \in \mathcal{A}} \pi(a|s) \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
+			$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
+		}
+	}
+	$V_\pi \leftarrow V(s)$\;
+	\KwOut{$V_\pi$}
+	\caption{Iterative Policy Evaluation for estimating $V_\pi$}
+	\label{policy_evaluation}
+\end{algorithm}
+
+Policy improvement represents the second step toward policy iteration. Intuitively, it is possible to find a better policy than the starting one by changing the action to take in a specific state with a more rewarding one.  The key to check if the new policy is better than the previous one is to use the action-value function $Q_\pi(s,a)$. This function returns the value of taking action $a$ in the current state $s$ and after that following the existing policy $\pi$. If $Q_\pi(s,a)$ is higher than $V_\pi(s)$, so the action selected is better than the action chosen by the current policy, and consequently, the new policy would be better overall.
+
+\todomacaluso{Restart from here}
+
+
+
 \subsection{Monte Carlo}
 
-\subsection{\acrshort{td} Learning method}
+\subsection{Temporal Difference (TD) Learning method}
 
 \subsection{Function Approximation}
 
@@ -222,9 +259,9 @@ On the other hand, \textit{on-policy} methods profoundly depend on the training 
 
 After the quick overview of the basics of RL terminology and notation provided in the previous section, it is possible to explore more in-depth the universe behind the algorithms of modern Deep RL. Because of the nature of this work, the focus of this section will be on the types of algorithms used in the thesis, without leaving out a quick overview of other types of algorithms most used today in Deep RL.
 
-\subsection{\acrfull{ddpg}}
+\subsection{Deep Deterministic Policy Gradient (DDPG)}
 
-\subsection{\acrfull{sac}}
+\subsection{Soft-Actor Critic (SAC)}
 
 \section{Summary}
 

@@ -48,18 +48,47 @@ numerazioneromana
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsfonts}
+
 \usepackage{varioref}
-\usepackage{hyperref} 
-\usepackage{cleveref}
+\usepackage{hyperref}
+\usepackage{cleveref} 
+
+
+
+\usepackage[ruled,vlined,dotocloa,algochapter]{algorithm2e}
+\Crefname{algocf}{Algorithm}{Algorithms}
+\usepackage{float}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Algorithm}% Listing -> Algorithm
+\renewcommand{\lstlistlistingname}{List of \lstlistingname s}% List of Listings -> List of Algorithms
+\crefname{listing}{algorithm}{algorithms}  
+\Crefname{listing}{Algorithm}{Algorithms}
+\floatname{algorithm}{Procedure}
+
+
+\lstset{frame=tb,
+	language=Python,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3,
+	inputencoding=latin1
+}
 
 
 
 % Vedere la documentazione toptesi-it.pdf per le
 % attenzioni che bisogna usare al fine di ottenere un file
 % veramente conforme alle norme per l'archiviabilità.
-
-
-\usepackage{hyperref}
 
 \hypersetup{%
 	pdfpagemode={UseOutlines},

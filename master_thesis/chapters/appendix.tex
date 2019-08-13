@@ -11,8 +11,8 @@ The value function is decomposable in the immediate reward $r_t$ and the discoun
 V^\pi(s) &= \mathbb{E}[g_t | s_t = s] \\
 &= \mathbb{E}[r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots | s_t = s] \\
 &= \mathbb{E}[r_{t+1} + \gamma g_{t+1} | s_t = s] \\
-&= \sum_{a \in \mathcal{A}}\pi(a|s_t)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s_t, a)\big[r + \gamma\mathbb{E}[g_{t+1}| s_{t+1} = s']\big]\\
-&= \sum_{a \in \mathcal{A}}\pi(a|s_t)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s_t, a)\big[r + \gamma V^\pi(s')\big]
+&= \sum_{a \in \mathcal{A}}\pi(a|s)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma\mathbb{E}[g_{t+1}| s_{t+1} = s']\big]\\
+&= \sum_{a \in \mathcal{A}}\pi(a|s)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma V^\pi(s')\big]
 \end{split}
 \end{align}
 
