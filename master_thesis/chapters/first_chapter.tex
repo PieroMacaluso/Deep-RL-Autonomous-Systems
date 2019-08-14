@@ -149,9 +149,11 @@ It is possible to delineate two main value functions: the \textit{state value} f
 Both these functions satisfy recursive relationships between the value of a state and the values of its successor states. It is possible to see this property deriving \textit{Bellman equations} as shown in \vref{appendix:bellmaneq}.
 
 The results are shown in \vref{eq:bellman} where $s_{t+1}\sim \mathit{E}$ means that the next state is sampled from the environment $E$ and $a_{t+1}\sim \pi$ shows that the next action is taken following the policy $\pi$.
+\todomacaluso{Rivedi queste formule inserendo estensioni}
 \begin{align} \label{eq:bellman}
 	\begin{split}
 V^\pi(s_t) &= \mathbb{E}_{a_t \sim \pi, s_{t+1} \sim E}[r(s_t, a_t) + \gamma V^\pi(s_{t+1})] \\
+		&= \sum_{a \in \mathcal{A}}\pi(a|s)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma V^\pi(s')\big]\\
 Q^\pi(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \mathbb{E}_{ a_{t+1} \sim \pi}[Q^\pi(s_{t+1}, a_{t+1})]]
 \end{split}
 \end{align}
@@ -168,6 +170,7 @@ Value functions allow defining a partial ordering over policies such that \[\pi 
 This definition is helpful to enounce the \textit{Sanity Theorem}. It asserts that for any \acrshort{mdp} there exists an optimal policy $\pi^*$ that is better than or equal to all other policies, $\pi^* \ge \pi, \forall \pi$, but also that all optimal policies achieve the optimal state value function and the optimal action-value function.
 
 The solution of Bellman Optimality Equation is not linear and, in general, there is no closed-form solution. For this reason, there are many iterative methods.
+\todomacaluso{Bisognerà aggiungere riferimento a sezioni successive}.
 
 \subsection{Approaches of Reinforcement Learning}
 
@@ -218,9 +221,8 @@ This thesis will not focus on this type of approach, so this section aims to pre
 
 \subsubsection{Policy Iteration}
 
-The policy iteration aims to find the optimal policy by directly manipulating the starting policy. However, before proceeding with this process, a proper evaluation of the current policy is essential. This procedure can be done iteratively following \vref{policy_evaluation}.
+The \textit{policy iteration} aims to find the optimal policy by directly manipulating the starting policy. However, before proceeding with this process, a proper evaluation of the current policy is essential. This procedure can be done iteratively following \vref{policy_evaluation} where $\theta$ is the parameter that defines the accuracy: the more the value is closer to $0$, the more the evaluation would be precise.
 
-$\theta$ is the parameter that defines the accuracy: the more the value is closer to $0$, the more the evaluation would be precise.
 \begin{algorithm}
 	\SetAlgoLined
 	\DontPrintSemicolon
@@ -241,8 +243,36 @@ $\theta$ is the parameter that defines the accuracy: the more the value is close
 	\label{policy_evaluation}
 \end{algorithm}
 
-Policy improvement represents the second step toward policy iteration. Intuitively, it is possible to find a better policy than the starting one by changing the action to take in a specific state with a more rewarding one.  The key to check if the new policy is better than the previous one is to use the action-value function $Q_\pi(s,a)$. This function returns the value of taking action $a$ in the current state $s$ and after that following the existing policy $\pi$. If $Q_\pi(s,a)$ is higher than $V_\pi(s)$, so the action selected is better than the action chosen by the current policy, and consequently, the new policy would be better overall.
+\textit{Policy improvement} represents the second step towards policy iteration. Intuitively, it is possible to find a more valuable policy than the starting one by changing the action to take in a specific state with a more rewarding one.  The key to check if the new policy is better than the previous one is to use the action-value function $Q_\pi(s,a)$. This function returns the value of taking action $a$ in the current state $s$ and after that following the existing policy $\pi$. If $Q_\pi(s,a)$ is higher than $V_\pi(s)$, so the action selected is better than the action chosen by the current policy, and consequently, the new policy would be better overall.
 
+Policy improvement theorem is the formalisation of this fact: \vref{policyimprovement} shows its demonstration. Thanks to this theorem, it is reasonable to act greedily to find a better policy starting from the current one iteratively selecting the action that produces the higher  $Q_\pi(s, a)$ for each state.
+
+%\begin{align}\label{eq:greedy}
+%\begin{split}
+%\pi'(s) &\doteq \underset{a}{\arg\max\,} Q_\pi(s, a)\\
+%		&= \underset{a}{\arg\max\,} \mathbb{E}[r_{t+1}+\gamma V_\pi(s_{t+1})|s_t = s, a_t = a]\\
+%		&= \underset{a \in \mathcal{A}}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s',r |s, a)\bigg[r+\gamma V_\pi(s')\bigg]\\
+%\end{split}
+%\end{align}
+
+The iterative application of policy improvement stops after an improvement step that does not modify the initial policy, returning the optimal policy found.
+
+\begin{algorithm}
+	\SetAlgoLined
+	\DontPrintSemicolon
+	\LinesNumbered
+	\KwIn{$\pi$ the policy to be improved\;}
+	$is\_policy\_stable \leftarrow true$\;
+	\For{each $s \in \mathcal{S}$}{
+		$old\_action \leftarrow \pi(s)$\;
+		$\pi(s) \leftarrow \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s',r |s, a)\bigg[r+\gamma V_\pi(s')\bigg]$\;
+		\If{$old\_action \neq \pi(s)$}{$is\_policy\_stable \leftarrow false$}
+	}
+	\If{$is\_policy\_stable$}{Stop and return $V \sim V^*$ and $\pi \sim \pi^*$\;}
+	\KwOut{$V*$ and $\pi*$}
+	\caption{Policy Improvement for estimating $\pi \sim \pi'$}
+	\label{policy_improvement}
+\end{algorithm}
 \todomacaluso{Restart from here}
 
 

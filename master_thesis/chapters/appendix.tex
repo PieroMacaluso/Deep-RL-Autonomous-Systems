@@ -28,3 +28,37 @@ V^\pi &= \mathcal{R}^\pi + \gamma \mathcal{P}^\pi V^\pi \\
 V^\pi &= (I - \gamma\mathcal{P}^\pi)^{-1}\mathcal{R}^\pi
 \end{split}
 \end{align}
+
+\section{Policy Improvement Theorem} \label{policyimprovement}
+
+
+
+Let $\pi$ and $\pi'$ be any pair of deterministic policy such that 
+\begin{equation} \label{eq:impr0}
+	Q_\pi(s, \pi'(s)) \ge V_\pi(s) \; \forall s \in S
+\end{equation}
+Then the policy $\pi'$ leads to
+\begin{equation} \label{eq:impr1}
+V_\pi'(s) \ge V_\pi(s)
+\end{equation}
+
+
+Therefore, the presence of strict inequality in \vref{eq:impr0} for a state leads to a strict inequality of \vref{eq:impr1}.
+
+The proof of this theorem is shown in \vref{eq:policyimprovement}.
+\begin{align}\label{eq:policyimprovement}
+\begin{split}
+V_\pi(s) &\le Q_\pi(s, \pi'(s))\\
+		&= \mathbb{E}[r_{t+1} + \gamma V_\pi(s_{t+1})| s_t = s, a_t = \pi'(s)]\\
+		&= \mathbb{E}_{\pi'}[r_{t+1} + \gamma V_\pi(s_{t+1})| s_t = s]\\
+		&\le \mathbb{E}_{\pi'}[r_{t+1} + \gamma Q_\pi(s_{t+1}, \pi'(s_{t+1}))| s_t = s] \; \; \text{(by \ref{eq:impr0})}\\
+		&= \mathbb{E}_{\pi'}[r_{t+1} + \gamma \mathbb{E}_{\pi'}[r_{t+2}+ \gamma V_\pi(s_{t+2})| s_{t+1}, a_{t+1} = \pi'(s_{t+1})]| s_t = s]\\
+		&= \mathbb{E}_{\pi'}[r_{t+1} + \gamma r_{t+2} + \gamma^2 V_\pi(s_{t+2})| s_t = s]\\
+		&\le \mathbb{E}_{\pi'}[r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \gamma^3 V_\pi(s_{t+3})| s_t = s]\\
+		&\vdots\\
+		&\le \mathbb{E}_{\pi'}[r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \gamma^3 r_{t+4} + \dots| s_t = s]\\
+		&= v_{\pi'}(s)
+\end{split}
+\end{align}
+
+
