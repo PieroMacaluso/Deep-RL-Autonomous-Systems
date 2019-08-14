@@ -1,5 +1,7 @@
 \chapter{Introduction}
 
+\todomacaluso{Da rifare totalmente alla fine}
+
 \section{Motivation}
 
 Autonomous systems, and in particular self-driving for unsupervised robots and vehicles (e.g.\ self-driving cars) is a topic that has attracted a lot of attention from both the research community and industry, due to its potential to radically change mobility and transport. In general, most approaches to date focus on formal logic methods, which define driving behavior in annotated geometric maps. This can be difficult to scale, as it relies heavily on an external mapping infrastructure rather than using and understanding the local scene.
@@ -10,6 +12,8 @@ Recently, \gls{rl} – a machine learning subfield focused on solving \gls{mdp},
 
 In this thesis, we argue that the generality of \gls{rl} makes it a useful framework to apply to autonomous driving. 
 For this reason we design and implement a control system for an autonomous driving task with a small robot, exploiting state-of-the-art model-free Deep \gls{rl} algorithms and discussing possible ways to make them data efficient.
+
+\section{Related Work}
 
 \section{Structure of the thesis}
 The aim of this section is to describe the main structure of the thesis.
@@ -23,8 +27,8 @@ The aim of this chapter is to present a description as detailed as possible abou
 This chapter explains briefly what are the main tools, frameworks and languages used in the thesis.
 \todomacaluso{Continue this list}
 \begin{description}
-	\item[OpenAI Gym] a framework that is proposed as toolkit for developing and comparing \gls{rl} algorithms.
-	\item [Anki Cozmo] Cozmo looks like a simple toy at first sight, but it hides an infinite potential under the hood, which make it a perfect candidate for the purposes of this thesis.
+	\item[OpenAI Gym] framework for developing and comparing Reinforcement Learning algorithms and environments using standardize interface.
+	\item [Anki Cozmo] it looks like a simple toy at first sight, but it hides an infinite potential under the hood, which make it a perfect candidate for the purposes of this thesis.
 \end{description}
 
 \subsubsection*{Chapter 4 - Design of the control system}
@@ -37,12 +41,3 @@ This is the most important chapter. It shows all the results obtained during the
 
 \subsubsection*{Chapter 6 - Conclusions} 
 A summary of the results obtained from experiments with a specific part dedicated to future improvements.
-
-
-
-\section{Hardware and Software}
-In this section I want to list all software tools and hardware used, providing a quick introduction.
-
-\begin{itemize}
-	\item 
-\end{itemize}

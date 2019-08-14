@@ -12,15 +12,15 @@ Before discussing the results of this thesis, it is good to clarify everything t
 
 The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement}, \cite{openai2018spinningup}, \cite{lapan2018deep}.
 
-\section{Elements of Reinforcement Learning}
+\section{Fundamentals of Reinforcement Learning} \label{fundreinflearn}
 
-In all bibliography books and papers about RL, it is likely to find different choices about notation used. For this reason, this thesis is written using one of the conventional notation of \acrshort{rl}, trying to be as coherent as possible through all reported demonstrations.
+Reinforcement Learning is a computational approach to Sequential Decision Making. It provides a framework that is exploitable with decision-making problems that are unsolvable with a single action and need a sequence of actions, a broader horizon, to be solved. 
 
-As a general guideline, this exposition uses uppercase letters (e.g. $\mathcal{A}$) to describe sets of elements, while lowercase letters (e.g. $a$) to represent the specific instance of a set. Some entities are related to a specific timestep $t$ and, for this reason, added as subscript (e.g. $a_t$).
+This section aims to present the fundamental ideas and notions behind this research field in order to help the reader to develop a baseline useful to approach \vref{deepreinflearn} about Deep Reinforcement Learning.
 
 \subsection{The Reinforcement Learning Problem}
 
-Reinforcement Learning is a computational approach to Sequential Decision Making. It provides a framework that is exploitable with decision-making problems that are unsolvable with a single action and need a sequence of actions, a broader horizon, to be solved. In this context, \acrshort{rl} algorithms learn how to improve and maximise a future reward from interactions between two main components: the agent and the environment. 
+The primary purpose of \acrshort{rl} algorithms is to learn how to improve and maximise a future reward by relying on interactions between two main components: the agent and the environment. 
 
 The \textit{agent} is the entity that interacts with the environment by making decisions based on what it can observe from the state of the surrounding situation. The decisions taken by the agent consist of \textit{actions} ($a_t$).  The agent has no control over the environment, but actions are the only means by which it can modify and influence the environment.
 
@@ -45,7 +45,7 @@ The \textit{return $g_t$} is the total discounted reward starting from timestep 
 	g_t = r_{t+1} + \gamma r_{t+2} + \dots = \sum_{k=0}^{\infty} \gamma^k r_{t+k+1}, \;\;\;\gamma \in [0,1)
 \end{equation}
 
- Not only the fact that animal and human behaviour show a preference for immediate rewards rather than for the future ones motivates the presence of this factor, but it is also mathematically necessary: an infinite-horizon sum of rewards may not converge to a finite value. Indeed, the return function is a geometric series, so, if $\gamma \in [0,1)$, the series converges to a finite value equal to $1/(1-\gamma)$. For the same convergence sake, the case with $\gamma = 0$ makes sense only with a finite-horizon cumulative discounted reward.
+ Not only the fact that animal and human behaviour show a preference for immediate rewards rather than for the future ones motivates the presence of this factor, but it is also mathematically necessary: an infinite-horizon sum of rewards may not converge to a finite value. Indeed, the return function is a geometric series, so, if $\gamma \in [0,1)$, the series converges to a finite value equal to $1/(1-\gamma)$. For the same convergence sake, the case with $\gamma = 1$ makes sense only with a finite-horizon cumulative discounted reward.
 
 The other data emitted by the environment is the \textit{observation} ($o_t$) that is related to the \textit{state} ($s_t$). It represents a summary of information that the agent uses to select the next action, while the \textit{state} is a function of the \textit{history} the sequence of observation, actions and rewards at timestep $t$ as shown in \vref{eq:history}.
 
@@ -121,11 +121,9 @@ Furthermore, a state is called \textit{informational state} (or \textit{Markov s
 
 The main goal of an \acrshort{mdp} is to select the best action to take, given a state, in order to collect the best reward. 
 
-\subsection{Bellman Equation}
+In this quick overview of the main unit of \acrshort{rl}, the components that may compose the agent, the brain of the \acrshort{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
 
-In this quick overview of the main unit of \acrshort{rl} the components that may compose the agent, the brain of the \acrshort{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
-
-A \textit{model} is composed by information about the environment. These data must not be confused with \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.
+A \textit{model} is composed by information about the environment. These data must not be confused with the ones provided by \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.
 
 A \textit{policy} is the core of \acrshort{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from states to actions.  The \textit{policy} is represented by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
 
@@ -146,31 +144,6 @@ It is possible to delineate two main value functions: the \textit{state value} f
 	\end{equation}
 \end{itemize}
 
-Both these functions satisfy recursive relationships between the value of a state and the values of its successor states. It is possible to see this property deriving \textit{Bellman equations} as shown in \vref{appendix:bellmaneq}.
-
-The results are shown in \vref{eq:bellman} where $s_{t+1}\sim \mathit{E}$ means that the next state is sampled from the environment $E$ and $a_{t+1}\sim \pi$ shows that the next action is taken following the policy $\pi$.
-\todomacaluso{Rivedi queste formule inserendo estensioni}
-\begin{align} \label{eq:bellman}
-	\begin{split}
-V^\pi(s_t) &= \mathbb{E}_{a_t \sim \pi, s_{t+1} \sim E}[r(s_t, a_t) + \gamma V^\pi(s_{t+1})] \\
-		&= \sum_{a \in \mathcal{A}}\pi(a|s)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma V^\pi(s')\big]\\
-Q^\pi(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \mathbb{E}_{ a_{t+1} \sim \pi}[Q^\pi(s_{t+1}, a_{t+1})]]
-\end{split}
-\end{align}
- $r(s_t, a_t)$ is a placeholder function to represent the reward given the starting state and the action taken.
-As discussed above, the goal is to find the optimal policy $\pi^*$ to exploit. It can be done using the optimal value functions defined in \vref{eq:optbellman}. 
-\begin{align} \label{eq:optbellman}
-\begin{split}
-V^*(s_t) &= \max_{a} \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a) + \gamma V^*(s_{t+1})] \\
-Q^*(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \max_{a'}[Q^*(s_{t+1}, a')]]
-\end{split}
-\end{align}
-
-Value functions allow defining a partial ordering over policies such that \[\pi \ge \pi' \text{ if } V_\pi \ge V_{\pi'},\forall s \in \mathcal{S}\]
-This definition is helpful to enounce the \textit{Sanity Theorem}. It asserts that for any \acrshort{mdp} there exists an optimal policy $\pi^*$ that is better than or equal to all other policies, $\pi^* \ge \pi, \forall \pi$, but also that all optimal policies achieve the optimal state value function and the optimal action-value function.
-
-The solution of Bellman Optimality Equation is not linear and, in general, there is no closed-form solution. For this reason, there are many iterative methods.
-\todomacaluso{Bisognerà aggiungere riferimento a sezioni successive}.
 
 \subsection{Approaches of Reinforcement Learning}
 
@@ -211,39 +184,47 @@ An \textit{off-policy} method can use a different source of valuable data for th
 On the other hand, \textit{on-policy} methods profoundly depend on the training data to be sampled according to the current policy.
 
 
+\subsection{Bellman Equations}
+
+Both \vref{eq:statevalue,eq:actionvalue} satisfy recursive relationships between the value of a state and the values of its successor states. It is possible to see this property deriving \textit{Bellman equations} -- shown in \vref{eq:bellman} and demonstrated in \vref{appendix:bellmaneq} -- where $s_{t+1}\sim \mathit{E}$ means that the next state is sampled from the environment $E$ and $a_{t+1}\sim \pi$ shows that the next action is taken following the policy $\pi$.
+\begin{align} \label{eq:bellman}
+	\begin{split}
+V^\pi(s_t) &= \mathbb{E}_{a_t \sim \pi, s_{t+1} \sim E}[r(s_t, a_t) + \gamma V^\pi(s_{t+1})] \\
+		&= \sum_{a \in \mathcal{A}}\pi(a|s)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma V^\pi(s')\big]\\
+Q^\pi(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \mathbb{E}_{ a_{t+1} \sim \pi}[Q^\pi(s_{t+1}, a_{t+1})]]\\
+	&= \sum_{a \in \mathcal{A}}\pi(a|s)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma Q^\pi(s',a')\big]\\
+\end{split}
+\end{align}
+ $r(s_t, a_t)$ is a placeholder function to represent the reward given the starting state and the action taken.
+As discussed above, the goal is to find the optimal policy $\pi^*$ to exploit. It can be done using \textit{Bellman optimality equations} defined in \vref{eq:optbellman}. 
+\begin{align} \label{eq:optbellman}
+\begin{split}
+V^*(s_t) &= \max_{a} \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a) + \gamma V^*(s_{t+1})] \\
+		&= \max_{a}\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma V^*(s')\big]\\
+Q^*(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \max_{a'}[Q^*(s_{t+1}, a')]]\\
+			&= \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma \max_{a'} Q^*(s',a')\big]\\
+\end{split}
+\end{align}
+
+Therefore, value functions allow defining a partial ordering over policies such that \[\pi \ge \pi' \text{ if } V_\pi \ge V_{\pi'},\forall s \in \mathcal{S}\]
+This definition is helpful to enounce the \textit{Sanity Theorem}. It asserts that for any \acrshort{mdp} there exists an optimal policy $\pi^*$ that is better than or equal to all other policies, $\pi^* \ge \pi, \forall \pi$, but also that all optimal policies achieve the optimal state value function and the optimal action-value function.
+
+%The solution of Bellman Optimality Equation is not linear and, in general, there is no closed-form solution. For this reason, there are many iterative methods.
+%\todomacaluso{Bisognerà aggiungere riferimento a sezioni successive}.
+
 \subsection{Dynamic Programming}
 
-Dynamic programming is one of the approaches used to solve \acrshort{rl} problems. Formally, it is a general method to solve complex problems by breaking them into sub-problems that are more convenient to solve. After solving all sub-problems, it is possible to sum them up in order to obtain the final solution to the whole original problem.
+Dynamic programming is one of the approaches used to solve \acrshort{rl} problems calculation the optimal policy $\pi^*$. Formally, it is a general method to solve complex problems by breaking them into sub-problems that are more convenient to solve. After solving all sub-problems, it is possible to sum them up in order to obtain the final solution to the whole original problem.
 
 This technique provides a practical framework to solve MDP problems and to observe what is the best result achievable from it, but it assumes to have full knowledge about the specific problem. For this reason, it applies primarily to model-based problems.
 
-This thesis will not focus on this type of approach, so this section aims to present only the basic concept of \textit{policy iteration} and \textit{value iteration} which are worth quoting: the fourth chapter of \cite{sutton2018reinforcement} provides further details about this section.
+This thesis will not focus on this type of approaches, so this section aims to present only the basic concept of \textit{policy iteration} and \textit{value iteration} which are worth quoting: the fourth chapter of \cite{sutton2018reinforcement} provides further details about them.
 
 \subsubsection{Policy Iteration}
 
 The \textit{policy iteration} aims to find the optimal policy by directly manipulating the starting policy. However, before proceeding with this process, a proper evaluation of the current policy is essential. This procedure can be done iteratively following \vref{policy_evaluation} where $\theta$ is the parameter that defines the accuracy: the more the value is closer to $0$, the more the evaluation would be precise.
 
-\begin{algorithm}
-	\SetAlgoLined
-	\DontPrintSemicolon
-	\LinesNumbered
-	\KwIn{$\pi$ the policy to be evaluated; a small threshold $\theta$ which defines the accuracy of the estimation\;}
-	Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily except that $V(terminal) = 0$\;
-	\Repeat{$\Delta \le \theta$}{
-		$\Delta \leftarrow 0$\;
-		\For{each $s \in \mathcal{S}$}{
-			v $\leftarrow$ $V(s)$\;
-			$V(s) \leftarrow \sum_{a \in \mathcal{A}} \pi(a|s) \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
-			$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
-		}
-	}
-	$V_\pi \leftarrow V(s)$\;
-	\KwOut{$V_\pi$}
-	\caption{Iterative Policy Evaluation for estimating $V_\pi$}
-	\label{policy_evaluation}
-\end{algorithm}
-
-\textit{Policy improvement} represents the second step towards policy iteration. Intuitively, it is possible to find a more valuable policy than the starting one by changing the action to take in a specific state with a more rewarding one.  The key to check if the new policy is better than the previous one is to use the action-value function $Q_\pi(s,a)$. This function returns the value of taking action $a$ in the current state $s$ and after that following the existing policy $\pi$. If $Q_\pi(s,a)$ is higher than $V_\pi(s)$, so the action selected is better than the action chosen by the current policy, and consequently, the new policy would be better overall.
+\textit{Policy improvement} represents the second step towards policy iteration. Intuitively, it is possible to find a more valuable policy than the starting one by changing the action to take in a specific state with a more rewarding one.  The key to check if the new policy is better than the previous one is to use the action-value function $Q_\pi(s,a)$. This function returns the value of taking action $a$ in the current state $s$ and, after that, following the existing policy $\pi$. If $Q_\pi(s,a)$ is higher than $V_\pi(s)$, so the action selected is better than the action chosen by the current policy, and consequently, the new policy would be better overall.
 
 Policy improvement theorem is the formalisation of this fact: \vref{policyimprovement} shows its demonstration. Thanks to this theorem, it is reasonable to act greedily to find a better policy starting from the current one iteratively selecting the action that produces the higher  $Q_\pi(s, a)$ for each state.
 
@@ -257,33 +238,82 @@ Policy improvement theorem is the formalisation of this fact: \vref{policyimprov
 
 The iterative application of policy improvement stops after an improvement step that does not modify the initial policy, returning the optimal policy found.
 
-\begin{algorithm}
+
+\begin{algorithm}[H]
 	\SetAlgoLined
 	\DontPrintSemicolon
 	\LinesNumbered
-	\KwIn{$\pi$ the policy to be improved\;}
+	\KwIn{$\pi$ the policy to be evaluated; a small threshold $\theta$ which defines the accuracy of the estimation\;}
+	Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily, except that $V(terminal) = 0$\;
 	$is\_policy\_stable \leftarrow true$\;
-	\For{each $s \in \mathcal{S}$}{
-		$old\_action \leftarrow \pi(s)$\;
-		$\pi(s) \leftarrow \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s',r |s, a)\bigg[r+\gamma V_\pi(s')\bigg]$\;
-		\If{$old\_action \neq \pi(s)$}{$is\_policy\_stable \leftarrow false$}
+	\Repeat{$\neg \; is\_policy\_stable$}{
+		\tcc{Policy Evaluation}
+		\Repeat{$\Delta < \theta$}{
+			$\Delta \leftarrow 0$\;
+			\For{each $s \in \mathcal{S}$}{
+				v $\leftarrow$ $V(s)$\;
+				$V(s) \leftarrow \sum_{a \in \mathcal{A}} \pi(a|s) \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
+				$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
+			}
+		}
+		$V_\pi \leftarrow V(s)$\;
+		\tcc{Policy Improvement}
+		
+		\While{true}{
+			\For{each $s \in \mathcal{S}$}{
+				$old\_action \leftarrow \pi(s)$\;
+				$\pi(s) \leftarrow \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s',r |s, a)\bigg[r+\gamma V_\pi(s')\bigg]$\;
+				\If{$old\_action \neq \pi(s)$}{$is\_policy\_stable \leftarrow false$}
+			}
+		}
 	}
-	\If{$is\_policy\_stable$}{Stop and return $V \sim V^*$ and $\pi \sim \pi^*$\;}
-	\KwOut{$V*$ and $\pi*$}
-	\caption{Policy Improvement for estimating $\pi \sim \pi'$}
-	\label{policy_improvement}
+	\KwOut{$V^*$ and $\pi^*$}
+	\caption{Policy Iteration for estimating $\pi \sim \pi^*$}
+	\label{policy_evaluation}
 \end{algorithm}
-\todomacaluso{Restart from here}
 
+\subsubsection{Value Iteration}
 
+The second approach used by Dynamic Programming to solve Markov Decision Processes is \textit{value iteration}.
+Policy iteration is an iterative technique that alternate evaluation and improvement until it converges to the optimal policy.
+On the contrary, value iteration uses a modified version of policy evaluation to determine $V(s)$ and then it calculates the policy.
+The pseudocode of this method is available \vref{value_iteration}.
 
-\subsection{Monte Carlo}
+\begin{algorithm}[H]
+	\SetAlgoLined
+	\DontPrintSemicolon
+	\LinesNumbered
+	\KwIn{A small threshold $\theta$ which defines the accuracy of the estimation\;}
+	Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily, except that $V(terminal) = 0$\;
+		\Repeat{$\Delta < \theta$}{
+			$\Delta \leftarrow 0$\;
+			\For{each $s \in \mathcal{S}$}{
+				v $\leftarrow$ $V(s)$\;
+				$V(s) \leftarrow \max_{a}\sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
+				$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
+			}
+		}
+		Output a deterministic policy, $\pi \sim \pi^*$, such that \[
+		\pi(s) = \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]\]\\
+	\KwOut{$V^*$ and $\pi^*$}
+	\caption{Value Iteration, for estimating $\pi \sim \pi^*$}
+	\label{value_iteration}
+\end{algorithm}
+
+\subsection{Model-Free Prediction and Control}
+
+As reported in the previous section, having a comprehensive knowledge of the environment is at the foundation of Dynamic Programming methods. However, this fact is not always accurate in the real world and owning a full understanding of surroundings is almost a utopia. In these cases, the agent has to infer the model using its experience, so it has to exploit model-free methods, based on the assumption that there is no knowledge about state transitions and rewards.
+This section intends to provide a brief description of two model-free approaches to prediction and control: Monte Carlo (MC) methods and Temporal-Difference (TD) ones.
+
+\subsubsection{Monte Carlo methods}
+
+Monte Carlo methods can learn from episodes of experience using the simple idea that averaging sample returns provide the value. It is possible to define an episode of experience as a series of $(s_t, a_t, r_t, s_{t+1})$. This method requires complete episodes to work: it samples episodes of experience and makes updates to our estimates only at the end of each episode.
 
 \subsection{Temporal Difference (TD) Learning method}
 
 \subsection{Function Approximation}
 
-\section{Deep Reinforcement Learning}
+\section{Deep Reinforcement Learning} \label{deepreinflearn}
 
 \subsection{Taxonomy of Deep RL Algorithm}
 
