@@ -86,7 +86,7 @@ class CozmoEnv(gym.Env):
         self.start_position()
     
     def start_position(self):
-        self.set_head_angle(0)
+        self.set_head_angle(self.head.low);
         self.set_lift_height(self.lift.high)
     
     def get_image(self):
@@ -101,7 +101,7 @@ class CozmoEnv(gym.Env):
         # screen_height, screen_width = screen.shape
         screen = np.ascontiguousarray(observation, dtype=np.float32) / 255
         # plt.imshow(screen)
-        screen = screen[-140:, :]
+        # screen = screen[-140:, :]
         screen = cv2.resize(screen, (self.img_w, self.img_h))
         # screen = screen.transpose((2, 0, 1))
         return screen
