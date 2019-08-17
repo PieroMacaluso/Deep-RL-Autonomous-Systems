@@ -40,7 +40,7 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     alpha = 0.2
     autotune_entropy = False
     hidden_size = 256
-    img_h = 140
+    img_h = 240
     img_w = 320
     
     # Episode
