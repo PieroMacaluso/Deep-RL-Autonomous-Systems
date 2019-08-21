@@ -245,6 +245,7 @@ class SAC(object):
             i_episode = start_episode
             last_episode_steps = 0
             episode_reward = episode_steps = timing = total_timing = 0
+            mem_size_last_learn = 0
             while True:
                 
                 # Stop the robot
@@ -366,15 +367,18 @@ class SAC(object):
                     episode_reward += reward
                     mask = 1 if done else float(not done)
                     
-                    # Push the transition in the memory
+                    # Push the transition in the memory only if n steps is greater than 5
                     # print('push')
                     if episode_steps > 5:
                         memory.push(state, action, reward, next_state, mask)
                     state = next_state
                 print("Memory {}/{}".format(len(memory), self.replay_size))
-                if len(memory) > self.min_replay_size and updates_episode < self.updates_per_episode:
+                if len(memory) > self.min_replay_size and updates_episode < self.updates_per_episode and \
+                        i_episode > self.warm_up_episodes and len(memory) - mem_size_last_learn >= self.min_replay_size:
                     updates = self.learning_phase(self.updates_per_episode - updates_episode, memory, updates,
                                                   writer_learn)
+                    mem_size_last_learn = len(memory)
+                    print(mem_size_last_learn)
                     updates_episode += self.updates_per_episode - updates_episode
                 # self.logger.info("#TotalUpdates={})"
                 #                  .format(updates))
