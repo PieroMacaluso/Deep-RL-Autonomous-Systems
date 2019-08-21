@@ -50,6 +50,12 @@
       - Technologies used to implement the interaction between the Cozmo SDK and OpenAI Gym.
       - Differences from the simulated environment caused by the need for direct human interaction.
       - Implementation of human interaction in the system.
+   4. Setup of the real Environment
+      - The Track design
+      - Analysis of the problems:
+        - Reflection
+        - Background and Horizon
+      - (Single Line Track)
 5. Experimental results
    1. Introduction
       - Arguments of the chapter
