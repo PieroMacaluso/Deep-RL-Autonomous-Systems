@@ -4,6 +4,7 @@
    1. Motivation
       - General discussion about autonomous driving
       - General discussion about reinforcement learning and recent results with Deep Reinforcement Learning
+      - The increasing interests to real world problems and not simulations
       - Focus on the object of the thesis, motivation, description of the procedure followed and results obtained
    2. Structure of the Thesis
       - Brief description of every chapter
@@ -11,11 +12,12 @@
    - Introduction to the chapter
    1. Elements of Reinforcement Learning
       - Introduction
-      - Central concepts regarding fundamentals (e.g. Agent, Environment, Reward)
+      - Central concepts regarding fundamentals (e.g. Agent, Environment, Reward, Return)
+      - Markov Decision Process (MDP)
       - Model-based prevision and control: just a brief introduction to Dynamic Programming and Policy/Value Iteration
       - Model-free prevision and control: a brief introduction to Monte Carlo and TD Learning approaches (SARSA and Q-Learning)
    2. Deep Reinforcement Learning
-      - Introduction and Motivation behind
+      - Introduction and Motivation behind function approximation
       - Value-based methods and Policy Gradient methods
       - Focus and detailed explanation of DDPG and SAC
    3. Related Work
@@ -30,7 +32,7 @@
       - General description of Cozmo and Anki
       - General information about the mechanics and features of Cozmo
       - Discussion about the selection of Cozmo instead of other solutions
-        - Amazon Deep Racer: not available at the start of the thesis. It provides a simulator to train the agent. Drawback of 
+        - Amazon Deep Racer: not available at the start of the thesis. It provides a simulator to train the agent. It is connected to AWS for computation which can be seen as a benefit, but also a drawback (rate for simulations).
         - Building a Car: one of the best path to follow because of the personalization available. Main drawbacks are the length of the car construction process but also the time to spend in the creation of interfaces between the car and Python. (FUTURE WORK)
         - In the end, Cozmo is the best trade-off between functionalities and fast-developing. It provides plain and straightforward control of the car and a rich Python SDK to use with OpenAI Gym.
       - Discussion about the on-board or off-board computation
@@ -64,5 +66,10 @@
       - Comparative analysis between results obtained with DDPG and SAC
       - Results
 6. Conclusions
-    - (Coming soon)
+    - Comments on the results obtained
+    - Strong points and weaknesses
+    - Autocriticism about weaknesses that affect the final result
    1. Future Work
+      - The project of a Cozmo simulator with Unity
+      - Usage of Variational Auto Encoder (VAE)
+      - Building a car with more sensors and better camera
