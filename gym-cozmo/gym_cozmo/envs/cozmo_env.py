@@ -19,7 +19,7 @@ class CozmoEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     
     def __init__(self, robot: cozmo.robot.Robot, img_h, img_w):
-        self.choice_time = 0.1
+        self.choice_time = 0.01
         self.last_action = None
         self.seed()
         self.img_h = img_h
