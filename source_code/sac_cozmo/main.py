@@ -28,9 +28,9 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     seed = math.floor(time.time())
     
     # Evaluation
-    eval = False
-    eval_every = 10
-    eval_episode = 2
+    eval = True
+    eval_every = 20
+    eval_episode = 5
     
     # Net and SAC parameters
     policy = "Gaussian"
@@ -38,20 +38,20 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     tau = 0.005
     lr = 0.0003
     alpha = 0.2
-    autotune_entropy = False
+    autotune_entropy = True
     hidden_size = 256
     img_h = 240
     img_w = 320
     
     # Episode
-    warm_up_episodes = 10
+    warm_up_episodes = 0
     num_episode = 500
     max_num_run = 5
-    batch_size = 4
-    replay_size = 30000
+    batch_size = 32
+    replay_size = 3000
     min_replay_size = 64
     state_buffer_size = 1
-    updates_per_episode = 1000
+    updates_per_episode = 1
     target_update = 1
     
     parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')

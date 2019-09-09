@@ -103,7 +103,9 @@ class SAC(object):
         self.warm_up_episodes = args.warm_up_episodes
         self.batch_size = args.batch_size
         self.updates_per_episode = args.updates_per_episode
+        self.eval = args.eval;
         self.eval_episode = args.eval_episode
+        self.eval_every = args.eval_every
         self.env_name = args.env_name
         self.entropy_backup = None
         self.scale_reward = 1
@@ -253,7 +255,7 @@ class SAC(object):
                 
                 # Wait for the human to leave the command
                 while self.env.is_human_controlled():
-                    continue
+                    pass
                 
                 # Let's forget (if it is the case)
                 if self.env.is_forget_enabled():
@@ -286,12 +288,12 @@ class SAC(object):
                                              str(datetime.timedelta(seconds=total_timing))))
                 
                 # Let's test (if it is the case)
-                while self.env.is_test_phase():
+                if i_episode % self.eval_every == 0 and self.eval == True:
                     # print('test')
                     self.test_phase(writer_test, i_run, i_episode)
                     # Wait for the human to leave the command
                     while self.env.is_human_controlled():
-                        continue
+                        pass
                 
                 if self.env.is_save_and_close():
                     self.logger.important("Saving context...")
@@ -373,13 +375,10 @@ class SAC(object):
                         memory.push(state, action, reward, next_state, mask)
                     state = next_state
                 print("Memory {}/{}".format(len(memory), self.replay_size))
-                if len(memory) > self.min_replay_size and updates_episode < self.updates_per_episode and \
-                        i_episode > self.warm_up_episodes and len(memory) - mem_size_last_learn >= self.min_replay_size:
-                    updates = self.learning_phase(self.updates_per_episode - updates_episode, memory, updates,
-                                                  writer_learn)
+                if len(memory) > self.min_replay_size and i_episode > self.warm_up_episodes:
+                    updates = self.learning_phase(episode_steps, memory, updates, writer_learn)
                     mem_size_last_learn = len(memory)
-                    print(mem_size_last_learn)
-                    updates_episode += self.updates_per_episode - updates_episode
+                    updates_episode += episode_steps
                 # self.logger.info("#TotalUpdates={})"
                 #                  .format(updates))
                 # self.scheduler_alpha.step()
@@ -464,9 +463,9 @@ class SAC(object):
         n_tests = 0
         ts = time.time()
         total_reward = 0
-        while self.env.is_test_phase():
+        for _ in range(self.eval_episode):
             while self.env.is_human_controlled():
-                continue
+                pass
             if self.env.is_forget_enabled():
                 n_tests -= 1
                 self.logger.info("Last Test Episode Forgotten")
