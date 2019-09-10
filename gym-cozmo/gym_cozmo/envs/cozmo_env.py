@@ -18,12 +18,14 @@ MAX_T_SPEED = 100
 class CozmoEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     
-    def __init__(self, robot: cozmo.robot.Robot, img_h, img_w):
-        self.choice_time = 0.01
+    def __init__(self, robot: cozmo.robot.Robot, img_h: int, img_w: int):
+        # choice_time: time between an action and the next one
+        self.choice_time = 0.1
         self.last_action = None
         self.seed()
         self.img_h = img_h
         self.img_w = img_w
+        # last_time: it stores the time of the last action. It is useful to calculate the reward (mm)
         self.last_time = 0
         self.robot = robot
         self.rc, self.thread = start(self.robot)
@@ -42,6 +44,7 @@ class CozmoEnv(gym.Env):
         step_reward = -1
         if action is not None:
             self.drive(action)
+            # TODO: select choice_time or last_time
             step_reward = action[0] * MAX_F_SPEED * self.choice_time
             self.last_time = now_time
         
@@ -50,6 +53,7 @@ class CozmoEnv(gym.Env):
         
         self.state = self.get_image()
         
+        # Only a human can interrupt an episode
         if self.rc.is_human_controlled():
             self.robot.stop_all_motors()
             done = True
@@ -106,7 +110,7 @@ class CozmoEnv(gym.Env):
         # screen = screen.transpose((2, 0, 1))
         return screen
     
-    def drive(self, action):
+    def drive(self, action: spaces.Box):
         l_wheel_speed = action[0] * MAX_F_SPEED + action[1] * MAX_T_SPEED
         r_wheel_speed = action[0] * MAX_F_SPEED - action[1] * MAX_T_SPEED
         
