@@ -1,333 +1,55 @@
+\chapter{Introduction}
 
-\chapter{Reinforcement Learning}
+\section{Motivation}
 
-\acrfull{rl} is a field of Machine Learning that is experiencing a period of great fervour in the world of research, fomented by recent progress in \acrfull{dl}. This event opened the doors to function approximation with \acrfull{nn} and \acrfull{cnn} developing what is nowadays known as Deep Reinforcement Learning.
-
-\acrshort{rl} represents the third paradigm of Machine Learning alongside supervised and unsupervised learning. The idea behind  this research field is that the learning process to solve a decision-making problem consists in a sequence of trial and error where the \textit{agent}, the protagonist of \acrshort{rl},could discover and discriminate valuable decisions from penalising ones exploiting information given by a \textit{reward signal}. This interaction has a strong correlation with what human beings and animals do in the real world to forge their behaviour.
-
-Recently \acrshort{rl} has known a remarkable development and interests in video games: it managed to beat world champions at the game of Go \cite{silver2016mastering} and Dota with superhuman results and to master numerous Atari video games \cite{mnih2013playing} from raw pixels. Decisions, actions and consequences make video games a simulated reality on which to exploit and test the power of \acrshort{rl} algorithms.
-It is essential to realise that the heart of \acrshort{rl} is the science of decision making. This fact makes it compelling and general for many research fields ranging from Engineering, Computer Science, Mathematics, Economics, to Psychology and Neuroscience.
-
-Before discussing the results of this thesis, it is good to clarify everything that today represents the state-of-the-art in order to understand the universe behind this new paradigm better. Indeed, the exploration of this field of research is the main aim of this chapter: the first section begins with the definition of the notation used and with the theoretical foundations behind \acrshort{rl}, then in the second section it moves  progressively towards what is Deep \acrshort{rl} through a careful discussion of the most important algorithms paying more attention to those used during the thesis project.
-
-The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement}, \cite{openai2018spinningup}, \cite{lapan2018deep}.
-
-\section{Fundamentals of Reinforcement Learning} \label{fundreinflearn}
-
-Reinforcement Learning is a computational approach to Sequential Decision Making. It provides a framework that is exploitable with decision-making problems that are unsolvable with a single action and need a sequence of actions, a broader horizon, to be solved. 
-
-This section aims to present the fundamental ideas and notions behind this research field in order to help the reader to develop a baseline useful to approach \vref{deepreinflearn} about Deep Reinforcement Learning.
-
-\subsection{The Reinforcement Learning Problem}
-
-The primary purpose of \acrshort{rl} algorithms is to learn how to improve and maximise a future reward by relying on interactions between two main components: the agent and the environment. 
-
-The \textit{agent} is the entity that interacts with the environment by making decisions based on what it can observe from the state of the surrounding situation. The decisions taken by the agent consist of \textit{actions} ($a_t$).  The agent has no control over the environment, but actions are the only means by which it can modify and influence the environment.
-
-Usually, the agent has a set of actions it can take, which is called \textit{action space}.
-Some environments have discrete action spaces, where only a finite number of moves are available (e.g. $\mathcal{A} = [\text{North}, \text{South}, \text{East}, \text{West}]$ choosing the direction to take in a bidimensional maze). On the other side, there are continuous action spaces where actions are vectors of real values.
-This distinction is fundamental to choose the right algorithm to use because not all of them could be compatible with both types: according to the needs of the specific case, it may be necessary to modify the algorithm to make it compatible.
-
-The \textit{environment} represents all the things that are outside the agent. At every action received by the agent, it emits a reward, an essential aspect of \acrshort{rl}, and an observation of the environment.
-
-The \textit{reward} $r_t$ is a scalar feedback signal that defines the objective of the \acrshort{rl} problem. This signal allows the agent to be able to distinguish positive actions from negative ones in order to reinforce and improve its behaviour. It is crucial to notice that the reward is local: it describes only the value of the latest action. Furthermore, actions may have long term consequences, delaying the reward. As it happens with human beings' decisions, receiving a conspicuous reward at a specific time step does not exclude the possibility to receive a small reward immediately afterwards and sometimes it may be better to sacrifice immediate reward to gain more rewards later.
-
-
-In this context, many features make \acrshort{rl} different from supervised and unsupervised learning.
-Firstly, there is no supervisor: when the agent has to decide what action to take, there is no entity that can tell him what the optimal decision is in that specific moment. The agent receives only a reward signal which may delay compared to the moment in which it has to perform the next action. 
-This fact brings out another significant difference: the importance of time. The sequentiality links all actions taken by the agent, making resulting data no more \acrfull{iid}.
-
-Given these definitions, it is noticeable that the primary purpose of the agent is to maximise the cumulative reward called \textit{return}.
-
-The \textit{return $g_t$} is the total discounted reward starting from timestep $t$ defined by \vref{eq:return} where $\gamma$ is a \textit{discount factor}.
-
-\begin{equation} \label{eq:return} 
-	g_t = r_{t+1} + \gamma r_{t+2} + \dots = \sum_{k=0}^{\infty} \gamma^k r_{t+k+1}, \;\;\;\gamma \in [0,1)
-\end{equation}
-
- Not only the fact that animal and human behaviour show a preference for immediate rewards rather than for the future ones motivates the presence of this factor, but it is also mathematically necessary: an infinite-horizon sum of rewards may not converge to a finite value. Indeed, the return function is a geometric series, so, if $\gamma \in [0,1)$, the series converges to a finite value equal to $1/(1-\gamma)$. For the same convergence sake, the case with $\gamma = 1$ makes sense only with a finite-horizon cumulative discounted reward.
-
-The other data emitted by the environment is the \textit{observation} ($o_t$) that is related to the \textit{state} ($s_t$). It represents a summary of information that the agent uses to select the next action, while the \textit{state} is a function of the \textit{history} the sequence of observation, actions and rewards at timestep $t$ as shown in \vref{eq:history}.
-
-\begin{equation}\label{eq:history}
-h_t = o_1, r_1, a_1, \dots, a_{t-1}, o_{t}, r_t, \;\;\;\;\; s_t = f(h_t)
-\end{equation}
-
-The sequence of states and actions is named \textit{trajectory} ($\tau$): it is helpful to represent an episode in \acrfull{rl} framework.
-
-The state described above is also called \textit{agent state} $s_t^a$, while the private state of the environment is called \textit{environment state} $s_t^e$. This distinction is useful for distinguishing fully observable environments where $o_t = s_t^e = s_t^a$, from partially observable environments where $s_t^e \neq s_t^a$.
-In the first case, the agent can observe the environment state directly, while in the second one, it has access to partial information about the state of the environment.
-
-Beyond the fact that this chapter will focus on fully observable environments, the distinction between state and observation is often unclear and, conventionally, the input of the agent is composed by the reward and the state as shown in \vref{fig:interactionsAE}.
-
-
-\begin{figure}
-	\centering
-	\begin{tikzpicture}
-	% node Agent
-	\node[punkt] (agent) {Agent};
-	% node Environment
-	\node[punkt, below=2cm of agent] (env) {Environment};
-	% node a_t
-	\node[mylabel, below right=0.75cm and 0cm of agent] (action) {$a_t$};
-	% node s_t
-	\node[mylabel, below left=0.75cm and 0.8cm of agent] (state) {$s_t$};
-	% node r_t
-	\node[mylabel, below left=0.75cm and -0.3cm of agent] (reward) {$r_t$};
-	% node s_t+1
-	\node[mylabel, above left=-1.3cm and -1cm of env] (state) {$s_{t+1}$};
-	% node r_t+1
-	\node[mylabel,above left=-.3cm and -1cm of env] (reward1) {$r_{t+1}$};
-	
-	
-	
-	\draw[pil]   (agent.east) -- ($(agent.east) + (1.2cm,0cm)$)  |-  (env.east);
-	\draw[pil]   ($(env.west) + (0,-0.2cm)$) -- ($(env.west) + (-1.2cm,-0.2cm)$);
-	\draw[pil]   ($(env.west) + (-1.2cm,-0.2cm)$) -- ($(env.west) + (-2cm,-0.2cm)$) |-($(agent.west) + (0,0.2cm)$);
-	\draw[pil]   ($(env.west) + (0,+0.2cm)$) -- ($(env.west) + (-1.2cm,+0.2cm)$);
-	\draw[pil]   ($(env.west) + (-1.2cm,+0.2cm)$) -- ($(env.west) + (-1.6cm,+0.2cm)$) |-($(agent.west) + (0,-0.2cm)$);
-	\draw[dashed]  ($(env.west) - (1.2cm,-0.5cm)$) -- ($(env.west) - (1.2cm,0.5cm)$);
-	\end{tikzpicture}
-	\caption[Interaction loop between Agent and Environment]{Interaction loop between Agent and Environment. The reward and the state resulting from taking an action become the input of the next iteration.}
-	\label{fig:interactionsAE}
-\end{figure}
-
-Furthermore, a state is called \textit{informational state} (or \textit{Markov state}) when it contains all data and information about its history. Formally, a state is a Markov state if and only if satisfies \vref{eq:markov_state}.
-
-\begin{equation} \label{eq:markov_state}
-	\mathbb{P}[s_{t+1}| s_t] = \mathbb{P}[s_{t+1} | s_1, \dots, s_t]
-\end{equation}
-
- It means that the state contains all data and information the agent needs to know to make decisions: the whole history is not useful anymore because it is inside the state. The environment state $s_t^e$ is a Markov state.
- 
- With all the definitions shown so far, it is possible to formalise the type of problems on which \acrshort{rl} can unleash all its features: the \acrfull{mdp}, a mathematic framework to model decision processes. Its main application fields are optimization and dynamic programming.
- 
- An \acrshort{mdp} is defined by 
- \begin{equation}\label{eq:mdp}
- \begin{gathered} 
- <\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma>\\
- \begin{aligned}
- 	\text{where}\hspace{10pt} \mathcal{S} & \text{ is a finite set of states} \\
- 	\mathcal{A} & \text{ a finite set of actions} \\
- 	\mathcal{P} & \text{ a state transition probability matrix}\;\;
- 	 \mathcal{P}_{ss'}^a = \mathbb{P}[s_{t+1}= s' | s_t = s, a_t = a]\\
- 	\mathcal{R} & \text{ a reward function}
- 	 	\;\; \mathcal{R}_{s}^a = \mathbb{E}[r_{t+1} | s_t = s, a_t = a] \\
- 	 \gamma & \text{ a discount factor such that } \gamma \in [0,1]
- \end{aligned}
- \end{gathered}
- \end{equation}
-
-
-The main goal of an \acrshort{mdp} is to select the best action to take, given a state, in order to collect the best reward. 
-
-In this quick overview of the main unit of \acrshort{rl}, the components that may compose the agent, the brain of the \acrshort{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
-
-A \textit{model} is composed by information about the environment. These data must not be confused with the ones provided by \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.
-
-A \textit{policy} is the core of \acrshort{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from states to actions.  The \textit{policy} is represented by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
-
-In this perspective, it is evident that the central goal of RL is to learn an optimal policy $\pi^*$. The optimal policy is a policy which can show agent what the most profitable way to achieve the maximum return is, what is the best action to do in a specific situation. In order to learn the nature of the optimal policy, \acrshort{rl} exploits value functions.
-
-A \textit{value function} represents what is the expected reward that the agent can presume to collect in the future, starting from the current state. The reward signal represents only a local value of the reward, while the value function provides a broader view of future rewards: it is a sort of prediction of rewards.
-
-It is possible to delineate two main value functions: the \textit{state value} function and the \textit{action value} function.
-
+\todomacaluso{
 \begin{itemize}
-	\item The \textit{State Value Function} $V^\pi(s)$ is the expected return starting from the state $s$ and always acting according to policy $\pi$.
-	\begin{equation} \label{eq:statevalue}
-		V^\pi(s) = \mathbb{E}_{\tau \sim \pi}[g_t | s_0 = s]
-	\end{equation}
-	\item The \textit{Action Value Function} $Q^\pi(s)$ is the expected return starting from the state $s$, taking an action $a$ and then always acting according to policy $\pi$.
-	\begin{equation} \label{eq:actionvalue}
-	Q^\pi(s, a) = \mathbb{E}_{\tau \sim \pi}[g_t | s_0 = s, a_0 = a]
-	\end{equation}
+	\item General discussion about autonomous driving
+	\item General discussion about Reinforcement Learning and recent results with Deep Reinforcement Learning
+	\item The increasing interests in real-world problems and not only simulations
+	\item Focus on the object of the thesis with motivation, description of the procedure followed and results obtained
 \end{itemize}
+}
+Autonomous systems, and in particular self-driving for unsupervised robots and vehicles (e.g.\ self-driving cars) is a topic that has attracted a lot of attention from both the research community and industry, due to its potential to radically change mobility and transport. In general, most approaches to date focus on formal logic methods, which define driving behavior in annotated geometric maps. This can be difficult to scale, as it relies heavily on an external mapping infrastructure rather than using and understanding the local scene.
+
+In order to make autonomous driving a truly ubiquitous technology, in this thesis we focus on systems which address the ability to drive and navigate in the absence of maps and explicit rules, relying – just like humans do – on a comprehensive understanding of the immediate environment while following simple high-level directions (e.g.\ turn-by-turn route commands). Recent work in this area has demonstrated that this is possible on rural country roads, using GPS for coarse localization and LIDAR to understand the local scene. 
+
+Recently, \gls{rl} – a machine learning subfield focused on solving \gls{mdp}, where an agent learns to select actions in an environment in an attempt to maximize some reward function – has been shown to achieve super-human results at games such as Go or chess, to be particularly suited for simulated environments like computer games, and to be a promising methodology for simple tasks with robotic manipulators.
+
+In this thesis, we argue that the generality of \gls{rl} makes it a useful framework to apply to autonomous driving. 
+For this reason we design and implement a control system for an autonomous driving task with a small robot, exploiting state-of-the-art model-free Deep \gls{rl} algorithms and discussing possible ways to make them data efficient.
 
 
-\subsection{Approaches of Reinforcement Learning}
+\section{Structure of the thesis}
 
-It is possible to explain the main strategies in RL to solve problems using \textit{policy}, \textit{model} and \textit{value function} defined previously.
+\todomacaluso{
+	\begin{itemize}
+		\item Brief Description of Every Chapter
+	\end{itemize}
+}
 
-Every agent has a specific application field which depends on the different approach it supports.
-Understanding differences among these approaches is useful to adequately understand what type of algorithm satisfies better the needs of a specific context.
+The aim of this section is to describe the main structure of the thesis.
 
-The distinctions presented in this part are just a part of the complete set because this section aims to describe the most crucial distinctions that are useful in the context of the thesis without claiming to be exhaustive.
+\subsubsection*{Chapter 1 - Introduction} The current chapter contains the motivation of this work and the structure of the thesis.
 
-\subsubsection{Model-Free vs Model-Based}
+\subsubsection*{Chapter 2 - Reinforcement Learning Fundamentals}
+The aim of this chapter is to present a description as detailed as possible about \gls{rl} state-of-the-art in order to provide the reader with useful tools to enter in this research field.
+\todomacaluso{Da qui in poi questo capitolo è da fare}
+\subsubsection*{Chapter 3 - Tools and Frameworks} 
+This chapter explains briefly what are the main tools, frameworks and languages used in the thesis.
+\todomacaluso{Continue this list}
+\begin{description}
+	\item[OpenAI Gym] framework for developing and comparing Reinforcement Learning algorithms and environments using standardize interface.
+	\item [Anki Cozmo] it looks like a simple toy at first sight, but it hides an infinite potential under the hood, which make it a perfect candidate for the purposes of this thesis.
+\end{description}
 
-One of the most crucial aspects of an RL algorithm is the question of whether the agent has access to (or learns) a model of the environment. A model of the environment enables the agent to predict state transitions and rewards.
+\subsubsection*{Chapter 4 - Design of the control system}
 
-A method is \textit{model-free} when it does not build a model of the environment. All the actions made by the agent results from direct observation of the current situation in which the agent is. It takes the observation, does computations on them and then select the best action to take.
-
-This last representation is in contrast with \textit{model-based} methods. In this case, the agent tries to build a model of the surrounding environment in order to infer information useful to predict what the next observation or reward would be.
-
-Both groups of methods have strong and weak sides.
-Ordinarily, \textit{model-based} methods show their potential in a deterministic environment (e.g. board game with rules). In these contexts, the presence of the model enables the agent to plan by reasoning ahead, to recognise what would result from a specific decision before taking action. The agent can extract all this knowledge and learn an optimal policy to follow. However, this opportunity is not always achievable: the model may be partially or entirely unavailable, and the agent would have to learn the model from its experience. Learning a model is radically complex and may lead to various hurdles to overcome: for instance, the agent can exploit the bias present in the model, producing an agent which is not able to generalise in real environments.
-
-On the other hand, model-free methods tend to be more straightforward to train and tune because it is usually hard to build models of a heterogeneous environment. Furthermore, model-free methods are more popular and have been more extensively developed and tested than model-based methods.
-
-\subsubsection{Policy-Based vs Value-Based}
-
-The use of policy or value function as the central part of the method represents another essential distinction between RL algorithms.
-
-The approximation of the policy of the agent is the base of \textit{policy-based} methods. The representation of the policy is usually a probability distribution over available actions. This method points to optimise the behaviour of the agent directly and, because of its on-policy nature, may ask manifold observations from the environment: this fact makes this method not so sample-efficient.
-
-On the opposite side, methods could be \textit{value-based}. In this case, the agent is still involved in finding the optimal behaviour to follow, but indirectly. It is not interested anymore about the probability distribution of actions. Its main objective is to determine the value of all actions available, choosing the best value. The main difference from the policy-based method is that this method can benefit from other sources, such as old policy data or replay buffer.
-
-\subsubsection{On-Policy vs Off-Policy}
-
-It is possible to classify this method also by different types of policy usage.
-
-An \textit{off-policy} method can use a different source of valuable data for the learning process instead of the direct experience of the current policy. This feature allows the agent to use, for instance, large experience buffers of past episodes. In this context, these buffers are usually randomly sampled in order to make the data closer to being independent and identically distributed (i.i.d): random extraction guarantees this fact.
-
-On the other hand, \textit{on-policy} methods profoundly depend on the training data to be sampled according to the current policy.
+\subsubsection*{Chapter 5 - Algorithms for Autonomous Systems} 
 
 
-\subsection{Bellman Equations}
+\subsubsection*{Chapter 5 - Experiments} 
+This is the most important chapter. It shows all the results obtained during the numerous experiments with comments and speculations about them.
 
-Both \vref{eq:statevalue,eq:actionvalue} satisfy recursive relationships between the value of a state and the values of its successor states. It is possible to see this property deriving \textit{Bellman equations} -- shown in \vref{eq:bellman} and demonstrated in \vref{appendix:bellmaneq} -- where $s_{t+1}\sim \mathit{E}$ means that the next state is sampled from the environment $E$ and $a_{t+1}\sim \pi$ shows that the next action is taken following the policy $\pi$.
-\begin{align} \label{eq:bellman}
-	\begin{split}
-V^\pi(s_t) &= \mathbb{E}_{a_t \sim \pi, s_{t+1} \sim E}[r(s_t, a_t) + \gamma V^\pi(s_{t+1})] \\
-		&= \sum_{a \in \mathcal{A}}\pi(a|s)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma V^\pi(s')\big]\\
-Q^\pi(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \mathbb{E}_{ a_{t+1} \sim \pi}[Q^\pi(s_{t+1}, a_{t+1})]]\\
-	&= \sum_{a \in \mathcal{A}}\pi(a|s)\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma Q^\pi(s',a')\big]\\
-\end{split}
-\end{align}
- $r(s_t, a_t)$ is a placeholder function to represent the reward given the starting state and the action taken.
-As discussed above, the goal is to find the optimal policy $\pi^*$ to exploit. It can be done using \textit{Bellman optimality equations} defined in \vref{eq:optbellman}. 
-\begin{align} \label{eq:optbellman}
-\begin{split}
-V^*(s_t) &= \max_{a} \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a) + \gamma V^*(s_{t+1})] \\
-		&= \max_{a}\sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma V^*(s')\big]\\
-Q^*(s_t,a_t) &= \mathbb{E}_{s_{t+1} \sim E}[r(s_t, a_t) + \gamma \max_{a'}[Q^*(s_{t+1}, a')]]\\
-			&= \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s', r | s, a)\big[r + \gamma \max_{a'} Q^*(s',a')\big]\\
-\end{split}
-\end{align}
-
-Therefore, value functions allow defining a partial ordering over policies such that \[\pi \ge \pi' \text{ if } V_\pi \ge V_{\pi'},\forall s \in \mathcal{S}\]
-This definition is helpful to enounce the \textit{Sanity Theorem}. It asserts that for any \acrshort{mdp} there exists an optimal policy $\pi^*$ that is better than or equal to all other policies, $\pi^* \ge \pi, \forall \pi$, but also that all optimal policies achieve the optimal state value function and the optimal action-value function.
-
-%The solution of Bellman Optimality Equation is not linear and, in general, there is no closed-form solution. For this reason, there are many iterative methods.
-%\todomacaluso{Bisognerà aggiungere riferimento a sezioni successive}.
-
-\subsection{Dynamic Programming}
-
-Dynamic programming is one of the approaches used to solve \acrshort{rl} problems calculation the optimal policy $\pi^*$. Formally, it is a general method to solve complex problems by breaking them into sub-problems that are more convenient to solve. After solving all sub-problems, it is possible to sum them up in order to obtain the final solution to the whole original problem.
-
-This technique provides a practical framework to solve MDP problems and to observe what is the best result achievable from it, but it assumes to have full knowledge about the specific problem. For this reason, it applies primarily to model-based problems.
-
-This thesis will not focus on this type of approaches, so this section aims to present only the basic concept of \textit{policy iteration} and \textit{value iteration} which are worth quoting: the fourth chapter of \cite[Chapter 4]{sutton2018reinforcement} provides further details about them.
-
-\subsubsection{Policy Iteration}
-
-The \textit{policy iteration} aims to find the optimal policy by directly manipulating the starting policy. However, before proceeding with this process, a proper evaluation of the current policy is essential. This procedure can be done iteratively following \vref{policy_evaluation} where $\theta$ is the parameter that defines the accuracy: the more the value is closer to $0$, the more the evaluation would be precise.
-
-\textit{Policy improvement} represents the second step towards policy iteration. Intuitively, it is possible to find a more valuable policy than the starting one by changing the action to take in a specific state with a more rewarding one.  The key to check if the new policy is better than the previous one is to use the action-value function $Q_\pi(s,a)$. This function returns the value of taking action $a$ in the current state $s$ and, after that, following the existing policy $\pi$. If $Q_\pi(s,a)$ is higher than $V_\pi(s)$, so the action selected is better than the action chosen by the current policy, and consequently, the new policy would be better overall.
-
-Policy improvement theorem is the formalisation of this fact: \vref{policyimprovement} shows its demonstration. Thanks to this theorem, it is reasonable to act greedily to find a better policy starting from the current one iteratively selecting the action that produces the higher  $Q_\pi(s, a)$ for each state.
-
-%\begin{align}\label{eq:greedy}
-%\begin{split}
-%\pi'(s) &\doteq \underset{a}{\arg\max\,} Q_\pi(s, a)\\
-%		&= \underset{a}{\arg\max\,} \mathbb{E}[r_{t+1}+\gamma V_\pi(s_{t+1})|s_t = s, a_t = a]\\
-%		&= \underset{a \in \mathcal{A}}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s',r |s, a)\bigg[r+\gamma V_\pi(s')\bigg]\\
-%\end{split}
-%\end{align}
-
-The iterative application of policy improvement stops after an improvement step that does not modify the initial policy, returning the optimal policy found.
-
-
-\begin{algorithm}[H]
-	\SetAlgoLined
-	\DontPrintSemicolon
-	\LinesNumbered
-	\KwIn{$\pi$ the policy to be evaluated; a small threshold $\theta$ which defines the accuracy of the estimation\;}
-	Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily, except that $V(terminal) = 0$\;
-	$is\_policy\_stable \leftarrow true$\;
-	\Repeat{$\neg \; is\_policy\_stable$}{
-		\tcc{Policy Evaluation}
-		\Repeat{$\Delta < \theta$}{
-			$\Delta \leftarrow 0$\;
-			\For{each $s \in \mathcal{S}$}{
-				v $\leftarrow$ $V(s)$\;
-				$V(s) \leftarrow \sum_{a \in \mathcal{A}} \pi(a|s) \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
-				$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
-			}
-		}
-		$V_\pi \leftarrow V(s)$\;
-		\tcc{Policy Improvement}
-		
-		\While{true}{
-			\For{each $s \in \mathcal{S}$}{
-				$old\_action \leftarrow \pi(s)$\;
-				$\pi(s) \leftarrow \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s',r |s, a)\bigg[r+\gamma V_\pi(s')\bigg]$\;
-				\If{$old\_action \neq \pi(s)$}{$is\_policy\_stable \leftarrow false$}
-			}
-		}
-	}
-	\KwOut{$V^*$ and $\pi^*$}
-	\caption{Policy Iteration for estimating $\pi \sim \pi^*$}
-	\label{policy_evaluation}
-\end{algorithm}
-
-\subsubsection{Value Iteration}
-
-The second approach used by Dynamic Programming to solve Markov Decision Processes is \textit{value iteration}.
-Policy iteration is an iterative technique that alternate evaluation and improvement until it converges to the optimal policy.
-On the contrary, value iteration uses a modified version of policy evaluation to determine $V(s)$ and then it calculates the policy.
-The pseudocode of this method is available \vref{value_iteration}.
-
-\begin{algorithm}[H]
-	\SetAlgoLined
-	\DontPrintSemicolon
-	\LinesNumbered
-	\KwIn{A small threshold $\theta$ which defines the accuracy of the estimation\;}
-	Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily, except that $V(terminal) = 0$\;
-		\Repeat{$\Delta < \theta$}{
-			$\Delta \leftarrow 0$\;
-			\For{each $s \in \mathcal{S}$}{
-				v $\leftarrow$ $V(s)$\;
-				$V(s) \leftarrow \max_{a}\sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
-				$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
-			}
-		}
-		Output a deterministic policy, $\pi \sim \pi^*$, such that \[
-		\pi(s) = \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]\]\\
-	\KwOut{$V^*$ and $\pi^*$}
-	\caption{Value Iteration, for estimating $\pi \sim \pi^*$}
-	\label{value_iteration}
-\end{algorithm}
-
-\subsection{Model-Free Prediction and Control}
-
-As reported in the previous section, having a comprehensive knowledge of the environment is at the foundation of dynamic programming methods. However, this fact is not always accurate in the real world and owning a full understanding of surroundings is almost a utopia. In these cases, the agent has to infer the model using its experience, so it has to exploit model-free methods, based on the assumption that there is no knowledge about state transitions and rewards.
-This section intends to provide a brief description of two model-free approaches to prediction and control: Monte Carlo (MC) methods and Temporal-Difference (TD) ones.
-
-\subsubsection{Monte Carlo methods}
-
-Monte Carlo methods can learn from episodes of experience using the simple idea that averaging sample returns provide the value. It is possible to define an episode of experience as a series of $(s_t, a_t, r_t, s_{t+1})$. This method requires complete episodes to work: it samples episodes of experience and makes updates to our estimates only at the end of each episode.
-
-\subsection{Temporal Difference (TD) Learning method}
-
-\subsection{Function Approximation}
-
-\section{Deep Reinforcement Learning} \label{deepreinflearn}
-
-\subsection{Taxonomy of Deep RL Algorithm}
-
-After the quick overview of the basics of RL terminology and notation provided in the previous section, it is possible to explore more in-depth the universe behind the algorithms of modern Deep RL. Because of the nature of this work, the focus of this section will be on the types of algorithms used in the thesis, without leaving out a quick overview of other types of algorithms most used today in Deep RL.
-
-\subsection{Deep Deterministic Policy Gradient (DDPG)}
-
-\subsection{Soft-Actor Critic (SAC)}
-
-\section{Summary}
-
-
-
-
-
-
-
+\subsubsection*{Chapter 6 - Conclusions} 
+A summary of the results obtained from experiments with a specific part dedicated to future improvements.
