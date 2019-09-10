@@ -9,7 +9,6 @@ import torch
 import torch.nn.functional as F
 from tensorboardX import SummaryWriter
 from torch.optim import Adam
-from torch.optim.lr_scheduler import StepLR
 
 from model import GaussianPolicyCNN, QNetworkCNN, DeterministicPolicyCNN
 from model import GaussianPolicyNN, QNetworkNN, DeterministicPolicyNN
@@ -21,7 +20,9 @@ from utils import soft_update, hard_update
 class SAC(object):
     """
     This is the class of SAC Cozmo. It can be used as a starting draft to build your own implementation of SAC on Cozmo.
+    The main function to modify as desire is the `train` one.
     """
+    
     # TODO: complete documentation of SAC
     def __init__(self, num_inputs, action_space, env, args, folder, logger):
         """
@@ -90,7 +91,6 @@ class SAC(object):
             self.policy = self.deterministic_policy(num_inputs, action_space.shape[0], args.hidden_size).to(self.device)
             self.policy_optim = Adam(self.policy.parameters(), lr=self.learning_rate)
             # self.scheduler_policy = StepLR(self.policy_optim, 1, gamma=0.99)
-        
         
         self.folder = folder
         self.logger = logger
@@ -218,7 +218,8 @@ class SAC(object):
             with open(self.folder + "updates.pkl", "rb") as pickle_out:
                 start_updates = pickle.load(pickle_out)
             self.restore_model()
-        
+            self.logger.important("Load completed!")
+
         in_ts = time.time()
         for i_run in range(start_run, num_run):
             if self.env.is_save_and_close():
@@ -288,14 +289,15 @@ class SAC(object):
                                              str(datetime.timedelta(seconds=total_timing))))
                 
                 # Let's test (if it is the case)
-                if i_episode % self.eval_every == 0 and self.eval == True:
+                if i_episode % self.eval_every == 0 and self.eval and i_episode != 0:
                     # print('test')
                     self.test_phase(writer_test, i_run, i_episode)
                     # Wait for the human to leave the command
                     while self.env.is_human_controlled():
                         pass
                 
-                if self.env.is_save_and_close():
+                # TODO: HP Checkpoint and check correctness of checkpoint restoring
+                if i_episode % 50 == 0 and i_episode != 0 and not restore:
                     self.logger.important("Saving context...")
                     self.logger.info("To restart from here set this flag: --restore " + self.folder)
                     # Save Replay, net weights, hp, i_episode and i_run
@@ -309,8 +311,6 @@ class SAC(object):
                         pickle.dump(updates, pickle_out)
                     self.backup_model()
                     self.logger.important("Save completed!")
-                    
-                    break
                 
                 # Limit of episode/run reached. Let's start a new RUN
                 if i_episode > self.num_episode:
@@ -341,13 +341,13 @@ class SAC(object):
                         writer_train.add_image('episode_{}'
                                                .format(str(i_episode)), state_buffer.get_tensor(), episode_steps)
                     
-                    if i_episode < self.warm_up_episodes:
+                    if i_episode < self.warm_up_episodes or len(memory) < self.min_replay_size:
                         # Warm_up phase -> Completely random choice of an action
                         action = self.env.action_space.sample()
                     else:
                         # Training phase -> Action sampled from policy
                         action = self.select_action(state)
-
+                    
                     assert action.shape == self.env.action_space.shape
                     assert action is not None
                     # TODO: problem with histograms!
@@ -371,14 +371,16 @@ class SAC(object):
                     
                     # Push the transition in the memory only if n steps is greater than 5
                     # print('push')
-                    if episode_steps > 5:
-                        memory.push(state, action, reward, next_state, mask)
+                    # if episode_steps > 5:
+                    memory.push(state, action, reward, next_state, mask)
                     state = next_state
+                if self.env.is_forget_enabled():
+                    continue
                 print("Memory {}/{}".format(len(memory), self.replay_size))
                 if len(memory) > self.min_replay_size and i_episode > self.warm_up_episodes:
                     updates = self.learning_phase(episode_steps, memory, updates, writer_learn)
-                    mem_size_last_learn = len(memory)
-                    updates_episode += episode_steps
+                    mem_size_last_learn = total_numsteps
+                    updates_episode += self.updates_per_episode
                 # self.logger.info("#TotalUpdates={})"
                 #                  .format(updates))
                 # self.scheduler_alpha.step()
@@ -394,7 +396,7 @@ class SAC(object):
                 start_episode = 0
                 # Disable restore phase after the restored run
                 restore = False
-        
+    
     def do_one_test(self):
         old = self.env.reset()
         state_buffer = StateBuffer(self.state_buffer_size, old)
