@@ -54,7 +54,7 @@ def initial_setup():
     batch_size = 256
     replay_size = 1000000
     state_buffer_size = 2
-    updates_per_step = 1
+    updates_per_step = 1000
     target_update = 1
     
     parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')
@@ -144,6 +144,7 @@ if __name__ == '__main__':
         rewards = []
         
         for i_episode in itertools.count(1):
+            print(updates)
             ts = time.time()
             episode_reward = episode_steps = 0
             done = False
@@ -161,21 +162,6 @@ if __name__ == '__main__':
                     action = env.action_space.sample()  # Sample random action
                 else:
                     action = agent.select_action(state)  # Sample action from policy
-                    if len(memory) > args.batch_size:
-                        # Number of updates per step in environment
-                        for i in range(args.updates_per_step):
-                            # Update parameters of all the networks
-                            critic_1_loss, critic_2_loss, policy_loss, ent_loss, alpha = agent.update_parameters(
-                                memory,
-                                args.batch_size,
-                                updates)
-                            
-                            critic_1_loss_acc += critic_1_loss
-                            critic_2_loss_acc += critic_2_loss
-                            policy_loss_acc += policy_loss
-                            ent_loss_acc += ent_loss
-                            alpha_acc += alpha
-                            updates += 1
                 
                 next_state, reward, done, _ = env.step(action)  # Step
                 env.render()
@@ -191,7 +177,11 @@ if __name__ == '__main__':
                 memory.push(state, action, reward, next_state, mask)  # Append transition to memory
                 
                 state = next_state
-            
+            if len(memory) > args.batch_size:
+                # Number of updates per step in environment
+                # Update parameters of all the networks
+                updates = agent.learning_phase(args.updates_per_step, memory, updates, writer_train, args.batch_size)
+
             if i_episode > args.num_episode:
                 break
             rewards.append(episode_reward)
@@ -201,11 +191,6 @@ if __name__ == '__main__':
             else:
                 last_100 = rewards[-100:]
                 running_episode_reward_100 = np.array(last_100).mean()
-            writer_train.add_scalar('loss/critic_1', critic_1_loss_acc / episode_steps, i_episode)
-            writer_train.add_scalar('loss/critic_2', critic_2_loss_acc / episode_steps, i_episode)
-            writer_train.add_scalar('loss/policy', policy_loss_acc / episode_steps, i_episode)
-            writer_train.add_scalar('loss/entropy_loss', ent_loss_acc / episode_steps, i_episode)
-            writer_train.add_scalar('entropy_temperature/alpha', alpha_acc / episode_steps, i_episode)
             writer_train.add_scalar('reward/train', episode_reward, i_episode)
             writer_train.add_scalar('reward/running_mean', running_episode_reward, i_episode)
             writer_train.add_scalar('reward/running_mean_last_100', running_episode_reward_100, i_episode)

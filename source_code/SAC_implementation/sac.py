@@ -1,13 +1,12 @@
 import os
+import time
 
 import torch
 import torch.nn.functional as F
 from torch.optim import Adam
-import numpy as np
 
 from model import GaussianPolicyCNN, QNetworkCNN, DeterministicPolicyCNN
 from model import GaussianPolicyNN, QNetworkNN, DeterministicPolicyNN
-
 from utils import soft_update, hard_update
 
 
@@ -18,6 +17,7 @@ class SAC(object):
         self.gamma = args.gamma
         self.tau = args.tau
         self.alpha = args.alpha
+        self.learning_rate = args.lr
         
         self.policy_type = args.policy
         self.target_update = args.target_update
@@ -32,7 +32,7 @@ class SAC(object):
             self.q_network = QNetworkNN
             self.gaussian_policy = GaussianPolicyNN
             self.deterministic_policy = DeterministicPolicyNN
-
+        
         self.critic = self.q_network(num_inputs, action_space.shape[0], args.hidden_size).to(device=self.device)
         self.critic_optim = Adam(self.critic.parameters(), lr=args.lr)
         
@@ -122,6 +122,29 @@ class SAC(object):
             soft_update(self.critic_target, self.critic, self.tau)
         
         return qf1_loss.item(), qf2_loss.item(), policy_loss.item(), alpha_loss.item(), alpha_tlogs.item()
+    
+    def learning_phase(self, updates_per_episode, memory, updates, writer_learn, batch_size):
+        time_update = time.time()
+        # Let's update our parameters, this is the main part of learning
+        for i in range(updates_per_episode):
+            # Update parameters of all the networks
+            critic_1_loss, critic_2_loss, policy_loss, ent_loss, alpha = self.update_parameters(memory,
+                                                                                                batch_size,
+                                                                                                updates)
+            writer_learn.add_scalar('loss/critic_1', critic_1_loss, updates)
+            writer_learn.add_scalar('loss/critic_2', critic_2_loss, updates)
+            writer_learn.add_scalar('loss/policy', policy_loss, updates)
+            writer_learn.add_scalar('loss/entropy_loss', ent_loss, updates)
+            writer_learn.add_scalar('entropy_temperature/alpha', alpha, updates)
+            writer_learn.add_scalar('entropy_temperature/learning_rate', torch.tensor(self.learning_rate),
+                                    updates)
+            
+            updates += 1
+        # print(updates)
+        print("Update (up. {})took {}s"
+              .format(updates_per_episode,
+                      round(time.time() - time_update, 2)))
+        return updates
     
     # Save model parameters
     def save_model(self, env_name, folder, i_episode, suffix=""):
