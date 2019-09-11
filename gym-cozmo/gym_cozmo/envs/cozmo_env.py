@@ -90,7 +90,7 @@ class CozmoEnv(gym.Env):
         self.start_position()
     
     def start_position(self):
-        self.set_head_angle(self.head.low+1)
+        self.set_head_angle(self.head.low+2)
         self.set_lift_height(self.lift.high)
     
     def get_image(self):
