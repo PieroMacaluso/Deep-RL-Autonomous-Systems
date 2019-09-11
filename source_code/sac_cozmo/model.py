@@ -6,8 +6,8 @@ from torch.distributions import Normal
 LOG_SIG_MAX = 2
 LOG_SIG_MIN = -20
 epsilon = 1e-6
-IMAGE_H = 240
-IMAGE_W = 320
+IMAGE_H = 64
+IMAGE_W = 64
 
 
 def conv2d_size_out(size, data):

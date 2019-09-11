@@ -371,14 +371,14 @@ class SAC(object):
                     
                     # Push the transition in the memory only if n steps is greater than 5
                     # print('push')
-                    # if episode_steps > 5:
-                    memory.push(state, action, reward, next_state, mask)
+                    if episode_steps > 5:
+                        memory.push(state, action, reward, next_state, mask)
                     state = next_state
                 if self.env.is_forget_enabled():
                     continue
                 print("Memory {}/{}".format(len(memory), self.replay_size))
                 if len(memory) > self.min_replay_size and i_episode > self.warm_up_episodes:
-                    updates = self.learning_phase(episode_steps, memory, updates, writer_learn)
+                    updates = self.learning_phase(self.updates_per_episode, memory, updates, writer_learn)
                     mem_size_last_learn = total_numsteps
                     updates_episode += self.updates_per_episode
                 # self.logger.info("#TotalUpdates={})"

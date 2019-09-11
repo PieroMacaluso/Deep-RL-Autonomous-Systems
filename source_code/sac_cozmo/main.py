@@ -40,14 +40,14 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     alpha = 0.2
     autotune_entropy = True
     hidden_size = 256
-    img_h = 240
-    img_w = 320
+    img_h = 64
+    img_w = 64
     
     # Episode
     warm_up_episodes = 0
     num_episode = 500
     max_num_run = 5
-    batch_size = 64
+    batch_size = 256
     replay_size = 5000
     min_replay_size = 300
     state_buffer_size = 1
