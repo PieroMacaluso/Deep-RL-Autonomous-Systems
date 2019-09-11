@@ -54,7 +54,7 @@ def initial_setup():
     batch_size = 256
     replay_size = 1000000
     state_buffer_size = 2
-    updates_per_step = 1000
+    updates_per_step = 100
     target_update = 1
     
     parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')
