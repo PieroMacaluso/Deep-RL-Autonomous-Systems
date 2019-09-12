@@ -50,7 +50,7 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     batch_size = 256
     replay_size = 5000
     min_replay_size = 300
-    state_buffer_size = 1
+    state_buffer_size = 2
     updates_per_episode = 100
     target_update = 1
     

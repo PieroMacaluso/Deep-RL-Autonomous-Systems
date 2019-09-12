@@ -2,6 +2,7 @@ import copy
 import datetime
 import os
 import pickle
+import shutil
 import time
 
 import numpy as np
@@ -14,7 +15,7 @@ from model import GaussianPolicyCNN, QNetworkCNN, DeterministicPolicyCNN
 from model import GaussianPolicyNN, QNetworkNN, DeterministicPolicyNN
 from replay_memory import ReplayMemory
 from state_buffer import StateBuffer
-from utils import soft_update, hard_update
+from utils import soft_update, hard_update, copytree
 
 
 class SAC(object):
@@ -103,7 +104,7 @@ class SAC(object):
         self.warm_up_episodes = args.warm_up_episodes
         self.batch_size = args.batch_size
         self.updates_per_episode = args.updates_per_episode
-        self.eval = args.eval;
+        self.eval = args.eval
         self.eval_episode = args.eval_episode
         self.eval_every = args.eval_every
         self.env_name = args.env_name
@@ -207,6 +208,17 @@ class SAC(object):
         start_episode = 0
         start_updates = 0
         start_run = 0
+        start_total_numsteps = 0
+        start_running_episode_reward = 0
+        start_running_episode_reward_100 = 0
+        start_rewards = []
+        start_last_episode_steps = 0
+        start_episode_reward = 0
+        start_episode_steps = 0
+        start_timing = 0
+        start_total_timing = 0
+        
+        # Restore Phase
         if restore:
             # TODO: Not tested deeply yet
             with open(self.folder + "i_episode.pkl", "rb") as pickle_out:
@@ -217,13 +229,36 @@ class SAC(object):
                 memory = pickle.load(pickle_out)
             with open(self.folder + "updates.pkl", "rb") as pickle_out:
                 start_updates = pickle.load(pickle_out)
+            with open(self.folder + "total_numsteps.pkl", "rb") as pickle_out:
+                start_total_numsteps = pickle.load(pickle_out)
+            with open(self.folder + "running_episode_reward.pkl", "rb") as pickle_out:
+                start_running_episode_reward = pickle.load(pickle_out)
+            with open(self.folder + "running_episode_reward_100.pkl", "rb") as pickle_out:
+                start_running_episode_reward_100 = pickle.load(pickle_out)
+            with open(self.folder + "rewards.pkl", "rb") as pickle_out:
+                start_rewards = pickle.load(pickle_out)
+            with open(self.folder + "last_episode_steps.pkl", "rb") as pickle_out:
+                start_last_episode_steps = pickle.load(pickle_out)
+            with open(self.folder + "episode_reward.pkl", "rb") as pickle_out:
+                start_episode_reward = pickle.load(pickle_out)
+            with open(self.folder + "episode_steps.pkl", "rb") as pickle_out:
+                start_episode_steps = pickle.load(pickle_out)
+            with open(self.folder + "timing.pkl", "rb") as pickle_out:
+                start_timing = pickle.load(pickle_out)
+            with open(self.folder + "total_timing.pkl", "rb") as pickle_out:
+                start_total_timing = pickle.load(pickle_out)
             self.restore_model()
             self.logger.important("Load completed!")
 
         in_ts = time.time()
+        
+        # Start of the iteration on runs
         for i_run in range(start_run, num_run):
+            
+            # Break the loop if the phase "Save'n'Close" is triggered
             if self.env.is_save_and_close():
                 break
+                
             self.logger.important(f"START TRAINING RUN {i_run}")
             
             # Set Seed for repeatability
@@ -237,18 +272,25 @@ class SAC(object):
             writer_learn = SummaryWriter(log_dir=self.folder + 'run_' + str(i_run) + '/learn')
             writer_test = SummaryWriter(log_dir=self.folder + 'run_' + str(i_run) + '/test')
             
-            # Setup Replay Memory
+            # Setup Replay Memory: create new memory if is not the restore case
             if not restore:
                 memory = ReplayMemory(self.replay_size)
+            # Create a backup memory for Forget-Phase
             backup_memory = copy.deepcopy(memory)
+            
             # TRAINING LOOP
+            # All these variables must be backed up and restored
             updates = start_updates
-            total_numsteps = running_episode_reward = running_episode_reward_100 = 0
-            rewards = []
+            total_numsteps = start_total_numsteps
+            running_episode_reward = start_running_episode_reward
+            running_episode_reward_100 = start_running_episode_reward_100
+            rewards = start_rewards
             i_episode = start_episode
-            last_episode_steps = 0
-            episode_reward = episode_steps = timing = total_timing = 0
-            mem_size_last_learn = 0
+            last_episode_steps = start_last_episode_steps
+            episode_reward = start_episode_reward
+            episode_steps = start_episode_steps
+            timing = start_timing
+            total_timing = start_total_timing
             while True:
                 
                 # Stop the robot
@@ -297,7 +339,7 @@ class SAC(object):
                         pass
                 
                 # TODO: HP Checkpoint and check correctness of checkpoint restoring
-                if i_episode % 50 == 0 and i_episode != 0 and not restore:
+                if i_episode % 5 == 0 and i_episode != 0 and not restore:
                     self.logger.important("Saving context...")
                     self.logger.info("To restart from here set this flag: --restore " + self.folder)
                     # Save Replay, net weights, hp, i_episode and i_run
@@ -309,7 +351,29 @@ class SAC(object):
                         pickle.dump(i_run, pickle_out)
                     with open(self.folder + "updates.pkl", "wb") as pickle_out:
                         pickle.dump(updates, pickle_out)
+                    with open(self.folder + "total_numsteps.pkl", "wb") as pickle_out:
+                        pickle.dump(total_numsteps, pickle_out)
+                    with open(self.folder + "running_episode_reward.pkl", "wb") as pickle_out:
+                        pickle.dump(running_episode_reward, pickle_out)
+                    with open(self.folder + "running_episode_reward_100.pkl", "wb") as pickle_out:
+                        pickle.dump(running_episode_reward_100, pickle_out)
+                    with open(self.folder + "rewards.pkl", "wb") as pickle_out:
+                        pickle.dump(rewards, pickle_out)
+                    with open(self.folder + "last_episode_steps.pkl", "wb") as pickle_out:
+                        pickle.dump(last_episode_steps, pickle_out)
+                    with open(self.folder + "episode_reward.pkl", "wb") as pickle_out:
+                        pickle.dump(episode_reward, pickle_out)
+                    with open(self.folder + "episode_steps.pkl", "wb") as pickle_out:
+                        pickle.dump(episode_steps, pickle_out)
+                    with open(self.folder + "timing.pkl", "wb") as pickle_out:
+                        pickle.dump(timing, pickle_out)
+                    with open(self.folder + "total_timing.pkl", "wb") as pickle_out:
+                        pickle.dump(total_timing, pickle_out)
                     self.backup_model()
+                    if os.path.exists(self.folder[:-1] + "_bak" + self.folder[-1:]):
+                        shutil.rmtree(self.folder[:-1] + "_bak" + self.folder[-1:])
+                    print(self.folder[:-1] + "_bak" + self.folder[-1:])
+                    shutil.copytree(self.folder, self.folder[:-1] + "_bak" + self.folder[-1:])
                     self.logger.important("Save completed!")
                 
                 # Limit of episode/run reached. Let's start a new RUN
@@ -442,8 +506,11 @@ class SAC(object):
         torch.save(self.policy.state_dict(), actor_path)
         torch.save(self.critic.state_dict(), critic_path)
         torch.save(self.critic_target.state_dict(), critic_t_path)
-        if self.autotune_entropy and self.entropy_backup is None:
-            self.entropy_backup = self.target_entropy
+        if self.autotune_entropy:
+            # entropy_t_path = model_f + f"sac_entropy_t"
+            log_alpha_path = model_f + f"sac_log_alpha"
+            # torch.save(self.target_entropy, entropy_t_path)
+            torch.save(self.log_alpha, log_alpha_path)
     
     # Restore model parameters
     def restore_model(self):
@@ -457,9 +524,12 @@ class SAC(object):
             self.critic.load_state_dict(torch.load(critic_path))
         if critic_t_path is not None:
             self.critic_target.load_state_dict(torch.load(critic_t_path))
-        if self.autotune_entropy and self.entropy_backup is not None:
-            self.target_entropy = self.entropy_backup
-            self.entropy_backup = None
+        if self.autotune_entropy:
+            # entropy_t_path = model_f + f"sac_entropy_t"
+            log_alpha_path = model_f + f"sac_log_alpha"
+            # self.target_entropy = torch.load(entropy_t_path)
+            self.log_alpha = torch.load(log_alpha_path)
+            self.alpha_optim = Adam([self.log_alpha], lr=self.learning_rate)
     
     def test_phase(self, writer_test, i_run, i_episode):
         n_tests = 0
