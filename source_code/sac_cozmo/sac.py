@@ -15,7 +15,7 @@ from model import GaussianPolicyCNN, QNetworkCNN, DeterministicPolicyCNN
 from model import GaussianPolicyNN, QNetworkNN, DeterministicPolicyNN
 from replay_memory import ReplayMemory
 from state_buffer import StateBuffer
-from utils import soft_update, hard_update, copytree
+from utils import soft_update, hard_update
 
 
 class SAC(object):
