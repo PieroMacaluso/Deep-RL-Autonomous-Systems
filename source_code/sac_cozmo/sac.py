@@ -331,7 +331,7 @@ class SAC(object):
                                              str(datetime.timedelta(seconds=total_timing))))
                 
                 # Let's test (if it is the case)
-                if i_episode % self.eval_every == 0 and self.eval and i_episode != 0:
+                if i_episode % self.eval_every == 0 and self.eval and i_episode != 0 and not restore:
                     # print('test')
                     self.test_phase(writer_test, i_run, i_episode)
                     # Wait for the human to leave the command
