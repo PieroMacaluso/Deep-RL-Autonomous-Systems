@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="60d955be-8650-4ef5-a8b4-d9061020b642" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py" afterDir="false" />
+    <list default="true" id="60d955be-8650-4ef5-a8b4-d9061020b642" name="Default Changelist" comment="Brief Sum">
+      <change afterPath="$PROJECT_DIR$/../SAC_implementation/hp/Pendulum-v0_SAC_CNN_new.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../master_thesis/master_thesis.ist" beforeDir="false" afterPath="$PROJECT_DIR$/../../master_thesis/master_thesis.ist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../master_thesis/master_thesis.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../master_thesis/master_thesis.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../master_thesis/pre.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../master_thesis/pre.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../report_SAC/report_SAC.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../report_SAC/report_SAC.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../report_SAC/report_SAC.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../report_SAC/report_SAC.tex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sac.py" beforeDir="false" afterPath="$PROJECT_DIR$/sac.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/09092019.md" beforeDir="false" afterPath="$PROJECT_DIR$/09092019.md" afterDir="false" />
     </list>
-    <list id="1cf882ea-d51f-4d68-b3f6-7875a945990e" name="Little thesis insertion?" comment="Little thesis insertion?">
-      <change beforePath="$PROJECT_DIR$/../../master_thesis/chapters/fourth_chapter.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../master_thesis/chapters/second_chapter.tex" beforeDir="false" />
-    </list>
+    <list id="1cf882ea-d51f-4d68-b3f6-7875a945990e" name="Little thesis insertion?" comment="Little thesis insertion?" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,123 +32,8 @@
     <expand />
     <select />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/state_buffer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="780">
-              <caret line="52" column="8" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="8" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sac.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="380" column="74" selection-start-line="380" selection-start-column="74" selection-end-line="380" selection-end-column="74" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/replay_memory.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/remote_control.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7140">
-              <caret line="485" column="4" selection-start-line="485" selection-start-column="4" selection-end-line="485" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="49" column="20" selection-start-line="49" selection-start-column="20" selection-end-line="49" selection-end-column="20" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/cozmo/run.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8715">
-              <caret line="604" selection-start-line="604" selection-end-line="604" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/nn/modules/conv.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4650">
-              <caret line="317" column="8" selection-start-line="317" selection-start-column="8" selection-end-line="317" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/nn/init.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3345">
-              <caret line="229" column="4" selection-start-line="229" selection-start-column="4" selection-end-line="229" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/nn/modules/module.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3015">
-              <caret line="208" column="8" selection-start-line="208" selection-start-column="8" selection-end-line="208" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ImageWrapper</find>
-      <find>runs</find>
-      <find>max_num_step</find>
-      <find>thread</find>
-      <find>Thread</find>
-      <find>warn</find>
       <find>np_random</find>
       <find>upda</find>
       <find>restore_model</find>
@@ -173,6 +58,12 @@
       <find>updates_per_episode</find>
       <find>eval</find>
       <find>while self.env.is_human_controlled()</find>
+      <find>'conv2': [16, 32, 5, 2, 0]</find>
+      <find>'conv2': [16, 32, 4, 2, 0]</find>
+      <find>alpha</find>
+      <find>entropy_temperature/alpha</find>
+      <find>dict</find>
+      <find>500</find>
     </findStrings>
     <replaceStrings>
       <replace>16, 32, , 2, 0</replace>
@@ -186,6 +77,9 @@
       <replace>self.linear2</replace>
       <replace>updates_per_episode</replace>
       <replace>self.learning_rate</replace>
+      <replace>sifi.eurecom.fr</replace>
+      <replace>'conv2': [16, 32, 5, 2, 0]</replace>
+      <replace>'conv2': [16, 32, 4, 2, 0]</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -196,88 +90,30 @@
       </map>
     </option>
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/runs/2019-05-06_16-03-01_SAC/hp.json" />
-        <option value="$PROJECT_DIR$/../gym_cozmo/envs/cozmo_env.py" />
-        <option value="$PROJECT_DIR$/utils.py" />
-        <option value="$PROJECT_DIR$/replay_memory.py" />
-        <option value="$PROJECT_DIR$/runs/b256_r10000_auto_w2000/hp.json" />
-        <option value="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/remote_control.py" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/image_wrapper.py" />
-        <option value="$PROJECT_DIR$/runs/2019-05-23_09-29-33_SAC_CozmoDriver-v0/README.md" />
-        <option value="$PROJECT_DIR$/normalized_actions.py" />
-        <option value="$PROJECT_DIR$/index.rst" />
-        <option value="$PROJECT_DIR$/docs/index.rst" />
-        <option value="$PROJECT_DIR$/docs/conf.py" />
-        <option value="$PROJECT_DIR$/docs/code.rst" />
-        <option value="$PROJECT_DIR$/state_buffer.py" />
-        <option value="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py" />
-        <option value="$APPLICATION_HOME_DIR$/helpers/rest_runners/sphinx_runner.py" />
-        <option value="$PROJECT_DIR$/docs/source/conf.py" />
-        <option value="$PROJECT_DIR$/docs/source/main.rst" />
-        <option value="$PROJECT_DIR$/docs/source/index.rst" />
-        <option value="$PROJECT_DIR$/docs/.gitignore" />
-        <option value="$PROJECT_DIR$/latest_ideas.md" />
-        <option value="$PROJECT_DIR$/model.py" />
-        <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/sac.py" />
-      </list>
-    </option>
-  </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="50" />
     <option name="y" value="27" />
     <option name="width" value="1870" />
     <option name="height" value="1026" />
   </component>
+  <component name="ProjectId" id="1QuSANuUhx7M48YmlWci2rP5RWp" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectReloadState">
     <option name="STATE" value="1" />
   </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="sac_cozmo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="sac_cozmo" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="sac_cozmo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="sac_cozmo" type="462c0819:PsiDirectoryNode" />
-              <item name="runs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="sac_cozmo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="sac_cozmo" type="462c0819:PsiDirectoryNode" />
-              <item name="runs" type="462c0819:PsiDirectoryNode" />
-              <item name="runs" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
-  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../SAC_implementation" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Haml" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/runs" />
+      <recent name="$PROJECT_DIR$/runs/2019-09-12_15-18-59_SAC_CozmoDriver-v0" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -307,7 +143,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--cuda --pics --env_name CozmoMock-v0" />
+      <option name="PARAMETERS" value="--cuda --pics --env_name CozmoMock-v0 --restore ./runs/2019-09-12_11-45-20_SAC_CozmoDriver-v0/" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -351,7 +187,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--cuda --pics" />
+      <option name="PARAMETERS" value="--cuda --pics --restore ./runs/2019-09-13_10-03-28_SAC_CozmoDriver-v0/" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -396,6 +232,28 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="--cuda --pics --restore ./runs/2019-05-27_12-22-51_SAC_CozmoDriver-v0/" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="restoreEurecomSL" type="PythonConfigurationType" factoryName="Python">
+      <module name="sac_cozmo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/virtualenv/cozmo-env/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="--cuda --pics --restore ./runs/2019-09-12_15-18-59_SAC_CozmoDriver-v0/" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -532,10 +390,11 @@
     </configuration>
     <list>
       <item itemvalue="Python.debug" />
+      <item itemvalue="Python.restoreHome" />
+      <item itemvalue="Python.restoreEurecomSL" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.Mock" />
       <item itemvalue="Python.replay_memory" />
-      <item itemvalue="Python.restoreHome" />
       <item itemvalue="Python.restore" />
       <item itemvalue="Python.sac" />
       <item itemvalue="Python.singleLane Eurecom" />
@@ -613,6 +472,16 @@
       <workItem from="1568016525920" duration="6828000" />
       <workItem from="1568128535603" duration="3547000" />
       <workItem from="1568184445299" duration="1403000" />
+      <workItem from="1568188904790" duration="2331000" />
+      <workItem from="1568196826352" duration="138000" />
+      <workItem from="1568197329444" duration="1135000" />
+      <workItem from="1568274126300" duration="17384000" />
+      <workItem from="1568357484340" duration="6024000" />
+      <workItem from="1568369516222" duration="5272000" />
+      <workItem from="1568390957119" duration="4000" />
+      <workItem from="1568391749956" duration="1950000" />
+      <workItem from="1568618786051" duration="38000" />
+      <workItem from="1568618852022" duration="18000" />
     </task>
     <task id="LOCAL-00001" summary="First Huge Commit of Cozmo-SAC">
       <created>1557257801068</created>
@@ -873,13 +742,31 @@
       <option name="project" value="LOCAL" />
       <updated>1568128715246</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="SAC-Cozmo Backup and Restore logic improved and tested. It seems to work!">
+      <created>1568283190288</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1568283190288</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Brief summary of this week">
+      <created>1568306647303</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1568306647303</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Latest improvement and GIF">
+      <created>1568465217776</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1568465217776</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="264062000" />
-  </component>
-  <component name="TodoView" selected-index="4">
+  <component name="TodoView">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
     </todo-panel>
@@ -887,66 +774,6 @@
       <are-packages-shown value="true" />
       <is-autoscroll-to-source value="true" />
     </todo-panel>
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="50" y="27" width="1870" height="1026" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.36567983" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49946752" weight="0.32997763" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.47603834" visible="true" weight="0.4187643" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4914803" weight="0.39816934" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49520767" weight="0.32997763" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49946752" weight="0.30936074" />
-      <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5085197" side_tool="true" weight="0.39822024" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.80404687" weight="0.3340961" />
-      <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49946752" weight="0.32997763" />
-      <window_info anchor="bottom" id="Messages" order="13" />
-      <window_info active="true" anchor="bottom" id="Autodoc" order="14" weight="0.32997763" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" weight="0.32960597" />
-      <window_info anchor="right" id="R Graphics" order="4" />
-      <window_info anchor="right" id="R Packages" order="5" weight="0.3294956" />
-      <window_info anchor="right" id="Database" order="6" weight="0.32960597" />
-      <window_info anchor="right" id="Coverage" order="7" side_tool="true" />
-    </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.36567983" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49946752" weight="0.32997763" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.47603834" weight="0.4187643" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4914803" weight="0.39816934" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49520767" weight="0.32997763" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="8" sideWeight="0.49946752" visible="true" weight="0.30936074" />
-      <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5085197" side_tool="true" weight="0.39822024" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.80404687" weight="0.3340961" />
-      <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49946752" weight="0.32997763" />
-      <window_info anchor="bottom" id="Messages" order="13" />
-      <window_info active="true" anchor="bottom" id="Autodoc" order="14" weight="0.32997763" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" weight="0.32960597" />
-      <window_info anchor="right" id="R Graphics" order="4" />
-      <window_info anchor="right" id="R Packages" order="5" />
-      <window_info anchor="right" id="Database" order="6" weight="0.32960597" />
-      <window_info anchor="right" id="Coverage" order="7" side_tool="true" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -992,9 +819,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="TeX update&#10;&#10;- Master Thesis updated&#10;- Report SAC update" />
-    <MESSAGE value="Refactoring and experiments with code. Still no good results... :(" />
-    <MESSAGE value="Brand new functionality to make learning phase easy.&#10;&#10;[All features are not tested yet]&#10;- **Restore functionality**: Now the learning process can be stopped and saved in the main folder of the experiment. This allows the user to restore the experiment with the same net, the same replay buffer, etc. This can be useful for training which lasts longer than expected. You can close and save the context with the internet interface of OpenAI Cozmo environment using key C.&#10;&#10;&#10;- **Tensorboard in the main**: Before this implementation, Tensorboard had to be started separately from the main script. Now it is launched with the application and you can have the dashboard with a small link in the Cozmo RL Dashboard" />
     <MESSAGE value="Little enhancement of the TeX of my thesis" />
     <MESSAGE value="Refactoring and comments" />
     <MESSAGE value="Enhancement of SAC&#10;&#10;- Added a sleep of 0.05s in order to calibrate learning and random phase during experiment.&#10;- Added a learning phase after the experiment in order to reach 100 updates for episode.&#10;- Other fixes and refactoring" />
@@ -1017,7 +841,10 @@
     <MESSAGE value="Choice Time" />
     <MESSAGE value="Little thesis insertion?" />
     <MESSAGE value="SAC-Cozmo modifications (batchsize, checkpoint and testing phase)" />
-    <option name="LAST_COMMIT_MESSAGE" value="SAC-Cozmo modifications (batchsize, checkpoint and testing phase)" />
+    <MESSAGE value="SAC-Cozmo Backup and Restore logic improved and tested. It seems to work!" />
+    <MESSAGE value="Brief summary of this week" />
+    <MESSAGE value="Latest improvement and GIF" />
+    <option name="LAST_COMMIT_MESSAGE" value="Latest improvement and GIF" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1033,9 +860,24 @@
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model.py</url>
-          <line>214</line>
-          <option name="timeStamp" value="38" />
+          <url>file://$PROJECT_DIR$/sac.py</url>
+          <line>342</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/sac.py</url>
+          <line>80</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/sac.py</url>
+          <line>510</line>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/sac.py</url>
+          <line>528</line>
+          <option name="timeStamp" value="45" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -1049,19 +891,21 @@
         <watch expression="torch.cat([output_images, state_buffer.get_tensor().unsqueeze(0)], 0)" language="Python" />
         <watch expression="k.startswith('conv')" language="Python" />
         <watch expression="mean" language="Python" />
+        <watch expression="self.log_alpha.state_dict()" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/sac_cozmo$sphinx_task_in_sphinx_task_in_.coverage" NAME="sphinx task in sphinx task in  Coverage Results" MODIFIED="1559115597240" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/docs" />
-    <SUITE FILE_PATH="coverage/sac_cozmo$sphinx_apidoc.coverage" NAME="sphinx-apidoc Coverage Results" MODIFIED="1559114384886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/docs" />
-    <SUITE FILE_PATH="coverage/sac_cozmo$debug.coverage" NAME="debug Coverage Results" MODIFIED="1559125037939" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/sac_cozmo$state_buffer.coverage" NAME="state_buffer Coverage Results" MODIFIED="1557494263085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/sac_cozmo$restore.coverage" NAME="restore Coverage Results" MODIFIED="1559026781385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/sac_cozmo$Mock.coverage" NAME="Mock Coverage Results" MODIFIED="1568184626283" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sac_cozmo$replay_memory.coverage" NAME="replay_memory Coverage Results" MODIFIED="1557997003277" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sac_cozmo$restoreHome.coverage" NAME="restoreHome Coverage Results" MODIFIED="1566065549109" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/sac_cozmo$main.coverage" NAME="main Coverage Results" MODIFIED="1568185626569" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$restoreEurecomSL.coverage" NAME="restoreEurecomSL Coverage Results" MODIFIED="1568299502757" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$main.coverage" NAME="main Coverage Results" MODIFIED="1568375258913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$sphinx_apidoc.coverage" NAME="sphinx-apidoc Coverage Results" MODIFIED="1559114384886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/docs" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$Mock.coverage" NAME="Mock Coverage Results" MODIFIED="1568282614976" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$restore.coverage" NAME="restore Coverage Results" MODIFIED="1559026781385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$sphinx_task_in_sphinx_task_in_.coverage" NAME="sphinx task in sphinx task in  Coverage Results" MODIFIED="1559115597240" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/docs" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$debug.coverage" NAME="debug Coverage Results" MODIFIED="1568299409903" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$state_buffer.coverage" NAME="state_buffer Coverage Results" MODIFIED="1557494263085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="breakpointCondition">
@@ -1072,6 +916,16 @@
       </expression>
     </expressions>
     <expressions id="watch">
+      <expression>
+        <expression-string>self.log_alpha.state_dict()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.log_alpha.</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>mean</expression-string>
         <language-id>Python</language-id>
@@ -1108,312 +962,5 @@
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/__init__.pyi">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14475">
-          <caret line="988" column="96" selection-start-line="988" selection-start-column="96" selection-end-line="988" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/tensorboardX/x2num.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/runs/2019-05-22_11-09-45_SAC_CozmoDriver-v0/memory.pkl" />
-    <entry file="file://$PROJECT_DIR$/runs/2019-05-22_11-09-45_SAC_CozmoDriver-v0/logfile.log" />
-    <entry file="file://$PROJECT_DIR$/runs/2019-05-23_09-29-33_SAC_CozmoDriver-v0/README.md" />
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/gym/logger.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model_complex.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3270">
-          <caret line="221" column="34" selection-start-line="221" selection-start-column="34" selection-end-line="221" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/tensorboard/plugins/scalar/scalars_plugin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2100">
-          <caret line="157" selection-start-line="157" selection-end-line="157" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/conf.py" />
-    <entry file="file://$PROJECT_DIR$/index.rst" />
-    <entry file="file://$PROJECT_DIR$/docs/conf.py" />
-    <entry file="file://$PROJECT_DIR$/docs/index.rst" />
-    <entry file="file://$PROJECT_DIR$/docs/code.rst" />
-    <entry file="file://$PROJECT_DIR$/normalized_actions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="11" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor>
-            <caret column="6" selection-start-column="6" selection-end-column="6" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/tensorboard/backend/event_processing/plugin_event_accumulator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6240">
-          <caret line="436" selection-start-line="436" selection-end-line="436" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/tensorflow/python/eager/context.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10200">
-          <caret line="698" column="6" selection-start-line="698" selection-start-column="6" selection-end-line="698" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="57" column="27" selection-start-line="57" selection-start-column="27" selection-end-line="57" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/optim/lr_scheduler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="50" column="13" selection-start-line="50" selection-start-column="13" selection-end-line="50" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/tensorboardX/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1620">
-          <caret line="108" selection-start-line="108" selection-end-line="108" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydevd_bundle/pydevd_resolver.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3105">
-          <caret line="214" selection-start-line="214" selection-end-line="214" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/bin/sphinx-apidoc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="34" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/make.bat">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/index.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/rest_runners/sphinx_runner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/Makefile">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/utils.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/conf.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="50" column="30" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
-          <folding>
-            <element signature="e#534#543#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/main.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/model.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/image_wrapper.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="5" lean-forward="true" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_logging.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="30" column="21" selection-start-line="30" selection-end-line="31" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/tensorboardX/summary.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1845">
-          <caret line="145" selection-start-line="145" selection-end-line="145" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/gym/envs/registration.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="4" column="29" selection-start-line="4" selection-start-column="29" selection-end-line="4" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/latest_ideas.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="75">
-            <caret line="5" column="76" selection-start-line="5" selection-start-column="76" selection-end-line="5" selection-end-column="76" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/distributions/normal.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="870">
-          <caret line="64" column="8" selection-start-line="64" selection-start-column="8" selection-end-line="64" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/nn/functional.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25245">
-          <caret line="1696" selection-start-line="1696" selection-end-line="1696" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/cuda/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2280">
-          <caret line="162" selection-start-line="162" selection-end-line="162" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/tensorboardX/writer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="405" selection-start-line="405" selection-end-line="405" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/runs/2019-08-22_09-37-07_SAC_CozmoDriver-v0/hp.json" />
-    <entry file="file://$PROJECT_DIR$/state_buffer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="52" column="8" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/replay_memory.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/remote_control.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7140">
-          <caret line="485" column="4" selection-start-line="485" selection-start-column="4" selection-end-line="485" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/cozmo/run.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8715">
-          <caret line="604" selection-start-line="604" selection-end-line="604" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/nn/modules/conv.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4650">
-          <caret line="317" column="8" selection-start-line="317" selection-start-column="8" selection-end-line="317" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/nn/init.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3345">
-          <caret line="229" column="4" selection-start-line="229" selection-start-column="4" selection-end-line="229" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/torch/nn/modules/module.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3015">
-          <caret line="208" column="8" selection-start-line="208" selection-start-column="8" selection-end-line="208" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="49" column="20" selection-start-line="49" selection-start-column="20" selection-end-line="49" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sac.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="380" column="74" selection-start-line="380" selection-start-column="74" selection-end-line="380" selection-end-column="74" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>
