@@ -6,16 +6,12 @@ import time
 
 import numpy as np
 import torch
-import torch.nn.functional as F
 from tensorboardX import SummaryWriter
 from torch import optim, nn
-from torch.optim import Adam
 
 from CNN import CriticCNN, ActorCNN
 from NN import CriticNN, ActorNN
 from OUNoise import OUNoise
-from model import GaussianPolicyCNN, QNetworkCNN, DeterministicPolicyCNN
-from model import GaussianPolicyNN, QNetworkNN, DeterministicPolicyNN
 from replay_memory import ReplayMemory
 from state_buffer import StateBuffer
 from utils import soft_update, hard_update
@@ -75,17 +71,17 @@ class DDPG(object):
         self.pics = args.pics
         if self.pics:
             # CNN
-            self.h = env.observation_space.shape[1]
-            self.w = env.observation_space.shape[2]
-            self.critic_net = CriticCNN(self.state_buffer_size, self.batch_size, num_inputs, self.h,
+            self.h = args.img_h
+            self.w = args.img_w
+            self.critic_net = CriticCNN(num_inputs, action_space.shape[0], self.h,
                                         self.w).to(
                 self.device)
-            self.actor_net = ActorCNN(self.state_buffer_size, self.batch_size, num_inputs, self.h,
+            self.actor_net = ActorCNN(num_inputs, action_space.shape[0], self.h,
                                       self.w).to(self.device)
-            self.target_value_net = CriticCNN(self.state_buffer_size, self.batch_size, num_inputs, self.h,
+            self.target_value_net = CriticCNN(num_inputs, action_space.shape[0], self.h,
                                               self.w).to(
                 self.device)
-            self.target_policy_net = ActorCNN(self.state_buffer_size, self.batch_size, num_inputs, self.h,
+            self.target_policy_net = ActorCNN(num_inputs, action_space.shape[0], self.h,
                                               self.w).to(
                 self.device)
         else:
@@ -94,20 +90,20 @@ class DDPG(object):
             self.actor_net = ActorNN(action_space, num_inputs).to(self.device)
             self.target_value_net = CriticNN(action_space, num_inputs).to(self.device)
             self.target_policy_net = ActorNN(action_space, num_inputs).to(self.device)
-
+        
         hard_update(self.target_value_net, self.critic_net)
         hard_update(self.target_policy_net, self.actor_net)
         
         self.critic_opt = optim.Adam(self.critic_net.parameters(), lr=self.learning_rate)
         self.actor_opt = optim.Adam(self.actor_net.parameters(), lr=self.learning_rate)
         self.critic_loss = nn.MSELoss()
-
+        
         logger.debug(self.critic_net)
         logger.debug(self.actor_net)
         
         self.folder = folder
         self.logger = logger
-        
+    
     def select_action(self, state: np.array, eval=False):
         """
         Select the action based on the current state and the current policy network.
@@ -119,19 +115,21 @@ class DDPG(object):
         :return: Array with the action proposed by the policy network
         :rtype: np.array
         """
+
         state = torch.FloatTensor(state).to(self.device).unsqueeze(0)
         action = self.actor_net.sample(state)
         action = action.detach().cpu().numpy()
         action = action[0]
+
+        # The next 3 lines of code are used to
+        mod = (self.env.action_space.high - self.env.action_space.low) / 2
+        tra = (self.env.action_space.high + self.env.action_space.low) / 2
+        action = action * mod + tra
         if not eval:
             action = self.noise.get_action(action, self.eps)
         else:
             action = self.noise.get_action(action, 0.0)
         assert not np.isnan(action).all()
-        # The next 3 lines of code are used to
-        mod = (self.env.action_space.high - self.env.action_space.low) / 2
-        tra = (self.env.action_space.high + self.env.action_space.low) / 2
-        action = action * mod + tra
         return action
     
     def update_parameters(self, memory, batch_size, updates):
@@ -143,13 +141,13 @@ class DDPG(object):
         :return:
         """
         state_batch, action_batch, reward_batch, next_state_batch, mask_batch = memory.sample(batch_size=batch_size)
-
+        
         states = torch.FloatTensor(state_batch).to(self.device)
         next_states = torch.FloatTensor(next_state_batch).to(self.device)
         actions = torch.FloatTensor(action_batch).to(self.device)
         rewards = torch.FloatTensor(reward_batch).to(self.device).unsqueeze(1)
         done = torch.FloatTensor(mask_batch).to(self.device).unsqueeze(1)
-
+        
         # UPDATE CRITIC #
         # Get predicted next-state actions and Q values from target models
         actions_next = self.target_policy_net(next_states)
@@ -163,7 +161,7 @@ class DDPG(object):
         self.critic_opt.zero_grad()
         critic_loss.backward()
         self.critic_opt.step()
-
+        
         # UPDATE ACTOR #
         # Compute actor loss
         actions_pred = self.actor_net(states)
@@ -172,7 +170,7 @@ class DDPG(object):
         self.actor_opt.zero_grad()
         actor_loss.backward()
         self.actor_opt.step()
-
+        
         # UPDATE TARGET NETWORK #
         if updates % self.target_update == 0:
             soft_update(self.critic_net, self.target_value_net, self.tau)
@@ -197,7 +195,7 @@ class DDPG(object):
                 start_updates = pickle.load(pickle_out)
             self.restore_model()
             self.logger.important("Load completed!")
-
+        
         in_ts = time.time()
         for i_run in range(start_run, num_run):
             if self.env.is_save_and_close():
@@ -413,7 +411,7 @@ class DDPG(object):
         model_f = self.folder + 'backup/'
         if not os.path.exists(model_f):
             os.makedirs(model_f)
-
+        
         actor_path = model_f + f"ddpg_actor"
         actor_path_t = model_f + f"ddpg_actor_t"
         critic_path = model_f + f"ddpg_critic"

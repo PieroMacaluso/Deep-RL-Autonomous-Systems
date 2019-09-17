@@ -43,11 +43,11 @@ def weights_init_(m):
 
 class ActorCNN(nn.Module):
     
-    def __init__(self, num_channel, num_stack, num_actions, h, w, hidden_features=16):
+    def __init__(self, num_channel, num_actions, h, w, hidden_features=16):
         super(ActorCNN, self).__init__()
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
-            'conv1': [num_channel * num_stack, 16, 8, 4, 0],
+            'conv1': [num_channel, 16, 8, 4, 0],
             'conv2': [16, 32, 5, 2, 0]
         }
         fc = {
@@ -83,11 +83,11 @@ class ActorCNN(nn.Module):
 
 class CriticCNN(nn.Module):
     
-    def __init__(self, num_channel, num_stack, num_actions, h, w, hidden_features=16):
+    def __init__(self, num_channel, num_actions, h, w, hidden_features=16):
         super(CriticCNN, self).__init__()
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
-            'conv1': [num_channel * num_stack, 16, 8, 4, 0],
+            'conv1': [num_channel, 16, 8, 4, 0],
             'conv2': [16, 32, 5, 2, 0]
         }
         fc = {

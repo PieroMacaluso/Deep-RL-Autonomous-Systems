@@ -48,8 +48,8 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     tau = 0.005
     lr = 0.0003
     hidden_size = 256
-    img_h = 240
-    img_w = 320
+    img_h = 64
+    img_w = 64
     
     # Episode
     warm_up_episodes = 0
@@ -57,8 +57,8 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     max_num_run = 5
     batch_size = 64
     replay_size = 5000
-    min_replay_size = 300
-    state_buffer_size = 1
+    min_replay_size = 64
+    state_buffer_size = 2
     updates_per_episode = 100
     target_update = 1
     
