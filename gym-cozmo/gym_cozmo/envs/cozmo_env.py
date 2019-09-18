@@ -20,7 +20,9 @@ class CozmoEnv(gym.Env):
     
     def __init__(self, robot: cozmo.robot.Robot, img_h: int, img_w: int):
         # choice_time: time between an action and the next one
-        self.choice_time = 0.05
+        # this value is equal to 1 / number_frame_second
+        # number_frame_second is generally up to 15 as reported in Cozmo SDK
+        self.choice_time = 1/15
         self.last_action = None
         self.seed()
         self.img_h = img_h
