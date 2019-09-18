@@ -1,5 +1,6 @@
 import copy
 import datetime
+import json
 import os
 import pickle
 import shutil
@@ -221,35 +222,18 @@ class SAC(object):
         # Restore Phase
         if restore:
             # TODO: Not tested deeply yet
-            with open(self.folder + "i_episode.pkl", "rb") as pickle_out:
-                start_episode = pickle.load(pickle_out)
-            with open(self.folder + "i_run.pkl", "rb") as pickle_out:
-                start_run = pickle.load(pickle_out)
             with open(self.folder + "memory.pkl", "rb") as pickle_out:
-                memory = pickle.load(pickle_out)
-            with open(self.folder + "updates.pkl", "rb") as pickle_out:
-                start_updates = pickle.load(pickle_out)
-            with open(self.folder + "total_numsteps.pkl", "rb") as pickle_out:
-                start_total_numsteps = pickle.load(pickle_out)
-            with open(self.folder + "running_episode_reward.pkl", "rb") as pickle_out:
-                start_running_episode_reward = pickle.load(pickle_out)
-            with open(self.folder + "running_episode_reward_100.pkl", "rb") as pickle_out:
-                start_running_episode_reward_100 = pickle.load(pickle_out)
+                memory = ReplayMemory(self.replay_size, self.seed)
+                memory.load(pickle_out)
+            with open(self.folder + "context.json", "r+") as pickle_out:
+                (start_episode, start_run, start_updates, start_total_numsteps, start_running_episode_reward,
+                 start_running_episode_reward_100, start_last_episode_steps, start_episode_reward, start_episode_steps,
+                 start_timing, start_total_timing) = json.load(pickle_out)
             with open(self.folder + "rewards.pkl", "rb") as pickle_out:
                 start_rewards = pickle.load(pickle_out)
-            with open(self.folder + "last_episode_steps.pkl", "rb") as pickle_out:
-                start_last_episode_steps = pickle.load(pickle_out)
-            with open(self.folder + "episode_reward.pkl", "rb") as pickle_out:
-                start_episode_reward = pickle.load(pickle_out)
-            with open(self.folder + "episode_steps.pkl", "rb") as pickle_out:
-                start_episode_steps = pickle.load(pickle_out)
-            with open(self.folder + "timing.pkl", "rb") as pickle_out:
-                start_timing = pickle.load(pickle_out)
-            with open(self.folder + "total_timing.pkl", "rb") as pickle_out:
-                start_total_timing = pickle.load(pickle_out)
             self.restore_model()
             self.logger.important("Load completed!")
-
+        
         in_ts = time.time()
         
         # Start of the iteration on runs
@@ -258,7 +242,7 @@ class SAC(object):
             # Break the loop if the phase "Save'n'Close" is triggered
             if self.env.is_save_and_close():
                 break
-                
+            
             self.logger.important(f"START TRAINING RUN {i_run}")
             
             # Set Seed for repeatability
@@ -274,7 +258,7 @@ class SAC(object):
             
             # Setup Replay Memory: create new memory if is not the restore case
             if not restore:
-                memory = ReplayMemory(self.replay_size)
+                memory = ReplayMemory(self.replay_size, self.seed)
             # Create a backup memory for Forget-Phase
             backup_memory = copy.deepcopy(memory)
             
@@ -339,36 +323,18 @@ class SAC(object):
                         pass
                 
                 # TODO: HP Checkpoint and check correctness of checkpoint restoring
-                if i_episode % 5 == 0 and i_episode != 0 and not restore:
+                if i_episode % self.eval_every == 0 and i_episode != 0 and not restore:
                     self.logger.important("Saving context...")
                     self.logger.info("To restart from here set this flag: --restore " + self.folder)
                     # Save Replay, net weights, hp, i_episode and i_run
                     with open(self.folder + "memory.pkl", "wb") as pickle_out:
-                        pickle.dump(memory, pickle_out, pickle.HIGHEST_PROTOCOL)
-                    with open(self.folder + "i_episode.pkl", "wb") as pickle_out:
-                        pickle.dump(i_episode, pickle_out)
-                    with open(self.folder + "i_run.pkl", "wb") as pickle_out:
-                        pickle.dump(i_run, pickle_out)
-                    with open(self.folder + "updates.pkl", "wb") as pickle_out:
-                        pickle.dump(updates, pickle_out)
-                    with open(self.folder + "total_numsteps.pkl", "wb") as pickle_out:
-                        pickle.dump(total_numsteps, pickle_out)
-                    with open(self.folder + "running_episode_reward.pkl", "wb") as pickle_out:
-                        pickle.dump(running_episode_reward, pickle_out)
-                    with open(self.folder + "running_episode_reward_100.pkl", "wb") as pickle_out:
-                        pickle.dump(running_episode_reward_100, pickle_out)
+                        memory.dump(pickle_out)
+                    with open(self.folder + "context.json", "w+") as pickle_out:
+                        json.dump((i_episode, i_run, updates, total_numsteps, running_episode_reward,
+                                   running_episode_reward_100, last_episode_steps, episode_reward, episode_steps,
+                                   timing, total_timing), pickle_out)
                     with open(self.folder + "rewards.pkl", "wb") as pickle_out:
                         pickle.dump(rewards, pickle_out)
-                    with open(self.folder + "last_episode_steps.pkl", "wb") as pickle_out:
-                        pickle.dump(last_episode_steps, pickle_out)
-                    with open(self.folder + "episode_reward.pkl", "wb") as pickle_out:
-                        pickle.dump(episode_reward, pickle_out)
-                    with open(self.folder + "episode_steps.pkl", "wb") as pickle_out:
-                        pickle.dump(episode_steps, pickle_out)
-                    with open(self.folder + "timing.pkl", "wb") as pickle_out:
-                        pickle.dump(timing, pickle_out)
-                    with open(self.folder + "total_timing.pkl", "wb") as pickle_out:
-                        pickle.dump(total_timing, pickle_out)
                     self.backup_model()
                     if os.path.exists(self.folder[:-1] + "_bak" + self.folder[-1:]):
                         shutil.rmtree(self.folder[:-1] + "_bak" + self.folder[-1:])
@@ -403,7 +369,8 @@ class SAC(object):
                 while not done:
                     if self.pics:
                         writer_train.add_image('episode_{}'
-                                               .format(str(i_episode)), state_buffer.get_tensor()[0].unsqueeze(0), episode_steps)
+                                               .format(str(i_episode)), state_buffer.get_tensor()[0].unsqueeze(0),
+                                               episode_steps)
                     
                     if i_episode < self.warm_up_episodes or len(memory) < self.min_replay_size:
                         # Warm_up phase -> Completely random choice of an action
