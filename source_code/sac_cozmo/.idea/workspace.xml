@@ -2,14 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60d955be-8650-4ef5-a8b4-d9061020b642" name="Default Changelist" comment="Brief Sum">
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/hp/Pendulum-v0_SAC_CNN_new.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../master_thesis/master_thesis.ist" beforeDir="false" afterPath="$PROJECT_DIR$/../../master_thesis/master_thesis.ist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../master_thesis/master_thesis.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../master_thesis/master_thesis.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../master_thesis/pre.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../master_thesis/pre.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../report_SAC/report_SAC.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../report_SAC/report_SAC.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../report_SAC/report_SAC.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../report_SAC/report_SAC.tex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ddpg_cozmo/.idea/ddpg_cozmo.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ddpg_cozmo/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ddpg_cozmo/.idea/libraries/R_User_Library.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ddpg_cozmo/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ddpg_cozmo/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ddpg_cozmo/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ddpg_cozmo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../gym-cozmo/gym_cozmo/envs/cozmo_env.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/09092019.md" beforeDir="false" afterPath="$PROJECT_DIR$/09092019.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/replay_memory.py" beforeDir="false" afterPath="$PROJECT_DIR$/replay_memory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sac.py" beforeDir="false" afterPath="$PROJECT_DIR$/sac.py" afterDir="false" />
     </list>
     <list id="1cf882ea-d51f-4d68-b3f6-7875a945990e" name="Little thesis insertion?" comment="Little thesis insertion?" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,69 +36,13 @@
     <expand />
     <select />
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>np_random</find>
-      <find>upda</find>
-      <find>restore_model</find>
-      <find>repla</find>
-      <find>quantized::fake_quantize_per_tensor_affine_forward</find>
-      <find>100</find>
-      <find>add_image</find>
-      <find>lr</find>
-      <find>args.lr</find>
-      <find>print(</find>
-      <find>print</find>
-      <find>i</find>
-      <find>img_size</find>
-      <find>img</find>
-      <find>scheduler</find>
-      <find>schedule</find>
-      <find>do_one_test</find>
-      <find>inizi</find>
-      <find>http://127.0.0.1:5000/cozmoImage</find>
-      <find>min_replay_size</find>
-      <find>warm_up_episodes</find>
-      <find>updates_per_episode</find>
-      <find>eval</find>
-      <find>while self.env.is_human_controlled()</find>
-      <find>'conv2': [16, 32, 5, 2, 0]</find>
-      <find>'conv2': [16, 32, 4, 2, 0]</find>
-      <find>alpha</find>
-      <find>entropy_temperature/alpha</find>
-      <find>dict</find>
-      <find>500</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>16, 32, , 2, 0</replace>
-      <replace>16, 32, 4, 2, 0</replace>
-      <replace>num_inputs*3</replace>
-      <replace>num_inputs</replace>
-      <replace>self.pics</replace>
-      <replace>F.leaky_relu</replace>
-      <replace>'conv1': [num_inputs, 16, 4, 2, 0],</replace>
-      <replace>self.linear2 = nn.Linear(hidden_dim, hidden_dim)</replace>
-      <replace>self.linear2</replace>
-      <replace>updates_per_episode</replace>
-      <replace>self.learning_rate</replace>
-      <replace>sifi.eurecom.fr</replace>
-      <replace>'conv2': [16, 32, 5, 2, 0]</replace>
-      <replace>'conv2': [16, 32, 4, 2, 0]</replace>
-    </replaceStrings>
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/../.." value="SAC_Pendulum_learn_after" />
+        <entry key="$PROJECT_DIR$/../.." value="DDPG_Cozmo" />
       </map>
     </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="50" />
-    <option name="y" value="27" />
-    <option name="width" value="1870" />
-    <option name="height" value="1026" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="ProjectId" id="1QuSANuUhx7M48YmlWci2rP5RWp" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -104,15 +52,15 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../gym-cozmo" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Haml" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/runs" />
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/runs/2019-09-12_15-18-59_SAC_CozmoDriver-v0" />
     </key>
   </component>
@@ -143,7 +91,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--cuda --pics --env_name CozmoMock-v0 --restore ./runs/2019-09-12_11-45-20_SAC_CozmoDriver-v0/" />
+      <option name="PARAMETERS" value="--cuda --pics --env_name CozmoMock-v0" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -187,7 +135,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--cuda --pics --restore ./runs/2019-09-13_10-03-28_SAC_CozmoDriver-v0/" />
+      <option name="PARAMETERS" value="--cuda --pics" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -482,6 +430,10 @@
       <workItem from="1568391749956" duration="1950000" />
       <workItem from="1568618786051" duration="38000" />
       <workItem from="1568618852022" duration="18000" />
+      <workItem from="1568635692303" duration="5163000" />
+      <workItem from="1568660249083" duration="610000" />
+      <workItem from="1568703504159" duration="19330000" />
+      <workItem from="1568790222587" duration="3252000" />
     </task>
     <task id="LOCAL-00001" summary="First Huge Commit of Cozmo-SAC">
       <created>1557257801068</created>
@@ -763,17 +715,15 @@
       <option name="project" value="LOCAL" />
       <updated>1568465217776</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Modified replay size and buffersize">
+      <created>1568646312543</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1568646312543</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
-  </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -784,20 +734,7 @@
         <entry key="MAIN">
           <value>
             <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
+              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -819,7 +756,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Little enhancement of the TeX of my thesis" />
     <MESSAGE value="Refactoring and comments" />
     <MESSAGE value="Enhancement of SAC&#10;&#10;- Added a sleep of 0.05s in order to calibrate learning and random phase during experiment.&#10;- Added a learning phase after the experiment in order to reach 100 updates for episode.&#10;- Other fixes and refactoring" />
     <MESSAGE value="Gym_Cozmo enhacement" />
@@ -844,7 +780,8 @@
     <MESSAGE value="SAC-Cozmo Backup and Restore logic improved and tested. It seems to work!" />
     <MESSAGE value="Brief summary of this week" />
     <MESSAGE value="Latest improvement and GIF" />
-    <option name="LAST_COMMIT_MESSAGE" value="Latest improvement and GIF" />
+    <MESSAGE value="Modified replay size and buffersize" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modified replay size and buffersize" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -866,24 +803,21 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/sac.py</url>
-          <line>80</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/sac.py</url>
-          <line>510</line>
-          <option name="timeStamp" value="44" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/sac.py</url>
           <line>528</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="state_buffer.get_tensor()" language="Python" />
+        <watch expression="state_buffer.get_tensor()[0].unsqueeze(0)" language="Python" />
         <watch expression="self.env.is_forget_enabled()" language="Python" />
         <watch expression="[x for x in self.buffer if x is not None]" language="Python" />
         <watch expression="memory.buffer[398]" />
@@ -899,68 +833,12 @@
     <SUITE FILE_PATH="coverage/sac_cozmo$replay_memory.coverage" NAME="replay_memory Coverage Results" MODIFIED="1557997003277" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sac_cozmo$restoreHome.coverage" NAME="restoreHome Coverage Results" MODIFIED="1566065549109" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sac_cozmo$restoreEurecomSL.coverage" NAME="restoreEurecomSL Coverage Results" MODIFIED="1568299502757" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/sac_cozmo$main.coverage" NAME="main Coverage Results" MODIFIED="1568375258913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$main.coverage" NAME="main Coverage Results" MODIFIED="1568792563847" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sac_cozmo$sphinx_apidoc.coverage" NAME="sphinx-apidoc Coverage Results" MODIFIED="1559114384886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/docs" />
-    <SUITE FILE_PATH="coverage/sac_cozmo$Mock.coverage" NAME="Mock Coverage Results" MODIFIED="1568282614976" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sac_cozmo$Mock.coverage" NAME="Mock Coverage Results" MODIFIED="1568791445756" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sac_cozmo$restore.coverage" NAME="restore Coverage Results" MODIFIED="1559026781385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sac_cozmo$sphinx_task_in_sphinx_task_in_.coverage" NAME="sphinx task in sphinx task in  Coverage Results" MODIFIED="1559115597240" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/docs" />
     <SUITE FILE_PATH="coverage/sac_cozmo$debug.coverage" NAME="debug Coverage Results" MODIFIED="1568299409903" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sac_cozmo$state_buffer.coverage" NAME="state_buffer Coverage Results" MODIFIED="1557494263085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-  </component>
-  <component name="debuggerHistoryManager">
-    <expressions id="breakpointCondition">
-      <expression>
-        <expression-string>i == 2000</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
-    <expressions id="watch">
-      <expression>
-        <expression-string>self.log_alpha.state_dict()</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>self.log_alpha.</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>mean</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>k.startswith('conv')</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>torch.cat([output_images, state_buffer.get_tensor().unsqueeze(0)], 0)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>len(memory)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>[x for x in self.buffer if x is not None]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>self.env.is_forget_enabled()</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>state_buffer.get_tensor()</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
   </component>
 </project>

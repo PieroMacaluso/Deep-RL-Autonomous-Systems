@@ -403,7 +403,7 @@ class SAC(object):
                 while not done:
                     if self.pics:
                         writer_train.add_image('episode_{}'
-                                               .format(str(i_episode)), state_buffer.get_tensor(), episode_steps)
+                                               .format(str(i_episode)), state_buffer.get_tensor()[0].unsqueeze(0), episode_steps)
                     
                     if i_episode < self.warm_up_episodes or len(memory) < self.min_replay_size:
                         # Warm_up phase -> Completely random choice of an action
@@ -558,6 +558,7 @@ class SAC(object):
         self.logger.info("----------------------------------------")
     
     def learning_phase(self, updates_per_episode, memory, updates, writer_learn):
+        self.logger.info("Learning phase starts...");
         time_update = time.time()
         # Let's update our parameters, this is the main part of learning
         for i in range(updates_per_episode):
