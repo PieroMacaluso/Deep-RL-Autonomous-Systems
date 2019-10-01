@@ -247,40 +247,41 @@ Policy improvement theorem is the formalisation of this fact: \vref{policyimprov
 %\end{align}
 
 The iterative application of policy improvement stops after an improvement step that does not modify the initial policy, returning the optimal policy found.
-
-
-\begin{algorithm}[H]
-	\SetAlgoLined
-	\DontPrintSemicolon
-	\LinesNumbered
-	\KwIn{$\pi$ the policy to be evaluated; a small threshold $\theta$ which defines the accuracy of the estimation\;}
-	Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily, except that $V(terminal) = 0$\;
-	$is\_policy\_stable \leftarrow true$\;
-	\Repeat{$\neg \; is\_policy\_stable$}{
-		\tcc{Policy Evaluation}
-		\Repeat{$\Delta < \theta$}{
-			$\Delta \leftarrow 0$\;
-			\For{each $s \in \mathcal{S}$}{
-				v $\leftarrow$ $V(s)$\;
-				$V(s) \leftarrow \sum_{a \in \mathcal{A}} \pi(a|s) \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
-				$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
+\begin{figure}
+	
+	\begin{algorithm}[H]
+		\SetAlgoLined
+		\DontPrintSemicolon
+		\LinesNumbered
+		\KwIn{$\pi$ the policy to be evaluated; a small threshold $\theta$ which defines the accuracy of the estimation\;}
+		Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily, except that $V(terminal) = 0$\;
+		$is\_policy\_stable \leftarrow true$\;
+		\Repeat{$\neg \; is\_policy\_stable$}{
+			\tcc{Policy Evaluation}
+			\Repeat{$\Delta < \theta$}{
+				$\Delta \leftarrow 0$\;
+				\For{each $s \in \mathcal{S}$}{
+					v $\leftarrow$ $V(s)$\;
+					$V(s) \leftarrow \sum_{a \in \mathcal{A}} \pi(a|s) \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
+					$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
+				}
+			}
+			$V_\pi \leftarrow V(s)$\;
+			\tcc{Policy Improvement}
+			
+			\While{true}{
+				\For{each $s \in \mathcal{S}$}{
+					$old\_action \leftarrow \pi(s)$\;
+					$\pi(s) \leftarrow \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s',r |s, a)\bigg[r+\gamma V_\pi(s')\bigg]$\;
+					\If{$old\_action \neq \pi(s)$}{$is\_policy\_stable \leftarrow false$}
+				}
 			}
 		}
-		$V_\pi \leftarrow V(s)$\;
-		\tcc{Policy Improvement}
-		
-		\While{true}{
-			\For{each $s \in \mathcal{S}$}{
-				$old\_action \leftarrow \pi(s)$\;
-				$\pi(s) \leftarrow \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s',r |s, a)\bigg[r+\gamma V_\pi(s')\bigg]$\;
-				\If{$old\_action \neq \pi(s)$}{$is\_policy\_stable \leftarrow false$}
-			}
-		}
-	}
-	\KwOut{$V^*$ and $\pi^*$}
-	\caption{Policy Iteration for estimating $\pi \sim \pi^*$}
-	\label{policy_evaluation}
-\end{algorithm}
+		\KwOut{$V^*$ and $\pi^*$}
+		\caption{Policy Iteration for estimating $\pi \sim \pi^*$}
+		\label{policy_evaluation}
+	\end{algorithm}
+\end{figure}
 
 \subsubsection{Value Iteration}
 
@@ -288,6 +289,8 @@ The second approach used by Dynamic Programming to solve Markov Decision Process
 Policy iteration is an iterative technique that alternate evaluation and improvement until it converges to the optimal policy.
 On the contrary, value iteration uses a modified version of policy evaluation to determine $V(s)$ and then it calculates the policy.
 The pseudocode of this method is available \vref{value_iteration}.
+
+\begin{figure}
 
 \begin{algorithm}[H]
 	\SetAlgoLined
@@ -310,9 +313,17 @@ The pseudocode of this method is available \vref{value_iteration}.
 	\label{value_iteration}
 \end{algorithm}
 
+\end{figure}
+
 \subsection{Model-Free Prediction and Control}
 
-As reported in the previous section, having a comprehensive knowledge of the environment is at the foundation of dynamic programming methods. However, this fact is not always accurate in the real world and owning a full understanding of surroundings is almost a utopia. In these cases, the agent has to infer the model using its experience, so it has to exploit model-free methods, based on the assumption that there is no knowledge about state transitions and rewards.
+As reported in the previous section, having a comprehensive knowledge of the environment is at the foundation of dynamic programming methods. However, this fact is not always accurate in the real world and owning a full understanding of surroundings is almost a utopia.
+In these cases, the agent has to infer the model using its experience, so it has to exploit model-free methods, based on the assumption that there is no knowledge about state transitions and rewards.
+These methods can be used with any reinforcement learning problem because they do not have the model of the environment as a requirement.
+
+Model-free approaches are divided into \textit{value-function-based methods} and \textit{policy-based methods}. 
+The learning of the value function to approximate and infer an optimal policy characterises the first type, while the second one directly seeks the optimal policy using the space of policy parameters.
+
 This section intends to provide a brief description of two model-free approaches to prediction and control: Monte Carlo (MC) methods and Temporal-Difference (TD) ones.
 
 \subsubsection{Monte Carlo methods}

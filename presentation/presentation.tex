@@ -1,39 +1,192 @@
-\documentclass{beamer}
+% !TeX program = xelatex
+\documentclass[aspectratio=43]{beamer}
 \usetheme[
 outer/progressbar=foot,
 outer/numbering=none
-]{metropolis}           % Use metropolis theme
-\title{A Study of Reinforcement Learning}
+]{metropolis} 
+
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepgfplotslibrary{external} 
+\tikzexternalize
+
+\newcommand{\sectiondark}[1]{
+	\metroset{background=dark} % change background theme according to manual
+	\usebeamercolor[fg]{normal text}
+	\section{#1}
+	\metroset{background=light} % change background theme according to manual
+	\usebeamercolor[fg]{normal text}
+}
+
+\makeatletter
+%\setbeamertemplate{title}{
+%	\raggedright%
+%	\linespread{1.0}%
+%	\inserttitle%
+%	\par%
+%	%\vspace*{0.5em}
+%}
+\setbeamertemplate{author}{
+	\vspace*{2em}
+	\begin{minipage}[t]{.2\textwidth}
+		{\textbf{Candidate:}}
+	\end{minipage}
+	\begin{minipage}[t]{.8\textwidth}
+	\insertauthor%
+	\par%
+	\end{minipage}
+	\vspace*{0.25em}
+}
+\setbeamertemplate{date}{
+	\hfill
+	\insertdate%
+	\par%
+}
+\setbeamertemplate{title page}{
+	\begin{minipage}[b][\paperheight]{\textwidth}
+		\vfill%
+		\ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+		\ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+		\usebeamertemplate*{title separator}
+		\ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
+		\ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+		
+		\ifx\inserttitlegraphic\@empty\else\inserttitlegraphic\fi
+		%\vspace*{1cm}
+		\begin{minipage}[t]{.2\textwidth}
+	    	{\small Supervisors:}%
+	    	\par%
+		\end{minipage}
+		\begin{minipage}[t]{.8\textwidth}
+			{\small Prof. Pietro Michiardi \hfill EURECOM, France}%
+			\par%
+			{\small Prof. Elena Baralis \hfill Politecnico di Torino, Italy}%
+			\par%
+		\end{minipage}
+		
+		\vfill
+		\ifx\insertdate\@empty\else\usebeamertemplate*{date}\fi
+		\vfill
+		\vspace*{0mm}
+	\end{minipage}
+}
+\makeatother
+
+%\titlegraphic{%
+%	\includegraphics[width=.2\textwidth]{example-image-a}\hfill\hfill
+%	\includegraphics[width=.2\textwidth]{example-image-b}
+%	
+%}          % Use metropolis theme
+\title{Deep Reinforcement Learning for autonomous systems}
+%\subtitle{Design and implementation of a control system for autonomous driving task of a small robot, exploiting state-of-the-art model-free deep reinforcement learning algorithms}
 \date{\today}
-\author{Piero Macaluso}
+\author{Piero Macaluso - s252894}
+\setbeamercolor{background canvas in title}{parent=palette primary}
+\setbeamercolor{progress bar}{use=palette primary}
 % \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
-
+  
 \begin{document}
-  \maketitle
-  \begin{frame}{Table of contents}
-  \setbeamertemplate{section in toc}[sections numbered]
-  \tableofcontents[hideallsubsections]
-\end{frame}
-  \section{Reinforcement Learning Fundamentals}
-	  \begin{frame}{Reinforcement Learning Fundamentals Frame}
-	    Hello, world!
-	  \end{frame}
-  \section{Deep Reinforcement Learning}
-	  \begin{frame}{Deep Reinforcement Learning Frame}
-	  	Hello, world!
-	  \end{frame}
-  \section{Conclusions}
-  	\begin{frame}{Conclusions Frame}
-  		Hello, world!
-	\end{frame}
+\metroset{background=dark} % change background theme according to manual
+\usebeamercolor[fg]{normal text}
+\maketitle
+\metroset{background=light} % change background theme according to manual
+\usebeamercolor[fg]{normal text}
+%\begin{frame}{Training Evolution}
+%	\begin{figure}
+%		\begin{tikzpicture}[scale=0.9]
+%		\begin{axis}[mlineplot,legend pos=north west]
+%		
+%		\addplot table[x=Step,y=Value, col sep=comma] {plot/SAC/cozmodriver-v0/train/episode/mean.csv};
+%		%\addlegendentry{Mean Reward of last 100 episode};
+%		\addlegendentry{Mean $\mu$};
+%		\addlegendentry{Area $[min, max]$};
+%		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+%		
+%		\end{axis}
+%		\end{tikzpicture}
+%		\caption{Total reward for each episode. The maximum value of about 1200mm is at iteration 400.}
+%		\label{fig:train_episode}
+%		
+%	\end{figure}
+%\end{frame}
+%\begin{frame}{Test Evolution}
+%	\begin{figure}
+%		\begin{tikzpicture}[scale=0.9]
+%		\begin{axis}[mlineplot,legend pos=north west]
+%		
+%		\addplot table[x=Step,y=Value, col sep=comma] {plot/SAC/cozmodriver-v0/test/rewardMean/mean.csv};
+%		%\addlegendentry{Mean Reward of last 100 episode};
+%		\addlegendentry{Mean $\mu$};
+%		\addlegendentry{Area $[min, max]$};
+%		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+%		
+%		\end{axis}
+%		\end{tikzpicture}
+%		\caption{Mean Reward over 5 episode of test.}
+%		\label{fig:test_episode}
+%		
+%	\end{figure}
+%\end{frame}
 
-	\begin{frame}[allowframebreaks]{References}
-	
+\begin{frame}{Mean 100 Episodes Evolution}
+	\begin{figure}
+		\begin{tikzpicture}[scale=0.9]
+		\begin{axis}[mlineplot,legend pos=north west]
+		
+		\addplot table[x=Step,y=Value, col sep=comma] {plot/SAC/cozmodriver-v0/train/meanLast100/mean.csv};
+		%\addlegendentry{Mean Reward of last 100 episode};
+		\addlegendentry{Mean $\mu$};
+		\addlegendentry{Area $[min, max]$};
+		\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+		
+		\end{axis}
+		\end{tikzpicture}
+		\caption{Mean Reward over previous 100 episodes.}
+		\label{fig:train_mean100}
+		
+	\end{figure}
+\end{frame}
+\begin{frame}{Table of contents}
+	\setbeamertemplate{section in toc}[sections numbered]
+	\tableofcontents[hideallsubsections]
+\end{frame}
+\sectiondark{Reinforcement Learning Background}
+\begin{frame}{Reinforcement Learning Fundamentals Frame}
+	Hello, world!
+\end{frame}
+\sectiondark{Problem formulation}
+\begin{frame}{Reinforcement Learning Fundamentals Frame}
+	Hello, world!
+	\pause
+	\begin{itemize}
+		\item Cozmo
+		\item Ciao
+	\end{itemize}
+\end{frame}
+\sectiondark{Design of the Control System}
+\begin{frame}{Reinforcement Learning Fundamentals Frame}
+	Hello, world!
+\end{frame}
+\sectiondark{Experiment Setup}
+\begin{frame}{Reinforcement Learning Fundamentals Frame}
+	Hello, world!
+\end{frame}
+\sectiondark{Results}
+\begin{frame}{Reinforcement Learning Fundamentals Frame}
+	Hello, world!
+\end{frame}
+\sectiondark{Conclusions}
+\begin{frame}{Conclusions Frame}
+	Hello, world!
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+
 	\bibliography{demo}
 	\bibliographystyle{abbrv}
-	
-	\end{frame}
-	\begin{frame}[standout]
+
+\end{frame}
+\begin{frame}[standout]
 	Thank you!
-	\end{frame}
+\end{frame}
 \end{document}
