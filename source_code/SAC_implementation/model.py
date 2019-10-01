@@ -6,6 +6,7 @@ from torch.distributions import Normal
 LOG_SIG_MAX = 2
 LOG_SIG_MIN = -20
 epsilon = 1e-6
+img_size = 32
 
 
 def conv2d_size_out(size, data):
@@ -60,7 +61,7 @@ class ValueNetworkCNN(nn.Module):
         self.conv1, self.bn1 = convolutional(conv['conv1'])
         self.conv2, self.bn2 = convolutional(conv['conv2'])
         
-        self.linear1 = nn.Linear(conv2d_size_out(64, conv) * conv2d_size_out(64, conv) * conv['conv2'][1], hidden_dim)
+        self.linear1 = nn.Linear(conv2d_size_out(img_size, conv) * conv2d_size_out(img_size, conv) * conv['conv2'][1], hidden_dim)
         self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         self.linear3 = nn.Linear(hidden_dim, 1)
         
@@ -92,13 +93,13 @@ class QNetworkCNN(nn.Module):
         self.conv4, self.bn4 = convolutional(conv['conv2'])
         
         # Q1 architecture
-        self.linear1 = nn.Linear(conv2d_size_out(64, conv) * conv2d_size_out(64, conv) * conv['conv2'][1] + num_actions,
+        self.linear1 = nn.Linear(conv2d_size_out(img_size, conv) * conv2d_size_out(img_size, conv) * conv['conv2'][1] + num_actions,
                                  hidden_dim)
         self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         self.linear3 = nn.Linear(hidden_dim, 1)
         
         # Q2 architecture
-        self.linear4 = nn.Linear(conv2d_size_out(64, conv) * conv2d_size_out(64, conv) * conv['conv2'][1] + num_actions,
+        self.linear4 = nn.Linear(conv2d_size_out(img_size, conv) * conv2d_size_out(img_size, conv) * conv['conv2'][1] + num_actions,
                                  hidden_dim)
         self.linear5 = nn.Linear(hidden_dim, hidden_dim)
         self.linear6 = nn.Linear(hidden_dim, 1)
@@ -139,7 +140,7 @@ class GaussianPolicyCNN(nn.Module):
         self.conv1, self.bn1 = convolutional(conv['conv1'])
         self.conv2, self.bn2 = convolutional(conv['conv2'])
         
-        self.linear1 = nn.Linear(conv2d_size_out(64, conv) * conv2d_size_out(64, conv) * conv['conv2'][1], hidden_dim)
+        self.linear1 = nn.Linear(conv2d_size_out(img_size, conv) * conv2d_size_out(img_size, conv) * conv['conv2'][1], hidden_dim)
         self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         
         self.mean_linear = nn.Linear(hidden_dim, num_actions)
@@ -183,7 +184,7 @@ class DeterministicPolicyCNN(nn.Module):
         self.conv1, self.bn1 = convolutional(conv['conv1'])
         self.conv2, self.bn2 = convolutional(conv['conv2'])
         
-        self.linear1 = nn.Linear(conv2d_size_out(64, conv) * conv2d_size_out(64, conv) * conv['conv2'][1], hidden_dim)
+        self.linear1 = nn.Linear(conv2d_size_out(img_size, conv) * conv2d_size_out(img_size, conv) * conv['conv2'][1], hidden_dim)
         self.linear2 = nn.Linear(hidden_dim, hidden_dim)
         
         self.mean = nn.Linear(hidden_dim, num_actions)
