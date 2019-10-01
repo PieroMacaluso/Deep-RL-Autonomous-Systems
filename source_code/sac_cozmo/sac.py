@@ -275,6 +275,12 @@ class SAC(object):
             episode_steps = start_episode_steps
             timing = start_timing
             total_timing = start_total_timing
+            updates_episode = 0
+            episode_images = list()
+            
+            '''
+                LOOP: Episode
+            '''
             while True:
                 
                 # Stop the robot
@@ -287,15 +293,28 @@ class SAC(object):
                 # Let's forget (if it is the case)
                 if self.env.is_forget_enabled():
                     # print('forget')
+                    i_episode -= 1
                     print(len(memory))
+                    # Restore Nets
                     self.restore_model()
                     self.env.reset_forget()
+                    # Restore Memory
                     memory = copy.deepcopy(backup_memory)
                     print(len(memory))
                     # memory.forget_last(last_episode_steps)
                     self.logger.info("Last Episode Forgotten")
                 elif i_episode != start_episode:
+                    # LEARNING AND PRINTING PHASE
                     ep_print = i_episode - 1
+                    last_episode_steps = episode_steps
+                    if self.pics:
+                        for i, image in enumerate(episode_images):
+                            writer_train.add_image('episode_{}'
+                                                   .format(str(ep_print)), image.unsqueeze(0),
+                                                   i)
+                    
+                    if len(memory) > self.min_replay_size and ep_print > self.warm_up_episodes:
+                        updates = self.learning_phase(last_episode_steps, memory, updates, writer_learn)
                     self.print_nets(writer_train, ep_print)
                     rewards.append(episode_reward)
                     running_episode_reward += (episode_reward - running_episode_reward) / (ep_print + 1)
@@ -313,6 +332,10 @@ class SAC(object):
                                      .format(ep_print, self.num_episode, episode_steps, round(episode_reward, 2),
                                              round(running_episode_reward_100, 2), round(timing, 2),
                                              str(datetime.timedelta(seconds=total_timing))))
+                
+                # Security Wall, useful for longer training Phase
+                while self.env.is_human_controlled():
+                    pass
                 
                 # Let's test (if it is the case)
                 if i_episode % self.eval_every == 0 and self.eval and i_episode != 0 and not restore:
@@ -363,14 +386,13 @@ class SAC(object):
                 if self.pics:
                     state_buffer = StateBuffer(self.state_buffer_size, state)
                     state = state_buffer.get_state()
+                    episode_images = list()
                 updates_episode = 0
                 
                 # Start of the episode
                 while not done:
                     if self.pics:
-                        writer_train.add_image('episode_{}'
-                                               .format(str(i_episode)), state_buffer.get_tensor()[0].unsqueeze(0),
-                                               episode_steps)
+                        episode_images.append(state_buffer.get_tensor()[0])
                     
                     if i_episode < self.warm_up_episodes or len(memory) < self.min_replay_size:
                         # Warm_up phase -> Completely random choice of an action
@@ -405,13 +427,7 @@ class SAC(object):
                     if episode_steps > 5:
                         memory.push(state, action, reward, next_state, mask)
                     state = next_state
-                if self.env.is_forget_enabled():
-                    continue
                 print("Memory {}/{}".format(len(memory), self.replay_size))
-                if len(memory) > self.min_replay_size and i_episode > self.warm_up_episodes:
-                    updates = self.learning_phase(self.updates_per_episode, memory, updates, writer_learn)
-                    mem_size_last_learn = total_numsteps
-                    updates_episode += self.updates_per_episode
                 # self.logger.info("#TotalUpdates={})"
                 #                  .format(updates))
                 # self.scheduler_alpha.step()
@@ -420,11 +436,10 @@ class SAC(object):
                 # print("{} {} {}"
                 #       .format(self.scheduler_policy.get_lr(), self.scheduler_critic.get_lr(),
                 #               self.scheduler_alpha.get_lr()))
-                last_episode_steps = episode_steps
-                i_episode += 1
                 timing = time.time() - ts
                 total_timing = time.time() - in_ts
                 start_episode = 0
+                i_episode += 1
                 # Disable restore phase after the restored run
                 restore = False
     
@@ -453,6 +468,15 @@ class SAC(object):
         critic_path = model_f + f"sac_critic_{env_name}_episode{i_episode}"
         torch.save(self.policy.state_dict(), actor_path)
         torch.save(self.critic.state_dict(), critic_path)
+
+    def load_model_to_play(self, env_name, folder, i_run, i_episode, suffix=""):
+        model_f = folder + f'run_{i_run}/' + 'models/' + f"episode_{i_episode}/"
+        if not os.path.exists(model_f):
+            os.makedirs(model_f)
+    
+        actor_path = model_f + f"sac_actor_{env_name}_episode{i_episode}"
+        critic_path = model_f + f"sac_critic_{env_name}_episode{i_episode}"
+        self.load_model(actor_path, critic_path);
     
     # Load model parameters
     def load_model(self, actor_path, critic_path):
@@ -502,15 +526,19 @@ class SAC(object):
         n_tests = 0
         ts = time.time()
         total_reward = 0
-        for _ in range(self.eval_episode):
+        while True:
+            episode_reward = self.do_one_test()
             while self.env.is_human_controlled():
                 pass
             if self.env.is_forget_enabled():
-                n_tests -= 1
                 self.logger.info("Last Test Episode Forgotten")
-            episode_reward = self.do_one_test()
-            total_reward += episode_reward
-            n_tests += 1
+                self.env.reset_forget()
+            else:
+                n_tests += 1
+                total_reward += episode_reward
+            # TODO: fix this with >=
+            if n_tests > self.eval_episode:
+                break
         
         writer_test.add_scalar('reward/test', total_reward / n_tests, i_episode)
         
@@ -525,7 +553,7 @@ class SAC(object):
         self.logger.info("----------------------------------------")
     
     def learning_phase(self, updates_per_episode, memory, updates, writer_learn):
-        self.logger.info("Learning phase starts...");
+        self.logger.info("Learning phase starts...")
         time_update = time.time()
         # Let's update our parameters, this is the main part of learning
         for i in range(updates_per_episode):
@@ -561,3 +589,22 @@ class SAC(object):
                 writer_train.add_histogram('critic_target/' + k, v, global_step=ep_print)
         
         pass
+    
+    def play(self):
+        n_tests = 0
+        ts = time.time()
+        total_reward = 0
+        while True:
+            episode_reward = self.do_one_test()
+            while self.env.is_human_controlled():
+                pass
+            if self.env.is_forget_enabled():
+                self.logger.info("Last Test Episode Forgotten")
+                self.env.reset_forget()
+            else:
+                n_tests += 1
+                total_reward += episode_reward
+                self.logger.info("Test {}, mean_r: {}, time_spent {}s"
+                                 .format(n_tests,
+                                         round(total_reward / n_tests, 2),
+                                         round(time.time() - ts, 2)))

@@ -19,7 +19,7 @@ from sac import SAC
 def initial_setup() -> (argparse.Namespace, str, Log, bool):
     """
     Initialization of default parameters and parsing of command line arguments.
-    
+
     :return: arguments, name of the main folder of the experiment and logger.
     :rtype: (argparse.Namespace, str, Log, bool)
     """
@@ -84,6 +84,8 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     parser.add_argument('--img_h', type=int, default=img_h, metavar='N', help='Size of image (H)')
     parser.add_argument('--img_w', type=int, default=img_w, metavar='N', help='Size of image (W)')
     parser.add_argument('--load_from_json', type=str, default=None, help='Load From File')
+    parser.add_argument('--run', type=int, default=0, help='Run to Play')
+    parser.add_argument('--episode', type=int, default=20, help='Episode to Play')
     parser.add_argument('--restore', type=str, default=None, help='Folder of experiment to restore')
     
     args = parser.parse_args()
@@ -125,7 +127,7 @@ class TensorBoardTool:
     def __init__(self, dir_path: str):
         """
         Constructor
-        
+
         :param dir_path: path of TensorBoardX experiment files
         :type dir_path:  str
         """
@@ -135,7 +137,7 @@ class TensorBoardTool:
     def run(self) -> str:
         """
         Run TensorBoardX using the args specified in the code.
-        
+
         :return: url
         :rtype: str
         """
@@ -155,7 +157,7 @@ def run(sdk_conn: cozmo.conn):
     """
     Container of the main loop. It is necessary to work with Cozmo. This is called by the cozmo.connect
     presents in the main loop of this file.
-    
+
     :param sdk_conn: SDK connection to Anki Cozmo
     :type sdk_conn: cozmo.conn
     :return: nothing
@@ -175,8 +177,8 @@ def run(sdk_conn: cozmo.conn):
     # Setting up Hyper-Parameters
     args, folder, logger, restore = initial_setup()
     # if not debug:
-        # tb_tool = TensorBoardTool(folder)
-        # tb_tool.run()
+    # tb_tool = TensorBoardTool(folder)
+    # tb_tool.run()
     logger.debug("Initial setup completed.")
     
     # Create JSON of Hyper-Parameters for reproducibility
@@ -189,7 +191,10 @@ def run(sdk_conn: cozmo.conn):
     
     # Setup the agent
     agent = SAC(args.state_buffer_size, env.action_space, env, args, folder, logger)
-    agent.train(args.max_num_run, restore)
+    i_run = args.run
+    i_epi = args.episode
+    agent.load_model_to_play(args.env_name, folder, i_run, i_epi)
+    agent.play()
     env.close()
     logger.important("Program closed correctly!")
 

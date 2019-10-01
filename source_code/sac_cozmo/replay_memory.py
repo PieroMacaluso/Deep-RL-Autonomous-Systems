@@ -5,6 +5,7 @@ import time
 from collections import deque, namedtuple
 
 import numpy as np
+import torch
 
 
 class ReplayMemory(object):
@@ -38,7 +39,10 @@ class ReplayMemory(object):
         Args:
             batch_size:
         """
-        return random.sample(self.buffer, k=batch_size)
+        out = random.sample(self.buffer, k=batch_size)
+        
+        states, actions, rewards, next_states, dones = map(np.stack, zip(*out))
+        return states, actions, rewards, next_states, dones
     
     def forget_last(self, num_episode_to_forget):
         """
@@ -66,6 +70,16 @@ class ReplayMemory(object):
             dones.append(item[4])
         pickle.dump((states, actions, rewards, next_states, dones), fp)
         pass
+
+    def separate_out_data_types(self, experiences):
+        """Puts the sampled experience into the correct format for a PyTorch neural network"""
+        states = torch.from_numpy(np.vstack([e.state for e in experiences if e is not None])).float()
+        actions = torch.from_numpy(np.vstack([e.action for e in experiences if e is not None])).float()
+        rewards = torch.from_numpy(np.vstack([e.reward for e in experiences if e is not None])).float()
+        next_states = torch.from_numpy(np.vstack([e.next_state for e in experiences if e is not None])).float()
+        dones = torch.from_numpy(np.vstack([int(e.done) for e in experiences if e is not None])).float()
+    
+        return states, actions, rewards, next_states, dones
     
     def load(self, fp):
         (states, actions, rewards, next_states, dones) = pickle.load(fp)
@@ -83,12 +97,13 @@ class ReplayMemory(object):
 
 if __name__ == '__main__':
     
-    memory = ReplayMemory(20000, 1)
+    memory = ReplayMemory(10, 1)
     print(len(memory))
-    for i in range(20000):
-        memory.push(np.ones((64, 64)) * i, np.ones((64, 64)) * i, i, np.ones((64, 64)) * i, i)
+    
+    for i in range(15):
+        memory.push(np.ones((32, 32)) * i, np.ones((32, 32)) * i, i, np.ones((32, 32)) * i, i)
     print(len(memory))
-    memory.forget_last(256)
+    memory.forget_last(2)
     print(len(memory))
     ts = time.time()
     with open("memory.pkl", "wb") as pickle_out:
@@ -96,12 +111,13 @@ if __name__ == '__main__':
     delta = time.time() - ts
     print(round(delta, 2))
     ts = time.time()
+    memory2 = ReplayMemory(10, 1)
     with open("memory.pkl", "rb") as pickle_out:
-        memory.load(pickle_out)
+        memory2.load(pickle_out)
     print(round(delta, 2))
     print(len(memory))
-    batch = memory.sample(256)
+    one, two, three, four, five = memory.sample(2)
     for i in range(20050):
-        memory.push(i, i, i, i, i)
+        memory.push(np.ones((32, 32)) * i, np.ones((32, 32)) * i, i, np.ones((32, 32)) * i, i)
     for i in range(3):
         print(memory.sample(2))
