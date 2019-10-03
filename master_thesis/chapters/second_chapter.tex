@@ -3,7 +3,7 @@
 
 \acrfull{rl} is a field of Machine Learning that is experiencing a period of great fervour in the world of research, fomented by recent progress in \acrfull{dl}. This event opened the doors to function approximation with \acrfull{nn} and \acrfull{cnn} developing what is nowadays known as Deep Reinforcement Learning.
 
-\acrshort{rl} represents the third paradigm of Machine Learning alongside supervised and unsupervised learning. The idea behind  this research field is that the learning process to solve a decision-making problem consists in a sequence of trial and error where the \textit{agent}, the protagonist of \acrshort{rl},could discover and discriminate valuable decisions from penalising ones exploiting information given by a \textit{reward signal}. This interaction has a strong correlation with what human beings and animals do in the real world to forge their behaviour.
+\acrshort{rl} represents the third paradigm of Machine Learning alongside supervised and unsupervised learning. The idea behind  this research field is that the learning process to solve a decision-making problem consists in a sequence of trial and error where the \textit{agent}, the protagonist of \acrshort{rl}, could discover and discriminate valuable decisions from penalising ones exploiting information given by a \textit{reward signal}. This interaction has a strong correlation with what human beings and animals do in the real world to forge their behaviour.
 
 Recently \acrshort{rl} has known a remarkable development and interests in video games: it managed to beat world champions at the game of Go \cite{silver2016mastering} and Dota with superhuman results and to master numerous Atari video games \cite{mnih2013playing} from raw pixels. Decisions, actions and consequences make video games a simulated reality on which to exploit and test the power of \acrshort{rl} algorithms.
 It is essential to realise that the heart of \acrshort{rl} is the science of decision making. This fact makes it compelling and general for many research fields ranging from Engineering, Computer Science, Mathematics, Economics, to Psychology and Neuroscience.
@@ -14,15 +14,15 @@ The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{
 
 \section{Fundamentals of Reinforcement Learning} \label{fundreinflearn}
 
-\todomacaluso{
-	\begin{itemize}
-		\item Introduction
-		\item Central concepts regarding fundamentals (e.g. Agent, Environment, Reward, Return)
-		\item Markov Decision Process (MDP)
-		\item Model-based prevision and control: just a brief introduction to Dynamic Programming and Policy/Value Iteration
-		\item Model-free prevision and control: a brief introduction to Monte Carlo and TD Learning approaches (SARSA and Q-Learning)
-	\end{itemize}	
-}
+%\todomacaluso{
+%	\begin{itemize}
+%		\item Introduction
+%		\item Central concepts regarding fundamentals (e.g. Agent, Environment, Reward, Return)
+%		\item Markov Decision Process (MDP)
+%		\item Model-based prevision and control: just a brief introduction to Dynamic Programming and Policy/Value Iteration
+%		\item Model-free prevision and control: a brief introduction to Monte Carlo and TD Learning approaches (SARSA and Q-Learning)
+%	\end{itemize}	
+%}
 
 Reinforcement Learning is a computational approach to Sequential Decision Making. It provides a framework that is exploitable with decision-making problems that are unsolvable with a single action and need a sequence of actions, a broader horizon, to be solved. 
 
@@ -228,7 +228,7 @@ Dynamic programming is one of the approaches used to solve \acrshort{rl} problem
 
 This technique provides a practical framework to solve MDP problems and to observe what is the best result achievable from it, but it assumes to have full knowledge about the specific problem. For this reason, it applies primarily to model-based problems.
 
-This thesis will not focus on this type of approaches, so this section aims to present only the basic concept of \textit{policy iteration} and \textit{value iteration} which are worth quoting: the fourth chapter of \cite[Chapter 4]{sutton2018reinforcement} provides further details about them.
+This thesis will not focus on this type of approaches, so this section aims to present only the basic concept of \textit{policy iteration} and \textit{value iteration} which are worth quoting: \cite[Chapter 4]{sutton2018reinforcement} provides further details about them.
 
 \subsubsection{Policy Iteration}
 
@@ -315,11 +315,107 @@ The pseudocode of this method is available \vref{value_iteration}.
 As reported in the previous section, having a comprehensive knowledge of the environment is at the foundation of dynamic programming methods. However, this fact is not always accurate in the real world and owning a full understanding of surroundings is almost a utopia. In these cases, the agent has to infer the model using its experience, so it has to exploit model-free methods, based on the assumption that there is no knowledge about state transitions and rewards.
 This section intends to provide a brief description of two model-free approaches to prediction and control: Monte Carlo (MC) methods and Temporal-Difference (TD) ones.
 
-\subsubsection{Monte Carlo methods}
+\subsubsection{Monte Carlo learning}
 
-Monte Carlo methods can learn from episodes of experience using the simple idea that averaging sample returns provide the value. It is possible to define an episode of experience as a series of $(s_t, a_t, r_t, s_{t+1})$. This method requires complete episodes to work: it samples episodes of experience and makes updates to our estimates only at the end of each episode.
+Monte Carlo methods \cite[Chapter 5]{sutton2018reinforcement} can learn from episodes of experience using the simple idea that averaging sample returns provide the value. Generalised policy iteration (GPI) is the central concept underlying these methods: it is an iterative scheme borrowed by dynamic programming based on the interaction of two main steps. The first step, known as policy evaluation step, exploits the current policy to build an approximation of the value function. The second step, known as policy improvement step, tries to improve the policy starting from the current value function.
+Monte Carlo methods do not use a model to compute the value of each state: they average many returns that start in the state. This lead to the main caveat of these methods: they work only with episodic MDPs because the episode has to terminate before it is possible to calculate any returns.
+The total reward accumulated in an episode and the distribution of the visited states is used to calculate the value function while the improvement step is carried out by making the policy greedy concerning the value function.
+Therefore, these approaches combine policy evaluation and policy improvement steps on an episode-by-episode basis: these two processes compete and cooperate to find the optimal value function and an optimal policy.
 
-\subsection{Temporal Difference (TD) Learning method}
+Unfortunately, even though Monte Carlo methods are simple to implement, they require a high number of iteration to converge, and they have a wide variance in their value function estimation.
+
+\subsubsection{Temporal Difference learning}
+
+The idea of the GPI is also at the base of Temporal Difference (TD) \cite[Chapter 6]{sutton2018reinforcement} methods, but with proper differences in respect of Monte Carlo methods. The central distinction between these two methods is that TD methods calculate a temporal error instead of using the total accumulated reward. The temporal error is the difference between the new estimate of the value function and the old one. Furthermore, they calculate this error considering the reward received at the current time step and use it to update the value function: this means that these approaches can work with continuing (non-terminating) environments.
+This type of update reduces the variance compared to Monte Carlo one but increases the bias in the estimate of the value function because of bootstrapping: it means that these strategies use one or more estimated values in the update step for the same kind of estimated value, leading to results more sensitive results initial values.
+
+The fundamental update equation for the value function is shown in \vref{eq:tdlearning}, where \textit{TD error} and \textit{TD target} are in evidence.
+
+ \begin{equation}\label{eq:tdlearning}
+	V(s_t) \leftarrow V(s_t) + \alpha \big(\underbrace{\overbrace{r_{t+1} + \gamma V(s_{t+1})}^{\text{TD target}}- V(s_t)}_{\text{TD error} \ (\delta_t)}\big)
+\end{equation}
+
+Two TD algorithms for the control problem which are worth quoting because of their extensive use to solve RL problems are \textit{SARSA (State-Action-Reward-State-Action)} and \textit{Q-Learning}.
+
+\textit{SARSA} is an \textit{on-policy} temporal difference algorithm whose first step is to learn an \textit{action-value} function instead of a \textit{state-value} function. This approach leads to focus not to estimate the specific value of each state, but to determine the value of transitions and state-action pairs. \Vref{eq:sarsa} represents the update function of \textit{SARSA}, while \vref{alg:sarsa} summarise its pseudocode.
+
+\begin{equation}\label{eq:sarsa}
+Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha [r_{t+1} + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_t, a_t)]
+\end{equation}
+
+\begin{figure}
+	
+	\begin{algorithm}[H]
+		\SetAlgoLined
+		\DontPrintSemicolon
+		\LinesNumbered
+		\KwIn{step size $\alpha \in (0,1]$, small $\epsilon > 0$\;}
+		Initialise $Q(s,a) \; \forall\; s \in \mathcal{S}, a \in \mathcal{A}$ arbitrarily, except that $Q(\text{terminal}, \cdot) = 0$\;
+		\ForEach{episode}{
+			Initialise $s_t$ \;
+			Choose $a_t$ from $s_t$ using policy derived from $Q$ (e.g.\ $\epsilon$-greedy) 	 \;
+			\Repeat{$s_t$ is terminal}{
+				Take action $a_t$ $\rightarrow$ obtain $r_{t+1}$ and $s_{t+1}$ \;	
+				Choose $a_{t+1}$ from $s_{t+1}$ using policy derived from Q (e.g.\ $\epsilon$-greedy) \;
+				$Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha [r_{t+1} + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_t, a_t)]$\;
+				$s_t \leftarrow s_{t+1}$ ; $a_t \leftarrow a_{t+1}$
+			}
+		}
+		\caption{SARSA (on-policy TD control) for estimating $Q \approx q_*$}
+		\label{alg:sarsa}
+	\end{algorithm}
+\end{figure}
+
+\textit{Q-learning} \cite{watkins1989learning} is an off-policy TD control algorithm which represents one of the early revolution and advance in reinforcement learning.
+The main difference from SARSA is the update rule for the Q-function: it selects the action in respect of an $\epsilon$-greedy policy while the Q-function is refreshed using a greedy policy based on the current Q-function using a max function to select the best action to do in the current state with the current policy.
+
+\Vref{eq:qlearning} represents the update function of \textit{Q-learning}, while \vref{alg:qlearning} summarise its pseudocode.
+
+\begin{equation}\label{eq:qlearning}
+Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha [r_{t+1} + \gamma \max_{a}{Q(s_{t+1}, a)} - Q(s_t, a_t)]
+\end{equation}
+
+\begin{figure}
+	
+	\begin{algorithm}[H]
+		\SetAlgoLined
+		\DontPrintSemicolon
+		\LinesNumbered
+		\KwIn{step size $\alpha \in (0,1]$, small $\epsilon > 0$\;}
+		Initialise $Q(s,a) \; \forall\; s \in \mathcal{S}, a \in \mathcal{A}$ arbitrarily, except that $Q(\text{terminal}, \cdot) = 0$\;
+		\ForEach{episode}{
+			Initialise $s_t$ \;
+			Choose $a_t$ from $s_t$ using policy derived from $Q$ (e.g.\ $\epsilon$-greedy) 	 \;
+			\Repeat{$s_t$ is terminal}{
+				Take action $a_t$ $\rightarrow$ obtain $r_{t+1}$ and $s_{t+1}$ \;	
+				Choose $a_{t+1}$ from $s_{t+1}$ using policy derived from Q (e.g.\ $\epsilon$-greedy) \;
+				$Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha [r_{t+1} + \gamma \max_{a}{Q(s_{t+1}, a)} - Q(s_t, a_t)]$\;
+				$s_t \leftarrow s_{t+1}$ ; $a_t \leftarrow a_{t+1}$
+			}
+		}
+		\caption{Q-learning (off-policy TD control) for estimating $\pi \approx \pi_*$}
+		\label{alg:qlearning}
+	\end{algorithm}
+\end{figure}
+
+\subsubsection{Temporal Difference Lambda Learning}
+
+As reported previously, Monte Carlo and Temporal Difference learning perform updates in different ways. The first approach exploits the total reward to update the value function, while the second one, on the other hand, works with the reward of the current step. Temporal Difference Lambda, also known as TD($\lambda$) \cite[Chapter 7,12]{sutton2018reinforcement}, represents a combination of these two procedures and it takes into account the results of each time step together with the weighted average of those returns.
+The idea of calculating TD target looking n-steps into the future instead of considering only a single step is the baseline of TD($\lambda$). This lead to the formalisation of the $\lambda$-weighted return $G_t^\lambda$
+
+\begin{equation}\label{eq:lambdaG}
+G_t^\lambda = (1-\lambda)\sum_{n=1}^{\infty}\lambda^{n-1}G_t^{(n)}
+\end{equation}
+
+TD($\lambda$) implementation takes into account an additional variable called eligibility trace $e_t(s_t)$ which indicates how much learning should be carried out for each state for each timestep. It aims to describe how much the agent encountered a specific state recently and \vref{eq:eligibility_trace} describes the updating rule of this value where the $\lambda$ represents the trace-decay parameter.
+
+\begin{equation}\label{eq:eligibility_trace}
+e_t(s) = \gamma \lambda e_{t-1}(s) + \mathbbm{1}(s = s_t)
+\end{equation}
+
+
+
+
 
 \subsection{Function Approximation}
 
@@ -346,7 +442,7 @@ After the quick overview of the basics of RL terminology and notation provided i
 \todomacaluso{
 	\begin{itemize}
 		\item Explanation of the state-of-the-art focusing more on Reda's paper, its approach and the related bibliography
-		\item Increasing interest in Reinforcement Learning applied to real-world situations, in contrast with simulated environments experiments
+\item Increasing interest in Reinforcement Learning applied to real-world situations, in contrast with simulated environments experiments
 	\end{itemize}	
 }
 
