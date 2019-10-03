@@ -1,24 +1,29 @@
 \chapter{Introduction}
 
-\section{Motivation}
+%\todomacaluso{
+%\begin{itemize}
+%	\item General discussion about autonomous driving
+%	\item General discussion about Reinforcement Learning and recent results with Deep Reinforcement Learning
+%	\item The increasing interests in real-world problems and not only simulations
+%	\item Focus on the object of the thesis with motivation, description of the procedure followed and results obtained
+%\end{itemize}
+%}
+Autonomous systems and in particular self-driving for unsupervised robots and vehicles (e.g.\ self-driving cars) are becoming more and more integral part of human lives. This topic attracted much attention from both the research community and industry, due to its potential to radically change mobility and transport. In general, most approaches to date focus on formal logic methods, which define driving behaviour in annotated geometric maps. These methods can be challenging to scale, as they rely heavily on an external mapping infrastructure rather than using and understanding the local scene, leaving fully autonomous driving in a real urban environment an essential but elusive goal.
 
-\todomacaluso{
-\begin{itemize}
-	\item General discussion about autonomous driving
-	\item General discussion about Reinforcement Learning and recent results with Deep Reinforcement Learning
-	\item The increasing interests in real-world problems and not only simulations
-	\item Focus on the object of the thesis with motivation, description of the procedure followed and results obtained
-\end{itemize}
-}
-Autonomous systems, and in particular self-driving for unsupervised robots and vehicles (e.g.\ self-driving cars) is a topic that has attracted a lot of attention from both the research community and industry, due to its potential to radically change mobility and transport. In general, most approaches to date focus on formal logic methods, which define driving behavior in annotated geometric maps. This can be difficult to scale, as it relies heavily on an external mapping infrastructure rather than using and understanding the local scene.
+In order to make autonomous driving a truly ubiquitous technology, in this thesis we focus on systems which address the ability to drive and navigate in the absence of maps and explicit rules, relying – just like humans do – on a comprehensive understanding of the immediate environment while following simple high-level directions (e.g.\ turn-by-turn route commands). Recent work in this area has demonstrated that this is possible on rural country roads, using GPS for coarse localization and LIDAR to understand the local scene \cite{ort2018autonomous}.
 
-In order to make autonomous driving a truly ubiquitous technology, in this thesis we focus on systems which address the ability to drive and navigate in the absence of maps and explicit rules, relying – just like humans do – on a comprehensive understanding of the immediate environment while following simple high-level directions (e.g.\ turn-by-turn route commands). Recent work in this area has demonstrated that this is possible on rural country roads, using GPS for coarse localization and LIDAR to understand the local scene. 
+The majority of the approaches adopted to exploit the local scene to learn how to drive, concentrate on deterministic algorithms to recognize the surroundings and select the right action (e.g.\ lane following problem on well-marked structured highways). However, these methods, like the previous ones, are not able to generalize proficiently in a different environment because of their deterministic nature.
 
-Recently, \gls{rl} – a machine learning subfield focused on solving \gls{mdp}, where an agent learns to select actions in an environment in an attempt to maximize some reward function – has been shown to achieve super-human results at games such as Go or chess, to be particularly suited for simulated environments like computer games, and to be a promising methodology for simple tasks with robotic manipulators.
+Recently, \gls{rl} – a machine learning subfield focused on solving \gls{mdp}, where an agent learns to select actions in an environment in an attempt to maximize some reward function – has been shown to achieve super-human results at games such as Go \cite{silver2016mastering} or chess \cite{silver2017mastering}, to be particularly suited for simulated environments like computer games \cite{mnih2013playing}, and to be a promising methodology for simple tasks with robotic manipulators \cite{gu2017deep}.
+
+Furthermore, the great fervour produced by the widespread exploitation of Deep Learning opened the doors to function approximation with neural networks and convolutional neural networks, developing what is nowadays known as Deep Reinforcement Learning.
+
+\todomacaluso{Continue from here}
 
 In this thesis, we argue that the generality of \gls{rl} makes it a useful framework to apply to autonomous driving. 
-For this reason we design and implement a control system for an autonomous driving task with a small robot, exploiting state-of-the-art model-free Deep \gls{rl} algorithms and discussing possible ways to make them data efficient.
+For this reason, we design and implement a control system for an autonomous driving task with the small robot Cozmo by Anki \cite{cozmo2019SDK} on which to exploit state-of-the-art model-free deep reinforcement learning algorithms and discussing possible ways to make them data efficient.
 
+\section{Motivation}
 
 \section{Structure of the thesis}
 

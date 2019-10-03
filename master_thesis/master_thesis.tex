@@ -48,7 +48,7 @@ numerazioneromana
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsfonts}
-
+\usepackage{bbm}
 \usepackage{varioref}
 \usepackage{hyperref}
 \usepackage{cleveref} 
@@ -145,19 +145,19 @@ numerazioneromana
 }
 
 \begin{document}
-	\nocite{*}
-	\include{pre}
-	\mainmatter
+%	\nocite{*}
+\include{pre}
+\mainmatter
 
-	\include{chapters/first_chapter}
-	\include{chapters/second_chapter}
-	\include{chapters/third_chapter}
-	\include{chapters/fourth_chapter}
-	\include{chapters/fifth_chapter}
-	\include{chapters/sixth_chapter}
-	\include{chapters/appendix}
-	\clearpage
-	\printglossary[type=\acronymtype]
-	\include{bibliography}
+\include{chapters/first_chapter}
+\include{chapters/second_chapter}
+\include{chapters/third_chapter}
+\include{chapters/fourth_chapter}
+\include{chapters/fifth_chapter}
+\include{chapters/sixth_chapter}
+\include{chapters/appendix}
+\clearpage
+\printglossary[type=\acronymtype]
+\include{bibliography}
 
 \end{document}
