@@ -8,9 +8,9 @@
 Recently \acrshort{rl} has known a remarkable development and interests in video games: it managed to beat world champions at the game of Go \cite{silver2016mastering} and Dota with superhuman results and to master numerous Atari video games \cite{mnih2013playing} from raw pixels. Decisions, actions and consequences make video games a simulated reality on which to exploit and test the power of \acrshort{rl} algorithms.
 It is essential to realise that the heart of \acrshort{rl} is the science of decision making. This fact makes it compelling and general for many research fields ranging from Engineering, Computer Science, Mathematics, Economics, to Psychology and Neuroscience.
 
-Before discussing the results of this thesis, it is good to clarify everything that today represents the state-of-the-art in order to understand the universe behind this new paradigm better. Indeed, the exploration of this field of research is the main aim of this chapter: the first section begins with the definition of the notation used and with the theoretical foundations behind \acrshort{rl}, then in the second section it moves  progressively towards what is Deep \acrshort{rl} through a careful discussion of the most important algorithms paying more attention to those used during the thesis project.
+Before discussing the results of this thesis, it is good to clarify everything that today represents the state-of-the-art in order to understand the universe behind this new paradigm better. Indeed, the exploration of this field of research is the main aim of this chapter: the first section begins with the definition of the notation used and with the theoretical foundations behind \acrshort{rl}, then in the second section it moves  progressively towards what is Deep \acrshort{rl} through a careful discussion of the most essential algorithms paying more attention to those used during the thesis project.
 
-The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement}, \cite{openai2018spinningup}, \cite{lapan2018deep}.
+The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement}, \cite{openai2018spinningup}, \cite{lapan2018deep} and \cite{franccois2018introduction}.
 
 \section{Fundamentals of Reinforcement Learning} \label{fundreinflearn}
 
@@ -131,13 +131,13 @@ Furthermore, a state is called \textit{informational state} (or \textit{Markov s
 
 The main goal of an \acrshort{mdp} is to select the best action to take, given a state, in order to collect the best reward. 
 
-In this quick overview of the main unit of \acrshort{rl}, the components that may compose the agent, the brain of the \acrshort{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
+In this quick overview of the central unit of \acrshort{rl}, the components that may compose the agent, the brain of the \acrshort{rl} problem can not be missing: they are the \textit{model}, the \textit{policy} and the \textit{value function}.
 
-A \textit{model} is composed by information about the environment. These data must not be confused with the ones provided by \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.
+A \textit{model} consist of information about the environment. These data must not be confused with the ones provided by \textit{states} and \textit{observations}: they make it possible to infer prior knowledge about the environment, influencing the behaviour of the agent.
 
 A \textit{policy} is the core of \acrshort{rl} because it is the representation of the agent's behaviour. It is a function that describes the mapping from states to actions.  The \textit{policy} is represented by $\pi$ and it may be deterministic  $a_t = \pi(s_t)$  or stochastic $\pi(a_t|s_t) = \mathbb{P}[a_t | s_t]$.
 
-In this perspective, it is evident that the central goal of RL is to learn an optimal policy $\pi^*$. The optimal policy is a policy which can show agent what the most profitable way to achieve the maximum return is, what is the best action to do in a specific situation. In order to learn the nature of the optimal policy, \acrshort{rl} exploits value functions.
+In this perspective, it is evident that the central goal of RL is to learn an optimal policy $\pi^*$. The optimal policy is a policy which can show to the agent what the most profitable way to achieve the maximum return is, what is the best action to do in a specific situation. In order to learn the nature of the optimal policy, \acrshort{rl} exploits value functions.
 
 A \textit{value function} represents what is the expected reward that the agent can presume to collect in the future, starting from the current state. The reward signal represents only a local value of the reward, while the value function provides a broader view of future rewards: it is a sort of prediction of rewards.
 
@@ -155,48 +155,9 @@ It is possible to delineate two main value functions: the \textit{state value} f
 \end{itemize}
 
 
-\subsection{Approaches of Reinforcement Learning}
-
-It is possible to explain the main strategies in RL to solve problems using \textit{policy}, \textit{model} and \textit{value function} defined previously.
-
-Every agent has a specific application field which depends on the different approach it supports.
-Understanding differences among these approaches is useful to adequately understand what type of algorithm satisfies better the needs of a specific context.
-
-The distinctions presented in this part are just a part of the complete set because this section aims to describe the most crucial distinctions that are useful in the context of the thesis without claiming to be exhaustive.
-
-\subsubsection{Model-Free vs Model-Based}
-
-One of the most crucial aspects of an RL algorithm is the question of whether the agent has access to (or learns) a model of the environment. A model of the environment enables the agent to predict state transitions and rewards.
-
-A method is \textit{model-free} when it does not build a model of the environment. All the actions made by the agent results from direct observation of the current situation in which the agent is. It takes the observation, does computations on them and then select the best action to take.
-
-This last representation is in contrast with \textit{model-based} methods. In this case, the agent tries to build a model of the surrounding environment in order to infer information useful to predict what the next observation or reward would be.
-
-Both groups of methods have strong and weak sides.
-Ordinarily, \textit{model-based} methods show their potential in a deterministic environment (e.g. board game with rules). In these contexts, the presence of the model enables the agent to plan by reasoning ahead, to recognise what would result from a specific decision before taking action. The agent can extract all this knowledge and learn an optimal policy to follow. However, this opportunity is not always achievable: the model may be partially or entirely unavailable, and the agent would have to learn the model from its experience. Learning a model is radically complex and may lead to various hurdles to overcome: for instance, the agent can exploit the bias present in the model, producing an agent which is not able to generalise in real environments.
-
-On the other hand, model-free methods tend to be more straightforward to train and tune because it is usually hard to build models of a heterogeneous environment. Furthermore, model-free methods are more popular and have been more extensively developed and tested than model-based methods.
-
-\subsubsection{Policy-Based vs Value-Based}
-
-The use of policy or value function as the central part of the method represents another essential distinction between RL algorithms.
-
-The approximation of the policy of the agent is the base of \textit{policy-based} methods. The representation of the policy is usually a probability distribution over available actions. This method points to optimise the behaviour of the agent directly and, because of its on-policy nature, may ask manifold observations from the environment: this fact makes this method not so sample-efficient.
-
-On the opposite side, methods could be \textit{value-based}. In this case, the agent is still involved in finding the optimal behaviour to follow, but indirectly. It is not interested anymore about the probability distribution of actions. Its main objective is to determine the value of all actions available, choosing the best value. The main difference from the policy-based method is that this method can benefit from other sources, such as old policy data or replay buffer.
-
-\subsubsection{On-Policy vs Off-Policy}
-
-It is possible to classify this method also by different types of policy usage.
-
-An \textit{off-policy} method can use a different source of valuable data for the learning process instead of the direct experience of the current policy. This feature allows the agent to use, for instance, large experience buffers of past episodes. In this context, these buffers are usually randomly sampled in order to make the data closer to being independent and identically distributed (i.i.d): random extraction guarantees this fact.
-
-On the other hand, \textit{on-policy} methods profoundly depend on the training data to be sampled according to the current policy.
-
-
 \subsection{Bellman Equations}
 
-Both \vref{eq:statevalue,eq:actionvalue} satisfy recursive relationships between the value of a state and the values of its successor states. It is possible to see this property deriving \textit{Bellman equations} -- shown in \vref{eq:bellman} and demonstrated in \vref{appendix:bellmaneq} -- where $s_{t+1}\sim \mathit{E}$ means that the next state is sampled from the environment $E$ and $a_{t+1}\sim \pi$ shows that the next action is taken following the policy $\pi$.
+Both \vref{eq:statevalue,eq:actionvalue} satisfy recursive relationships between the value of a state and the values of its successor states. It is possible to see this property deriving \textit{Bellman equations} -- shown in \vref{eq:bellman} and demonstrated in \vref{appendix:bellmaneq} -- where $s_{t+1}\sim \mathit{E}$ means that the next state is sampled from the environment $E$ and $a_{t+1}\sim \pi$ shows that the policy $\pi$ determines the next action.
 \begin{align} \label{eq:bellman}
 	\begin{split}
 V^\pi(s_t) &= \mathbb{E}_{a_t \sim \pi, s_{t+1} \sim E}[r(s_t, a_t) + \gamma V^\pi(s_{t+1})] \\
@@ -224,11 +185,11 @@ This definition is helpful to enounce the \textit{Sanity Theorem}. It asserts th
 
 \subsection{Dynamic Programming}
 
-Dynamic programming is one of the approaches used to solve \acrshort{rl} problems calculation the optimal policy $\pi^*$. Formally, it is a general method to solve complex problems by breaking them into sub-problems that are more convenient to solve. After solving all sub-problems, it is possible to sum them up in order to obtain the final solution to the whole original problem.
+Dynamic programming (DP) \cite[Chapter 4]{sutton2018reinforcement} is one of the approaches used to solve \acrshort{rl} problems calculation the optimal policy $\pi^*$. Formally, it is a general method to solve complex problems by breaking them into sub-problems that are more convenient to solve. After solving all sub-problems, it is possible to sum them up in order to obtain the final solution to the whole original problem.
 
 This technique provides a practical framework to solve MDP problems and to observe what is the best result achievable from it, but it assumes to have full knowledge about the specific problem. For this reason, it applies primarily to model-based problems.
 
-This thesis will not focus on this type of approaches, so this section aims to present only the basic concept of \textit{policy iteration} and \textit{value iteration} which are worth quoting: \cite[Chapter 4]{sutton2018reinforcement} provides further details about them.
+Furthermore, dynamic programming methods bootstrap: it means that these strategies use one or more estimated values in the update step for the same kind of estimated value, leading to results more sensitive to initial values.
 
 \subsubsection{Policy Iteration}
 
@@ -248,8 +209,7 @@ Policy improvement theorem is the formalisation of this fact: \vref{policyimprov
 
 The iterative application of policy improvement stops after an improvement step that does not modify the initial policy, returning the optimal policy found.
 
-
-\begin{algorithm}[H]
+\begin{algorithm}[!htp]
 	\SetAlgoLined
 	\DontPrintSemicolon
 	\LinesNumbered
@@ -289,7 +249,7 @@ Policy iteration is an iterative technique that alternate evaluation and improve
 On the contrary, value iteration uses a modified version of policy evaluation to determine $V(s)$ and then it calculates the policy.
 The pseudocode of this method is available \vref{value_iteration}.
 
-\begin{algorithm}[H]
+\begin{algorithm}[!htp]
 	\SetAlgoLined
 	\DontPrintSemicolon
 	\LinesNumbered
@@ -310,24 +270,43 @@ The pseudocode of this method is available \vref{value_iteration}.
 	\label{value_iteration}
 \end{algorithm}
 
-\subsection{Model-Free Prediction and Control}
+\subsubsection{Generalised Policy Iteration}
 
-As reported in the previous section, having a comprehensive knowledge of the environment is at the foundation of dynamic programming methods. However, this fact is not always accurate in the real world and owning a full understanding of surroundings is almost a utopia. In these cases, the agent has to infer the model using its experience, so it has to exploit model-free methods, based on the assumption that there is no knowledge about state transitions and rewards.
+Generalised Iteration Policy (GPI) indicates the idea underlying the interaction between evaluation and improvement steps seen in value and policy iteration.
+\Vref{fig:gpi} reports how the two processes compete and cooperate to find the optimal value function and an optimal policy. The first step, known as policy evaluation step, exploits the current policy to build an approximation of the value function. The second step, known as policy improvement step, tries to improve the policy starting from the current value function.
+This iterative scheme of dynamic programming can represent almost all reinforcement learning algorithm.
+
+\begin{figure}[!h]
+	\centering
+	\begin{minipage}[b]{0.25\textwidth}
+		\includegraphics[width=\textwidth]{img/gpi00.png}
+	\end{minipage}
+	\begin{minipage}[b]{0.55\textwidth}
+		\includegraphics[width=\textwidth]{img/gpi01.png}
+	\end{minipage}
+	\caption{Generalized policy iteration figure taken from \cite{sutton2018reinforcement}: Value and policy functions interact until they are optimal and thus consistent with other}
+	\label{fig:gpi}
+\end{figure}
+
+\subsection{Model-Free approach}
+
+As reported in the previous section, having a comprehensive knowledge of the environment is at the foundation of dynamic programming methods. However, this fact is not always accurate in practice, where it is infrequent to have a full understanding of how the world works. In these cases, the agent has to infer the model using its experience, so it has to exploit model-free methods, based on the assumption that there is no prior knowledge about state transitions and rewards.
 This section intends to provide a brief description of two model-free approaches to prediction and control: Monte Carlo (MC) methods and Temporal-Difference (TD) ones.
 
 \subsubsection{Monte Carlo learning}
 
-Monte Carlo methods \cite[Chapter 5]{sutton2018reinforcement} can learn from episodes of experience using the simple idea that averaging sample returns provide the value. Generalised policy iteration (GPI) is the central concept underlying these methods: it is an iterative scheme borrowed by dynamic programming based on the interaction of two main steps. The first step, known as policy evaluation step, exploits the current policy to build an approximation of the value function. The second step, known as policy improvement step, tries to improve the policy starting from the current value function.
-Monte Carlo methods do not use a model to compute the value of each state: they average many returns that start in the state. This lead to the main caveat of these methods: they work only with episodic MDPs because the episode has to terminate before it is possible to calculate any returns.
+Monte Carlo methods \cite[Chapter 6]{sutton2018reinforcement} can learn from episodes of experience using the simple idea that averaging sample returns provide the value. This lead to the main caveat of these methods: they work only with episodic MDPs because the episode has to terminate before it is possible to calculate any returns.
 The total reward accumulated in an episode and the distribution of the visited states is used to calculate the value function while the improvement step is carried out by making the policy greedy concerning the value function.
-Therefore, these approaches combine policy evaluation and policy improvement steps on an episode-by-episode basis: these two processes compete and cooperate to find the optimal value function and an optimal policy.
 
-Unfortunately, even though Monte Carlo methods are simple to implement, they require a high number of iteration to converge, and they have a wide variance in their value function estimation.
+This approach brings to light the exploration dilemma about how it is possible to guarantee that the algorithm will explore all the states without prior knowledge of the whole environment. $\epsilon$-greedy policies are exploited instead of full greedy policy to solve this problem.
+An $\epsilon$-greedy policy is a policy that acts randomly with probability $\epsilon$ and follows the policy learned with probability $(1-\epsilon)$.
+
+Unfortunately, even though Monte Carlo methods are simple to implement and they are unbiased because they do not bootstrap, they require a high number of iteration to converge. Furthermore, they have a wide variance in their value function estimation due to lots of random decisions within an episode.
 
 \subsubsection{Temporal Difference learning}
 
-The idea of the GPI is also at the base of Temporal Difference (TD) \cite[Chapter 6]{sutton2018reinforcement} methods, but with proper differences in respect of Monte Carlo methods. The central distinction between these two methods is that TD methods calculate a temporal error instead of using the total accumulated reward. The temporal error is the difference between the new estimate of the value function and the old one. Furthermore, they calculate this error considering the reward received at the current time step and use it to update the value function: this means that these approaches can work with continuing (non-terminating) environments.
-This type of update reduces the variance compared to Monte Carlo one but increases the bias in the estimate of the value function because of bootstrapping: it means that these strategies use one or more estimated values in the update step for the same kind of estimated value, leading to results more sensitive results initial values.
+Temporal Difference (TD) is an approach made combining ideas from both Monte Carlo methods and dynamic programming. TD is a model-free method like MC but uses bootstrapping to make updates as in dynamic programming. The central distinction from MC approaches is that TD methods calculate a temporal error instead of using the total accumulated reward. The temporal error is the difference between the new estimate of the value function and the old one. Furthermore, they calculate this error considering the reward received at the current time step and use it to update the value function: this means that these approaches can work with continuing (non-terminating) environments.
+This type of update reduces the variance compared to Monte Carlo one but increases the bias in the estimate of the value function because of bootstrapping.
 
 The fundamental update equation for the value function is shown in \vref{eq:tdlearning}, where \textit{TD error} and \textit{TD target} are in evidence.
 
@@ -413,25 +392,225 @@ TD($\lambda$) implementation takes into account an additional variable called el
 e_t(s) = \gamma \lambda e_{t-1}(s) + \mathbbm{1}(s = s_t)
 \end{equation}
 
+\subsection{Model-Based approach}
 
 
+So far, the focus of this section was on methods which have no prior knowledge of the environment, since this thesis grows on model-free foundations.
+Despite this point, it is worth to summarise the main concepts behind model-based approaches.
+Model-based methods gather information to enable the ability of planning, which can enhance the sample efficiency of the algorithm. 
 
+There are two primary principles to model-based learning. The first one implies to assemble a model starting from prior knowledge and to exploit it to calculate the policy and the value-function, while the second one is to infer the model from the environment by sampling experience.
+The central drawback of the first technique is that prior knowledge could be not as accurate as expected, leading to sub-optimal results. Consequently, the preferred way to learn is the second one.
 
-\subsection{Function Approximation}
+The decisive point behind these approaches is that they are more sample-efficient concerning model-free ones: they require fewer data to learn a policy. On the other hand, the algorithm must learn the policy as well as the model: this translates to two different sources of approximation errors and an increase of computational complexity.
 
 \section{Deep Reinforcement Learning} \label{deepreinflearn}
 
-\todomacaluso{
-	\begin{itemize}
-		\item Introduction and motivation behind function approximation
-		\item Value-based methods and Policy Gradient methods
-		\item Focus and detailed description of DDPG and SAC
-	\end{itemize}	
-}
+%\todomacaluso{
+%	\begin{itemize}
+%		\item Introduction and motivation behind function approximation
+%		\item Value-based methods and Policy Gradient methods
+%		\item Focus and detailed description of DDPG and SAC
+%	\end{itemize}	
+%}
 
-\subsection{Taxonomy of Deep RL Algorithm}
 
-After the quick overview of the basics of RL terminology and notation provided in the previous section, it is possible to explore more in-depth the universe behind the algorithms of modern Deep RL. Because of the nature of this work, the focus of this section will be on the types of algorithms used in the thesis, without leaving out a quick overview of other types of algorithms most used today in Deep RL.
+The strategies shown so far works smoothly with systems with well-defined states and actions. In this context, it is reasonable to use lookup tables to describe the problem: state-value function V has an entry for each state while in action-value function Q has an entry for each state-action pair.
+It is easy to understand how this setting cannot scale up with very large MDPs: problems regarding the availability of memory arise as it becomes difficult to manage the storage of a large number of states and actions. Also, there may be obstacles concerning the slowness of learning the value of each state individually. Furthermore, the tabular form could lead to expensive computation in linear lookup and can not work with continuous action and state space.
+
+Function approximators represent the solution to overwhelm this problem. The underlying intention is to use a vector $\theta = (\theta_1, \theta_2. \dots, \theta_n)^T$ to estimate state-value and action-value function as shown in \vref{eq:fun_appr}, generalise from seen states to unseen states and finally update parameter $\theta$ using MC or TD Learning strategies.
+
+\begin{equation}\label{eq:fun_appr}
+\begin{aligned}
+V(s, \theta) &\approx V_\pi(s) \\
+Q(s, a, \theta) &\approx Q_\pi(s,a)
+\end{aligned}	
+\end{equation}
+
+In these terms, function approximators can be considered as a mapping from the vector $\theta$ to the value function.
+This choice leads to a reduction in the number of parameters to learn and consequently to a system which can generalise better in fewer training samples.
+
+Nowadays, since its widespread use in research, neural networks represent the most intuitive option to take as function approximator: it reduces the training time for high dimensional systems, and it requires less space in memory.
+This point represents the bridge between traditional Reinforcement Learning and recent discoveries in the theory of Deep Learning. 
+Thanks to the last decade great fervour of Deep Learning, neural networks become the fundamental tool to exploit as function approximator to develop Deep Reinforcement Learning (DRL). This evolution of traditional reinforcement learning accomplished remarkable results. One of the first steps towards Deep RL and general artificial intelligence -- an AI broadly applicable to a different set of various environments -- was done by DeepMind with their pioneering paper \cite{mnih2013playing} and the consequent \cite{mnih2015human}.
+
+This section aims to explain the state-of-the-art and the leading theory behind DRL framework and to define two deep actor-critic algorithms used in the experiments of this thesis: Deep Deterministic Policy Gradient (DDPG) and Soft Actor-Critic (SAC).
+
+\subsection{Fundamentals of Deep Learning}
+
+Deep learning (DL) is an approach to learning based on a function $f: \mathcal{X} \rightarrow \mathcal{Y}$ parametrised with $\theta \in \mathbb{R}^{n_\theta} (n_\theta \in \mathbb{N})$ such that $y = f(x;\theta)$.
+
+The central components of this research field are Neural Networks (NN).
+A deep neural network consists of a series of processing layers to which correspond non-linear transformation.
+The whole sequence of these alterations directs the learning process through different levels of abstraction \cite{erhan2009visualizing}.
+To better understand the nature of a deep neural network, it is convenient to describe a neural network with one fully-connected layer represented by \vref{fig:fullyconnected}. 
+
+\begin{equation}\label{eq:non_linear_transformation}
+\begin{gathered}
+h = g(w_1 \cdot i + b_1) \\
+o = w_2 \cdot h + b_2
+\end{gathered}
+\end{equation}
+
+The input layer receives as input a column vector of input-features $i$ of size $n \in \mathbb{N}$. Every value of the hidden-layer represented by a vector $h$ of size $m \in \mathbb{N}$ is the result of a transformation of the input values given by \vref{eq:non_linear_transformation} where $w_1$ is a matrix of size $m \times n$ and $b_1$ is a bias term of size $m$. $g$ is a non-linear parametric function called activation function, which represents the core of neural networks. Subsequently, the second and last transformation manipulates the hidden layer $h$ to produce the values of the output layer following \vref{eq:non_linear_transformation} using $w_2$ with size $o \times m$ and $b_2$ with size $o$.  
+
+\begin{figure}
+	\centering
+	\tikzset{%
+		every neuron/.style={
+			circle,
+			draw,
+			minimum size=1cm
+		},
+		neuron missing/.style={
+			draw=none, 
+			scale=4,
+			text height=0.333cm,
+			execute at begin node=\color{black}$\vdots$
+		},
+	}
+	
+	\begin{tikzpicture}[x=1.5cm, y=1.5cm, >=stealth]
+	
+	\foreach \m/\l [count=\y] in {1,2,3,missing,4}
+	\node [every neuron/.try, neuron \m/.try] (input-\m) at (0,2.5-\y) {};
+	
+	\foreach \m [count=\y] in {1,missing,2}
+	\node [every neuron/.try, neuron \m/.try ] (hidden-\m) at (2,2-\y*1.25) {};
+	
+	\foreach \m [count=\y] in {1,missing,2}
+	\node [every neuron/.try, neuron \m/.try ] (output-\m) at (4,1.5-\y) {};
+	
+	\foreach \l [count=\i] in {1,2,3,n}
+	\draw [<-] (input-\i) -- ++(-1,0)
+	node [above, midway] {$i_\l$};
+	
+	\foreach \l [count=\i] in {1,m}
+	\node [above] at (hidden-\i.north) {$h_\l$};
+	
+	\foreach \l [count=\i] in {1,l}
+	\draw [->] (output-\i) -- ++(1,0)
+	node [above, midway] {$o_\l$};
+	
+	\foreach \i in {1,...,4}
+	\foreach \j in {1,...,2}
+	\draw [->] (input-\i) -- (hidden-\j);
+	
+	\foreach \i in {1,...,2}
+	\foreach \j in {1,...,2}
+	\draw [->] (hidden-\i) -- (output-\j);
+	
+	\foreach \l [count=\x from 0] in {Input, Hidden, Ouput}
+	\node [align=center, above] at (\x*2,2) {\l \\ layer};
+	
+	\end{tikzpicture}
+	\caption{An example representation of a deep neural network with one fully-connected hidden layer.}
+	\label{fig:fullyconnected}
+\end{figure}
+\Vref{eq:activation} shows the most common activation functions: in general, \textit{ReLu}  achieves better performance over a wide variety of tasks, but usually the selection of the best activation function has to be done starting from all information and requirements of the deep learning model.
+\begin{equation}\label{eq:activation}
+\begin{aligned}
+\text{Sigmoid} \;\rightarrow\;& g(x) = \frac{1}{1+ e^{-x}}\\
+\text{Hyperbolic Tangent} \;\rightarrow\;& g(x) = \frac{e^x-e^{-x}}{e^x+e^{-x}}\\
+\text{Rectified Linear Unit (ReLu)} \;\rightarrow\;& g(x) = \max(0,x)
+\end{aligned}
+\end{equation}
+
+$w1$ and $w_2$ in the shown example are the weights of the neural network. The technique used to train these parameters is known as \textit{gradient descent} via the \textit{backpropagation} algorithm. It develops from the concept error and loss function.  The error is the difference between the output of the neural network for a specific input data and the actual value: it is essential to calculate the loss function. One of the most exploited loss function is the Mean-Squared Error (MSE) shown in \vref{eq:backprop}.
+
+\begin{equation}\label{eq:backprop}
+\begin{aligned}
+L(y, \hat{y}) = (y_\theta - y)^2 \\
+J = \frac{1}{n}\sum_{i=1}^{n}L(y_i, f(x_i))
+\end{aligned}
+\end{equation}
+
+The objective of the gradient descent is to minimise the loss function by modifying the internal parameters of the network using \vref{eq:update} where $\alpha$ is the learning rate.
+\begin{equation}\label{eq:update}
+\theta \leftarrow \theta -\alpha \nabla_\theta J
+\end{equation}
+
+Nowadays, the techniques applied in the majority of research projects is stochastic gradient descent with its various improved extensions and variants, such as ADAM \cite{kingma2014adam} and AdaGrad \cite{duchi2011adaptive}: these extensions manage to improve the convergence of SGD thanks to the introduction of adaptive learning rates.
+
+Another crucial step in deep learning was the introduction of convolutional layers \cite{lecun1995convolutional}. This type of layer revealed is power with images, leading to an increasing interest in image processing field. The parameters of this layer are a set of filters (or kernels) with dimensions smaller than the whole input image: these filters are used to implement a convolution operation over the whole image, and the result serves the input to the next layer in the network. In this context, the network can learn filters that detect specific features in the image such as edges, textures and patterns \cite{erhan2009visualizing}.
+
+\subsection{Approaches to Reinforcement Learning} \label{approaches}
+
+
+It is possible to explain the main strategies in RL to solve problems using \textit{policy}, \textit{model} and \textit{value function} defined previously.
+
+Every agent has a specific application field which depends on the different approach it supports.
+Understanding differences among these approaches is useful to adequately understand what type of algorithm satisfies better the needs of a specific context.
+
+The distinctions presented in this part are just a part of the complete set because this section aims to describe the most crucial distinctions that are useful in the context of the thesis without claiming to be exhaustive.
+
+\subsection{Components of learning}
+
+One of the most crucial aspects of an RL algorithm is the question of whether the agent has access to (or learns) a model of the environment. A model of the environment enables the agent to predict state transitions and rewards.
+
+A method is \textit{model-free} when it does not build a model of the environment. All the actions made by the agent results from direct observation of the current situation in which the agent is. It takes the observation, does computations on them and then select the best action to take.
+
+This last representation is in contrast with \textit{model-based} methods. In this case, the agent tries to build a model of the surrounding environment in order to infer information useful to predict what the next observation or reward would be.
+
+Both groups of methods have strong and weak sides.
+Ordinarily, \textit{model-based} methods show their potential in a deterministic environment (e.g. board game with rules). In these contexts, the presence of the model enables the agent to plan by reasoning ahead, to recognise what would result from a specific decision before taking action. The agent can extract all this knowledge and learn an optimal policy to follow. However, this opportunity is not always achievable: the model may be partially or entirely unavailable, and the agent would have to learn the model from its experience. Learning a model is radically complex and may lead to various hurdles to overcome: for instance, the agent can exploit the bias present in the model, producing an agent which is not able to generalise in real environments.
+
+On the other hand, model-free methods tend to be more straightforward to train and tune because it is usually hard to build models of a heterogeneous environment. Furthermore, model-free methods are more popular and have been more extensively developed and tested than model-based methods.
+
+
+The use of policy or value function as the central part of the method represents another essential distinction between RL algorithms.
+The approximation of the policy of the agent is the base of \textit{policy-based} methods. The representation of the policy is usually a probability distribution over available actions. This method points to optimise the behaviour of the agent directly and, because of its on-policy nature, may ask manifold observations from the environment: this fact makes this method not so sample-efficient.
+On the opposite side, methods could be \textit{value-based}. In this case, the agent is still involved in finding the optimal behaviour to follow, but indirectly. It is not interested anymore about the probability distribution of actions. Its main objective is to determine the value of all actions available, choosing the best value. The main difference from the policy-based method is that this method can benefit from other sources, such as old policy data or replay buffer.
+
+\subsubsection{Learning settings}
+
+It is possible to classify this method also by different types of policy usage.
+An \textit{off-policy} method can use a different source of valuable data for the learning process instead of the direct experience of the current policy. This feature allows the agent to use, for instance, large experience buffers of past episodes. In this context, these buffers are usually randomly sampled in order to make the data closer to being independent and identically distributed (i.i.d): random extraction guarantees this fact.
+
+On the other hand, \textit{on-policy} methods profoundly depend on the training data to be sampled according to the current policy.
+
+
+\subsection{Taxonomy of Deep RL algorithm}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{img/taxonomy.png}
+	\caption{A non-exhaustive, but useful taxonomy of algorithms in Deep RL taken from \cite{openai2018spinningup}.}
+	\label{fig:taxonomy}
+\end{figure}
+
+After the quick overview of the basics of RL terminology and notation provided in the previous section, it is possible to explore more in-depth the universe behind the algorithms of modern DRL. The first significant branching point in \vref{fig:taxonomy} is the distinction between model-free and model-based algorithms, already analysed in \vref{approaches}. 
+The second crucial branching point in Deep RL is the question about what to learn. The main components to learn are policies (both stochastic or deterministic), action-value or state-value function and environment models.
+
+Because of the nature of this work, the focus of this section will be on model-free algorithms.
+
+\subsection{Policy Optimization}
+
+As the name suggests, the concept of policy  $\pi_\theta(a|s)$ is central in the techniques of this group. They exploit gradient descent on the performance objective $J(\pi_\theta)$ to update parameters $\theta$ directly. Furthermore, they can indirectly update parameters $\theta$ by maximising local approximation of $J(\pi_\theta)$.
+
+This approach usually works with on-policy optimisation, which implies that every update only uses data gathered with the most recent version of the policy.
+In this context, it is also useful to learn an approximator for $V_\phi(s)$ for on-policy value-function $V^\pi(s)$: it is essential to figure out how to update the policy.
+Two examples of this type of algorithms are:
+\begin{itemize}
+	\item \textit{Advantage Actor Critic (A2C)} and \textit{Asynchronous Advantage Actor Critic (A3C)} introduced in \cite{mnih2016asynchronous} are two actor-critic methods which updates parameters directly with gradient descent to maximise performance.
+	\item \textit{Proximal Policy Optimisation (PPO)} \cite{schulman2017proximal} increases the performance indirectly by maximising a \textit{surrogate objective} function which tracks how much $J(\pi_\theta)$ changed in the update phase.
+\end{itemize}
+
+Policy optimisation methods are principled because they directly optimise the function they want to learn: this fact makes these techniques stable and reliable concerning Q-Learning methods.
+
+\subsection{Q-Learning}
+
+This group of algorithm works learning an approximator $Q_\theta(s,a)$ to infer the optimal action-value function $Q*(s,a)$ using an objective function based upon Bellman equations.
+This time, the optimisation presented in this technique is off-policy: this means that the optimisation step is done using all data collected during the whole training, not only with the most recent policy available. In this configuration, the information used for the learning phase could come from exploration decision, not only policy choices.
+Thanks to the relation expressed by $a(s) = \operatornamewithlimits{argmax}_a Q_\theta(s,a)$, it is possible to obtain the policy learned so far from the current action-value function.
+
+An example of this technique is Deep Q Network \cite{}, which is one of the most important milestones reached by the research in this field.  \Vref{sec:dqn} provides further information about this algorithm.
+
+Q-Learning is considered less stable than policy optimisation, but they are more sample efficient because they can reuse data more efficiently with respect policy optimisation approaches.
+
+\subsection{Value-Based approaches}
+
+\subsection{Policy Gradient approaches}
 
 \subsection{Deep Deterministic Policy Gradient (DDPG)}
 

@@ -48,12 +48,10 @@ numerazioneromana
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsfonts}
-\usepackage{bbm}
+
 \usepackage{varioref}
 \usepackage{hyperref}
 \usepackage{cleveref} 
-
-\usepackage{svg}
 
 
 
@@ -148,18 +146,18 @@ numerazioneromana
 
 \begin{document}
 %	\nocite{*}
-\include{pre}
-\mainmatter
+	\include{pre}
+	\mainmatter
 
-\include{chapters/first_chapter/first_chapter}
-\include{chapters/second_chapter/second_chapter}
-\include{chapters/third_chapter/third_chapter}
-\include{chapters/fourth_chapter/fourth_chapter}
-\include{chapters/fifth_chapter/fifth_chapter}
-\include{chapters/sixth_chapter/sixth_chapter}
-\include{chapters/appendix/appendix}
-\clearpage
-\printglossary[type=\acronymtype]
-\include{bibliography}
+	\include{chapters/first_chapter}
+	\include{chapters/second_chapter}
+	\include{chapters/third_chapter}
+	\include{chapters/fourth_chapter}
+	\include{chapters/fifth_chapter}
+	\include{chapters/sixth_chapter}
+	\include{chapters/appendix}
+	\clearpage
+	\printglossary[type=\acronymtype]
+	\include{bibliography}
 
 \end{document}

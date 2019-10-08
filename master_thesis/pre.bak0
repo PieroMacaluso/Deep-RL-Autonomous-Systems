@@ -1,0 +1,95 @@
+\errorcontextlines=9
+	\english
+	\iflanguage{english}{%
+		\retrofrontespizio{This work is subject to the Creative Commons Licence}
+		% \DottoratoIn{PhD Course in\space}
+		\StrutturaDidattica{Department of }
+		\struttura{Control and Computer Engineering}
+		\CorsoDiLaureaIn{Master of Science in\space}
+		%\NomeMonografia{Bachelor Degree Final Work}
+		\TesiDiLaurea{Master Thesis}
+		%\NomeDissertazione{PhD Dissertation}
+		%\InName{in}
+		\CandidateName{Candidate}% or Candidate
+		\AdvisorName{Supervisors}% or Supervisor
+		\TutorName{Tutor}
+		\NomeTutoreAziendale{Internship Tutor}
+		%\CycleName{cycle}
+		%\NomePrimoTomo{First volume}
+		%\NomeSecondoTomo{Second Volume}
+		%\NomeTerzoTomo{Third Volume}
+		%\NomeQuartoTomo{Fourth Volume}
+		%\logosede{logodue}% or comma separated list of logos
+		\TitoloListaCandidati{Candidate,Candidate,Candidates,Candidates}
+	}{}
+	%%%%%%% Questi comandi è meglio metterli dentro l'ambiente
+	%%%%%%% frontespizio o frontespizio*, oppure in un file di
+	%%%%%%% configurazione personale. Si veda la documentazione
+	%%%%%%% inglese o italiana.
+	%%%%%%% Comunque i presenti comandi servono per comporre la
+	%%%%%%% tesi con i moduli di estensione standard del pacchetto
+	%%%%%%% TOPtesi.
+	
+	\begin{ThesisTitlePage}
+		\ateneo{Politecnico di Torino}
+		\titolo{Deep Reinforcement Learning algorithms for autonomous systems}
+		\sottotitolo{Design and implementation of a control system for autonomous driving task of a small robot, exploiting state-of-the-art Model-Free Deep Reinforcement Learning algorithms}
+		%%%%%%% Corso degli studi
+		\corsodilaurea{Computer Engineering (Software Career)}
+		%%%%%%% L'eventuale numero di matricola va fra parentesi quadre
+		\candidato{Piero \textsc{Macaluso}}[s252894] 
+		%\secondocandidato{Evangelista \textsc{Torricelli}}[123457]
+		
+		%%%%%%% Relatori o supervisori
+		%
+		\relatore{prof.~Pietro \textsc{Michiardi}}
+		\secondorelatore{prof.~Elena \textsc{Baralis}}
+		
+		%%%%%%% Seduta dell'esame
+%		\sedutadilaurea{\textsc{October} 2019}
+		%%%%%%%% oppure:
+		\sedutadilaurea{\textsc{Academic~year} \todomacaluso{2019-2020}}% 
+		%%%%%%% Logo della sede
+		\logosede{logopolito}% 
+	\end{ThesisTitlePage}
+	
+	
+	%%%%%%% Per cambiare l'offset per la rilegatura;
+	%%%%%%% meno offset c'e', meglio e'
+	%\setbindingcorrection{3mm}
+	
+		\sommario
+		
+		\todomacaluso{Abstract is the last thing to do}	
+		
+		
+		
+		% \paginavuota % funziona anche senza specificare l'opzione classica
+		
+		%\printglossaries
+		
+		\ringraziamenti
+		
+		\todomacaluso{Acknowledgements must be prepared!}	
+		
+		
+%		\tablespagetrue\figurespagetrue % normalmente questa riga non serve ed e' commentata
+		\indici
+		
+		%%%%%%%% Altro esperimento con l'opzione classica
+		%%%%%%%% Non usare mai anche se qui lo si è fatto!
+		%%%%%%%% Oltretutto funziona solo se si è specificata la lingua greca fra le opzioni.
+		%%%%%%%% Commentare fra \ifclassica fino a \fi compresi. 
+		\ifclassica   
+		\begin{citazioni}
+			\textit{testo testo testo\\testo testo testo}
+			
+			[\textsc{G.\ Leopardi}, Operette Morali]\vspace{1em}
+			
+			\textgreek{>all'a p'anta <o k'eraunos d'' >oiak'izei}
+			
+			[\textsc{Eraclito}, fr.\ D-K 134]
+		\end{citazioni}
+		
+		\fi
+		%%%%%%%% fine esperimento
