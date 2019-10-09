@@ -1,15 +1,60 @@
-\chapter{Experiments}
+\chapter{Design of the Control System}
 
-\lipsum[10]
 
-\section{Results of the experiments}
 
-\lipsum[10]
+\section{The main concept}
 
-\subsection{Track A}
 
-\lipsum[10]
 
-\subsection{Track B}
+\subsection{Related Work}
 
-\lipsum[10]
+
+
+\section{The track}
+
+The design and training of a good driving model cannot go beyond the construction and design of the road. For this reason, some time was spent searching the better way to build a path where to train Cozmo.
+This section aims to present the central concept and decisions made about the design of the track for the experiments, starting from the materials used, up to the description of the dimensional choices applied.
+
+\subsection{Track requirements}
+
+It is essential to explain the primary needs of the road before proceeding with the description of the choices made.
+
+Firstly, the track needs to be easily transportable to allow various attempt with different locations and environmental conditions that could affect the training phase. In particular, it is necessary to use a material less reflective as possible to avoid problems during the learning process.
+Another crucial factor is the dimension of the lane, which must reproduce an environment similar to the real one. It can be done analyzing the ratio of the size of a vehicle to the width of a road. On average, a family car is about $160$-$170$cm large, while a lane width can vary between $275$cm and $375$cm. Cozmo width is about $5.5$cm, which results in a ratio of $1/30$. Therefore, the scaled lane must be between $9$cm and $12.5$cm.
+
+\subsection{Track design and materials}
+
+The first choice to make is the one about the type of material to use as terrain for the track. The first choice was the black floor of the Data Science laboratory of Eurecom. It was useful only during the initial design and development of the control system to build small pieces of track in which testing functionalities. This solution had numerous drawbacks such as the impracticality to transport and high light reflection. 
+
+The following list provides a brief report of the various solutions taken into account during the thesis, together with an analysis of advantages and drawbacks.
+
+\begin{itemize}
+	\item \textit{Covering fabric}: this material is easily transportable, but it has a high light reflection, and its structure is prone to make wrinkles and dunes challenging to remove.
+	\item \textit{Tar paper}: this solution slightly diminished the reflection problem compared to the previous choice, but the material was fragile and with the same drawbacks of the covering fabric.
+	\item \textit{Cotton fabric}: this solution offers an easily  transportable material with reduced light reflection where it is easy to remove wrinkles and dunes.
+\end{itemize}
+
+Summing up, it is noticeable from this analysis that the cotton fabric provides the right trade-off among all requirements reported before.
+
+The structure of the road is also composed by the lane. The implementation of this part was done using a simple paper tape of width equal to $2.5$cm. As described in the beginning of this section, the width of the lane must be between $9$cm and $12.5$cm to provide a context similar to the real one. Because of the narrow and limited angle of vision provided by Cozmo camera, $10$cm-width was set: positioning the tape with a distance greater than $10$cm would result in a great part of the tape outside the view of the camera.
+
+
+
+\subsection{Problems and solutions}
+
+
+
+\section{Cozmo Control System}
+
+
+
+\subsection{Formalization as an Markov Decision Process}
+
+
+
+\subsection{Design of the OpenAI Gym Environment}
+
+
+
+\subsection{Main setup of the system}
+
