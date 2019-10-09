@@ -14,7 +14,7 @@
   "max_num_step": 1000,
   "num_episode": 200,
   "hidden_size": 32,
-  "updates_per_step": 1,
+  "updates_per_step": 2,
   "warm_up_episode": 5,
   "target_update": 1,
   "replay_size": 1000000,

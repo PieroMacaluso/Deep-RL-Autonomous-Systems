@@ -6,8 +6,8 @@ from torch.distributions import Normal
 LOG_SIG_MAX = 2
 LOG_SIG_MIN = -20
 epsilon = 1e-6
-IMAGE_H = 240
-IMAGE_W = 320
+IMAGE_H = 64
+IMAGE_W = 64
 
 
 def conv2d_size_out(size, data):
@@ -78,7 +78,7 @@ class ValueNetworkCNN(nn.Module):
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
             'conv1': [num_inputs, 16, 8, 4, 0],
-            'conv2': [16, 32, 4, 2, 0]
+            'conv2': [16, 32, 5, 2, 0]
         }
         
         self.conv1, self.bn1 = convolutional(conv['conv1'])
@@ -117,7 +117,7 @@ class QNetworkCNN(nn.Module):
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
             'conv1': [num_inputs, 16, 8, 4, 0],
-            'conv2': [16, 32, 4, 2, 0]
+            'conv2': [16, 32, 5, 2, 0]
         }
         
         self.conv1, self.bn1 = convolutional(conv['conv1'])
@@ -178,7 +178,7 @@ class GaussianPolicyCNN(nn.Module):
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
             'conv1': [num_inputs, 16, 8, 4, 0],
-            'conv2': [16, 32, 4, 2, 0]
+            'conv2': [16, 32, 5, 2, 0]
         }
         
         self.conv1, self.bn1 = convolutional(conv['conv1'])
@@ -236,7 +236,7 @@ class DeterministicPolicyCNN(nn.Module):
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
             'conv1': [num_inputs, 16, 8, 4, 0],
-            'conv2': [16, 32, 4, 2, 0]
+            'conv2': [16, 32, 5, 2, 0]
         }
         
         self.conv1, self.bn1 = convolutional(conv['conv1'])
