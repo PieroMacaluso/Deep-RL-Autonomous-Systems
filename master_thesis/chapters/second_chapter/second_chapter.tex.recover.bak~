@@ -1,9 +1,9 @@
 
 \chapter{Reinforcement Learning}
 
-\acrfull{rl} is a field of Machine Learning that is experiencing a period of great fervour in the world of research, fomented by recent progress in \acrfull{dl}. This event opened the doors to function approximation with \acrfull{nn} and \acrfull{cnn} developing what is nowadays known as Deep Reinforcement Learning (Deep RL).
+\acrfull{rl} is a field of Machine Learning that is experiencing a period of great fervour in the world of research, fomented by recent progress in \acrfull{dl}. This event opened the doors to function approximation with \acrfull{nn} and \acrfull{cnn} developing what is nowadays known as Deep Reinforcement Learning.
 
-\acrshort{rl} represents the third paradigm of Machine Learning alongside supervised and unsupervised learning. The idea underlying this research field is that the learning process to solve a decision-making problem consists in a sequence of trial and error where the \textit{agent}, the protagonist of \acrshort{rl}, could discover and discriminate valuable decisions from penalising ones exploiting information given by a \textit{reward signal}. This interaction has a strong correlation with what human beings and animals do in the real world to forge their behaviour.
+\acrshort{rl} represents the third paradigm of Machine Learning alongside supervised and unsupervised learning. The idea behind  this research field is that the learning process to solve a decision-making problem consists in a sequence of trial and error where the \textit{agent}, the protagonist of \acrshort{rl}, could discover and discriminate valuable decisions from penalising ones exploiting information given by a \textit{reward signal}. This interaction has a strong correlation with what human beings and animals do in the real world to forge their behaviour.
 
 Recently \acrshort{rl} has known a remarkable development and interests in video games: it managed to beat world champions at the game of Go \cite{silver2016mastering} and Dota with superhuman results and to master numerous Atari video games \cite{mnih2013playing} from raw pixels. Decisions, actions and consequences make video games a simulated reality on which to exploit and test the power of \acrshort{rl} algorithms.
 It is essential to realise that the heart of \acrshort{rl} is the science of decision making. This fact makes it compelling and general for many research fields ranging from Engineering, Computer Science, Mathematics, Economics, to Psychology and Neuroscience.
@@ -12,7 +12,7 @@ Before discussing the results of this thesis, it is good to clarify everything t
 
 The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement}, \cite{openai2018spinningup}, \cite{lapan2018deep} and \cite{franccois2018introduction}.
 
-\section{Fundamentals of reinforcement learning} \label{fundreinflearn}
+\section{Fundamentals of Reinforcement Learning} \label{fundreinflearn}
 
 %\todomacaluso{
 %	\begin{itemize}
@@ -28,8 +28,7 @@ Reinforcement Learning is a computational approach to Sequential Decision Making
 
 This section aims to present the fundamental ideas and notions behind this research field in order to help the reader to develop a baseline useful to approach \vref{deepreinflearn} about Deep Reinforcement Learning.
 
-\subsection{The reinforcement learning problem}
-
+\subsection{The Reinforcement Learning Problem}
 
 The primary purpose of \acrshort{rl} algorithms is to learn how to improve and maximise a future reward by relying on interactions between two main components: the agent and the environment. 
 
@@ -42,6 +41,7 @@ This distinction is fundamental to choose the right algorithm to use because not
 The \textit{environment} represents all the things that are outside the agent. At every action received by the agent, it emits a reward, an essential aspect of \acrshort{rl}, and an observation of the environment.
 
 The \textit{reward} $r_t$ is a scalar feedback signal that defines the objective of the \acrshort{rl} problem. This signal allows the agent to be able to distinguish positive actions from negative ones in order to reinforce and improve its behaviour. It is crucial to notice that the reward is local: it describes only the value of the latest action. Furthermore, actions may have long term consequences, delaying the reward. As it happens with human beings' decisions, receiving a conspicuous reward at a specific time step does not exclude the possibility to receive a small reward immediately afterwards and sometimes it may be better to sacrifice immediate reward to gain more rewards later.
+
 
 In this context, many features make \acrshort{rl} different from supervised and unsupervised learning.
 Firstly, there is no supervisor: when the agent has to decide what action to take, there is no entity that can tell him what the optimal decision is in that specific moment. The agent receives only a reward signal which may delay compared to the moment in which it has to perform the next action. 
@@ -193,6 +193,7 @@ The first worthy distinction between RL algorithms can be made analysing how the
 One of the most crucial aspects of an RL algorithm is the question of whether the agent has access to or learns a model of the environment. A model of the environment enables the agent to predict state transitions and rewards.
 A method is \textit{model-free} when it does not exploit the model of the environment to solve the problem. All the actions made by the agent results from direct observation of the current situation in which the agent is. It takes the observation, does computations on them and then select the best action to take.
 This last representation is in contrast with \textit{model-based} methods. In this case, the agent tries to build a model of the surrounding environment in order to infer information useful to predict what the next observation or reward would be.
+
 
 Both groups of methods have strong and weak sides.
 Ordinarily, \textit{model-based} methods show their potential in a deterministic environment (e.g. board game with rules). In these contexts, the presence of the model enables the agent to plan by reasoning ahead, to recognise what would result from a specific decision before taking action. The agent can extract all this knowledge and learn an optimal policy to follow. However, this opportunity is not always achievable: the model may be partially or entirely unavailable, and the agent would have to learn the model from its experience. Learning a model is radically complex and may lead to various hurdles to overcome: for instance, the agent can exploit the bias present in the model, producing an agent which is not able to generalise in real environments.
@@ -430,22 +431,9 @@ This choice leads to a reduction in the number of parameters to learn and conseq
 
 Nowadays, since its widespread use in research, neural networks represent the most intuitive option to take as function approximator: it reduces the training time for high dimensional systems, and it requires less space in memory.
 This point represents the bridge between traditional Reinforcement Learning and recent discoveries in the theory of Deep Learning. 
-Thanks to the last decade great fervour of Deep Learning, neural networks have become the fundamental tool to exploit as function approximator to develop Deep Reinforcement Learning (DRL). This evolution of traditional reinforcement learning accomplished remarkable results. One of the first steps towards Deep RL and general artificial intelligence -- an AI broadly applicable to a different set of various environments -- was done by DeepMind with their pioneering paper \cite{mnih2013playing} and the consequent \cite{mnih2015human}.
+Thanks to the last decade great fervour of Deep Learning, neural networks become the fundamental tool to exploit as function approximator to develop Deep Reinforcement Learning (DRL). This evolution of traditional reinforcement learning accomplished remarkable results. One of the first steps towards Deep RL and general artificial intelligence -- an AI broadly applicable to a different set of various environments -- was done by DeepMind with their pioneering paper \cite{mnih2013playing} and the consequent \cite{mnih2015human}.
 
-%\begin{figure}
-%	\centering
-%	\includegraphics[width=\textwidth]{img/taxonomy.png}
-%	\caption{A non-exhaustive, but useful taxonomy of algorithms in Deep RL \cite{openai2018spinningup}.}
-%	\label{fig:taxonomy}
-%\end{figure}
-%
-%After the quick overview of the basics of RL terminology and notation provided in the previous section, it is possible to explore more in-depth the universe behind the algorithms of modern Deep RL. A first summary of the various approach to traditional RL, which also extend to Deep RL, is provided in \vref{approaches}.
-%
-%As shown in \vref{fig:taxonomy}, the first significant branching point is the distinction between model-free and model-based algorithms. 
-%The second crucial branching point in Deep RL is the question about what to learn: the main components to learn are policies (both stochastic or deterministic), action-value or state-value function and environment models.
-
-Because of the nature of this work, the focus of this section will be on model-free algorithms.
-This section aims to explain the state-of-the-art and the leading theory behind Deep RL framework and to define two deep actor-critic algorithms used in the experiments of this thesis: Deep Deterministic Policy Gradient (DDPG) and Soft Actor-Critic (SAC).
+This section aims to explain the state-of-the-art and the leading theory behind DRL framework and to define two deep actor-critic algorithms used in the experiments of this thesis: Deep Deterministic Policy Gradient (DDPG) and Soft Actor-Critic (SAC).
 
 \subsection{Fundamentals of Deep Learning}
 
@@ -545,79 +533,32 @@ Nowadays, the techniques applied in the majority of research projects is stochas
 
 Another crucial step in deep learning was the introduction of convolutional layers \cite{lecun1995convolutional}. This type of layer revealed is power with images, leading to an increasing interest in image processing field. The parameters of this layer are a set of filters (or kernels) with dimensions smaller than the whole input image: these filters are used to implement a convolution operation over the whole image, and the result serves the input to the next layer in the network. In this context, the network can learn filters that detect specific features in the image such as edges, textures and patterns \cite{erhan2009visualizing}.
 
-
-\subsection{Value-based methods}
-
-The first class of algorithms to explore is the one of value-based methods. They works learning an approximator $Q_\theta(s,a)$ to infer the optimal action-value function $Q^*(s,a)$ using an objective function based on Bellman equations.
-The preponderance of optimisations belonging to this category is \textit{off-policy}: this means that the optimisation step is done using all data collected during the whole training, not only with the most recent policy available. In this configuration, the information used for the learning phase could also come from exploration decision, apart from ones obtained with the most recent policy. 
-Indeed, value-based approaches are more sample efficient because they can reuse data more efficiently, but they are considered less stable than policy gradient ones.
-Thanks to the relation expressed by $a(s) = \operatornamewithlimits{argmax}_a Q_\theta(s,a)$, it is possible to obtain the policy learned so far from the current action-value function.
-
-\subsubsection{Deep Q-Network (DQN)}
-This algorithm grows from the ideas underlying Q-Learning \cite{watkins1989learning}  shown previously in \vref{tdlearn}. The team of DeepMind introduced the Deep Q-Network (DQN) in \cite{mnih2013playing} and in the next cutting-edge paper \cite{mnih2015human}: they managed to create an algorithm capable of learning to play ATARI video-games online using raw image and pixels. It works with neural networks as a function approximator, employing convolutional layers in the first layers of the neural network and performing the optimisation with a variant of stochastic gradient descent called RMSprop \cite{tieleman2012lecture}. The exploited neural network provides as output a probability distribution over all possible discrete actions to determine what is the best action to take.
-
-To overcome the instability problem of value-based methods, DQN utilises two heuristics to narrow instabilities.
-
-\paragraph{Target Network}
-The presence of a second network, called \textit{target network}, enriches the update phase of this algorithm. \Vref{eq:lossdqn}
-defines the loss function of DQN where $y_i$ value is computed using the target network instead of the local network. Therefore, the parameters of the target network are hard updated every $I \in \mathbb{N}$ iterations: this choice precludes instabilities and avoids divergence because of target networks parameters remain fixed for $I$ iterations.
-
-\begin{equation} \label{eq:lossdqn}
-\begin{gathered}
-L_i(\theta_i)) = \mathbb{E}_{s, a \sim \pi}\big[(y_i - Q(s, a; \theta_i))^2\big]\\
-y_i = \mathbb{E}_{s' \sim E}[r + \gamma \max_{a'}Q(s',a'; \theta_{i-1})|s,a]
-\end{gathered}
-\end{equation}
-
-\paragraph{Experience Memory Replay}
-
-Another crucial introduction in this algorithm is \textit{experience memory replay buffer} \cite{lin1992self}. Trajectories sampled from the environment are temporally correlated, and this could lead to over-fitting the parameters of the neural network. The setting of this algorithm is \textit{online} because the replay buffer stores $N_{\text{replay}} \in \mathbb{N}$ replacing old steps as new ones arrive. The experience is collected as tuples $<s_t,a_t,r_t,s_{t+1}>$ using the $\epsilon$-greedy policy. The learning phase samples a set of limited tuples called \textit{mini-batch} allowing a wider set of state-action pair in the update of the network and improving the procedure in terms of variance in respect of single tuple update.
-Trajectories sampled from the environment are temporally correlated, and this could lead to over-fitting the parameters of the neural network. Using a batch sample from the replay buffer makes the data \textit{i.i.d.} and consequently improves the learning.
-
-\subsubsection{Improvements of DQN}
-Further investigation and speculation followed the publication of the thriving DQN. Summing up and comparing these new approaches to original DQN is the main aim of \textit{Rainbow} \cite{hessel2018rainbow}: it also introduces an algorithm called \textit{Rainbow DQN} with all the techniques proposed. The following paragraphs will delineate three main improvements of DQN.
-
-\paragraph{Double DQN}
-The Double DQN \cite{hasselt2010double, van2016deep} can handle the intricacy of overestimation of Q-values caused by the maximisation step in \vref{eq:lossdqn}. It works with two separate Q-Network with parameters $\theta$ and $\theta^-$ for estimating TD-target. It allows for removing the positive bias in estimating action values, leading to less overestimation of Q-learning values, improved stability and performance. In this context, the target $y_i$ is replaced by \vref{eq:ddqny}
-\begin{equation} \label{eq:ddqny}
-y_i = \mathbb{E}_{s' \sim E}[r + \gamma Q(s',\operatornamewithlimits{argmax}_aQ(s', a; \theta_{i-1}); \theta^-_{i-1})|s,a]
-\end{equation}
-
-\paragraph{Prioritized Experience Replay}
-
-The fundamental idea underlying \textit{prioritized experience replay} \cite{schaul2015prioritized} is exactly to prioritise experiences that contain more crucial information than other ones. An additional value that defines the priority of a specific transition joins each tuple stored in the replay buffer: thanks to this approach, experiences with higher priority has a higher sampling probability and are more likely to remain longer in the replay buffer. It is possible to use \textit{TD-error} to measure the importance of each tuple in the experience. A high TD-error means that the agent behaved better or worse than expected in that particular moment, and therefore, it can learn more from that specific passage.
-
-\paragraph{Dueling DQN}
-
-The Dueling DQN architecture \cite{wang2015dueling} shown in \vref{fig:duelingdqn} works decoupling the Q-value estimation in two distinct sequences of fully-connected layers right after convolutional layers. These streams are capable of providing separate estimates of the state-value  $V(s; \theta, \beta)$ and advantage $A(s,a; \theta, \alpha)$ functions exploited in the end to obtain the Q-value function $Q(s,a; \theta, \alpha, \beta)$ estimate where $\theta$ represents the parameters of convolutional layers while $\alpha$ and $\beta$ the ones of state-value and advantage function respectively.
-
-The first formalisation of the Q-value function is shown by \vref{eq:qvalueddqn0}, but \cite{wang2015dueling} also suggests a different approach \vref{eq:qvalueddqn1} which shown increased stability in practice.
-
-\begin{equation} \label{eq:qvalueddqn1}
-Q(s,a; \theta, \alpha, \beta) = V(s;\theta, \beta) + \big(A(s,a;\theta, \alpha) - \max_{a' \in \mathcal{A}}A(s, a'; \theta, \alpha)\big)
-\end{equation}
-\begin{equation} \label{eq:qvalueddqn0}
-Q(s,a; \theta, \alpha, \beta) = V(s;\theta, \beta) + \big(A(s,a;\theta, \alpha) - \frac{1}{|\mathcal{A}|}\sum_{a' \in \mathcal{A}}A(s, a'; \theta, \alpha)\big)
-\end{equation}
-
+\subsection{Taxonomy of Deep RL algorithm}
 
 \begin{figure}
-	\centering
-	\begin{tikzpicture}
-	 \node at (0,0) (image) {\includegraphics[width=0.7\textwidth]{img/duelingdqnn.png}};
-	% node a_t
-	\node[mylabel, below right=-0.1cm and -0.5cm of image.north] (action) {\LARGE \textcolor{Blue}{$\beta$}};
-	\node[mylabel, above right=0.3cm and -0.5cm of image.south] (action) {\LARGE \textcolor{OliveGreen}{$\alpha$}};
-	\node[mylabel, above right=0.8cm and -4.6cm of image.south] (action) {\LARGE \textcolor{PineGreen}{$\theta$}};% node s_t
-	\end{tikzpicture}
-	\caption[Dueling DQN]{\small Dueling DQN architecture \cite{wang2015dueling} representation taken from \cite{franccois2018introduction}. It consists in two stream to estimate state-value parametrized with $\beta$ and advantages values parametrized with $\alpha$ for each action. The last layer represent the combination of these two types of values. }
-	\label{fig:duelingdqn}
+\centering
+\includegraphics[width=\textwidth]{img/taxonomy.png}
+\caption{A non-exhaustive, but useful taxonomy of algorithms in Deep RL \cite{openai2018spinningup}.}
+\label{fig:taxonomy}
 \end{figure}
 
+After the quick overview of the basics of RL terminology and notation provided in the previous section, it is possible to explore more in-depth the universe behind the algorithms of modern Deep RL. A first summary of the various approach to traditional RL, which also extend to Deep RL, is provided in \vref{approaches}.
 
-\subsection{Policy gradient methods}
+As shown in \vref{fig:taxonomy}, the first significant branching point is the distinction between model-free and model-based algorithms.
+The second crucial branching point in Deep RL is the question about what to learn: the main components to learn are policies (both stochastic or deterministic), action-value or state-value function and environment models.
 
-\todomacaluso{RESTART FROM HERE}
+Because of the nature of this work, the focus of this section will be on model-free algorithms.
+
+\subsubsection{Value-based methods}
+
+This group of algorithm works learning an approximator $Q_\theta(s,a)$ to infer the optimal action-value function $Q^*(s,a)$ using an objective function based upon Bellman equations.
+This time, the optimisation presented in this technique is off-policy: this means that the optimisation step is done using all data collected during the whole training, not only with the most recent policy available. In this configuration, the information used for the learning phase could come from exploration decision, not only ones obtained with the most recent policy.
+Thanks to the relation expressed by $a(s) = \operatornamewithlimits{argmax}_a Q_\theta(s,a)$, it is possible to obtain the policy learned so far from the current action-value function.
+This type of algorithm grows from the ideas underlying Q-Learning \cite{watkins1989learning} (see \vref{tdlearn}) to develop the deep Q-Network (DQN) algorithm presented in \cite{mnih2013playing} and in the next cutting-edge paper \cite{mnih2015human}, where the algorithm manages to learn to play ATARI video-games online using raw image and pixels and neural network as a function approximator.
+
+Value-based methods are considered less stable than policy gradient ones, but they are more sample efficient because they can reuse data more efficiently.
+
+\subsubsection{Policy gradient methods}
 
 As the name suggests, the concept of policy  $\pi_\theta(a|s)$ is central in the techniques of this class. They exploit stochastic gradient descent on the performance objective $J(\pi_\theta)$ to update parameters $\theta$ directly. Furthermore, they can indirectly update parameters $\theta$ by maximising local approximation of $J(\pi_\theta)$.
 
@@ -625,13 +566,11 @@ This approach usually works with on-policy optimisation, which implies that ever
 In this context, it is also useful to learn an approximator for $V_\phi(s)$ for on-policy value-function $V^\pi(s)$: it is essential in order to figure out how to update the policy.
 Two examples of this type of algorithms are:
 \begin{itemize}
-	\item \textit{Advantage Actor Critic (A2C)} and \textit{Asynchronous Advantage Actor Critic (A3C)} introduced in \cite{mnih2016asynchronous} are two actor-critic methods which updates parameters directly with gradient descent to maximise performance.
-	\item \textit{Proximal Policy Optimisation (PPO)} \cite{schulman2017proximal} increases the performance indirectly by maximising a \textit{surrogate objective} function which tracks how much $J(\pi_\theta)$ changed in the update phase.
+\item \textit{Advantage Actor Critic (A2C)} and \textit{Asynchronous Advantage Actor Critic (A3C)} introduced in \cite{mnih2016asynchronous} are two actor-critic methods which updates parameters directly with gradient descent to maximise performance.
+\item \textit{Proximal Policy Optimisation (PPO)} \cite{schulman2017proximal} increases the performance indirectly by maximising a \textit{surrogate objective} function which tracks how much $J(\pi_\theta)$ changed in the update phase.
 \end{itemize}
 
 Policy optimisation methods are principled because they directly optimise the function they want to learn: this fact makes these techniques stable and reliable concerning Q-Learning methods.
-
-\subsubsection{Actor-Critic Architecture}
 
 
 \subsection{Deep Deterministic Policy Gradient (DDPG)}

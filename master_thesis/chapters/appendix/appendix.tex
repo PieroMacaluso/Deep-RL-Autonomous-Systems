@@ -31,9 +31,44 @@ V^\pi &= (I - \gamma\mathcal{P}^\pi)^{-1}\mathcal{R}^\pi
 \end{split}
 \end{align}
 
-\section{Policy Improvement Theorem} \label{policyimprovement}
+\section{Dynamic programming} \label{policyimprovement}
 
+\subsubsection{Policy iteration algorithm}
 
+\begin{algorithm}[!htp]
+	\SetAlgoLined
+	\DontPrintSemicolon
+	\LinesNumbered
+	\KwIn{$\pi$ the policy to be evaluated; a small threshold $\theta$ which defines the accuracy of the estimation\;}
+	Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily, except that $V(terminal) = 0$\;
+	$is\_policy\_stable \leftarrow true$\;
+	\Repeat{$\neg \; is\_policy\_stable$}{
+		\tcc{Policy Evaluation}
+		\Repeat{$\Delta < \theta$}{
+			$\Delta \leftarrow 0$\;
+			\For{each $s \in \mathcal{S}$}{
+				v $\leftarrow$ $V(s)$\;
+				$V(s) \leftarrow \sum_{a \in \mathcal{A}} \pi(a|s) \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
+				$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
+			}
+		}
+		$V_\pi \leftarrow V(s)$\;
+		\tcc{Policy Improvement}
+		
+		\While{true}{
+			\For{each $s \in \mathcal{S}$}{
+				$old\_action \leftarrow \pi(s)$\;
+				$\pi(s) \leftarrow \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}}P(s',r |s, a)\bigg[r+\gamma V_\pi(s')\bigg]$\;
+				\If{$old\_action \neq \pi(s)$}{$is\_policy\_stable \leftarrow false$}
+			}
+		}
+	}
+	\KwOut{$V^*$ and $\pi^*$}
+	\caption{Policy Iteration for estimating $\pi \sim \pi^*$}
+	\label{policy_evaluation}
+\end{algorithm}
+
+\subsubsection{Policy improvement theorem}
 
 Let $\pi$ and $\pi'$ be any pair of deterministic policy such that 
 \begin{equation} \label{eq:impr0}
@@ -62,5 +97,28 @@ V_\pi(s) &\le Q_\pi(s, \pi'(s))\\
 		&= v_{\pi'}(s)
 \end{split}
 \end{align}
+
+\subsubsection{Value iteration algorithm}
+
+\begin{algorithm}[!htp]
+	\SetAlgoLined
+	\DontPrintSemicolon
+	\LinesNumbered
+	\KwIn{A small threshold $\theta$ which defines the accuracy of the estimation\;}
+	Initialise $V(s) \; \forall s \in \mathcal{S}$ arbitrarily, except that $V(terminal) = 0$\;
+	\Repeat{$\Delta < \theta$}{
+		$\Delta \leftarrow 0$\;
+		\For{each $s \in \mathcal{S}$}{
+			v $\leftarrow$ $V(s)$\;
+			$V(s) \leftarrow \max_{a}\sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]$\;
+			$\Delta \leftarrow \max(\Delta, |v - V(s)|)$	
+		}
+	}
+	Output a deterministic policy, $\pi \sim \pi^*$, such that \[
+	\pi(s) = \underset{a}{\arg\max\,} \sum_{s' \in \mathcal{S}, r \in \mathcal{R}} P(s', r|s,a) \big[r+\gamma V(s')\big]\]\\
+	\KwOut{$V^*$ and $\pi^*$}
+	\caption{Value Iteration, for estimating $\pi \sim \pi^*$}
+	\label{value_iteration}
+\end{algorithm}
 
 
