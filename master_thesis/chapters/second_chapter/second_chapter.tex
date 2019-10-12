@@ -449,10 +449,25 @@ This section aims to explain the state-of-the-art and the leading theory behind 
 
 \subsection{Fundamentals of Deep Learning}
 
+\subsubsection{Artificial Neural Networks}
 Deep learning (DL) is an approach to learning based on a function $f: \mathcal{X} \rightarrow \mathcal{Y}$ parametrised with $\theta \in \mathbb{R}^{n_\theta} (n_\theta \in \mathbb{N})$ such that $y = f(x;\theta)$.
 
-The central components of this research field are Neural Networks (NN).
-A deep neural network consists of a series of processing layers to which correspond non-linear transformation.
+The starting point of this research field is the artificial neuron, inspired by the biological neuron from the brain of animals and human being. A neuron consists of numerous inputs called \textit{dendrites} coming from preceding neurons. Therefore, the neuron elaborates the input and, only if the value reaches a specific potential, it \textit{fires} through its single output called \textit{axon}.
+
+The neuron elaborates the inputs by taking the weighted sum, adding a bias b and applying an activation function $f( \sum_{n}\theta_i)$ following relation where $f$ is an activation function. The parallel comparison between the biological neuron and the artificial one is shown in \vref{fig:neuron}. The set of parameter $w$ needs to be adjusted to find a good parameter set: this process is called \textit{learning}.
+\begin{figure}[!h]
+	\centering
+	\begin{minipage}[b]{0.5\textwidth}
+		\includegraphics[width=\textwidth]{img/neuron.png}
+	\end{minipage}
+	\begin{minipage}[b]{0.4\textwidth}
+		\includegraphics[width=\textwidth]{img/neuron_model.jpeg}
+	\end{minipage}
+	\caption{\small Comparison between biological neuron (left) and artificial neuron (right). The artificial neuron designs the dendrites as weighted inputs and returns the sum through an activation function. \cite{stanford2019cs231n}.}
+	\label{fig:neuron}
+\end{figure}
+
+A deep neural network (NN) organises a set of artificial neurons in a series of processing layers to which correspond non-linear transformation.
 The whole sequence of these alterations directs the learning process through different levels of abstraction \cite{erhan2009visualizing}.
 To better understand the nature of a deep neural network, it is convenient to describe a neural network with one fully-connected layer represented by \vref{fig:fullyconnected}. 
 
@@ -463,7 +478,6 @@ o = w_2 \cdot h + b_2
 \end{gathered}
 \end{equation}
 
-The input layer receives as input a column vector of input-features $i$ of size $n \in \mathbb{N}$. Every value of the hidden-layer represented by a vector $h$ of size $m \in \mathbb{N}$ is the result of a transformation of the input values given by \vref{eq:non_linear_transformation} where $w_1$ is a matrix of size $m \times n$ and $b_1$ is a bias term of size $m$. $g$ is a non-linear parametric function called activation function, which represents the core of neural networks. Subsequently, the second and last transformation manipulates the hidden layer $h$ to produce the values of the output layer following \vref{eq:non_linear_transformation} using $w_2$ with size $o \times m$ and $b_2$ with size $o$.  
 
 \begin{figure}
 	\centering
@@ -518,6 +532,74 @@ The input layer receives as input a column vector of input-features $i$ of size 
 	\caption{An example representation of a deep neural network with one fully-connected hidden layer.}
 	\label{fig:fullyconnected}
 \end{figure}
+
+
+The input layer receives as input a column vector of input-features $i$ of size $n \in \mathbb{N}$. Every value of the hidden-layer represented by a vector $h$ of size $m \in \mathbb{N}$ is the result of a transformation of the input values given by \vref{eq:non_linear_transformation} where $w_1$ is a matrix of size $m \times n$ and $b_1$ is a bias term of size $m$. $g$ is a non-linear parametric function called activation function, which represents the core of neural networks. Subsequently, the second and last transformation manipulates the hidden layer $h$ to produce the values of the output layer following \vref{eq:non_linear_transformation} using $w_2$ with size $o \times m$ and $b_2$ with size $o$.  
+
+\subsubsection{Learning process}
+
+The learning process aims to seek a set of parameters $\theta$ that results in the best possible function approximation for a specific objective. In supervised learning, the actual output $Y$ is available for each particular input $X$, and it is used to update the parameters. The learning process can be carried out iteratively according to the following steps.
+
+\paragraph{Forward pass} The input $X$ is forwarded through the neural network and the output $Y_pred = f(X, \theta)$ is gathered.
+
+\paragraph{Loss} The resulting predicted value $Y_{pred}$ is compared with the actual value $Y$ computing the loss function $L(\theta)$. There are a lot of loss functions available to satisfy the particular needs of specific learning tasks. The \textit{error} is the difference between the output of the neural network for a specific input data and the actual value: it is essential to calculate the loss function. One of the most exploited loss function is the \textit{Mean-Squared Error} (MSE) \cite{shalev2014understanding} shown in \vref{eq:backprop} which works with L2-distance.
+
+\begin{equation}\label{eq:backprop}
+\begin{aligned}
+L(y, \hat{y}) = (y_\theta - y)^2 \\
+J = \frac{1}{n}\sum_{i=1}^{n}L(y_i, f(x_i))
+\end{aligned}
+\end{equation}
+
+\paragraph{Backpropagation}
+The next step is the computation of the global gradient of the loss  function $\nabla L(\theta)$ which is carried out together with its backpropagation through the network. The backpropagation algorithm \cite{rumelhart1988learning} calculates the local gradient of loss for each neuron in the hidden layers. The concept underlying this procedure and shown in \vref{eq:chainrule} is the \textit{chain rule} \cite{lecun2015deep}, which computes derivatives of composed functions by multiplying local derivatives.
+
+\begin{equation}\label{eq:chainrule}
+\begin{gathered}
+y = g(x), \;\;\; z = f(g(x)),  \;\;\;
+\frac{\partial z}{\partial x} = \frac{\partial z}{\partial y} \frac{\partial y}{\partial x}
+\end{gathered}
+\end{equation}
+
+
+Therefore, the chain rule is exploited to propagate the calculate global gradient loss $\frac{\partial L(\theta)}{\partial \theta}$ back through the network, in the opposite direction of the forward pass.
+The procedure calculates the local derivatives during the forward pass, while estimates the local gradient of loss during backpropagation determining the multiplication between the local derivative and the local gradient of the loss of the connected neuron of the next layer: if the neuron has multiple connections neurons, the algorithms adds up all the gradients.
+
+\paragraph{Update} In this final step consists in the update of the weights of all neurons. There are many ways developed through the years to carry out the update phase, but the most common one is the gradient descent.
+The objective of the gradient descent is to minimise the loss function by refreshing the internal parameters of the network in the negative direction of the gradient loss: this choice leads the function approximation process closer to the minimum at each iteration. \Vref{eq:update} describes the update rule presented by the gradient descent where $\alpha$ is the learning rate. The last-mentioned parameter determines how quickly the algorithm should approach the minimum. A higher learning rate leads to a greater step towards the minimum, which threatens to overshoot the target.
+
+\begin{equation}\label{eq:update}
+\theta \leftarrow \theta -\alpha \nabla_\theta J
+\end{equation}
+
+Nowadays, the techniques applied in the majority of research projects is stochastic gradient descent which combines batch learning \cite{stanford2019cs231n} and gradient descent, but also its various improved extensions and variants, such as ADAM \cite{kingma2014adam} and AdaGrad \cite{duchi2011adaptive}: these extensions manage to improve the convergence of SGD thanks to the introduction of adaptive learning rates.
+
+\subsubsection{Regularization}
+
+The final aim of the learning process is to obtain a function approximator capable of generalising over data. This fact means that a neural network should show performances on unseen data comparable to the one obtained from training data. For this reason, it is necessary an appropriate trade-off between underfitting and overfitting.
+
+A shallow approximated function and insufficient training data with a lack of diversity are the leading cause to the first situation: the network generalises on the data, but the prediction error is always too high for all data points.
+The phenomenon of overfitting describes the exact contrary of underfitting. The leading cause is too complex approximation function: this lead to a network which scores an excellent performance on training data, but poorly predicts unseen points.
+
+Regularisation \cite{bishop2006pattern,lecun2015deep} represents an approach to overcome and prevent the problem of overfitting. It works extending the loss function with a regularised term $\Omega(\theta)$ as shown in \vref{eq:generalreg} where $\lambda$ is the regularisation factor. 
+
+\begin{equation}\label{eq:generalreg}
+L'(\theta) = L(\theta, Y, Y_{pred}) + \lambda \Omega(\theta)
+\end{equation}
+
+\Vref{eq:l2reg,eq:l1reg} show two examples of regularisation terms. The first is $L^2$-regularisation which exploits the squared sum of the weights $\theta$ in order to keep the weights small. The second approach is known as $L^1$-regularisation: in this case, large weights are less penalised, but this method leads to a sparser solution.
+\begin{equation}\label{eq:l2reg}
+L'(\theta) = L(\theta, Y, Y_{pred}) + \lambda \frac{1}{2}||\theta||^2 
+\end{equation}
+\begin{equation}\label{eq:l1reg}
+L'(\theta) = L(\theta, Y, Y_{pred}) + \lambda \frac{1}{2}||\theta|| 
+\end{equation}
+
+
+\subsubsection{Activation function}
+
+\todomacaluso{RESTART FROM HERE}
+
 \Vref{eq:activation} shows the most common activation functions: in general, \textit{ReLu}  achieves better performance over a wide variety of tasks, but usually the selection of the best activation function has to be done starting from all information and requirements of the deep learning model.
 \begin{equation}\label{eq:activation}
 \begin{aligned}
@@ -527,23 +609,14 @@ The input layer receives as input a column vector of input-features $i$ of size 
 \end{aligned}
 \end{equation}
 
-$w1$ and $w_2$ in the shown example are the weights of the neural network. The technique used to train these parameters is known as \textit{gradient descent} via the \textit{backpropagation} algorithm. It develops from the concept error and loss function.  The error is the difference between the output of the neural network for a specific input data and the actual value: it is essential to calculate the loss function. One of the most exploited loss function is the Mean-Squared Error (MSE) shown in \vref{eq:backprop}.
+\subsubsection{Batch Learning and Normalization}
 
-\begin{equation}\label{eq:backprop}
-\begin{aligned}
-L(y, \hat{y}) = (y_\theta - y)^2 \\
-J = \frac{1}{n}\sum_{i=1}^{n}L(y_i, f(x_i))
-\end{aligned}
-\end{equation}
-
-The objective of the gradient descent is to minimise the loss function by modifying the internal parameters of the network using \vref{eq:update} where $\alpha$ is the learning rate.
-\begin{equation}\label{eq:update}
-\theta \leftarrow \theta -\alpha \nabla_\theta J
-\end{equation}
-
-Nowadays, the techniques applied in the majority of research projects is stochastic gradient descent with its various improved extensions and variants, such as ADAM \cite{kingma2014adam} and AdaGrad \cite{duchi2011adaptive}: these extensions manage to improve the convergence of SGD thanks to the introduction of adaptive learning rates.
-
+\subsubsection{Convolutional Neural Networks}
 Another crucial step in deep learning was the introduction of convolutional layers \cite{lecun1995convolutional}. This type of layer revealed is power with images, leading to an increasing interest in image processing field. The parameters of this layer are a set of filters (or kernels) with dimensions smaller than the whole input image: these filters are used to implement a convolution operation over the whole image, and the result serves the input to the next layer in the network. In this context, the network can learn filters that detect specific features in the image such as edges, textures and patterns \cite{erhan2009visualizing}.
+
+\paragraph{Convolutional Layer}
+
+\paragraph{Pooling Layer}
 
 
 \subsection{Value-based methods}
@@ -593,12 +666,10 @@ The Dueling DQN architecture \cite{wang2015dueling} shown in \vref{fig:duelingdq
 
 The first formalisation of the Q-value function is shown by \vref{eq:qvalueddqn0}, but \cite{wang2015dueling} also suggests a different approach \vref{eq:qvalueddqn1} which shown increased stability in practice.
 
-\begin{equation} \label{eq:qvalueddqn1}
-Q(s,a; \theta, \alpha, \beta) = V(s;\theta, \beta) + \big(A(s,a;\theta, \alpha) - \max_{a' \in \mathcal{A}}A(s, a'; \theta, \alpha)\big)
-\end{equation}
-\begin{equation} \label{eq:qvalueddqn0}
-Q(s,a; \theta, \alpha, \beta) = V(s;\theta, \beta) + \big(A(s,a;\theta, \alpha) - \frac{1}{|\mathcal{A}|}\sum_{a' \in \mathcal{A}}A(s, a'; \theta, \alpha)\big)
-\end{equation}
+\begin{gather} 
+Q(s,a; \theta, \alpha, \beta) = V(s;\theta, \beta) + \big(A(s,a;\theta, \alpha) - \max_{a' \in \mathcal{A}}A(s, a'; \theta, \alpha)\big) \label{eq:qvalueddqn0}\\
+Q(s,a; \theta, \alpha, \beta) = V(s;\theta, \beta) + \big(A(s,a;\theta, \alpha) - \frac{1}{|\mathcal{A}|}\sum_{a' \in \mathcal{A}}A(s, a'; \theta, \alpha)\big) \label{eq:qvalueddqn1}
+\end{gather}
 
 
 \begin{figure}
@@ -617,22 +688,37 @@ Q(s,a; \theta, \alpha, \beta) = V(s;\theta, \beta) + \big(A(s,a;\theta, \alpha) 
 
 \subsection{Policy gradient methods}
 
-\todomacaluso{RESTART FROM HERE}
+Policy gradient algorithms aim to optimize the policy's performance measure in \vref{eq:pgperf} by finding a good policy $\pi_\theta(s|a)$ capable of generation a trajectory $\tau$ that maximizes the expected rewards \vref{eq:pgmax} instead of learning a  value function. Indeed the objective function in policy gradient methods consists of maximising $J(\theta)$ value by finding a good policy updating $\theta$ parameters directly.
 
-As the name suggests, the concept of policy  $\pi_\theta(a|s)$ is central in the techniques of this class. They exploit stochastic gradient descent on the performance objective $J(\pi_\theta)$ to update parameters $\theta$ directly. Furthermore, they can indirectly update parameters $\theta$ by maximising local approximation of $J(\pi_\theta)$.
+\begin{gather} 
+J(\theta) = \mathbb{E}\big[\sum_{t=0}^{N}r(s_t,a_t); \pi_\theta\big] = \sum_{\tau}P(\tau;\theta)r(\tau) \label{eq:pgperf}\\
+\theta^* = \operatornamewithlimits{argmax}_\theta J(\theta) \label{eq:pgmax}
+\end{gather}
 
-This approach usually works with on-policy optimisation, which implies that every update only uses data gathered with the most recent version of the policy.
-In this context, it is also useful to learn an approximator for $V_\phi(s)$ for on-policy value-function $V^\pi(s)$: it is essential in order to figure out how to update the policy.
-Two examples of this type of algorithms are:
-\begin{itemize}
-	\item \textit{Advantage Actor Critic (A2C)} and \textit{Asynchronous Advantage Actor Critic (A3C)} introduced in \cite{mnih2016asynchronous} are two actor-critic methods which updates parameters directly with gradient descent to maximise performance.
-	\item \textit{Proximal Policy Optimisation (PPO)} \cite{schulman2017proximal} increases the performance indirectly by maximising a \textit{surrogate objective} function which tracks how much $J(\pi_\theta)$ changed in the update phase.
-\end{itemize}
 
-Policy optimisation methods are principled because they directly optimise the function they want to learn: this fact makes these techniques stable and reliable concerning Q-Learning methods.
+The parameters of the policy $\theta$ are refreshed via stochastic gradient ascent. Gradient ascent is the inverse of gradient descent and updates the parameters $\theta_t$ in the positive direction of the gradient of the policy’s performance measure $\nabla_\theta J(\theta)$ following \vref{eq:pgascent} where $\alpha$ is the learning rate which defines the strength of the steps in the direction of the gradient.
+
+\begin{equation} 
+\theta_{t+1} \leftarrow \theta_t + \alpha \nabla_\theta J(\theta_t) \label{eq:pgascent}
+\end{equation}
+
+The main advantage of policy gradient approaches consists in the stability of their convergence: these methods work updating their policy directly at each time step instead of renewing value function from which to derive the policy like value-based methods. Last-mentioned approaches can lead to a radical change in the policy output even for a small change in the value function: this event can cause big oscillation during training.
+Furthermore, policy gradient algorithms can face infinite and continuous action space because the agent estimates the action directly instead of calculating the Q-value for each possible discrete action.
+The third feature is their ability to learn stochastic policies, useful in uncertain contexts or partially observable environments. 
+Despite the presence of the advantages just mentioned, policy gradient methods have an important disadvantage: they rather converge to a local maximum than to the global optimum.
 
 \subsubsection{Actor-Critic Architecture}
 
+Actor-critic architecture, shown in \vref{fig:actorcritic} represents the point of contact between value-based approaches and policy gradient methods. They are policy gradient methods basically but exploit value-function to learn the parameters $\theta$ of the policy. As its name suggests, these approaches work with two different parts called \textit{actor} and \textit{critic} \cite{konda2000actor}. The \textit{actor} relates to the policy, while the \textit{critic} deals with the estimation of a value function (e.g.\ Q-value function). In the context of deep reinforcement learning, they can be represented using neural networks function approximator \cite{mnih2016asynchronous}: the actor exploits gradients derived from the policy gradient theorem and adjusts the policy parameters, while the critic estimates the approximate value function for the current policy $\pi$.
+
+Standard practice is to update both networks with the \textit{TD-Error}, discussed in \vref{tdlearn}. Estimation made by the critic is useful to determine the contribution that expected values of the current and next state gives to the TD-error. Essentially, the output of the critic contributes to the update of the actor.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/actorcritic.png}
+	\caption{\small Actor-critic architecture schema: the actor represents the policy and maps the input state to an output action, while the critic represents the value function. Both networks can be updated with, e.g.  the TD-error, using the contribution of the critic. It is noticeable that the actor uses the critic during the learning process \cite{sutton2018reinforcement}.}
+	\label{fig:actorcritic}
+\end{figure}
 
 \subsection{Deep Deterministic Policy Gradient (DDPG)}
 
