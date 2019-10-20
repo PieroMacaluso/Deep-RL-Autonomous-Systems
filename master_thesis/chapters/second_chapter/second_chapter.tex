@@ -8,7 +8,7 @@ RL represents the third paradigm of machine learning alongside supervised and un
 
 
 Before discussing the results of this thesis, it is good to delineate what today represents the state-of-the-art to understand the universe behind this paradigm better. Indeed, the exploration of this field of research is the main aim of this chapter: the first section begins with the definition of the notation used and with the theoretical foundations behind traditional RL, then in the second section it moves progressively towards what is deep RL through an introduction to the fundamentals of deep learning and a careful discussion of the most essential algorithms paying more attention to those used during the thesis project.
-The last section aims to illustrate the starting point and ideas of the thesis, drawing what the scenario of deep RL is today.
+The last section aims to illustrate the starting point and ideas of the thesis, drawing what the scenario of deep RL applied to autonomous systems and real-world robotic tasks is today.
 
 
 The elaboration of this chapter is inspired by \cite{silver2015lectures}, \cite{sutton2018reinforcement}, \cite{openai2018spinningup}, \cite{lapan2018deep} and \cite{franccois2018introduction}.
@@ -1014,16 +1014,16 @@ During the test phase, the algorithm uses the mean action instead of a  sample f
 			Observe state $s_t$ and select action $a_t \sim \pi_\theta(\cdot|s_t)$\;
 			Execute $a_t$  and obtain tuple $(r_t, s_{t+1}, d_t)$\;
 			Store $(s_t,a_t,r_t,s_{t+1},d_t)$ in replay buffer $\mathcal{D}$\;
-			\If{it is time to update}{
-				Sample random minibatch of $N$ transitions $(s_t, a_t, r_t, s_{t+1}, d_t)$ from $\mathcal{D}$\;
-				Calculate targets\;
-				$\phi_i \leftarrow \phi_i - \lambda_Q \nabla_{\phi_i}J_Q(\phi_i)$, for $i \in \{1, 2\}$\;
-				$\theta \leftarrow \theta - \lambda_\pi \nabla_\theta J_\pi(\theta)$\;
-				$\alpha \leftarrow \alpha - \lambda \nabla_\alpha J(\alpha)$\;
-				$\bar{\phi_i} \leftarrow \tau \phi_i + (1-\tau) \bar{\phi_i}$, for $i \in \{1, 2\}$\\
-			}
 			$s_t \leftarrow s_{t+1}$
 		}
+	}
+	\If{it is time to update}{
+		Sample random minibatch of $N$ transitions $(s_t, a_t, r_t, s_{t+1}, d_t)$ from $\mathcal{D}$\;
+		Calculate targets\;
+		$\phi_i \leftarrow \phi_i - \lambda_Q \nabla_{\phi_i}J_Q(\phi_i)$, for $i \in \{1, 2\}$\;
+		$\theta \leftarrow \theta - \lambda_\pi \nabla_\theta J_\pi(\theta)$\;
+		$\alpha \leftarrow \alpha - \lambda \nabla_\alpha J(\alpha)$\;
+		$\bar{\phi_i} \leftarrow \tau \phi_i + (1-\tau) \bar{\phi_i}$, for $i \in \{1, 2\}$\\
 	}
 	\KwOut{Optimised policy parameter $\theta$ and Q-function parameters $\phi_1,\phi_2$\;}
 	
@@ -1044,7 +1044,7 @@ A truly inspiring work for this thesis is \cite{kendall2019learning} where the a
 This technique is not able to scale up efficiently because of last-mentioned strong dependencies.
 
 The fundamental concept underlying \cite{kendall2019learning} to make autonomous driving systems a ubiquitous technology is the design of a system which can drive relying - just like humans - on a comprehensive understanding of the immediate environment \cite{badrinarayanan2017segnet}.
-\\cite{ort2018autonomous} is useful to motivate the research in this direction because it represents an example of autonomous vehicle navigation exploiting GPS for coarse localisation and LIDAR to understand the local scene instead of detailed prior maps, useful to motivate the research in this direction.
+\cite{ort2018autonomous} is useful to motivate the research in this direction because it represents an example of autonomous vehicle navigation exploiting GPS for coarse localisation and LIDAR to understand the local scene instead of detailed prior maps.
 Many sensors have been developed through the years to gather information and observations increasingly sophisticated. However, the major problem is the massive budget needed to afford all these technologies.
 The extraordinary results obtained by \cite{kendall2019learning} are not based on intelligent sensing techniques, but on the usage of a monocular camera image together with vehicle speed and steering angle.
 They decided to apply the model-free approach of reinforcement learning because it is exceptionally general and useful to solve tasks that are complex to model correctly. As discussed previously in this chapter, model-based algorithms tend to be more data-efficient than model-free ones; however, the quality of the adopted model limits the results \cite{deisenroth2011pilco}.
@@ -1053,17 +1053,14 @@ The authors decided to exploit Deep Deterministic Policy Gradient (DDPG) \cite{l
 Firstly, they developed a 3D driving simulator using Unreal Engine 4 to tune reinforcement learning hyperparameters such as learning rates and number of gradient steps to take after each training episode. Then, they tried to apply the DDPG algorithm in the real world using the parameters learnt. They also did some experiments using a compressed state representation provided by a Variational Autoencoder \cite{kingma2013auto,rezende2014stochastic}.
 The excellent results obtained in \cite{kendall2019learning} have been exceeded by the same authors in \cite{wayve2019human} that shows astonishing performances driving on narrow and crowded urban road never-seen during training.
 
-Starting from all these outlined ideas, we decided to investigate ways and approach to autonomous driving with reinforcement learning without using simulators or prior data in order to make a step towards the so-called \textit{reinforcement learning in the wild} \cite{chara2018wild}. The most popular and prominent achievements in reinforcement learning to date consist of experiments done using simulated environments or ones which exploit the knowledge acquired in simulated environments in real environments. 
-The team of the DeepMind manages to develop smart agents capable of performing super-human results in numerous games and videogames such as \textit{Go} \cite{silver2016mastering,silver2017mastering}, while OpenAI engineers an agent capable of beating the world champion of the multi-player Dota 2 game \cite{openai2018dota,openai2019dota}. 
+Starting from all these outlined ideas, we decided to investigate ways and approach to autonomous driving with reinforcement learning without using simulators or prior data in order to make a step towards the so-called \textit{reinforcement learning in the wild} \cite{chara2018wild}. The most popular and prominent achievements in reinforcement learning to date consist of experiments done using simulated environments or ones which exploit the knowledge acquired in simulated environments in real ones. 
+The team of the DeepMind manages to develop smart agents capable of performing super-human results in numerous games and videogames such as \textit{Go} \cite{silver2016mastering,silver2017mastering}, while OpenAI engineers an agent capable of beating the world champion of the multi-player Dota 2 game \cite{openai2018dota,openai2019dota}.  These problems are not easy to solve but have the benefit of having a training environment equal to the test one. This fact does not apply to the approach which exploits simulated experiments results in real environments.
 
-The approach which exploits simulated experiments results in real environments encloses a critical caveat: the awareness that the simulator has limits.
-Unlike what happens in some environments where there are many similarities between the simulator and the environment -- e.g.\ especially games and videogames --, in harder environments -- e.g.\ autonomous vehicle on public roads, ads marketplaces, biology, and applications around human behaviour -- is impossible to get a simulator with high-fidelity the wild environment because of approximations that could mislead the learning.
-On the other hand, learning directly on the environment need a fast learning cycle because of the significant number of interaction with the environment and, above all, cheap or low-risk exploration cost: millions of self-driving episodes ending with a crash of the car has a small cost in respect of one episode with the same ending crash in the real world.
+The last-mentioned method encloses a critical caveat: the awareness that the simulator has limits.
+Unlike what happens in some environments where there are many similarities between the simulator and the environment -- e.g.\ games and videogames --, in harder environments -- e.g.\ autonomous vehicle on public roads, ads marketplaces, biology, and applications around human behaviour -- is very difficult to get a simulator capable of reproducing with  high-fidelity the wild environment because of approximations that could mislead the learning.
+On the other hand, learning directly on the environment need a fast learning cycle because of the significant number of interaction with the environment and, above all, cheap or low-risk exploration cost: millions of self-driving episodes in simulator ending with a crash of the car has a small cost in respect of one episode with the same ending crash in the real world.
 
-Therefore, we decided to follow this approach adapting a self-driving framework similar to the one presented in \cite{kendall2019learning}. Indeed, the project of this thesis aims to design a control system for a small toy robot called Anki Cozmo (see \vref{sec:cozmo}) and formalise the driving learning problem as a Markov decision process to enable the application of reinforcement learning algorithms. \Vref{chapter4} provides a detailed description of the choice made and the system design.
-
-Between the end of 2018 and the beginning of 2019, UC Berkeley and Google developed jointly state-of-the-art off-policy model-free reinforcement learning algorithm called soft actor-critic (SAC) (see \vref{sac}). The critical goal is to provide a deep RL algorithm suitable for real-world problems and the related new challenges that they pose.
-
+Between the end of 2018 and the beginning of 2019, UC Berkeley and Google developed jointly a state-of-the-art off-policy model-free reinforcement learning algorithm called soft actor-critic (SAC) (see \vref{sac}). The critical goal is to provide a deep RL algorithm suitable for real-world problems and the related new challenges that they pose.
 They outlined the desired properties of the ideal deep reinforcement learning algorithm:
 \begin{description}
 	\item[Sample Efficiency:] the process of learning in the real world can be a very time-consuming task. For this reason, it is desirable a functional sample complexity to learn skills successfully. 
@@ -1071,10 +1068,10 @@ They outlined the desired properties of the ideal deep reinforcement learning al
 	\item[Off-policy learning:] this learning approach allows the reuse of collected data for various tasks. This possibility helps the process of prototyping a new task when adjusting parameters or choosing a different reward function.
 \end{description}
 
-Soft actor-critic (SAC) represents a deep RL algorithm capable of satisfying the mentioned requirements. The authors of \cite{haarnoja2018soft,haarnoja2018alg} revealed that the algorithm is capable of solving real-world robot tasks in a conspicuous but acceptable number of hours, showing its robustness to hyperparameters and working on a variety of simulated environments always using the same set of hyperparameters.
-Not only it shows great performances in numerous challenging tasks compared to deep deterministic policy gradient (DDPG), twin delayed deep deterministic policy gradient (TD3) \cite{fujimoto2018addressing} and proximal policy optimisation (PPO) \cite{schulman2017proximal}, but reveals its power by solving three tasks from scratch without relying on simulation or demonstrations \cite{bair2019soft}.
+Soft actor-critic (SAC) represents a deep RL algorithm capable of satisfying the previously mentioned requirements. The authors of \cite{haarnoja2018soft,haarnoja2018alg} revealed that the algorithm is capable of solving real-world robotic tasks in a conspicuous but acceptable number of hours, showing its robustness to hyperparameters and working on a large variety of simulated environments always using the same set of parameters.
+Not only it shows great performances in numerous challenging tasks compared to deep deterministic policy gradient (DDPG), twin delayed deep deterministic policy gradient (TD3) \cite{fujimoto2018addressing} and proximal policy optimisation (PPO) \cite{schulman2017proximal}, but reveals its power by solving three tasks from scratch without relying on simulators or demonstrations \cite{bair2019soft}.
 
-The real-world robotic task involving a 3-finger dexterous robotic hand to manipulate an object similar to a sink faucet with a coloured end presented in \cite[Section 7.3]{haarnoja2018alg} shows similar concepts to the task analysed in this thesis for what concerns the framework of deep reinforcement learning exploited. The algorithm exploits raw RGB images and processes them through a convolutional neural network. The final goal of the robot is to rotate the valve into the correct position -- with the coloured part pointing to the right -- starting from a random starting position for each episode. The results obtained represents one of the most sophisticated real-world robotic manipulation tasks learned end-to-end with deep reinforcement learning, starting from raw images and without any previous simulation or pretraining phase.
+The real-world robotic task involving a 3-finger dexterous robotic hand to manipulate an object similar to a sink faucet with a coloured end presented in \cite[Section 7.3]{haarnoja2018alg} shows similar concepts to the task analysed in this thesis for what concerns the framework of deep reinforcement learning exploited. The algorithm exploits raw RGB images and processes them through a convolutional neural network. The final goal of the robot is to rotate the valve into the correct position -- with the coloured part pointing to the right -- starting from a random position for each episode. The results obtained represents one of the most sophisticated real-world robotic manipulation tasks learned end-to-end with deep reinforcement learning, starting from raw images and without any previous simulation or pretraining phase.
 
 Taking all arguments into account, we decided to follow \cite{kendall2019learning} implementing a similar self-driving framework based on the design of a control system for a small toy robot called Anki Cozmo (see \vref{sec:cozmo}). Therefore, we formalise the autonomous driving learning problem as a Markov decision process to enable the application of reinforcement learning algorithms, taking into account the improvements mentioned in this section about model-free reinforcement learning algorithms applied to real-world robotic problems. \Vref{chapter4} provides a detailed description of the choice made and the system design.
 
