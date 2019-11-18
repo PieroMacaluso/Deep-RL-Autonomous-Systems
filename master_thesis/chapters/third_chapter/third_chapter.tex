@@ -1,21 +1,68 @@
+%\todomacaluso{
+%	\begin{itemize}
+%		\item General description of the framework
+%		\item Discussion about the motivation and the importance of this framework, such as the necessity of a Reinforcement Learning Framework to test different algorithms with different environments providing the same interface.
+%		\item One contribution of the thesis: the creation and design of an OpenAI Gym environment for Anki Cozmo Environment with connection to chapter 4.
+%	\end{itemize}	
+%}
+
 \chapter{Tools and Frameworks}
 
-\todomacaluso{
-	\begin{itemize}
-		\item Introduction to the chapter
-	\end{itemize}	
-}
+This chapter aims to describe the main tools and frameworks used in this thesis. The first section will describe the OpenAI Gym framework, a central toolkit for developing and comparing reinforcement learning algorithms. The second section will outline PyTorch, an optimised tensor library for deep learning using GPUs and CPUs used to build up the convolutional neural network of this work, while the explanation and description of the Anki Cozmo robot used for the autonomous self-driving experiment will occupy the last part of this chapter.
 
 \section{OpenAI Gym}
 
+Nowadays, OpenAI Gym \cite{openaigymgithub,openaigymdocs,openaigymwhite}, released in 2016 with its public beta, is one of the most popular toolkits and frameworks in the reinforcement learning scenario. A brief analysis of RL research and RL features could be useful to outline the motivations underlying the need for a reinforcement learning framework.
 
-\todomacaluso{
-	\begin{itemize}
-		\item General description of the framework
-		\item Discussion about the motivation and the importance of this framework, such as the necessity of a Reinforcement Learning Framework to test different algorithms with different environments providing the same interface.
-		\item One contribution of the thesis: the creation and design of an OpenAI Gym environment for Anki Cozmo Environment with connection to chapter 4.
-	\end{itemize}	
-}
+As reported previously in  \vref{ch2} reinforcement learning is a subfield of machine learning dedicated to the world of decision making and motor control, studying how an agent can learn and improve to achieve a specific goal in a complex, usually unknown environment. RL is becoming more and more attractive for researchers because of its visionary property of being very general. An RL algorithm can be exploited to control a robot's motor in order to make it capable of running or jumping, play a videogame or board game, make critical business decisions like pricing and inventory management, but also learn how to invest in financial trading environments. The general feature of reinforcement learning became engaging thanks to the remarkable results achieved in many challenging environments, as reported in \vref{ch2}.
+
+Despite these appealing features, the research was slowed down by other factors no less critical.
+The need for better benchmarks represents the first factor. As an example, the abundant availability of conspicuous datasets like ImageNet \cite{deng2009imagenet} has driven supervised learning improvement in the research. For what concerns reinforcement learning, the nearest equivalent to supervised learning datasets would be a broad collection of different environments in order to test various algorithms with different kinds of observations or rewards.
+The second withdraw of this type of approach to learning is the lack of standardisation of environments designed in publications. In reinforcement learning, subtle differences in the definition of the problem or the design of the reward function or the action space could make the difficulty of the task grow.  This fact threatens to slow down and corrupts experiments reproducibility making an objective comparison between the results of different papers almost impossible.
+
+The need to fix both problems was the primary motivation behind the design and implementation of OpenAI Gym.
+
+\subsection{Environments}
+
+The agent and the environment represent the core of reinforcement learning. The choice of OpenAI was to implement and provide the abstraction mainly for environments, not for agents, leaving developers independent concerning agent interfaces, but providing a standard interface for environments. Thanks to this approach, all agents implemented with OpenAI Gym can be used with the whole set of environments provided by the framework. Therefore, it is possible to create a personalised environment to suit the needs of a specific experiment that can be used by all agents exploiting OpenAI Gym environment interfaces.
+
+In this scenario, we realised the first contribution to our thesis. Thanks to this framework features, we implemented an OpenAI Gym environment capable of interacting with Anki Cozmo by providing a binding between the function of Cozmo SDK and the interfaces of the reinforcement learning framework. In \vref{ch4} we will provide further information and details about our contribution.
+
+The importance related to the high quantity of environment is fundamental to build a reliable and sustainable framework for reinforcement learning algorithms. OpenAI Gym contains a various and heterogeneous environments database, ready to be used by every developed agent thanks to the standard interface offered by the framework.
+
+\subsubsection{Interface Functions}
+
+Exploring OpenAI Gym, it is essential to focus on the most crucial interface functions that the agent will exploit to interact with the environment.
+The functions which constitute the skeleton of an OpenAI Gym environment are the following:
+\begin{itemize}
+	\item \texttt{def step(self, action)}: through this function, the agent can communicate the action it wants to take. The input data depends on the type and number of variables in the actions space (e.g.\ discrete or continuous). As will be discussed in \vref{ch3:observations}, the values returned by this function represent the environment state after the manipulation caused by the action of the agents. Thanks to these data, the agent will be able to select the next action following the reinforcement learning loop.
+	\item \texttt{def reset(self)}: during the episode, internal variables of the environment changes, influenced by the action taken by the actor. This function allows the agent to restart the initial situation of the environment. This procedure is particularly suitable when an episode finishes and the agent has to restart the next learning episode in a brand new copy of the environment.
+	\item \texttt{def render(self, mode='human', close=False)}: this function is particularly suitable for simulated environments. It enables the visual render (if available) of the environment.
+	\item \texttt{def close(self)}: the final function to close the environment after all experiments and episodes.
+\end{itemize}
+
+\subsubsection{Available environments}
+
+To date, OpenAI Gym includes the following environments:
+\begin{itemize}
+	\item \textbf{Algorithms}: learning to imitate computations, such as copying or reversing symbols from the input tape, is the main aim of this typology. These environments might seem easy to be solved by a computer, but it is important to remember that the objective here is to learn to solve these tasks purely from examples. Therefore, it is possible to vary the sequence length to increase or decrease task difficulties easily. 
+	\item \textbf{Atari}: various videogames of Atari 2600, a home video game console developed in 1977 which spread the use of general-purpose CPUs into gaming with game code distributed through cartridges, constitute this environment section. OpenAI Gym exploits \textit{Arcade Learning Environment} (ALE) \cite{bellemare2013arcade} providing RAW pixel images or RAM as input. This database contains more than 100 different environments.
+	\item \textbf{Box2D}: here is possible to find some continuous control tasks in a simple 2D simulator such as \textit{BipedalWalker}, \textit{CarRacing} and \textit{LunarLander}
+	\item \textbf{Classic Control}: in this group, it is possible to find the set of problem borrowed by control theory and widely exploited in the classic reinforcement learning literature. Some task examples are balancing a pole on a cart or swing up a pendulum.
+	\item \textbf{MuJoCo}: this class contains continuous control tasks running in a fast physics three-dimensional simulator called \textit{MuJoCo} which stands for \textit{Multi-Joint dynamics with Contact}. This physics engine aims to facilitate research and development in robotics, biomechanics, graphics and animation. The simulator is particularly suitable for model-based optimisation allowing to scale up computationally-intensive techniques.
+	Thanks to its features, it became useful as a source for reinforcement learning algorithms.
+	\item \textbf{Robotics}: OpenAI released this algorithm typology to provide eight robotics environments with manipulation tasks significantly more difficult than the MoJoCo ones. It contains \textit{Fetch}, a robotic arm to move and grab objects, and \textit{ShadowHand}, a robotic hand to manipulate and grab pens, cubes and balls. \cite{ingredientsRoboticsResearch}
+\end{itemize}
+
+\subsection{Observations} \label{ch3:observations}
+
+
+
+
+
+\subsection{Observations}
+\subsection{Spaces}
+\subsection{An Environment for Anki Cozmo}
 
 \subsection{The importance of a Framework}
 
