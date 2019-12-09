@@ -310,6 +310,26 @@ The last step to start programming with Cozmo SDK is to install it in a developm
 
 \subsection{Why Cozmo?}
 
+Before starting the development of this thesis project, we spent some time analysing the small car market situation in order to find out the right choice for our specific needs. In addition to Anki Cozmo, the ideal alternatives were \textit{AWS DeepRacer Vehicle} and a customised car implemented from scratch exploiting \textit{Donkey\textregistered
+Car} library.
+
+\subsubsection{AWS DeepRacer}
+
+\textit{AWS DeepRacer} is a platform developed by Amazon to learn and refine artificial intelligence, machine learning and reinforcement learning algorithms and techniques on AWS DeepRacer vehicle.
+The whole ecosystem consists in two main part:
+\begin{itemize}
+\item \textbf{AWS DeepRacer Car}. It is a 1/18 scale race car developed and built to test reinforcement learning algorithms on a real track. It aims to show how the trained reinforcement learning model trained in a simulated environment can be conveyed to the real-world by using cameras to view the track and the model to control throttle and steering. It has a lot of interesting specifications under the hood such as Intel Atom\textsuperscript{\textregistered} Processor, 4GB of RAM, an expandable 32GB of storage to accommodate the trained model and a 4-megapixel camera with MJPEG.
+\item \textbf{AWS DeepRacer Simulator}. The user can build his models in \textit{Amazon SageMaker} and train, test and iterate the learning process using the racing simulator. It offers an integrated environment hosted on AWS cloud to experiment and optimize algorithms to apply to the autonomous driving model.
+\end{itemize}
+
+There are many advantages in using the DeepRacer stack. It offers an integrated approach were to focus just on reinforcement learning: indeed, it abstracts a significant part of the software giving the developer the chance to work almost exclusively on the model. It has a growing development community to confront or find both solutions and ideas through challenging competitions around the world. One of the fundamental aims behind this product is to build up a regulated environment where amateurs and researchers can compare and tests different approaches in solving the autonomous driving task. Therefore it provides a high-performance car where to store the trained model in order to make it independent to the training environment.
+
+On the other hand, one of the main disadvantages of this approach is that it is an Amazon lock-in: the framework provided force developer to use the whole stack of Amazon. This fact can be inconvenient economically-wise because of the rates of the Amazon platform that adds to the price of the car, but, above all, because Amazon may have access to all developer implementations and experiments. 
+Another not negligible factor was the product release date: Amazon had to release it in July, but, to date, it is not yet available in Italy. Because of this thesis is focused on the application of reinforcement learning algorithms directly in the real world without the aid of simulators and model, the absence of the physical car was crucial for the final decision.
+
+\subsubsection{Donkey\textregistered Car}
+
+
 
 \section{PyTorch}
 
