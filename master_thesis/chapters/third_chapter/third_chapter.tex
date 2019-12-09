@@ -75,17 +75,18 @@ The last important thing to report about OpenAI Gym framework is the definition 
 Especially in the latest decades, human beings have a complicated relationship with robots: they are very fascinated by the prospect of artificial intelligence, but they are apprehensive at the same time because of the apocalyptic plot of many sci-fi films and the big promise of automation, capable of replacing human workers in the future.
 However, all these concerns disappear with the palm-sized robot Cozmo, developed by the San Francisco-based company Anki and on sale since 2016.
 On first sight, Cozmo might appear as one of the cutest toy robots in the market. To design this robot, Anki employed the guidance of Carlos Baena, the former Pixar animator. 
-Therefore, this robot is able to interact with users using a small display screen together with audio effects to mimic human emotional reactions and responses.
-The result is a toy robot WALL-E-inspired both aesthetically and personality-wise, powered up by artificial intelligence to move in the environment. Thanks to the built-in camera, Cozmo is able to remember faces and recite names, but also to plan paths and play various game with its three cubes that carry sensors and lighting.
+Therefore, this robot can interact with users using a small display screen together with audio effects to mimic human emotional reactions and responses.
+The result is a toy robot WALL-E-inspired both aesthetically and personality-wise, powered up by artificial intelligence to move in the environment. Thanks to the built-in camera, Cozmo can remember faces and recite names, but also to plan paths and play various game with its three cubes that carry sensors and lighting.
 
 Despite this entertaining, but not so technical facts, it hides a lot of powerful features under the hood. Anki developers produced a high-quality Python SDK to provide plenty of functions and features for Python developers. 
-This section aims to outline the hardware and the software hidden underneath the cute Cozmo bodyworks, together with a comparison with the alternatives available for the reinforcement learning system designed in this thesis.
+This section aims to outline the hardware and the software hidden underneath the cute Cozmo bodyworks, together with a comparison with the alternatives available for the reinforcement learning system designed in this thesis. An essential inspiration in the writing of this section came from \cite{mellon2017cognitive}, \cite{touretzky2018cozmopedia} and Cozmo SDK Forums \footnote{Link: \href{https://forums.anki.com/}{https://forums.anki.com/}}.
 
 \subsection{Cozmo Architecture}
 
-It is possible to define Cozmo as a vision-guided mobile manipulator, one of the first consumer robot which has vision among its features. However, as reported before, the features it shows during the normal toy usage, do not equal the number of interfaces and functions made available to developers. The makes Cozmo, the right robotic choice to fast prototypying computer science projects: it is the main reason why we decided to exploit Anki Cozmo instead of other alternatives.
+It is possible to define Cozmo as a vision-guided mobile manipulator, one of the first consumer robot which can boast vision among its features. However, as reported before, the features it shows during the normal toy usage, do not equal the number of interfaces and functions made available to developers. The hardware and the software developed for Cozmo makes it the right choice to fast prototyping computer science projects: it is the main reason why we decided to exploit Anki Cozmo instead of other alternatives.
+The SDK provided by Anki consists in a comprehensive set of low- and high-level functions with a full access to sensor data providing the right flexibility, simplicity and granularity to satisfy every developer needs. It is versatile because it could easily connected with hundreds of third-party libraries to augment Cozmo capabilities. Therefore, it is entirely open source to give the community the freedom to customise and contribute.
 
-\Vref{fig:cozmotear1,fig:cozmotear2} shows technologies, the hardware and software stack involved in the production of Cozmo.
+\Vref{fig:cozmotear1,fig:cozmotear2} shows technologies, the hardware and software involved in the production of Cozmo. The first image represents stacks and connections between the robot core and the mobile application provided by Anki, while the second one shows the interaction between the last-mentioned application and the Python user program on the personal computer. The reader can retrieve a global perspective about the whole Cozmo architecture by merging these two figures.
 
 \begin{figure}
 	\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
@@ -182,19 +183,37 @@ It is possible to define Cozmo as a vision-guided mobile manipulator, one of the
 			
 			\end{tikzpicture}
 			}
-		\caption[Interaction Robot/Application]{Interaction between the Robot and the mobile application stack. \cite{mellon2017cognitive}}
+		\caption[Interaction Robot/Application]{Interaction between the Robot and the mobile application stack. The robot main program interacts with the Cozmo Engine (C++) implemented in the mobile application through a proprietary TCP protocol established using and ad-hoc WiFi connection. \cite{mellon2017cognitive}}
 		\label{fig:cozmotear1}
 	\end{figure}
 
-	Starting from \vref{fig:cozmotear1}, it is noticeable that Cozmo has a lot of sensors and actuators, which enable it to move and understand the surrounding environment. For what concerns the sensor part, the VGA Camera is the crucial component exploited in the thesis. This camera provides a grayscale image with 320$\times$240. Anki reported a camera resolution equal to 640$\times$480, but the firmware supports only the lower resolution. Furthermore, the camera can detect and acquire colours, but the firmware limits this feature to maintain the bandwidth stable and avoid overloads or slowdowns in the communication with the mobile application and subsequently, the user program running on the computer. 
-	The camera has approximately 60° field of view (FOV) and 290mm focal length.
-	
-	As regards actuators column, Cozmo can explore the world thanks to with four motors and over fifty gears. It has no wheels, but two tracks: Cozmo can steer and move freely by managing the speed of the individual tracks.
-	Another moving part is the head that can move up or down to direct the camera and the display. It also has a forklift with which it can lift objects or cubes available.
+	Starting from \vref{fig:cozmotear1}, it is noticeable that Cozmo has a lot of sensors and actuators, which enable it to move and understand the surrounding environment. For what concerns the sensor part, the VGA Camera is the crucial component exploited in the thesis. This camera provides a grayscale image with 320$\times$240. Anki reported a camera resolution equal to 640$\times$480, but the latest firmware version supports only the lower resolution. Furthermore, the camera can detect and acquire colours, but the firmware limits this feature to maintain the bandwidth stable and avoid overloads or slowdowns in the communication with the mobile application and subsequently, the user program running on the computer. 
+The camera has approximately 60° field of view (FOV) and 290mm focal length.
 
+As regards the actuators column, Cozmo can explore the world thanks to its four motors and over fifty gears. Instead of having wheels, this robot has two tracks to navigate: it can steer and move freely by controlling the speed of each track.
+Another moving part is the head that can move up or down to direct the camera and the display. It also has a forklift with which it can lift objects or the cubes available in the kit.
 
+Cozmo can perform one single action at a time: if the current action is not yet complete and the request of a new action occurs, the new action fails with a \textit{tracks locked} failure code. For this reason, the SDK does not allow the execution of multiple actions. Despite this fact, it is easy to notice that Cozmo animations and behaviours typically use combinations of actions: indeed the user can send simultaneous actions to the robot by calling them using \texttt{in\_parallel=True} in its script, but these actions have to belong to a different action track. This approach allows the parallel execution of actions, provided that they use different tracks.
+Cozmo software architecture holds seven independent action tracks:
 
+\begin{itemize}
+	\item \textbf{HEAD}: raise/lower robot head.
+	\item \textbf{LIFT}: raise/lower robot forklift.
+	\item \textbf{BODY}: wheels or treads actions for driving and turning.
+	\item \textbf{FACE\_IMAGE}: actions with the OLED display such as animations or faces.
+	\item \textbf{EVENT}: for this action type Anki does not release further information.
+	\item \textbf{BACKPACK\_LIGHTS}: actions or animations of lights on Cozmo back.
+	\item \textbf{AUDIO}: speech or sound effects emitted by the robot.
+\end{itemize}
 
+The project of this thesis mainly exploited the body action track to move the robot in the environment: it also employed head and lift tracks, but only to position the robot head to provide images about the track to the main program and the reinforcement learning agent. The usage of parallel operations was not necessary.
+
+The Cozmo hardware includes an onboard CPU and a WiFi access point, thanks to which the user can interact with the robot. However, to activate this communication, it is necessary to install the Cozmo Android/iOS application on a personal tablet or smartphone. This application is the same used to play with the toy-side of Cozmo, but in its settings, there is a function to enable Cozmo development mode.
+After connecting the chosen personal device to the robot through a simple WiFi connection, the application manages to create a proprietary TCP protocol to interact directly with the main robot program.
+The creators of Cozmo developed this mobile application using C++ to implement the \textit{Cozmo Engine}, the component which shall be responsible for the TCP communication with the robot. To design and implement the game experience and the graphical user interface, they used Unity and C\#.
+
+This last-mentioned part utilises the component internally designed and implemented by Anki to provide a contact point between the Cozmo SDK installed in the development machine, as shown in \vref{fig:cozmotear2}: the C-like Abstract Data language (CLAD).
+The fundamental idea behind this tool is to make the process of serialisation, communication and deserialisation of data structures written in Python easier for the developer. In practice, for every data which has to pass over the wire, files with extension \texttt{.clad} to define enums, structures and messages are generated: its syntax is similar to C struct one. After that phase, this tool auto-generates Python, C++ and C\# code for each structure previously defined. This process allows the user to define a specific message in Python and to send it over the network to C++ where it will be deserialised automatically, avoiding problems and sources of bugs coming from the intricate underlying details.
 
 \begin{figure}
 	\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
@@ -276,9 +295,18 @@ It is possible to define Cozmo as a vision-guided mobile manipulator, one of the
 	\draw (278,130.5) node   [align=left] {CLAD};
 	\end{tikzpicture}
 	}
-	\caption[Interaction Application/PC]{Interaction between the mobile application stack and the Python user program. \cite{mellon2017cognitive}}
+	\caption[Interaction Application/PC]{Interaction between the mobile application stack and the Python user program. Anki designed a C-like Abstract Data Language (CLAD) to implement the connection between the Cozmo SDK and the Cozmo Engine on the mobile application. This approach puts a decoupling layer between Python interfaces and low-level functions to make prototyping easier and fast-forwarding for developers. \cite{mellon2017cognitive}}
 	\label{fig:cozmotear2}
 \end{figure}
+
+This approach results in a process method much lighter than the one provided by \textit{Protocol Buffers (Protobuf)} by Google: even then, the main aim of this implementation choice is reducing the network bandwidth.
+Taking all arguments into account, CLAD is the protocol used for the interaction between the SDK ant the C++ Engine that allows the developer to not care about the low-level part of the code and to focus on the high-level logic using Python. It is also useful to maintain the same interface for the user even if low-level logic changes occur.
+
+In this case, the CLAD communication messages exploit a wired connection between the mobile device and the computer with a simple USB cable.  In this thesis, we used an Android tablet to run the experiments, and for this reason, we used the \textit{Android Debug Bridge (ADB)} to make this exchange possible.
+It is a command-line tool included in the \textit{Android SDK Platform-Tools} package that allows the communication between the computer and Android devices. It facilitates many device actions such as installing, debugging apps or running a variety of commands on a device. It is a client-server program that includes three components: it includes a \textit{client} hosted in the development machine, a \textit{daemon (adbd)} which runs the commands on the device as a background process and finally a \textit{server}, a background process in the development machine that manages the communication between the two previous components.
+
+The last step to start programming with Cozmo SDK is to install it in a development machine following the instruction provided by its documentation \footnote{Cozmo SDK Documentation: \href{http://cozmosdk.anki.com/docs/index.html}{http://cozmosdk.anki.com/docs/}}.
+
 
 \subsection{Why Cozmo?}
 
