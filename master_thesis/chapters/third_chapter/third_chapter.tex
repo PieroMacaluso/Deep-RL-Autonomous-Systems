@@ -351,15 +351,83 @@ A crucial factor in reaching the final decision was the dimension of the car: as
 Therefore, the connection between the development machine and the robot is suitable for implementing an OpenAI Gym environment, and it is similar, at least in the premises, to the distributed off-board computation approach. The main algorithm, the neural network, the reinforcement learning framework and the other cognitive parts are computed and managed by the workstation, instead of being stored in the vehicle as happens in Amazon DeepRacer and Donkey car approaches.
 
 Taking into account the perspective of autonomous cars in the real world, on-board and off-board computation approaches are still under research. With the on-board method, cars have much computational hardware inside in order to manage every aspect of autonomous driving by themselves, but it requires more powerful batteries to counterbalance energy consumption. On the other hand, the connection to off-board computer facilities or the clouds leads to new vectors of attack but also enables companies to monitor the behaviour the vehicle fleet to identify malicious activities early.
+To date, both approaches are still under research, and there it is not possible to decree a legitimate winner. For what concerns the thesis, the designed system emulate an off-board approach.
 
-To date, both approaches are still under research, and there it is not possible to decree a legitimate winner. For what concerns the thesis, the designed systems emulates an off-board approach.
+In the end, Cozmo provides plain and straightforward control of the car and a rich Python SDK to use with OpenAI Gym and it is the best trade-off between functionalities and fast-developing. 
 
 
 \section{PyTorch}
+PyTorch \footnote{PyTorch Github Repository: \href{https://github.com/pytorch/pytorch}{https://github.com/pytorch/pytorch}} \cite{paszke2017automatic}  is an open-source machine learning and deep learning library developed by Facebook's AI Research Lab and released to the public in October 2016. The main aim of this PyTorch is to provide an intuitive and straightforward framework to develop artificial intelligence projects: two of the main applications to date are computer vision and natural language processing.
+
+The programming languages utilised to develop PyTorch were Python, C++ and CUDA, the parallel computing and API model created by Nvidia to allow software developers and engineers to use CUDA-enabled GPU for general purpose processing. The primary interface provided by the library to the user employs Python, where Facebook Developers mainly put their development efforts. Despite this fact, it also offers a C++ interface. 
+
+PyTorch consists of the following components:
+\begin{itemize}
+\item \textbf{\texttt{torch}}: PyTorch Tensor library with strong GPU support. It implements interfaces similar to those of the NumPy library. It contains data structures for multi-dimensional tensors and mathematical operations, providing many utilities for efficient serialising of Tensors and arbitrary types.
+\item \textbf{\texttt{torch.autograd}}: the tape-based automatic differentiation library that supports every differentiable operation on Tensors available in \texttt{torch}. 
+\item \textbf{\texttt{torch.jit}}: this component is a compilation stack that uses TorchScript to create serializable and optimizable models from PyTorch code. This tool allows the user to train models in PyTorch using Python and then export the model in a production environment where Python may be disadvantageous for performance and multi-threading reasons.
+\item \textbf{\texttt{torch.nn}}: this component provides a neural networks library that is entirely compatible with \texttt{autograd} and designed for flexibility.
+\item \textbf{\texttt{torch.multiprocessing}}: this component is based on the Python multiprocessing library, but it implements memory sharing of torch Tensors across processes.
+\item \textbf{\texttt{torch.utils}}: it contains many utility functions to better exploits the features of PyTorch.
+\end{itemize}
+
+PyTorch provides a NumPy-like experience to interact and manipulate data structures suitable for GPU computation, offering a deep learning research platform able to provide flexibility and speed. These data structures are called \textit{Tensors} and they can be used both on the CPU and the GPU, accelerating the computation thanks to the whole set of functions and manipulators explicitly designed for every scientific computation need. 
+
+PyTorch is not a straightforward binding to an underlying complex C++ framework. The library design focused on establishing Python as the main priority, and for this reason, the user experience is very natural and similar to other important machine learning libraries already present in the package manager.
+
+It is noticeable that PyTorch developers aimed to create an intuitive and linear product to use. To follow this idea, they decided to make PyTorch synchronous to permit the debugger to receive and understand messages and stack traces promptly. This feature translates in a better debugging experience for the end-user.
+
+Beyond these features, one of the traits that distinguish PyTorch from other frameworks is its single way to build neural networks by using a tape-based automatic differentiation.
+The majority of deep learning frameworks available in the market, such as TensorFlow, Theano or Caffe exploit a static approach in structure creation of the computation graph: they reuse the same layout, but changing a simple component triggers the regeneration of the graph from scratch.
+PyTorch utilises an entirely different approach which is not unique to PyTorch, but it provides one of the fastest implementation: they call it \textit{Tape-Based Autograd}.
+This term refers to the reverse-mode automatic differentiation exploited in the framework, which is a technique based on the properties of the chain rule: to calculate the derivative of an output variable w.r.t. any intermediate or input variable, the only requirement is to know the derivatives of its parents and the formula to calculate derivative of primitive expression.
+The main improvement that this approach brings is allowing the user to change the network structure on-the-fly without lag or overhead.
 
 \subsection{TensorboardX}
 
+One of the most crucial means that every machine learning researchers need is a tool to visualise and measure data efficiently: this fact is significant because to improve models, projects and results, we need to measure.
+However, one of the main problem in PyTorch is the absence of such a tool, specifically designed for the Facebook framework. It can always use powerful tools such as \textit{Matplotlib}, but it offers a synchronous approach that leads to slow down the main program since the primary process has to wait for the data rendering before starting next operations. 
+
+On the other hand, TensorFlow, the most important deep learning alternative to PyTorch developed by Google, provides in its package TensorBoard which is a webserver to serve visualisation of the training progress of the neural network. It can show to the user scalar values, images or text, and it is particularly useful to visualise experimental metrics such as loss and accuracy. The particularity of this tool consists in the fact that it stores this information as events.
+The Python script calls specific functions to store information and goes on with the next operation without waiting for its render: that is possible thanks to the decoupling level inserted by this approach between the visualisation and the creation of data. Indeed, Tensorboard operates by opening and reading  TensorFlow events files that contain the summary data generated during experiments. Therefore, it will be the webserver to take care of elaborate data for rendering without bothering the current Python script.
+
+Fortunately, PyTorch can exploit the features of Tensorboard thanks to a library called \textit{TensorboardX} \footnote{TensorBoardX documentation: \href{https://tensorboardx.readthedocs.io/en/latest/index.html}{https://tensorboardx.readthedocs.io/}} that stands for \textit{Tensorboard for X} to highlight developers aim to make Tensorboard available for all deep learning framework.
+
 \subsection{PyTorch vs. TensorFlow}
 
+After the advent of deep learning, many companies decided to put their efforts to design architectures and framework to vehiculate this new technology. The two most popular frameworks in this research field are TensorFlow \cite{abadi2016tensorflow} by Google released in 2015 and PyTorch \cite{paszke2017automatic}  by Facebook released in 2017.
+
+Implementing the same neural network in these two frameworks will lead to different results because of the training process has many parameters that depend on the underlying technologies provided by the specific framework. For instance, the training process in PyTorch is enhanced by CUDA GPU usage, while TensorFlow can access to GPU through its GPU acceleration.
+The choice between these two frameworks is not straightforward because it depends on the perspective and the needs of the specific projects to develop.
+For this reason, this section aims to outline differences between these two libraries without aiming to decree the best one but to motivate the decision to use PyTorch.
+
+\subsubsection{Dynamic versus Static}
+
+The first difference concerns the construction of the computational graph. A computational graph is an abstraction useful to represent the computation process through a direct graph.
+
+In TensorFlow, the computational graphs are defined statically, before running the code. The main advantage of this method is allowing parallelism and dependency driving scheduling, features that boost the learning and make it more efficient. This framework communicates with the external world via specific tensors that will be substituted by input data at runtime. 
+Only with TensorFlow 2.0, Google decided to implement dynamic computational graph in its product, but its stable release was after the start of this thesis.
+
+As mentioned above, PyTorch approach to computational graphs is dynamic. This characteristic means that the graph is built incrementally at runtime without using particular data structures as placeholders. This feature supports projects where the author needs to change the computational graph on-the-fly avoiding the application restart. In this sense, PyTorch is more pythonic than TensorFlow.
 
 
+
+\subsubsection{Distributed Training}
+
+Another key feature is the distributed training and data parallelism. PyTorch offers native support for asynchronous execution from Python, and then it could improve performances. On the other hand, TensorFlow needs more efforts to allow distributed training: the developer must fine-tune every computation to be run on a specific device. Both frameworks offer the same opportunities in these terms. However, TensorFlow needs more effort to make things work.
+
+\subsubsection{Visualisation}
+
+As discussed in the previous section, TensorFlow exploits TensorBoard to provide all tools that machine learning researcher needs to visualise learning and keep track of the training process. Facebook researchers developed \textit{Visdom} for this purpose, but it provides very minimalistic and limited features compared to the ones offered by TensorBoard. As reported before, it is possible to use TensorBoard with PyTorch thanks to the library TensorBoardX.
+
+\subsubsection{Production Deployment}
+
+For what concerns the deployment of trained models into production, TensorFlow offers the best service via \textit{TensorFlow serving}, a framework that offers and uses REST Client API.
+The production deployment in PyTorch improved from its early releases, but, currently, it does not provide a framework to deploy the trained models on the web: the developers must use Flask or Django as backend server to provide the right environment to exploit the model.
+
+\subsubsection{Conclusions}
+
+Considering all the points explained in this section, we decided to utilise PyTorch for this project, but it is noticeable that there is no winner in this comparison.
+
+Both frameworks have strengths and weaknesses that depends basically from the specific applications where we would use them.
+TensorFlow is a mature and robust tool, notably suggested for production and AI-related products. Although, it needs some time to get the developer used to its programming approach and it supports only static computational graph methods. On the other side, PyTorch is an efficient and young framework with a large community that provides dynamic computational graphs and is more Python friendly. Therefore, it is especially recommended for research-oriented developers.
