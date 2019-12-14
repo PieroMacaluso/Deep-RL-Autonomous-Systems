@@ -6,7 +6,7 @@
 %	\end{itemize}	
 %}
 
-\chapter{Tools and Frameworks}
+\chapter{Tools and Frameworks} \label{ch3}
 
 This chapter aims to describe the main tools and frameworks used to develop the project of this thesis. The first section will describe OpenAI Gym framework, a central toolkit for developing and comparing reinforcement learning algorithms, and explain why this tool is essential for reinforcement learning research.
 The second part of this chapter will outline Cozmo, the powerful toy robot developed by Anki that we used as an agent in the reinforcement learning scenario to apply algorithms to try solving autonomous self-driving tasks: \vref{ch5} will report the analysis and description of these experiments. This section will also report a set of available alternatives to Cozmo, explaining the motivations underlying the final choice.
@@ -16,7 +16,7 @@ The description about PyTorch, an optimised tensor library for deep learning usi
 
 Nowadays, OpenAI Gym, released in 2016 with its public beta, is one of the most popular toolkits and frameworks in the reinforcement learning scenario. A brief analysis of reinforcement learning research could be useful to outline the motivations underlying the need for a reinforcement learning framework.
 
-As reported previously in  \vref{ch2} reinforcement learning is a subfield of machine learning dedicated to the world of decision making and motor control: researchers study how an agent can learn and improve to achieve a specific goal in a complex, usually unknown environment. This machine learning paradigm is becoming more and more attractive for both researchers and industries because of its visionary property of being very general. A reinforcement learning algorithm can be exploited to control a robot's motor in order to make it capable of running or jumping, play a videogame or a board game, make critical business decisions like pricing and inventory management, but also learn how to invest in financial trading environments. The generality of reinforcement learning became engaging thanks to the remarkable results achieved in many challenging environments, as reported previously in \vref{ch2}.
+As reported previously in  \vref{ch2}, reinforcement learning is a subfield of machine learning dedicated to the world of decision making and motor control: researchers study how an agent can learn and improve to achieve a specific goal in a complex, usually unknown environment. This machine learning paradigm is becoming more and more attractive for both researchers and industries because of its visionary property of being very general. A reinforcement learning algorithm can be exploited to control a robot's motor in order to make it capable of running or jumping, play a videogame or a board game, make critical business decisions like pricing and inventory management, but also learn how to invest in financial trading environments. The generality of reinforcement learning became engaging thanks to the remarkable results achieved in many challenging environments, as reported previously in \vref{ch2}.
 
 Despite these appealing features, the research was slowed down by other circumstances, no less critical.
 The need for better benchmarks represents the first factor. As an example, the abundant availability of conspicuous datasets like \textit{ImageNet} \cite{deng2009imagenet} has driven supervised learning improvement in the research. For what concerns reinforcement learning, the nearest equivalent to supervised learning datasets would be a broad collection of different environments in order to test various algorithms with different kinds of observations or rewards.
@@ -37,37 +37,37 @@ The importance related to the high quantity of environment is fundamental to bui
 EExploring OpenAI Gym, it is essential to focus on the most crucial interface functions that the agent will exploit to interact with the environment.
 The functions which constitute the skeleton of an OpenAI Gym environment are the following:
 \begin{itemize}
-    \item \texttt{def step(self, action)}: through this function, the agent can communicate the action it wants to take. The input data depends on the type and number of variables in the actions space (e.g.\ discrete or continuous). As will be discussed in \vref{ch3:observations}, the values returned by this function represent the environment state after the manipulation caused by the agent action. Thanks to these data, the agent will be able to select the next action following the reinforcement learning loop.
-    \item \texttt{def reset(self)}: during the episode, internal variables of the environment changes, influenced by the action taken previously. This function allows the agent to restart the initial situation of the environment. This procedure is particularly helpful when an episode finishes and the agent has to restart the next learning episode in a brand new copy of the environment.
-    \item \texttt{def render(self, mode='human', close=False)}: this function is mainly used in simulated environments. It enables the visual render (if available) of the environment.
- \item \texttt{def close(self)}: the final function to close the environment after the end of all experiments and episodes.
+	\item \texttt{def step(self, action)}: through this function, the agent can communicate the action it wants to take. The input data depends on the type and number of variables in the actions space (e.g.\ discrete or continuous). As will be discussed in \vref{ch3:observations}, the values returned by this function represent the environment state after the manipulation caused by the agent action. Thanks to these data, the agent will be able to select the next action following the reinforcement learning loop.
+	\item \texttt{def reset(self)}: during the episode, internal variables of the environment changes, influenced by the action taken previously. This function allows the agent to restart the initial situation of the environment. This procedure is particularly helpful when an episode finishes and the agent has to restart the next learning episode in a brand new copy of the environment.
+	\item \texttt{def render(self, mode='human', close=False)}: this function is mainly used in simulated environments. It enables the visual render (if available) of the environment.
+	\item \texttt{def close(self)}: the final function to close the environment after the end of all experiments and episodes.
 \end{itemize}
 
 \subsubsection{Available environments}
 
 To date, OpenAI Gym includes the following environments:
 \begin{itemize}
-    \item \textbf{Algorithms}: learning to imitate computations, such as copying or reversing symbols from the input tape, is the main aim of this typology. These environments might seem easy to be solved by a computer, but it is important to remember that the objective here is to learn to solve these tasks purely from examples. Therefore, it is possible to vary the sequence length to increase or decrease task difficulties easily. 
-    \item \textbf{Atari}: \textit{Atari 2600} is a home video game console developed in 1977 which spread the use of general-purpose CPUs into gaming with game code distributed through cartridges. This environment section provides a database which contains more than 100 environments emulating Atari 2600 videogames. OpenAI Gym exploits \textit{Arcade Learning Environment (ALE)} \cite{bellemare2013arcade} providing RAW pixel images or RAM as observation of the environment.
+	\item \textbf{Algorithms}: learning to imitate computations, such as copying or reversing symbols from the input tape, is the main aim of this typology. These environments might seem easy to be solved by a computer, but it is important to remember that the objective here is to learn to solve these tasks purely from examples. Therefore, it is possible to vary the sequence length to increase or decrease task difficulties easily.
+	\item \textbf{Atari}: \textit{Atari 2600} is a home video game console developed in 1977 which spread the use of general-purpose CPUs into gaming with game code distributed through cartridges. This environment section provides a database which contains more than 100 environments emulating Atari 2600 videogames. OpenAI Gym exploits \textit{Arcade Learning Environment (ALE)} \cite{bellemare2013arcade} providing RAW pixel images or RAM as observation of the environment.
 	\item \textbf{Box2D}: in this group is possible to find some continuous control tasks in a simple 2D simulator such as \textit{BipedalWalker}, \textit{CarRacing} and \textit{LunarLander}
 	\item \textbf{Classic Control}: this class provides a set of problem borrowed by control theory and widely exploited in the classic reinforcement learning literature. Some task examples are balancing a pole on a cart or swing up a pendulum.
 	\item \textbf{MuJoCo}: this collection contains continuous control tasks running in a fast physics three-dimensional simulator called \textit{MuJoCo} which stands for \textit{Multi-Joint dynamics with Contact}. This physics engine aims to facilitate research and development in robotics, biomechanics, graphics and animation. The simulator is particularly suitable for model-based optimisation allowing to scale up computationally-intensive techniques.
-Thanks to its features, it became useful as a source for reinforcement learning algorithms. \cite{todorov2012mujoco}
+	      Thanks to its features, it became useful as a source for reinforcement learning algorithms. \cite{todorov2012mujoco}
 	\item \textbf{Robotics}: OpenAI released this algorithm typology to provide eight robotics environments with manipulation tasks significantly more difficult than the MoJoCo ones. It contains \textit{Fetch}, a robotic arm to move and grab objects, and \textit{ShadowHand}, a robotic hand to manipulate and grab pens, cubes and balls. \cite{ingredientsRoboticsResearch}
 \end{itemize}
 
 \subsection{Observations} \label{ch3:observations}
 
-As previously reported, the \texttt{step(self, action)} environment interface is the most important one because it contains the behaviour definition of the environment that reacts to agent actions. 
+As previously reported, the \texttt{step(self, action)} environment interface is the most important one because it contains the behaviour definition of the environment that reacts to agent actions.
 Indeed, the agent has to know in which way its actions are influencing the environment in order to stop doing random actions and start making valuable decisions.
 
-In order to provide this type of information to the agents, the \texttt{step} function returns four relevant values that reinforcement learning algorithms can exploit to determine the best action to do in the future. 
+In order to provide this type of information to the agents, the \texttt{step} function returns four relevant values that reinforcement learning algorithms can exploit to determine the best action to do in the future.
 These values are:
 \begin{itemize}
-    \item \textbf{\texttt{observation (object)}}: a specific object which represents the environment observation and shows the changes provoked by agent actions. Its structure and interpretation depend on the implementation of the specific environment. For example, it could represent the raw pixel data from a camera, the status of a board game or physics data of a robot (joint angles and velocities).
-    \item \textbf{\texttt{reward (float)}}: this is the fuel of the reinforcement learning algorithms. This value represents the reward achieved thanks to the action taken by the agent. The reward for each action can change among environments, but this is the crucial information to enable the agent to learn.
-    \item \textbf{\texttt{done (boolean)}}: this value is a simple boolean that signals the agent when the episode ended and it is time to reset the environment to start a brand new episode. 
-    \item \textbf{\texttt{info (dict)}}: a Python dictionary to monitor and show diagnostic information useful for debugging. The agent could use it as additional information in the learning process, but the documentation of OpenAI Gym does not recommend to use this data in the learning process to maintain the coherence with the reinforcement learning loop. 
+	\item \textbf{\texttt{observation (object)}}: a specific object which represents the environment observation and shows the changes provoked by agent actions. Its structure and interpretation depend on the implementation of the specific environment. For example, it could represent the raw pixel data from a camera, the status of a board game or physics data of a robot (joint angles and velocities).
+	\item \textbf{\texttt{reward (float)}}: this is the fuel of the reinforcement learning algorithms. This value represents the reward achieved thanks to the action taken by the agent. The reward for each action can change among environments, but this is the crucial information to enable the agent to learn.
+	\item \textbf{\texttt{done (boolean)}}: this value is a simple boolean that signals the agent when the episode ended and it is time to reset the environment to start a brand new episode.
+	\item \textbf{\texttt{info (dict)}}: a Python dictionary to monitor and show diagnostic information useful for debugging. The agent could use it as additional information in the learning process, but the documentation of OpenAI Gym does not recommend to use this data in the learning process to maintain the coherence with the reinforcement learning loop.
 \end{itemize}
 
 The last important thing to report about OpenAI Gym framework is the definition of \texttt{Spaces}. As reported in the second chapter, an environment consists of the action space and the observation space. Both can provide discrete or continuous values: this distinction is fundamental to determine the usage of a specific algorithm rather than others to solve a given task better. For this reason, OpenAI Gym provides \texttt{Discrete} and \texttt{Box} to initialise discrete and continuous spaces, respectively. It allows the user to define a lot of features useful in the learning process, such as a maximum and minimum value setup or a default function to instantly sample a random value from the defined space.
@@ -313,7 +313,7 @@ The last step to start programming with Cozmo SDK is to install it in a developm
 \subsection{Why Cozmo?}
 
 Before starting the development of this thesis project, we spent some time analysing the small car market situation in order to find out the right choice for our specific needs. In addition to Anki Cozmo, the ideal alternatives in the self-driving scenario when we started this thesis were \textit{AWS DeepRacer Vehicle} and a customised car implemented from scratch exploiting \textit{Donkey \textregistered
-Car library}.
+	Car library}.
 
 This section part aims to briefly describe the main alternatives to Anki Cozmo listing strengths and weaknesses for each approach to motivate the final choice made.
 
@@ -323,20 +323,20 @@ This section part aims to briefly describe the main alternatives to Anki Cozmo l
 
 The whole ecosystem consists of two main part:
 \begin{itemize}
-\item \textbf{AWS DeepRacer Car}. It is a 1/18 scale race car developed and built to test reinforcement learning algorithms on a real track. It aims to show how the reinforcement learning model trained in a simulated environment can be conveyed to the real-world by using cameras to view the track and the model to control throttle and steering. It has a lot of interesting specifications under the hood such as Intel Atom \textsuperscript{\textregistered} Processor, 4GB of RAM, an expandable 32GB of storage to accommodate the trained model and a 4-megapixel camera with MJPEG.
-\item \textbf{AWS DeepRacer Simulator}. The user can build his models in \textit{Amazon SageMaker} and train, test and iterate the learning process using the racing simulator. It offers an integrated environment hosted on the AWS cloud to experiment and optimise algorithms to apply to the autonomous driving model.
+	\item \textbf{AWS DeepRacer Car}. It is a 1/18 scale race car developed and built to test reinforcement learning algorithms on a real track. It aims to show how the reinforcement learning model trained in a simulated environment can be conveyed to the real-world by using cameras to view the track and the model to control throttle and steering. It has a lot of interesting specifications under the hood such as Intel Atom \textsuperscript{\textregistered} Processor, 4GB of RAM, an expandable 32GB of storage to accommodate the trained model and a 4-megapixel camera with MJPEG.
+	\item \textbf{AWS DeepRacer Simulator}. The user can build his models in \textit{Amazon SageMaker} and train, test and iterate the learning process using the racing simulator. It offers an integrated environment hosted on the AWS cloud to experiment and optimise algorithms to apply to the autonomous driving model.
 \end{itemize}
 
 There are many advantages in using the DeepRacer stack. It offers an integrated approach where the developer has to focus just on reinforcement learning: indeed, it abstracts a significant part of the software giving the developer the chance to work almost exclusively on the model. It has a growing development community to confront ideas and find solutions through challenging competitions around the world. One of the fundamental aims behind this product is to build up a regulated environment where amateurs and researchers can compare and tests different approaches in solving the autonomous driving task. Therefore it provides a high-performance car where to store the trained model in order to make it independent to the training environment.
 
 
-On the other hand, one of the main disadvantages of this approach is that it is an Amazon lock-in: the framework provided force developer to use the whole Amazon stack. This fact can be inconvenient economically-wise because of the rates of the Amazon platform that adds to the price of the car, but, above all, because Amazon may have access to all developer implementations and experiments. 
+On the other hand, one of the main disadvantages of this approach is that it is an Amazon lock-in: the framework provided force developer to use the whole Amazon stack. This fact can be inconvenient economically-wise because of the rates of the Amazon platform that adds to the price of the car, but, above all, because Amazon may have access to all developer implementations and experiments.
 
 Another not negligible factor was the product release date: Amazon had to release it in July, but, to date, it is not yet available in Italy. Therefore, because of this thesis is focused on the application of reinforcement learning algorithms directly in the real world without the aid of simulators and model, the absence of the physical car was crucial for the final decision.
 
 Another important withdraw consists of the strict correlation between the simulator and the real system: the framework provided by Amazon seems to be suitable only to test reinforcement learning algorithms after the model training in the simulator, but not for the sake of this thesis.
 
-\subsubsection{Donkey\textregistered Car} 
+\subsubsection{Donkey\textregistered Car}
 
 The second important alternative to Cozmo was to develop a small car from scratch using integrated boards such as \textit{RaspberryPi} or \textit{NVIDIA Jetson Nano}, sensors and camera to personalise the device and satisfy specific project needs.
 \textit{Donkey\textregistered Car} \footnote{Donkey Car community website: \href{https://www.donkeycar.com}{https://www.donkeycar.com}} is the most popular choice to build a personal self driving toy car. It is an open-source community project powered by volunteers who are interested in build their own self-driving cars. They cooperated to build up a high-level self-driving library written in Python, focusing on enabling fast experimentation and easy contribution. They provide detailed instructions to build a personal Donkey, providing kits or lists of components to use: the whole kit costs among 250-300\$.
@@ -345,7 +345,7 @@ It is also possible to install the Donkey library on any RC car to make it self-
 
 The main strength of this choice is the freedom to develop a completely customised car to better suit the needs and requirements of a great set of autonomous driving projects. In the last releases of the library, Donkey developers released a complete sandbox simulator for training a self-driving car. The languages used to develop it are Unity for simulation and Python with Keras and Tensorflow for training. They also provide an OpenAI Gym environment to use with such simulator.
 
-The main weakness of this method consists in the process of building a self-driving car system from scratch. It offers versatility and flexibility in components choice, but the time to devote to building a working system, free from as many bugs as possible would have slowed down the prototyping of the system itself and the whole thesis project. The duration of development is not associated with the process of physically assembling the car because Donkey developers estimate two hours to build the car. The real obstacle consists of the setup of a connection similar to the Cozmo one: it needs to be as stable as possible to make all stack working smoothly in real-time.  
+The main weakness of this method consists in the process of building a self-driving car system from scratch. It offers versatility and flexibility in components choice, but the time to devote to building a working system, free from as many bugs as possible would have slowed down the prototyping of the system itself and the whole thesis project. The duration of development is not associated with the process of physically assembling the car because Donkey developers estimate two hours to build the car. The real obstacle consists of the setup of a connection similar to the Cozmo one: it needs to be as stable as possible to make all stack working smoothly in real-time.
 
 \subsubsection{The final choice}
 
@@ -357,26 +357,26 @@ Therefore, the connection between the development machine and the robot is suita
 Taking into account the perspective of autonomous cars in the real world, on-board and off-board computation approaches are still under research. With the on-board method, cars have much computational hardware inside in order to manage every aspect of autonomous driving by themselves, but it requires more powerful batteries to counterbalance energy consumption. On the other hand, the connection to off-board computer facilities or the clouds leads to new vectors of attack but also enables companies to monitor the behaviour the vehicle fleet to identify malicious activities early.
 To date, both approaches are still under research, and there it is not possible to decree a legitimate winner. For what concerns the thesis, the designed system emulate an off-board approach.
 
-In the end, Cozmo provides plain and straightforward control of the car and a rich Python SDK to use with OpenAI Gym and it is the best trade-off between functionalities and fast-developing. 
+In the end, Cozmo provides plain and straightforward control of the car and a rich Python SDK to use with OpenAI Gym and it is the best trade-off between functionalities and fast-developing.
 
 
 \section{PyTorch}
 
 PyTorch \footnote{PyTorch Github Repository: \href{https://github.com/pytorch/pytorch}{https://github.com/pytorch/pytorch}} \cite{paszke2017automatic}  is an open-source machine learning and deep learning library developed by Facebook's AI Research Lab and released to the public in October 2016. The main aim of PyTorch is to provide an intuitive and straightforward framework to develop artificial intelligence projects: two of the main applications to date are computer vision and natural language processing.
 
-The programming languages utilised to develop PyTorch were Python, C++ and CUDA, the parallel computing and API model created by Nvidia to allow software developers and engineers to use CUDA-enabled GPU for general purpose processing. The primary interface provided by the library to the user employs Python, the project where Facebook developers mainly put their efforts. Despite this fact, it also offers a C++ interface. 
+The programming languages utilised to develop PyTorch were Python, C++ and CUDA, the parallel computing and API model created by Nvidia to allow software developers and engineers to use CUDA-enabled GPU for general purpose processing. The primary interface provided by the library to the user employs Python, the project where Facebook developers mainly put their efforts. Despite this fact, it also offers a C++ interface.
 
 PyTorch consists of the following components:
 \begin{itemize}
-\item \textbf{\texttt{torch}}: PyTorch Tensor library with strong GPU support. It implements interfaces similar to those of the NumPy library. It contains data structures for multi-dimensional tensors and mathematical operations, providing many utilities for efficient serialising tensors and arbitrary types.
-\item \textbf{\texttt{torch.autograd}}: the tape-based automatic differentiation library that supports every differentiable operation on tensors available in \texttt{torch}. 
-\item \textbf{\texttt{torch.jit}}: this component is a compilation stack that uses TorchScript to create serializable and optimizable models from PyTorch code. This tool allows the user to train models in PyTorch using Python and then export the model in a production environment where Python may be disadvantageous for performance and multi-threading reasons.
-\item \textbf{\texttt{torch.nn}}: this component provides a neural networks library that is entirely compatible with \texttt{autograd} and designed for flexibility.
-\item \textbf{\texttt{torch.multiprocessing}}: this component is based on the Python multiprocessing library, but it implements memory sharing of torch tensors across processes.
-\item \textbf{\texttt{torch.utils}}: it contains many utility functions to better exploits the features of PyTorch.
+	\item \textbf{\texttt{torch}}: PyTorch Tensor library with strong GPU support. It implements interfaces similar to those of the NumPy library. It contains data structures for multi-dimensional tensors and mathematical operations, providing many utilities for efficient serialising tensors and arbitrary types.
+	\item \textbf{\texttt{torch.autograd}}: the tape-based automatic differentiation library that supports every differentiable operation on tensors available in \texttt{torch}.
+	\item \textbf{\texttt{torch.jit}}: this component is a compilation stack that uses TorchScript to create serializable and optimizable models from PyTorch code. This tool allows the user to train models in PyTorch using Python and then export the model in a production environment where Python may be disadvantageous for performance and multi-threading reasons.
+	\item \textbf{\texttt{torch.nn}}: this component provides a neural networks library that is entirely compatible with \texttt{autograd} and designed for flexibility.
+	\item \textbf{\texttt{torch.multiprocessing}}: this component is based on the Python multiprocessing library, but it implements memory sharing of torch tensors across processes.
+	\item \textbf{\texttt{torch.utils}}: it contains many utility functions to better exploits the features of PyTorch.
 \end{itemize}
 
-PyTorch provides a NumPy-like experience to interact and manipulate data structures suitable for GPU computation, offering a deep learning research platform which can provide flexibility and speed. These data structures are called \textit{Tensors} and they can be used both on the CPU and the GPU, accelerating the computation thanks to the whole set of functions and manipulators explicitly designed for every scientific computation need. 
+PyTorch provides a NumPy-like experience to interact and manipulate data structures suitable for GPU computation, offering a deep learning research platform which can provide flexibility and speed. These data structures are called \textit{Tensors} and they can be used both on the CPU and the GPU, accelerating the computation thanks to the whole set of functions and manipulators explicitly designed for every scientific computation need.
 
 PyTorch is not a straightforward binding to an underlying complex C++ framework. The library design focused on establishing Python as the main priority, and for this reason, the user experience is very natural and similar to other important machine learning libraries already present in the package manager.
 
@@ -391,7 +391,7 @@ The main improvement that this approach brings is allowing the user to change th
 \subsection{TensorboardX}
 
 One of the most crucial means that every machine learning researchers need is a tool to visualise and measure data efficiently: this fact is significant because to improve models, projects and results, we need to measure.
-However, one of the main problem in PyTorch is the absence of such a tool, specifically designed for the Facebook framework. It can always use powerful tools such as \textit{Matplotlib}, but it offers a synchronous approach that leads to slow down the main program since the primary process has to wait for the data rendering before starting next operations. 
+However, one of the main problem in PyTorch is the absence of such a tool, specifically designed for the Facebook framework. It can always use powerful tools such as \textit{Matplotlib}, but it offers a synchronous approach that leads to slow down the main program since the primary process has to wait for the data rendering before starting next operations.
 
 On the other hand, TensorFlow, the most important deep learning alternative to PyTorch developed by Google, provides in its package TensorBoard which is a webserver to serve visualisation of the training progress of the neural network. It can show to the user scalar values, images or text, and it is particularly useful to visualise experimental metrics such as loss and accuracy. The particularity of this tool consists in the fact that it stores these typologies of information asynchronously as events.
 The Python script calls specific functions to store information and goes on with the next operation without waiting for its render: that is possible thanks to the decoupling level inserted by this approach between the visualisation and the creation of data. Indeed, Tensorboard operates by opening and reading  TensorFlow events files that contain the summary data generated during experiments. Therefore, it will be the webserver to take care of elaborate data for rendering without bothering the current Python script.
@@ -410,7 +410,7 @@ For this reason, this section aims to outline differences between these two libr
 
 The first difference concerns the construction of the computational graph. A computational graph is an abstraction useful to represent the computation process through a direct graph.
 
-In TensorFlow, computational graphs are defined statically, before running the code. The main advantage of this method is allowing parallelism and dependency driving scheduling, features that boost the learning and make it more efficient. This framework communicates with the external world via specific tensors that will be substituted by input data at runtime. 
+In TensorFlow, computational graphs are defined statically, before running the code. The main advantage of this method is allowing parallelism and dependency driving scheduling, features that boost the learning and make it more efficient. This framework communicates with the external world via specific tensors that will be substituted by input data at runtime.
 Only with TensorFlow 2.0, Google decided to implement dynamic computational graph in its product, but its stable version was released after the start of this thesis.
 
 As mentioned above, PyTorch approach to computational graphs is dynamic. This characteristic means that the graph is built incrementally at runtime without using particular data structures as placeholders. This feature supports projects where the author needs to change the computational graph on-the-fly avoiding the application restart. In this sense, PyTorch is more pythonic than TensorFlow.

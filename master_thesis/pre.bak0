@@ -33,7 +33,7 @@
 	\begin{ThesisTitlePage}
 		\ateneo{Politecnico di Torino}
 		\titolo{Deep Reinforcement Learning algorithms for autonomous systems}
-		\sottotitolo{Design and implementation of a control system for autonomous driving task of a small robot, exploiting state-of-the-art Model-Free Deep Reinforcement Learning algorithms}
+		\sottotitolo{Design and implementation of a control system for autonomous driving task of a small robot, exploiting state-of-the-art model-free deep reinforcement learning algorithms}
 		%%%%%%% Corso degli studi
 		\corsodilaurea{Computer Engineering (Software Career)}
 		%%%%%%% L'eventuale numero di matricola va fra parentesi quadre
