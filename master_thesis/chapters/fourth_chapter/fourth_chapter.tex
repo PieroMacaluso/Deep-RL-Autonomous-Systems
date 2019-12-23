@@ -24,7 +24,7 @@ This section aims to describe as clearly as possible all the components of the c
 \begin{figure}
 	\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt    
 	\centering
-	\scalebox{0.85}{
+	\scalebox{0.75}{
 
 
 		\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
@@ -142,17 +142,38 @@ This section aims to describe as clearly as possible all the components of the c
 
 	\end{tikzpicture}
 	}
-	\caption[Interaction Human/Robot]{Interaction between the user and Anki Cozmo. The main Python script utilises OpenAI Gym for the reinforcement learning component and PyTorch for the deep learning one. The user can interact with the flow of the system through a simple web app implemented using HTML, CSS, JS that communicates with a Flask backend. This component interacts directly with OpenAI Gym and the Cozmo SDK to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands). The last component consists in TensorBoard thanks to the script can store results that can be retrieved later by the user.}
+	\caption[Interaction Human/Robot]{Interaction between the user and Anki Cozmo. The main Python script utilises OpenAI Gym for the reinforcement learning component and PyTorch for the deep learning one. The user can influence with the flow of the system through a simple web app that interacts directly with OpenAI Gym and the Cozmo SDK to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands). The last component consists in TensorBoard thanks to the script can store results that can be retrieved later by the user.}
 	\label{fig:system}
 \end{figure}
 
 \subsection{Human-Robot Interaction}
 
-It is noticeable that the simulator can undoubtedly be programmed to understand when the car is outside the track. In a reinforcement learning scenario, this fact facilitates the restarting procedure for an episode: the developer has to bind some events or actions to a process that stops the current episode, put the car on the road again and starts the next experiment. In the real world, the situation is more complicated because there are more variables to take into account: the most critical factor is that the failure of an episode in the simulator has no threats or costs, while real-world experiments failures could lead to high costs. Despite this point, the application of such experiment typology in a real environment instead of a mere simulation represents an exciting challenge that could bring reinforcement learning to the next level. In order to make experiments as safe as possible, the authors of \cite{kendall2018learning,kendall2019learning} implemented a self-driving system designed explicitly for reinforcement learning experiments where the car driver has the faculty of stopping the car when it is going to run off the road or in a dangerous situation and relocating it in the nearest safe position to start the next learning episode.
+It is noticeable that the simulator can undoubtedly be programmed to understand when the car is outside the track. In a reinforcement learning scenario, this fact facilitates the restarting procedure for an episode: the developer has to bind some events or actions to a process that stops the current episode, put the car on the road again and starts the next experiment. In the real world, the situation is more complicated because there are more variables to take into account: the most critical factor is that the failure of an episode in the simulator has no threats or costs, while real-world experiments failures could lead to high costs and severe damage to the car and equipment. Despite this point, the application of such experiment typology in a real environment instead of a mere simulation represents an exciting challenge that could bring reinforcement learning to the next level. In order to make experiments as safe as possible, the authors of \cite{kendall2018learning,kendall2019learning} implemented a self-driving system designed explicitly for reinforcement learning experiments where the car driver has the faculty of stopping the car when it is going to run off the road or in a dangerous situation and relocating it in the nearest safe position to start the next learning episode.
 
-For this reason, we firstly implemented a straightforward interface using a web app implemented using plain HTML, CSS and Javascript for the frontend and Flask as backend. The aim of this application is allowing user interaction with Cozmo and Flask represented the right choice to allow the communication between this interface and the OpenAI Gym environment. The user can see a sort of live streaming from the camera of Cozmo directly in the web app and can send commands to the robot through the computer keyboard. Just as example
+We aimed to implement this kind of user-robot interaction also in our setup. The requirements were the same as one described in the paper, but this case could not rely on steering wheel, brakes and accelerator as in the car scenario where they are directly accessible by the user. The system needed an interface to allow the user to manoeuvre the robot just like a car.
+
+For this reason, we firstly implemented a straightforward interface using a web app implemented using plain HTML, CSS and Javascript for the frontend and Flask as backend. The aim of this application is allowing user interaction with Cozmo and Flask represented the right choice to allow the communication between this interface and the OpenAI Gym environment. The Flask backend interacts directly with the Cozmo SDK functions to allow the user to see the live streaming from the camera of Cozmo directly in the web app. Therefore it can receive, convert and forward commands to the robot to SDK. These commands consist of the pressure of both single or combination of buttons: Flask decides the action to trigger programmatically following hard-coded conditions and calculates speeds and accelerations of both right and left treads. The SDK function we utilised to implement the manual Cozmo control is \texttt{drive\_wheels()}. The parameters of this function are the following:
+
+\begin{itemize}
+	\item \textbf{\texttt{l\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the left tread (in millimeters per second).
+	\item \textbf{\texttt{r\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the right tread (in millimeters per second).
+	\item \textbf{\texttt{l\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the left tread (in millimeters per second squared). The default value is the equal to \texttt{l\_wheel\_speed}.
+	\item \textbf{\texttt{r\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the right tread (in millimeters per second squared).  The default value is the equal to \texttt{r\_wheel\_speed}.
+	\item \textbf{\texttt{duration}} (\textit{float}): it specifies the duration of the driving action of the robot. It calls \texttt{stop\_all\_motors()} after this duration has passed. The default value is \texttt{None}, in this case, the behaviour of this function is equivalent to the non-async \texttt{drive\_wheel\_motors()} one: the wheels will continue to move at that speed until commanded to drive at a new speed.
+\end{itemize}
+
+This method is the same we used to implement the OpenAI Gym environment, allowing the algorithm to interact with the robot just like a human in the driving seat. Just as examples, the user can start and stop the episode using the enter button, forget the previous episode with backspace and relocate the robot on the track using W, A, S and D buttons.
 
 In this context, the human-robot interaction has a crucial role in the learning process because it is the source of all improvements and flaws of the learning process: the robot learns which actions are worthy and which are not, but the human is the one who decides the correctness of each action, carrying its unconscious bias in the algorithm. We will discuss the experiments and their results thoroughly in \vref{ch5,ch6}.
+
+\subsection{OpenAI Gym Cozmo Environment}
+\subsubsection{MDP formalisation}
+
+\subsubsection{Neural Networks}
+
+\subsubsection{Data Analysis}
+
+\subsection{Reinforcement learning algorithms implementations}
 
 
 
