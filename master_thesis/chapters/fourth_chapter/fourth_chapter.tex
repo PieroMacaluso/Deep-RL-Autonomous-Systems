@@ -167,14 +167,50 @@ This method is the same we used to implement the OpenAI Gym environment, allowin
 In this context, the human-robot interaction has a crucial role in the learning process because it is the source of all improvements and flaws of the learning process: the robot learns which actions are worthy and which are not, but the human is the one who decides the correctness of each action, carrying its unconscious bias in the algorithm. We will discuss the experiments and their results thoroughly in \vref{ch5,ch6}.
 
 \subsection{OpenAI Gym Cozmo Environment}
+
+This section describes the main features we implemented in \textit{CozmoEnv}, the OpenAI Gym environment we developed to apply and test reinforcement learning algorithms with Cozmo. 
+
 \subsubsection{MDP formalisation}
+
+The first important step to implement a reinforcement learning environment is formalising the problem we want to solve as a Markov Decision Process (MDP). Starting from the definition of MDP that we already reported in \vref{eq:mdp}, we studied and searched the best configuration to provide an acceptable trade-off between performance and memory consumption, capable of making the system work on the development machine we used for our experiments. In the following paragraphs, we will analyse each MDP aspects paying particular attention to the problems we faced and the motivations behind every decision made to overcome them.
+
+\paragraph{Observations} The environment observation is the group of information that the reinforcement learning agent can see and obtain from the interaction with the real world. In the self-driving tasks in question, the most reasonable way to obtain knowledge about the surrounding environment is to exploit front camera images provided by Cozmo SDK. However, it is essential to remember that the state must satisfy the Markov property according to which it must be independent of the past given the present. Using a single image to describe the current state may be an oversimplification of the problem. Even a human would not be able to determine the best action to take starting from a single frame. That is because it is difficult to infer or determine the current direction of the car, speed or steering wheel position. Merely adding another image can intuitively improve the human perception of the scene.
+
+To verify this fact before starting the experiments with the application of the reinforcement learning algorithms to Cozmo, we firstly analysed the results of some experiments on the environment of the classic control problem of trying to keep a frictionless pendulum standing up (\textit{Pendulum-v0}), appropriately modified to exploit raw images as observations instead of information about its inclination. We noticed that the usage of a single image as observation leads to more unstable and worse results than the ones obtained by combining two subsequential images to feed the algorithm. For this reason, we decided to use two consecutive raw images provided by Cozmo by using a queue data structure with size two. In the code flow, the developer merely has to push the next image obtained by the robot and use the specific queue function implemented to obtain the concatenation of the last two images, only when necessary.
+
+Therefore, we decided to reduce the original size of the input Cozmo image to 64$\times$64. We made this decision as a trade-off between performance, learning phase duration and space available in the central memory to store the replay memory.
+
+In conclusion, the observation provided to the agent is the concatenation of two images with dimension 64$\times$64 pixels.
+
+\paragraph{Actions} 
+
+Another essential part that we needed to formalise is how the agent can interact and influence the surrounding environment: its actions. In the car scenario, the two main components of driving are the speed and the position of the steering wheel. To straightforwardly formalise these two parts, we decided to use two simple real values.
+
+We chose to define the desired speed value in a range of 0 to 1, while we opted for a range of -1 to 1 for the steering wheel position. These limits allow the agent to manipulate simple values externally, while the underlying logic of the environment takes care to translate these values to a compatible format for the Cozmo SDK. 
+Indeed, as we reported before in this section, the Cozmo SDK function exploited to manoeuvre the robot needs at least the speed of each tread. \Vref{conversionCozmoEnv} reports the principal steps of this translation.
+
+\begin{algorithm}[!h]
+	\SetAlgoLined
+	\small
+	\DontPrintSemicolon
+	\LinesNumbered
+	\KwIn{Desired speed $s_t \in \{ x \in \mathbb{R} | 0 \le x \le 1 \}$\newline Steering wheel position $w_t \in \{ x \in \mathbb{R} | -1 \le x \le 1\} $\newline Maximum forward speed $s^{\text{forward}}_{\text{max}} = 150\text{mm/s}$\newline Maximum turning speed $s^{\text{turning}}_{\text{max}} = 100\text{mm/s}$}
+
+	Left tread speed: $ts_{\text{left}} = s_t \cdot s^{\text{forward}}_{\text{max}} + w_t \cdot s^{\text{turning}}_{\text{max}}$\;
+	Right tread speed: $ts_{\text{right}} = s_t \cdot s^{\text{forward}}_{\text{max}} - w_t \cdot s^{\text{turning}}_{\text{max}}$
+
+	\KwOut{Left tread speed $ts_{\text{left}}$ \newline Right tread speed: $ts_{\text{right}}$}
+	\caption{CozmoEnv actions conversion from virtual to real}
+	\label{conversionCozmoEnv}
+\end{algorithm}
+
+\paragraph{Reward Function}
 
 \subsubsection{Neural Networks}
 
 \subsubsection{Data Analysis}
 
 \subsection{Reinforcement learning algorithms implementations}
-
 
 
 
