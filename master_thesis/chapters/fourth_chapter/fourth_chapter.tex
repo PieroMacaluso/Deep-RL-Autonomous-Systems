@@ -14,7 +14,7 @@ In the final section of this chapter, the design and setup of the real track wil
 
 The development of the control system for Anki Cozmo was the main contribution of the thesis, together with the implementation of DDPG and SAC algorithm. The main aim of this work was to create an OpenAI Gym environment capable of interacting with a robot in the real world, not just through the usage of a simulator. OpenAI Gym usually provides plain and straightforward interfaces to interact with simulated environments: we decided to exploit these functions to allow the application of reinforcement learning algorithm directly in the real-world decision of the robot.
 
-The fundamental source of inspiration to develop this control system was \cite{kendall2018learning,kendall2019learning}. This publication represents, as its authors reported,  the first reinforcement learning self-driving experiment where a car learned to drive through the application of a reinforcement learning algorithm, by trial and error. They first trained the model exploiting Deep Deterministic Policy Gradient (DDPG) in a simulator for many epochs and, after this learning process, they managed to transfer the knowledge acquired in the simulator in real-world experiments. 
+The fundamental source of inspiration to develop this control system was \cite{kendall2018learning,kendall2019learning}. This publication represents, as its authors reported,  the first reinforcement learning self-driving experiment where a car learned to drive through the application of a reinforcement learning algorithm, by trial and error. They first trained the model exploiting Deep Deterministic Policy Gradient (DDPG) in a simulator for many epochs and, after this learning process, they managed to transfer the knowledge acquired in the simulator in real-world experiments.
 
 We decided to export and implement these ideas in our project, adapting them to the specificities and particularities of the Cozmo setup. The resulting system can be summed up by \vref{fig:system} which provide a schematic overview of every technology employed and the interaction among them.
 This section aims to describe as clearly as possible all the components of the control system we designed.
@@ -160,11 +160,11 @@ The aim of this application is allowing user interaction with Cozmo and Flask re
 The SDK function we utilised to control Cozmo is \texttt{drive\_wheels()}. The parameters of this function are the following:
 
 \begin{itemize}
- \item \textbf{\texttt{l\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the left tread (in millimeters per second).
- \item \textbf{\texttt{r\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the right tread (in millimeters per second).
- \item \textbf{\texttt{l\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the left tread (in millimeters per second squared). The default value is the equal to \texttt{l\_wheel\_speed}.
- \item \textbf{\texttt{r\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the right tread (in millimeters per second squared). The default value is the equal to \texttt{r\_wheel\_speed}.
- \item \textbf{\texttt{duration}} (\textit{float}): it specifies the duration of the driving action of the robot. It calls \texttt{stop\_all\_motors()} after this duration has passed. The default value is \texttt{None}, in this case, the behaviour of this function is equivalent to the non-async \texttt{drive\_wheel\_motors()} one: the wheels will continue to move at that speed until commanded to drive at a new speed.
+	\item \textbf{\texttt{l\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the left tread (in millimeters per second).
+	\item \textbf{\texttt{r\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the right tread (in millimeters per second).
+	\item \textbf{\texttt{l\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the left tread (in millimeters per second squared). The default value is the equal to \texttt{l\_wheel\_speed}.
+	\item \textbf{\texttt{r\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the right tread (in millimeters per second squared). The default value is the equal to \texttt{r\_wheel\_speed}.
+	\item \textbf{\texttt{duration}} (\textit{float}): it specifies the duration of the driving action of the robot. It calls \texttt{stop\_all\_motors()} after this duration has passed. The default value is \texttt{None}, in this case, the behaviour of this function is equivalent to the non-async \texttt{drive\_wheel\_motors()} one: the wheels will continue to move at that speed until commanded to drive at a new speed.
 \end{itemize}
 
 This method is the same we used to implement the OpenAI Gym environment, allowing the algorithm to interact with the robot just like a human in the driving seat. Just as examples, the user can start and stop the episode using the enter button, forget the previous episode with backspace and relocate the robot on the track using W, A, S and D buttons.
@@ -173,7 +173,7 @@ In this context, the human-robot interaction has a crucial role in the learning 
 
 \subsection{OpenAI Gym Cozmo Environment}
 
-This section describes the main features we implemented in \textit{CozmoEnv}, the OpenAI Gym environment we developed to apply and test reinforcement learning algorithms with Cozmo. 
+This section describes the main features we implemented in \textit{CozmoEnv}, the OpenAI Gym environment we developed to apply and test reinforcement learning algorithms with Cozmo.
 
 \subsubsection{MDP formalisation}
 
@@ -187,11 +187,11 @@ Therefore, we decided to reduce the original size of the input Cozmo image to 64
 
 In conclusion, the observation provided to the agent is the concatenation of two images with dimension 64$\times$64 pixels.
 
-\paragraph{Action Space} 
+\paragraph{Action Space}
 
 Another essential part that we needed to formalise is the action space, how the agent can interact and influence the surrounding environment. In the car scenario, the two main components of driving are the speed of the vehicle and the position of the steering wheel. To straightforwardly formalise these two parts, we decided to use two simple real values.
 
-We chose to define the desired speed value in a range of 0 to 1, while we opted for a range of -1 to 1 for the steering wheel position. These limits allow the agent to manipulate simple values in the decision-making process and to facilitate the manipulation of neural network results. At the same time, the underlying logic of the environment takes care to translate these values into a compatible format for the Cozmo SDK. 
+We chose to define the desired speed value in a range of 0 to 1, while we opted for a range of -1 to 1 for the steering wheel position. These limits allow the agent to manipulate simple values in the decision-making process and to facilitate the manipulation of neural network results. At the same time, the underlying logic of the environment takes care to translate these values into a compatible format for the Cozmo SDK.
 Indeed, as we reported previously in this section, the Cozmo SDK function exploited to manoeuvre the robot needs at least the speed of each tread. \Vref{conversionCozmoEnv} reports key steps of this translation. Therefore we decided to raise acceleration parameters by setting them equal to 4 times the desired speed of each thread.
 
 \begin{algorithm}[!h]
@@ -209,7 +209,35 @@ Indeed, as we reported previously in this section, the Cozmo SDK function exploi
 	\label{conversionCozmoEnv}
 \end{algorithm}
 
+
 \paragraph{Reward Function}
+
+The reward function is the crucial feature to define in the formalisation of the MDP. After a review of the available literature and the analysis of the problem, we obtained a list of ideas and concepts to model the reward function:
+
+\begin{itemize}
+	\item \textbf{Lane Distance}: this model calculates the reward of each action by calculating the distance between the car and the centre of the lane. The main aim is to prioritise the correct positioning of the car on the lane, crucial for driving safety. However, it is noticeable that this value can be easily calculated in a simulated environment, while it needs a lot of sensors and calculation to obtain a good estimation in a real-world environment. Beyond this problem, this approach has difficulties in scaling to varying environments where road typology and dimension is not a pre-configured constant. Therefore, it is a limited approach because, clearly, human beings do not always drive the car in the perfect centre of the lane: for instance, when approaching a curve it could be more convenient to move the car from slightly away from the perfect centre.
+
+	      This fact reveals the shortcomings of this approach: the system can perform only as good as the human intuition underlying the hand-crafted lane reward.
+
+	\item \textbf{Distance Covered}: the second approach we investigated was the one suggested by \cite{kendall2018learning,kendall2019learning}, where the reward of a specific action consists of the total distance covered by the car for each specific action taken. Approaching the problems with this method leads to results that can be easily understandable for humans: indeed, the total reward of each episode represents the total distance travelled by the robot.
+
+	      In the car scenario of the previously mentioned publication, it is possible to use the car odometry device to quickly retrieve this value after each action and calculate the reward of a specific decision obtaining the difference with the previous value. Cozmo does not have such kind of sensor on board. Therefore it is necessary to calculate this value manually. The intuition behind a reasonable estimation of the distance covered by Cozmo consists of using the fundamental formula of kinematics: the speed. Indeed, in the designed system, we have direct access to the aspired speed because it is a parameter that the agents decide at each iteration, and it is possible to derive the time elapsed between one action and its following one by manually calculating them inside the OpenAI Gym environment.
+
+	\item \textbf{Speed Crash Penalty}: the third typology of reward we investigated consists of a sort of life bonus reward. The robot receives a reward (e.g./ 1 point) for each timestep of correct decisions and a negative reward (e.g./ -10 points) every time the user stops the robot preventing the crash. Therefore we added to the positive reward a small quantity that depends on the current speed to encourage the robot to stay on track and increase its speed. Consequently, we decided to add a penalty in faulty time step proportional to the robot crash speed to entice the robot in avoiding high speed when close to critical points. \Vref{eq:speedCrashPenalty} formalises the reward used in this environment: $p_1$ and $p_2$ are two parameters that determine how much the speed influence the reward and their module must be much less than the constant value in the equation to highlight the fact that they represent a secondary objective. \cite{raffin2019learning}
+	      \begin{equation}
+		      r_t = \begin{cases} +1 + p_1 \cdot s_t, & \mbox{if } \mbox{Cozmo on the track} \\ -10 - p_2 \cdot s_t, & \mbox{if } \mbox{Cozmo off the track} \end{cases}
+		      \label{eq:speedCrashPenalty}
+	      \end{equation}
+
+\end{itemize}
+
+After the analysis of these three reward design proposal, we decided to select the second one to pursue our experiments in the real world. As previously reported, the first option would have been hard to carry on and to scale up. The third option hints intriguing facts that a reinforcement learning agent could take into account to better solve the driving task of our experiments. The only withdrawal of this approach is related to the correlation between reward and distance covered: this correspondence is significant for the developer to have a more transparent overview of what is happening and how the algorithm is learning. In the second option, the distance covered by the robot is equal to the reward, while this conformity is lacking in the third option. For this reason, we decided to take the second reward proposal for this time. We noticed that it could be an exciting future development trying to merge the second alternative with the third one to obtain a brand new reward function that both penalises bad decisions proportionally to speed and maintain its correspondence with the track crossed.
+
+In the first implementation of the environment, the agent was able to make decisions without a specific timing between actions. This fact led to different problems in the implementation of reinforcement learning agents. The first problem was related to experience memory gathering also caused by the limitation of Cozmo Camera: it is a 30fps camera but, as reported in the documentation of Cozmo SDK, the Cozmo framework emits a new camera image generally up to 15 times per second. Therefore, the frequency of image requests was very high because the system did not contain timing implementation constraints in the control of operations. These two factors led the system to retrieve the same image both before and after taking the current action.
+
+Consequently, the state of each environment step consisted of the concatenation of two images that were often the same picture. This consequence led to a conceptual error that may influence the process of learning if we observe that with a human perspective: a state of this kind represents an action that does not influence the environment of the system whilst it is modifying it.
+We noticed this problem because, in the first part of the experiments, where the agent takes random action to explore the surrounding environment, the robot continued to drive a straight path, even if shaky, without taking a definite step in a specific direction and with an almost constant speed. This symptom was strictly related to the robot's inability to have the right time to carry out a specific action before interacting with the environment with the next action. Accordingly, the robot ends up navigating with an average speed close to the half of the maximum speed and always going in a straight line only with small and temporary slopes to the right or left.
+After noting this problem, we fixed it by hard-coding a minimum interval between the execution of a specific action and the beginning of the next one in the OpenAI Gym environment: we selected this value according to the constraint given by the Cozmo SDK about robot camera device.
 
 \subsubsection{Neural Networks}
 
