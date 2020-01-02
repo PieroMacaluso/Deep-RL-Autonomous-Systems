@@ -9,18 +9,18 @@
   "lr": 0.0003,
   "alpha": 0.2,
   "autotune_entropy": true,
-  "batch_size": 256,
+  "batch_size": 64,
   "max_num_run": 5,
   "max_num_step": 200,
-  "num_episode": 500,
+  "num_episode": 200,
   "hidden_size": 256,
   "updates_per_step": 250,
-  "warm_up_episode": 0,
+  "warm_up_episode": 10,
   "target_update": 1,
-  "replay_size": 50000,
+  "replay_size": 10000,
   "state_buffer_size": 2,
   "cuda": true,
   "pics": true,
   "img_size": 64,
-  "max_num_episode": 5000
+  "max_num_episode": 200
 }

@@ -182,7 +182,7 @@ if __name__ == '__main__':
                 memory.push(state, action, reward, next_state, mask)  # Append transition to memory
                 
                 state = next_state
-            if len(memory) > args.batch_size:
+            if len(memory) > args.batch_size and i_episode > args.warm_up_episode:
                 # Number of updates per step in environment
                 # Update parameters of all the networks
                 updates = agent.learning_phase(args.updates_per_step, memory, updates, writer_train, args.batch_size)
