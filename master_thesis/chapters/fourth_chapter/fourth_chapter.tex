@@ -1,3 +1,33 @@
+% \todomacaluso{
+% 	\begin{itemize}
+% 		\item Introduction to the chapter
+% 		\item General description of the control systems with a diagram representing all the technologies involved.
+%       \item Setup and implementation of CozmoEnv
+% 		      \begin{itemize}
+% 			      \item Technologies used to implement the interaction between the Cozmo SDK and OpenAI Gym.
+% 			      \item Differences from the simulated environment caused by the need for direct human interaction.
+% 			      \item Implementation of human interaction in the system.
+% 		      \end{itemize}
+% 		\item Setup of the algorithms (DDPG, SAC)
+% 		      \begin{itemize}
+% 			      \item We decided to rewrite both algorithms without using libraries directly.
+% The first motivation was didactical, implementing from scratch is helpful to understand the practical implementation of the algorithm better, but also to make it possible to implement the singularity of the real Cozmo environment.
+% 			      \item The interaction with OpenAI Gym and PyTorch
+% 			      \item Discussion about Hyper-Parameters and the problems faced in the real world situation in the selection of these parameters.
+% 		      \end{itemize}
+% 		\item Setup of the real Environment
+% 		      \begin{itemize}
+% 			      \item The Track design
+% 			      \item Analysis of the problems:
+% 			            \begin{itemize}
+% 				            \item Reflection
+% 				            \item Background and Horizon
+% 			            \end{itemize}
+% 			      \item (Single Line Track)
+% 		      \end{itemize}
+% 	\end{itemize}
+% }
+
 \chapter{Design of the control system}\label{ch:ch4}
 
 In the previous chapters, we outlined deep reinforcement learning fundamentals with its most critical underlying concepts, and then we discussed the choice made about the technologies to use as baselines for our experiments.
@@ -151,7 +181,7 @@ This section aims to describe as clearly as possible all the components of the c
 
     \end{tikzpicture}
     }
-    \caption[Interaction Human/Robot]{Interaction between the user and Anki Cozmo.
+    \caption[Interaction Human/Robot]{ Interaction between the user and Anki Cozmo.
         The main Python script utilises OpenAI Gym for the reinforcement learning component and PyTorch for the deep learning one.
         The user can influence with the flow of the system through a simple web app that interacts directly with OpenAI Gym and the Cozmo SDK to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands).
         The last component consists in TensorBoard thanks to the script can store results that can be retrieved later by the user.}
@@ -320,7 +350,23 @@ This symptom was strictly related to the robot's inability to have the right tim
 Accordingly, the robot ends up navigating with an average speed close to the half of the maximum speed and always going in a straight line only with small and temporary slopes to the right or left.
 After noting this problem, we fixed it by hard-coding a minimum interval between the execution of a specific action and the beginning of the next one in the OpenAI Gym environment: we selected this value according to the constraint given by the Cozmo SDK about robot camera device.
 
-\subsubsection{Neural networks and hyperparameters}
+\section{Algorithm setup}
+
+Another crucial step in the design of the system is the setup of Reinforcement Learning algorithms we exploited.
+This thesis aims to show a comparison between DDPG and SAC algorithms implemented to solve a real-world driving task, so it is essential to include in this document ideas and implemented choices we used to develop our system.
+
+Given the fervour that has led to an impressive development of reinforcement learning in recent years, numerous repositories were born to be able to offer ready-made implementations of the most famous algorithms in order to speed up the implementation process in the most suitable experiments.
+Nowadays, the most famous and exploited reinforcement learning repository available for developers is \textit{OpenAI Baselines} \footnote{OpenAI Baselines Github Repository: \href{https://github.com/openai/baselines}{https://github.com/openai/baselines}} which provides a set of high-quality implementations of reinforcement learning algorithms realised using \textit{Tensorflow} deep learning library.
+In addition to this last-mentioned work, there are many new forks of this project which offers improvements, refactorings or additional implementations of the latest algorithms offered by the continuous scientific research in this field.
+
+Despite this fact, we decided to implement our versions of DDPG and SAC from scratch taking the last-mentioned implementations as guidelines to follow in the developing process instead of exploiting them directly.
+We decided to follow this workflow primarily for didactical reasons.
+Implementing an algorithm from scratch, starting from the theory provided by the related paper escorted by the numerous implementations available is probably the best way to understand the whole set of ideas underlying algorithms properly.
+Furthermore, we made this decision to have the opportunity to manage and implement architectural choices to create a suitable workflow for the episodes carried out in Cozmo experiments that could be compatible with the human-robot interaction of Cozmo.
+
+This section contains the choices we made in the design of the neural network and a reflection about the selections made for the hyper-parameters of reinforcement learning algorithms.
+
+\subsection{Neural networks design}
 
 Another essential component in the developing of the control system is the convolutional neural network we designed.
 As already reported in chapter 3, we opted using PyTorch as deep learning framework.
@@ -366,81 +412,70 @@ It is noticeable that this fact does not apply to a real-world scenario like the
 Therefore the system is highly unstable because this process not always has the same length and every action lasts differently: it depends on the specific network topology.
 After the analysis of this behaviour, we decided to maintain the optimisation phase among episodes and to fix a specific duration for each action of Cozmo.
 
-The architecture we selected was a sort of merge of the ones we found in \cite{kendall2018learning,kendall2019learning,haarnoja2018alg}. We opted for a neural network with 3 convolutional layer with 16 features. We decided to use a stride of 2 instead of using pooling layers \cite{springenberg2014striving}. The last part of the architecture is composed by two fully-connected layer with an hidden size of 256 features.
+The architecture we selected was a sort of merge of the ones we found in \cite{kendall2018learning,kendall2019learning,haarnoja2018alg}.
+We opted for a neural network with three convolutional layers with 16 features of 3$\times$3 dimension. 
+We decided to use a stride of 2 instead of using pooling layers with a stride of 1, following ideas of the authors of \cite{kendall2018learning,kendall2019learning}.
+This decision aims to shorten the optimisation phase and obtain more manageable experiments without impacting performance excessively \cite{springenberg2014striving}.
+We applied batch normalisation after each convolutional level to improve the speed, performance, and stability of neural networks \cite{ioffe2015batch}.
+Finally, we flattened the results and used them as input for the last part of the architecture, which consists of two fully-connected layers with a hidden size of 256 features. 
+We decided to implement the network using the Rectified Linear Unit function (ReLU) as non-linearity, to initialise all network biases to 0 and all weights using Xavier initialisation \cite{glorot2010understanding}.
+\Vref{fig:cnn_cozmo} provides an overview of the network used as Q-Network.
+In this scenario, the outputs of the convolutional section were concatenated with actions, and there is one single output value after the fully-connected part.
+In the network used as policy, there is no concatenation at the end of the convolutional layers stack, and the output size depends on the dimensionality of the specific action space which, in the Cozmo scenario, is equal to 2.
+
+\begin{figure}
+
+    \centering
+    \includegraphics[width=\textwidth]{img/cnn_cozmo.png}
+    \caption[Convolutional Neural Network Architecture for Cozmo experiments]{ Convolutional Neural Network Architecture for Cozmo experiments.
+    This particular example shows the model exploited as the Q-function with a single value as output and two consecutive grayscale images which represents the state of the environment.
+    The first part of the network consists of three convolutional layers with 16 features of 3$\times$3 dimensions. Each level is supplemented by a batch normalisation one.
+    The results are then flattened and concatenated with the vector of actions before entering the second part. This section consists of two fully-connected layers with 256 features.
+    The output of this particular network is a single value that represents the Q-Value that refers to the action in question.
+    This network uses ReLu as non-linearity. Before starting experiments, the network is initialised with biases equal to zero and weights set utilising Xavier initialisation \cite{glorot2010understanding}.}
+    \label{fig:cnn_cozmo}
+\end{figure}
+
+\subsection{Algorithms implementations and Hyperparameters}
 
 
+\section{Real-World experiments}
 
-\subsubsection{Data Analysis}
+\subsection{The Track}
 
-\subsection{Reinforcement learning algorithms implementations}
+The design and training of a good driving model cannot go beyond the construction and design of the road.
+For this reason, some time was spent searching the better way to build a path where to train Cozmo.
+This section aims to present the central concept and decisions made about the design of the track for the experiments, starting from the materials used, up to the description of the dimensional choices applied.
 
+\subsubsection{Track requirements}
 
+It is essential to explain the primary needs of the road before proceeding with the description of the choices made.
 
-% \todomacaluso{
-% 	\begin{itemize}
-% 		\item Introduction to the chapter
-% 		\item General description of the control systems with a diagram representing all the technologies involved.
-% 		\item Setup of the algorithms (DDPG, SAC)
-% 		      \begin{itemize}
-% 			      \item We decided to rewrite both algorithms without using libraries directly.
-% The first motivation was didactical, implementing from scratch is helpful to understand the practical implementation of the algorithm better, but also to make it possible to implement the singularity of the real Cozmo environment.
-% 			      \item The interaction with OpenAI Gym and PyTorch
-% 			      \item Discussion about Hyper-Parameters and the problems faced in the real world situation in the selection of these parameters.
-% 		      \end{itemize}
-% 		\item Setup and implementation of CozmoEnv
-% 		      \begin{itemize}
-% 			      \item Technologies used to implement the interaction between the Cozmo SDK and OpenAI Gym.
-% 			      \item Differences from the simulated environment caused by the need for direct human interaction.
-% 			      \item Implementation of human interaction in the system.
-% 		      \end{itemize}
-% 		\item Setup of the real Environment
-% 		      \begin{itemize}
-% 			      \item The Track design
-% 			      \item Analysis of the problems:
-% 			            \begin{itemize}
-% 				            \item Reflection
-% 				            \item Background and Horizon
-% 			            \end{itemize}
-% 			      \item (Single Line Track)
-% 		      \end{itemize}
-% 	\end{itemize}
-% }
+Firstly, the track needs to be easily transportable to allow various attempt with different locations and environmental conditions that could affect the training phase.
+In particular, it is necessary to use a material less reflective as possible to avoid problems during the learning process.
+Another crucial factor is the dimension of the lane, which must reproduce an environment similar to the real one.
+It can be done analyzing the ratio of the size of a vehicle to the width of a road.
+On average, a family car is about $160$-$170$cm large, while a lane width can vary between $275$cm and $375$cm.
+Cozmo width is about $5.5$cm, which results in a ratio of $1/30$.
+Therefore, the scaled lane must be between $9$cm and $12.5$cm.
 
-% \section{The track}
+\subsubsection{Track design and materials}
 
-% The design and training of a good driving model cannot go beyond the construction and design of the road.
-%For this reason, some time was spent searching the better way to build a path where to train Cozmo.
-% This section aims to present the central concept and decisions made about the design of the track for the experiments, starting from the materials used, up to the description of the dimensional choices applied.
-
-% \subsection{Track requirements}
-
-% It is essential to explain the primary needs of the road before proceeding with the description of the choices made.
-
-% Firstly, the track needs to be easily transportable to allow various attempt with different locations and environmental conditions that could affect the training phase.
-%In particular, it is necessary to use a material less reflective as possible to avoid problems during the learning process.
-% Another crucial factor is the dimension of the lane, which must reproduce an environment similar to the real one.
-% It can be done analyzing the ratio of the size of a vehicle to the width of a road.
-% On average, a family car is about $160$-$170$cm large, while a lane width can vary between $275$cm and $375$cm.
-% Cozmo width is about $5.5$cm, which results in a ratio of $1/30$.
-% Therefore, the scaled lane must be between $9$cm and $12.5$cm.
-
-% \subsection{Track design and materials}
-
-% The first choice to make is the one about the type of material to use as terrain for the track.
-% The first choice was the black floor of the Data Science laboratory of Eurecom.
-% It was useful only during the initial design and development of the control system to build small pieces of track in which testing functionalities.
-% This solution had numerous drawbacks such as the impracticality to transport and high light reflection.
+The first choice to make is the one about the type of material to use as terrain for the track.
+The first choice was the black floor of the Data Science laboratory of Eurecom.
+It was useful only during the initial design and development of the control system to build small pieces of track in which testing functionalities.
+This solution had numerous drawbacks such as the impracticality to transport and high light reflection.
 
 
-% The following list provides a brief report of the various solutions taken into account during the thesis, together with an analysis of advantages and drawbacks.
+The following list provides a brief report of the various solutions taken into account during the thesis, together with an analysis of advantages and drawbacks.
 
-% \begin{itemize}
-% 	\item \textit{Covering fabric}: this material is easily transportable, but it has a high light reflection, and its structure is prone to make wrinkles and dunes challenging to remove.
-% 	\item \textit{Tar paper}: this solution slightly diminished the reflection problem compared to the previous choice, but the material was fragile and with the same drawbacks of the covering fabric.
-% 	\item \textit{Cotton fabric}: this solution offers an easily  transportable material with reduced light reflection where it is easy to remove wrinkles and dunes.
-% \end{itemize}
+\begin{itemize}
+	\item \textit{Covering fabric}: this material is easily transportable, but it has a high light reflection, and its structure is prone to make wrinkles and dunes challenging to remove.
+	\item \textit{Tar paper}: this solution slightly diminished the reflection problem compared to the previous choice, but the material was fragile and with the same drawbacks of the covering fabric.
+	\item \textit{Cotton fabric}: this solution offers an easily  transportable material with reduced light reflection where it is easy to remove wrinkles and dunes.
+\end{itemize}
 
-% Summing up, it is noticeable from this analysis that the cotton fabric provides the right trade-off among all requirements reported before.
+Summing up, it is noticeable from this analysis that the cotton fabric provides the right trade-off among all requirements reported before.
 
-% The structure of the road is also composed by the lane.
-% The implementation of this part was done using a simple paper tape of width equal to $2.5$cm. As described in the beginning of this section, the width of the lane must be between $9$cm and $12.5$cm to provide a context similar to the real one. Because of the narrow and limited angle of vision provided by Cozmo camera, $10$cm-width was set: positioning the tape with a distance greater than $10$cm would result in a great part of the tape outside the view of the camera.
+The structure of the road is also composed by the lane.
+The implementation of this part was done using a simple paper tape of width equal to $2.5$cm. As described in the beginning of this section, the width of the lane must be between $9$cm and $12.5$cm to provide a context similar to the real one. Because of the narrow and limited angle of vision provided by Cozmo camera, $10$cm-width was set: positioning the tape with a distance greater than $10$cm would result in a great part of the tape outside the view of the camera.

@@ -207,7 +207,7 @@ On the opposite side, methods could be \textit{value-based}. In this case, the a
 		\draw[pil]   (valpol.north) -- ($(valpol.north) + (0cm,1cm)$)  |-  (experience.east);
 		\draw[pil]   ($(model.east) - (0cm,0.2cm)$)  --  ($(valpol.west) - (0cm,0.2cm)$);
 	\end{tikzpicture}
-	\caption[Overview of different components in learning]{\small Overview of components of an agent with their relation in respect of different approaches of learning. Model-Free methods works with the experience, value functions and the policy, while model-based techniques tries to build up a model to derive value functions and policy to act in the environment.}
+	\caption[Overview of different components in learning]{ Overview of components of an agent with their relation in respect of different approaches of learning. Model-Free methods works with the experience, value functions and the policy, while model-based techniques tries to build up a model to derive value functions and policy to act in the environment.}
 	\label{fig:components}
 \end{figure}
 
@@ -268,7 +268,7 @@ This iterative scheme of dynamic programming can represent almost all reinforcem
 	\begin{minipage}[b]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{img/gpi01.png}
 	\end{minipage}
-	\caption{\small Generalised policy iteration schema \cite{sutton2018reinforcement}. Value and policy functions compete and cooperate to reach the joint solution: the optimal value function and an optimal policy.}
+	\caption{ Generalised policy iteration schema \cite{sutton2018reinforcement}. Value and policy functions compete and cooperate to reach the joint solution: the optimal value function and an optimal policy.}
 	\label{fig:gpi}
 \end{figure}
 
@@ -425,7 +425,7 @@ The neuron elaborates the inputs by taking the weighted sum, adding a bias $b$ a
 	\begin{minipage}[b]{0.4\textwidth}
 		\includegraphics[width=\textwidth]{img/neuron_model.jpeg}
 	\end{minipage}
-	\caption{\small Comparison between biological neuron (left) and artificial neuron (right). The artificial neuron designs the dendrites as weighted inputs and returns the sum through an activation function. \cite{stanford2019cs231n}.}
+	\caption{ Comparison between biological neuron (left) and artificial neuron (right). The artificial neuron designs the dendrites as weighted inputs and returns the sum through an activation function. \cite{stanford2019cs231n}.}
 	\label{fig:neuron}
 \end{figure}
 
@@ -594,7 +594,7 @@ It is possible to suppose that the first layers have to learn low-level features
 	\centering
 	\includegraphics[width=\textwidth]{img/lenet5.jpg}
 
-	\caption{\small Comparison between biological neuron (left) and artificial neuron (right). The artificial neuron designs the dendrites as weighted inputs and returns the sum through an activation function. \cite{stanford2019cs231n}.}
+	\caption{ Comparison between biological neuron (left) and artificial neuron (right). The artificial neuron designs the dendrites as weighted inputs and returns the sum through an activation function. \cite{stanford2019cs231n}.}
 	\label{fig:lenet5}
 \end{figure}
 
@@ -634,7 +634,7 @@ The most common types of pooling layer are the \textit{max-pooling} and the \tex
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.7\textwidth]{img/maxpool.jpeg}
-	\caption{\small Example of a max-pooling operation with a stride of 2 and a spatial extent of 2. \cite{stanford2019cs231n}.}
+	\caption{ Example of a max-pooling operation with a stride of 2 and a spatial extent of 2. \cite{stanford2019cs231n}.}
 	\label{fig:avgpool}
 \end{figure}
 
@@ -694,7 +694,7 @@ The dueling DQN architecture \cite{wang2015dueling} presented in \vref{fig:dueli
 			\node[mylabel, above right=0.8cm and -4.6cm of image.south] (action) {\LARGE \textcolor{PineGreen}{$\theta$}};% node s_t
 		\end{tikzpicture}
 	}
-	\caption[Dueling DQN]{\small Dueling DQN architecture \cite{wang2015dueling}: It consists in two stream to estimate state-value parametrised with $\beta$ and advantages values parametrised with $\alpha$ for each action. The last layer represent the combination of these two types of values to obtain the Q-function. \cite{franccois2018introduction}}
+	\caption[Dueling DQN]{ Dueling DQN architecture \cite{wang2015dueling}: It consists in two stream to estimate state-value parametrised with $\beta$ and advantages values parametrised with $\alpha$ for each action. The last layer represent the combination of these two types of values to obtain the Q-function. \cite{franccois2018introduction}}
 	\label{fig:duelingdqn}
 \end{figure}
 
@@ -734,7 +734,7 @@ Standard practice is to update both networks with the \textit{TD-Error}, discuss
 \begin{figure}[!h]
 	\centering
 	\includegraphics[height=0.5\textwidth]{img/actorcritic.png}
-	\caption{\small Actor-critic architecture schema: the actor represents the policy and maps the input state to an output action, while the critic represents the value function. Both networks can be updated with, e.g.  the TD-error, using the contribution of the critic. It is noticeable that the actor uses the critic during the learning process \cite{sutton2018reinforcement}.}
+	\caption{ Actor-critic architecture schema: the actor represents the policy and maps the input state to an output action, while the critic represents the value function. Both networks can be updated with, e.g.  the TD-error, using the contribution of the critic. It is noticeable that the actor uses the critic during the learning process \cite{sutton2018reinforcement}.}
 	\label{fig:actorcritic}
 \end{figure}
 

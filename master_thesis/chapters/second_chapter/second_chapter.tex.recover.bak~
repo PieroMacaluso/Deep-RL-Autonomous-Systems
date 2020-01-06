@@ -221,7 +221,7 @@ On the opposite side, methods could be \textit{value-based}. In this case, the a
 	\draw[pil]   (valpol.north) -- ($(valpol.north) + (0cm,1cm)$)  |-  (experience.east);
 	\draw[pil]   ($(model.east) - (0cm,0.2cm)$)  --  ($(valpol.west) - (0cm,0.2cm)$);
 	\end{tikzpicture}
-	\caption[Overview of different components in learning]{\small Overview of components of an agent with their relation in respect of different approaches of learning. Model-Free methods works with the experience, value functions and the policy, while model-based techniques tries to build up a model to derive value functions and policy to act in the environment.}
+	\caption[Overview of different components in learning]{ Overview of components of an agent with their relation in respect of different approaches of learning. Model-Free methods works with the experience, value functions and the policy, while model-based techniques tries to build up a model to derive value functions and policy to act in the environment.}
 	\label{fig:components}
 \end{figure}
 
@@ -283,7 +283,7 @@ This iterative scheme of dynamic programming can represent almost all reinforcem
 	\begin{minipage}[b]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{img/gpi01.png}
 	\end{minipage}
-	\caption{\small Generalized policy iteration schema \cite{sutton2018reinforcement}. Value and policy functions compete and cooperate to reach the joint solution: the optimal value function and an optimal policy.}
+	\caption{ Generalized policy iteration schema \cite{sutton2018reinforcement}. Value and policy functions compete and cooperate to reach the joint solution: the optimal value function and an optimal policy.}
 	\label{fig:gpi}
 \end{figure}
 
