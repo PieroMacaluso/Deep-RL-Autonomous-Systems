@@ -438,6 +438,22 @@ In the network used as policy, there is no concatenation at the end of the convo
 
 \subsection{Algorithms implementations and Hyperparameters}
 
+As already mentioned in this section, the experiments we made in this thesis were carried out in a real-world environment.
+At the beginning of this thesis work, we implemented the DDPG algorithm following the theory of the related paper and the hyperparameters suggested in \cite{lillicrap2015continuous,kendall2018learning,kendall2019learning}.
+This process was carried out in parallel with the implementation of the same algorithms for a simulated environment offered by the OpenAI Gym framework, \textit{Pendulum-v0}.
+This decision was useful to check the correctness of the architectural decisions we made step by step.
+Despite this fact, the learning context of Cozmo showed its complexity since the first experiments bringing out differences from \textit{Pendulum-v0} environment.
+We found out that, in order to obtain acceptable results that could show as clearly as possible whether the algorithm is working and improving with the selected set of parameters, it was necessary to wait for a large number of epochs corresponding to tens of hours or few days depending on the neural network architecture and the hyper-parameters.
+Furthermore, these experiments can not exploit the advantages of the simulated environment in which the researcher can set the parameter ranges at the beginning, leaving the computer to start and complete the search for each combination of the available parameters.
+The real-world approach we described in this chapter needs the constant presence of a human to carry out the learning process, and the whole procedure is further slowed down by the life of the Cozmo battery and its charging times: both take about 30 minutes.
+It is noticeable that, in a real-world scenario like this, it is almost impossible to make a humanly manageable workflow capable of doing a sustainable grid search.
+For this reason, we decided to initialise these parameters following the guidelines provided by the DDPG paper.
+After this implementation, we started a search for a reinforcement learning algorithm more suitable for real-world problems.
+The ideal objective would be to find a hyperparameter agnostic algorithm capable of performing regardless of algorithm configuration and ensuring the absence of unfairness introduced from external sources \cite{henderson2018deep}.
+The last-mentioned aim is still being researched today by the scientific community.
+Despite this fact, we found out an algorithm capable of automatically adapt itself to reduce the hyper-parameter dependency: SAC, an algorithm which was born precisely as an evolution of the DDPG approach to improve its performance in a real-world application and overcome hyper-parameters dependency.
+Therefore, we also implemented this algorithm from scratch by using the implementation of the so-called \textit{parameter auto-tuning} proposed in \cite{haarnoja2018soft, haarnoja2018alg}.
+\Vref{ch5,ch6} will present the performance comparison between these two algorithms both in a \textit{Pendulum-v0} simulated environment and in the real-world Cozmo one.
 
 \section{Real-World experiments}
 
