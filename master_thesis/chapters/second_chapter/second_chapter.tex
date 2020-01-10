@@ -1,4 +1,4 @@
-\chapter{Reinforcement Learning} \label{ch2}
+\chapter{Reinforcement Learning} \label{ch:ch2}
 
 Reinforcement learning (RL) is a field of Machine Learning that is experiencing a period of great fervour in the world of research, fomented by recent progress in deep learning (DL) which opened the doors to function approximation developing what is nowadays known as deep reinforcement learning (deep RL).
 RL represents the third paradigm of machine learning alongside supervised and unsupervised learning. The idea underlying this research field is that the learning process to solve a decision-making problem consists in a sequence of trial and error where the \textit{agent}, the protagonist of RL, could discover and discriminate valuable decisions from penalising ones exploiting information given by a \textit{reward signal}. This interaction has a strong correlation with what human beings and animals do in the real world to forge their behaviour.
@@ -1027,7 +1027,7 @@ During the test phase, the algorithm uses the mean action instead of a  sample f
 	\label{sacalg}
 \end{algorithm}
 
-\section{Related Work}
+\section{Related Work} \label{sec:related-work}
 
 %\todomacaluso{
 %	\begin{itemize}
@@ -1036,7 +1036,8 @@ During the test phase, the algorithm uses the mean action instead of a  sample f
 %	\end{itemize}	
 %}The project of this thesis aims to design a control system for a small toy robot called Anki Cozmo (see \vref{sec:cozmo}) and formalise the driving learning problem as a Markov decision process to enable the application of reinforcement learning algorithms.
 
-A truly inspiring work for this thesis is \cite{kendall2019learning} where the authors show, probably for the first time, that deep reinforcement learning is a viable approach to autonomous driving. Nowadays,  most approaches focus on formal logic which determines driving behaviour using annotated 3D geometric maps: the external mapping infrastructure intuitively makes this approach limited to the models and the representation of the surroundings.
+A truly inspiring work for this thesis is \cite{kendall2019learning} where the authors show, probably for the first time, that deep reinforcement learning is a viable approach to autonomous driving.
+Nowadays,  most approaches focus on formal logic which determines driving behaviour using annotated 3D geometric maps: the external mapping infrastructure intuitively makes this approach limited to the models and the representation of the surroundings.
 This technique is not able to scale up efficiently because of last-mentioned strong dependencies.
 
 The fundamental concept underlying \cite{kendall2019learning} to make autonomous driving systems a ubiquitous technology is the design of a system which can drive relying - just like humans - on a comprehensive understanding of the immediate environment \cite{badrinarayanan2017segnet}.
@@ -1069,7 +1070,7 @@ Not only it shows great performances in numerous challenging tasks compared to d
 
 The real-world robotic task involving a 3-finger dexterous robotic hand to manipulate an object similar to a sink faucet with a coloured end presented in \cite[Section 7.3]{haarnoja2018alg} shows similar concepts to the task analysed in this thesis for what concerns the framework of deep reinforcement learning exploited. The algorithm exploits raw RGB images and processes them through a convolutional neural network. The final goal of the robot is to rotate the valve into the correct position -- with the coloured part pointing to the right -- starting from a random position for each episode. The results obtained represents one of the most sophisticated real-world robotic manipulation tasks learned end-to-end with deep reinforcement learning, starting from raw images and without any previous simulation or pretraining phase.
 
-Taking all arguments into account, we decided to follow \cite{kendall2019learning} implementing a similar self-driving framework based on the design of a control system for a small toy robot called Anki Cozmo (see \vref{ch4}). Therefore, we formalise the autonomous driving learning problem as a Markov decision process to enable the application of reinforcement learning algorithms, taking into account the improvements mentioned in this section about model-free reinforcement learning algorithms applied to real-world robotic problems. \Vref{ch4} provides a detailed description of the choice made and the system design.
+Taking all arguments into account, we decided to follow \cite{kendall2019learning} implementing a similar self-driving framework based on the design of a control system for a small toy robot called Anki Cozmo (see \vref{ch:ch4}). Therefore, we formalise the autonomous driving learning problem as a Markov decision process to enable the application of reinforcement learning algorithms, taking into account the improvements mentioned in this section about model-free reinforcement learning algorithms applied to real-world robotic problems. \Vref{ch:ch4} provides a detailed description of the choice made and the system design.
 
 
 

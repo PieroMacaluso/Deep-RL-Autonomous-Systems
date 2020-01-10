@@ -31,31 +31,36 @@
 \chapter{Design of the control system}\label{ch:ch4}
 
 In the previous chapters, we outlined deep reinforcement learning fundamentals with its most critical underlying concepts, and then we discussed the choice made about the technologies to use as baselines for our experiments.
-The decision fell on Anki Cozmo because of the high-quality SDK provided to developers and the versatility and flexibility provided by PyTorch, especially in a research context.
+The decision fell on Anki Cozmo because of the high-quality SDK provided to developers, ts dimension and its features, while for what concerns the deep learning framework we opted for the versatility and flexibility provided by PyTorch, particularly suitable for a research context.
 
 The following step in the path of this thesis consists of merging reinforcement learning theory with tools and frameworks presented previously to create the system in question.
 Indeed, this chapter aims to describe the design of the control system for reinforcement learning experiments with Anki Cozmo.
 The work presented in this part represents one of the contributions of our thesis and the necessary step towards reinforcement learning experiments.
 
 The outline of the whole ecosystem with the description of interfaces, frameworks and technologies used occupies the first section of the chapter.
-This part also comprehends a discussion about DDPG~\cite{lillicrap2015continuous} and SAC~\cite{haarnoja2018soft, haarnoja2018alg} implementation with references to the choice made in terms of hyper-parameters and problems faced.
+This part also comprehends the description about the implementation of the OpenAI Gym environment to make reinforcement learning algorithms interact with Cozmo, emphasising its differences from a typical simulated environment: we will start from the problem formalisation as Markov Decision Process (MDP) to conclude with the implementation of human-robot interaction.
 
-The second part of the chapter aims to describe the implementation of Anki Cozmo OpenAI Gym environment from the problem formalisation as MDP to the implementation of human-robot interaction.
-
-In the final section of this chapter, the design and setup of the real track will be discussed together with a discussion about the problems faced and the choice made to overcome them.
+We already presented the theory underlying DDPG~\cite{lillicrap2015continuous} and SAC~\cite{haarnoja2018soft, haarnoja2018alg} algorithms in \vref{ch:ch2}.
+For this reason, the second section consists of a discussion about the specificities of reinforcement learning implementations we built with references to the choice we made in terms of hyper-parameters and neural network design in a real-world application.
+In the final section of this chapter, we will present some relevant problem we faced in the design and setup of the real-world track together with the decision we made to overcome them.
 
 \section{Outline of the system}\label{sec:outline-of-the-system}
 
 The development of the control system for Anki Cozmo was the main contribution of the thesis, together with the implementation of DDPG and SAC algorithm.
-The main aim of this work was to create an OpenAI Gym environment capable of interacting with a robot in the real world, not just through the usage of a simulator.
+The main aim of this work was to create an OpenAI Gym environment capable of interacting with a robot in the real world without any interaction, fine-tuning or prior knowledge obtained through the use of a simulator.
 OpenAI Gym usually provides plain and straightforward interfaces to interact with simulated environments: we decided to exploit these functions to allow the application of reinforcement learning algorithm directly in the real-world decision of the robot.
+
 
 The fundamental source of inspiration to develop this control system was~\cite{kendall2018learning,kendall2019learning}.
 This publication represents, as its authors reported, the first reinforcement learning self-driving experiment where a car learned to drive through the application of a reinforcement learning algorithm, by trial and error.
-They first trained the model exploiting Deep Deterministic Policy Gradient (DDPG) in a simulator for many epochs and, after this learning process, they managed to transfer the knowledge acquired in the simulator in real-world experiments.
+They first trained the model exploiting Deep Deterministic Policy Gradient (DDPG) in a simulator for many epochs to find the most suitable values to use.
+After this simulated learning process, they started their experiments in the real world using the set of parameters obtained from preceding experiments.
+Unfortunately, the authors did not describe in details the fine-tuning process in the simulation and did not provide the results of these experiments in order to allow a weighted comparison with the real-world experiment.
+They revealed only a  table with a report of the best performance for each model.
+This fact, accompanied by the challenging prerogatives of this type of experimentation, was the propulsive thrust that led us to attempt to implement a similar reinforcement learning configuration without any prior help from simulations.
 
 We decided to export and implement these ideas in our project, adapting them to the specificities and particularities of the Cozmo setup.
-The resulting system can be summed up by~\vref{fig:system} which provide a schematic overview of every technology employed and the interaction among them.
+\Vref{fig:system} summarises the resulting system providing a schematic overview of every technology employed and interactions among them.
 This section aims to describe as clearly as possible all the components of the control system we designed.
 
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
@@ -188,71 +193,33 @@ This section aims to describe as clearly as possible all the components of the c
     \label{fig:system}
 \end{figure}
 
-\subsection{Human-Robot Interaction} \label{subsec:human-robot-interaction}
-
-It is noticeable that the simulator can undoubtedly be programmed to understand whenever the car is going outside the track, crossing the roadside.
-In a reinforcement learning scenario, this fact facilitates the restarting procedure for an episode: the developer has to bind some events or actions to a process that stops the current episode, put the car on the road again and starts the next experiment.
-In the real world, the situation is more complicated not only because of the need of the human intervention to relocate the car in a safe place but also because there are more variables to take into account.
-The most critical factor is that the failure of an episode in the simulator has no threats or costs, while real-world experiments failures could lead to high costs and severe damage to the car and equipment.
-Despite this point, the application of such experiment typology in a real environment instead of a mere simulation represents an exciting challenge that could bring reinforcement learning to the next level.
-In order to make experiments as safe as possible, the authors of~\cite{kendall2018learning,kendall2019learning} implemented a self-driving system designed explicitly for self-driving reinforcement learning experiments where the car driver has the faculty of stopping the car when it is going to run off the road or in a dangerous situation and relocating it in the nearest safe position to start the next learning episode.
-By simply pressing a button, the logic of the car disables reinforcement learning algorithm decision and gives full control to the real driver of the car.
-
-We aimed to implement this kind of user-robot interaction also in our setup.
-The requirements were almost the same as the ones described in the paper, but this case could not rely on steering wheel, brakes and accelerator as in the car scenario where they are directly accessible by the user.
-The system needed an interface to allow the user to stop the robot whenever it is approaching the side of the road and manoeuvre the robot just like a car.
-
-For this reason, we firstly implemented a straightforward interface using a web app implemented using plain HTML5, CSS3 and Javascript for the frontend and Flask \footnote{Flask Github Repository: \href{https://github.com/pallets/flask}{https://github.com/pallets/flask}}, a lightweight Web Server Gateway Interface (WSGI) web application framework, as backend.
-Therefore, we designed the web-app interface by using the Bootstrap framework \footnote{Bootstrap documentation: \href{https://getbootstrap.com/}{https://getbootstrap.com/}} to offer an easy-understandable and appealing user experience.
-
-The aim of this application is allowing user interaction with Cozmo and Flask represented the right choice to allow the communication between this interface and the OpenAI Gym environment.
-The Flask backend interacts directly with the functions offered by Cozmo SDK to allow the user to see the live streaming from Cozmo camera directly in the web app.
-Therefore it can receive, convert and forward commands from the robot to the SDK.
-These commands consist of the pressure of both single or combination of buttons: Flask decides the action to trigger programmatically with hard-coded conditions and calculates speeds and accelerations of both right and left treads.
-
-The SDK function we utilised to control Cozmo is \texttt{drive\_wheels()}.
-The parameters of this function are the following:
-
-\begin{itemize}
-    \item \textbf{\texttt{l\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the left tread (in millimeters per second).
-    \item \textbf{\texttt{r\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the right tread (in millimeters per second).
-    \item \textbf{\texttt{l\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the left tread (in millimeters per second squared).
-          The default value is the equal to \texttt{l\_wheel\_speed}.
-    \item \textbf{\texttt{r\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the right tread (in millimeters per second squared).
-          The default value is the equal to \texttt{r\_wheel\_speed}.
-    \item \textbf{\texttt{duration}} (\textit{float}): it specifies the duration of the driving action of the robot.
-          It calls \texttt{stop\_all\_motors()} after this duration has passed.
-          The default value is \texttt{None}, in this case, the behaviour of this function is equivalent to the non-async \texttt{drive\_wheel\_motors()} one: the wheels will continue to move at that speed until commanded to drive at a new speed.
-\end{itemize}
-
-This method is the same we used to implement the OpenAI Gym environment, allowing the algorithm to interact with the robot just like a human in the driving seat.
-Just as examples, the user can start and stop the episode using the enter button, forget the previous episode with backspace and relocate the robot on the track using W, A, S and D buttons.
-
-In this context, the human-robot interaction has a crucial role in the learning process.
-It represents the source of all improvements and imperfections of learning process results: the robot learns which actions are valuable and which are unprofitable or disadvantageous, but it is essential to remember that the human is the one who decides the correctness of each action by stopping the car in a dangerous situation.
-This fact leads to the introduction of unconscious bias in the algorithm that could affect final results.
-We will discuss the experiments and their results thoroughly in \vref{ch5,ch6}.
-
 \subsection{OpenAI Gym Cozmo Environment}
 
-This section describes the main features we implemented in \textit{CozmoEnv}, the OpenAI Gym environment we developed to apply and test reinforcement learning algorithms with Cozmo.
+Before starting the description of the system we designed to carry out reinforcement learning experiments it is necessary to outline the decisions we made about what to implement in \textit{CozmoEnv}, the OpenAI Gym environment we developed to apply, train and test reinforcement learning algorithms with Cozmo.
 
-\subsubsection{MDP formalisation}
+The path of this section will follow the steps of a typical formalization of the Markov Decision Process (MDP), bringing out the problems encountered, the reasoning behind them and solutions proposed as they go.
 
-The first important step to implement a reinforcement learning environment is formalising the problem we want to solve as a Markov Decision Process (MDP).
+\subsubsection{Markov Decision Process Formalisation}
+
 Starting from the definition of MDP that we already reported in~\vref{eq:mdp}, we studied and investigated the best configuration to provide an acceptable trade-off between performance and memory consumption, capable of making the system work on the development machine we used for our experiments.
 In the following paragraphs, we will analyse each MDP aspects paying particular attention to the problems we faced and the motivations behind every decision made to overcome them.
 
-\paragraph{State/Observation Space} The environment observation is the group of information that the reinforcement learning agent can see and obtain from the interaction with the real world.
-In the self-driving tasks in question, the most reasonable way to obtain knowledge about the surrounding environment is to exploit front camera images provided by Cozmo SDK.
-However, it is essential to remember that the state must satisfy the Markov property according to which it must be independent of the past given the present.
+\paragraph{State/Observation Space}
+The environment observation is the group of information that the reinforcement learning agent can see and obtain from the interaction with the real world.
+Current autonomous driving technology usually works thanks to the presence of various sensor positioned in different points of the car body as we discussed in \vref{sec:related-work}.
+However, this approach is quite different from what human beings use to guide every day: the only input that the human receives is what he sees.
+Taking this fact into account, in the self-driving tasks in question, we thought that the most reasonable way to obtain knowledge about the surrounding environment as similar as possible to how humans do was to exploit front camera images provided by Cozmo SDK.
+However, it is essential to remember that, by definition, the state must satisfy the Markov property.
+According to this definition, \textit{the state must be independent of the past given the present}.
 Using a single image to describe the current state may be an oversimplification of the problem.
 Even a human would not be able to determine the best action to take starting from a single frame.
 That is because it is difficult to infer or determine the current direction of the car, speed or steering wheel position.
-Merely adding another image can intuitively improve the human perception of the scene: as an example, the first intuition this introduction could reveal is where the car is going.
+Merely adding another image can intuitively improve the human perception of the scene: as an example, the first intuition this introduction could reveal is where the car is going, allowing the user to decide more accurately about the trajectory to follow.
 
 To verify this fact before starting the experiments with the application of the reinforcement learning algorithms to Cozmo, we firstly analysed the results of some experiments on the environment of the classic control problem of trying to keep a frictionless pendulum standing up (\textit{Pendulum-v0}).
 The original version of this environment utilises angle position and trigonometric results as observation to return to the agent.
+However, this environment offers to the user the access to the images provided by the OpenAI Gym \texttt{render} interface.
+It represents an entirely different kind of experiment from Cozmo driving task, but they have in common the improvement in trajectory inference brought by the presence of a number of raw images greater than one.
 In order to make this environment suitable for convolutional neural networks, we decided to appropriately modify it to exploit raw images as observations instead of the original information.
 We noticed that the usage of a single image as observation leads to unstable and worse results than the ones obtained by combining two subsequential images to feed the algorithm.
 For this reason, we decided to use two consecutive raw images provided by Cozmo by using a queue data structure with size two.
@@ -261,7 +228,7 @@ In the code flow, the developer merely has to push the next image obtained by th
 Therefore, we decided to reduce the original size of the input Cozmo image to 64$\times$64.
 We made this decision as a trade-off between performance, learning phase duration and space available in the central memory to store the replay memory.
 
-In conclusion, the observation provided to the agent is the concatenation of two images with dimension 64$\times$64 pixels.
+In conclusion, the observation provided to the agent is the concatenation of two grayscale images with dimension 64$\times$64 pixels.
 
 \paragraph{Action Space}
 
@@ -272,9 +239,9 @@ To straightforwardly formalise these two parts, we decided to use two simple rea
 We chose to define the desired speed value in a range of 0 to 1, while we opted for a range of -1 to 1 for the steering wheel position.
 These limits allow the agent to manipulate simple values in the decision-making process and to facilitate the manipulation of neural network results.
 At the same time, the underlying logic of the environment takes care to translate these values into a compatible format for the Cozmo SDK.
-Indeed, as we reported previously in this section, the Cozmo SDK function exploited to manoeuvre the robot needs at least the speed of each tread.
+Indeed, as reported in \vref{subsec:human-robot-interaction}, the Cozmo SDK function exploited to manoeuvre the robot needs at least the speed of each tread.
 \Vref{conversionCozmoEnv} reports key steps of this translation.
-Therefore we decided to raise acceleration parameters by setting them equal to 4 times the desired speed of each thread.
+Therefore we decided to raise acceleration parameters by setting them equal to 4 times the velocity of each thread to reach the desired speed as fast as possible.
 
 \begin{algorithm}[!h]
     \SetAlgoLined
@@ -302,7 +269,7 @@ After a review of the available literature and the analysis of the problem, we o
           The main aim is to prioritise the correct positioning of the car on the lane, crucial for driving safety.
           However, it is noticeable that this value can be easily calculated in a simulated environment, while it needs a lot of sensors and calculation to obtain a good estimation in a real-world environment.
           Beyond this problem, this approach has difficulties in scaling to varying environments where road typology and dimension is not a pre-configured constant.
-          Therefore, it is a limited approach because, clearly, human beings do not always drive the car in the perfect centre of the lane: for instance, when approaching a curve it could be more convenient to move the car from slightly away from the perfect centre.
+          Therefore, it is a limited approach because, clearly, human beings do not always drive the car in the perfect centre of the lane: for instance, when approaching a curve it could be more convenient to move the car slightly away from the perfect centre.
 
           This fact reveals the shortcomings of this approach: the system can perform only as good as the human intuition underlying the hand-crafted lane reward.
 
@@ -316,7 +283,7 @@ After a review of the available literature and the analysis of the problem, we o
           Indeed, in the designed system, we have direct access to the aspired speed because it is a parameter that the agents decide at each iteration, and it is possible to derive the time elapsed between one action and its following one by manually calculating them inside the OpenAI Gym environment.
 
     \item \textbf{Speed Crash Penalty}: the third typology of reward we investigated consists of a sort of life bonus reward.
-          The robot receives a reward (e.g./ 1 point) for each timestep of correct decisions and a negative reward (e.g./ -10 points) every time the user stops the robot preventing the crash.
+          The robot receives a reward (e.g.\ 1 point) for each timestep of correct decisions and a negative reward (e.g.\ -10 points) every time the user stops the robot preventing the crash.
           Therefore we added to the positive reward a small quantity that depends on the current speed to encourage the robot to stay on track and increase its speed.
           Consequently, we decided to add a penalty in faulty time step proportional to the robot crash speed to entice the robot in avoiding high speed when close to critical points.
           \Vref{eq:speedCrashPenalty} formalises the reward used in this environment: $p_1$ and $p_2$ are two parameters that determine how much the speed influence the reward and their module must be much less than the constant value in the equation to highlight the fact that they represent a secondary objective \cite{raffin2019learning}.
@@ -337,18 +304,49 @@ In the second option, the distance covered by the robot is equal to the reward, 
 For this reason, we decided to take the second reward proposal for this time.
 We noticed that it could be an exciting future development trying to merge the second alternative with the third one to obtain a brand new reward function that both penalises bad decisions proportionally to speed and maintain its correspondence with the track crossed.
 
-In the first implementation of the environment, the agent was able to make decisions without a specific timing between actions.
-This fact led to different problems in the implementation of reinforcement learning agents.
-The first problem was related to experience memory gathering also caused by the limitation of Cozmo Camera: it is a 30fps camera but, as reported in the documentation of Cozmo SDK, the Cozmo framework emits a new camera image generally up to 15 times per second.
-Therefore, the frequency of image requests was very high because the system did not contain timing implementation constraints in the control of operations.
-These two factors led the system to retrieve the same image both before and after taking the current action.
+\subsection{Human-Robot Interaction} \label{subsec:human-robot-interaction}
 
-Consequently, the state of each environment step consisted of the concatenation of two images that were often the same picture.
-This consequence led to a conceptual error that may influence the process of learning if we observe that with a human perspective: a state of this kind represents an action that does not influence the environment of the system whilst it is modifying it.
-We noticed this problem because, in the first part of the experiments, where the agent takes random action to explore the surrounding environment, the robot continued to drive a straight path, even if shaky, without taking a definite step in a specific direction and with an almost constant speed.
-This symptom was strictly related to the robot's inability to have the right time to carry out a specific action before interacting with the environment with the next action.
-Accordingly, the robot ends up navigating with an average speed close to the half of the maximum speed and always going in a straight line only with small and temporary slopes to the right or left.
-After noting this problem, we fixed it by hard-coding a minimum interval between the execution of a specific action and the beginning of the next one in the OpenAI Gym environment: we selected this value according to the constraint given by the Cozmo SDK about robot camera device.
+It is noticeable that the simulator can undoubtedly be programmed to understand whenever the car is going outside the track, crossing the roadside.
+In a reinforcement learning scenario, this fact facilitates the restarting procedure for an episode: the developer has to bind some events or actions to a process that stops the current episode, put the car on the road again and starts the next experiment.
+In the real world, the situation is more complicated not only because of the need of the human intervention to relocate the car in a safe place but also because there are more variables to take into account.
+The most critical factor is that the failure of an episode in the simulator has no threats or costs, while real-world experiments failures could lead to high costs and severe damage to the car and equipment.
+Despite this point, the application of such experiment typology in a real environment instead of a mere simulation represents an exciting challenge that could bring reinforcement learning to the next level.
+In order to make experiments as safe as possible, the authors of~\cite{kendall2018learning,kendall2019learning} implemented a self-driving system designed explicitly for self-driving reinforcement learning experiments where the car driver has the faculty of stopping the car when it is going to run off the road or in a dangerous situation and relocating it in the nearest safe position to start the next learning episode.
+By simply pressing a button, the logic of the car disables reinforcement learning algorithm decision and gives full control to the real driver of the car.
+
+We aimed to implement this kind of user-robot interaction also in our setup.
+The requirements were almost the same as the ones described in the paper, but this case could not rely on steering wheel, brakes and accelerator as in the car scenario where they are directly accessible by the user.
+The system needed an interface to allow the developer to stop the robot whenever it is approaching the side of the road and manoeuvre the robot just like a car.
+For this reason, we firstly implemented a straightforward interface using a web app implemented using plain HTML5, CSS3 and Javascript for the frontend and Flask \footnote{Flask Github Repository: \href{https://github.com/pallets/flask}{https://github.com/pallets/flask}}, a lightweight Web Server Gateway Interface (WSGI) web application framework, as backend.
+Therefore, we designed the web-app interface by using the Bootstrap framework \footnote{Bootstrap documentation: \href{https://getbootstrap.com/}{https://getbootstrap.com/}} to offer an easy-understandable and appealing user experience.
+
+The aim of this application is allowing user interaction with Cozmo and Flask represented the right choice to allow the communication between this interface and the OpenAI Gym environment.
+The Flask backend interacts directly with the functions offered by Cozmo SDK to allow the user to see the live streaming from Cozmo camera directly in the web app.
+Therefore it can receive, convert and forward commands from the robot to the SDK.
+These commands consist of the pressure of both single or combination of buttons: Flask decides the action to trigger programmatically with hard-coded conditions and calculates speeds and accelerations of both right and left treads.
+
+The SDK function we utilised to control Cozmo is \texttt{drive\_wheels()}.
+The parameters of this function are the following:
+
+\begin{itemize}
+    \item \textbf{\texttt{l\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the left tread (in millimeters per second).
+    \item \textbf{\texttt{r\_wheel\_speed}} (\textit{float}): mandatory parameter that specifies the speed of the right tread (in millimeters per second).
+    \item \textbf{\texttt{l\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the left tread (in millimeters per second squared).
+          The default value is the equal to \texttt{l\_wheel\_speed}.
+    \item \textbf{\texttt{r\_wheel\_acc}} (\textit{float}): optional parameter that specifies the acceleration of the right tread (in millimeters per second squared).
+          The default value is the equal to \texttt{r\_wheel\_speed}.
+    \item \textbf{\texttt{duration}} (\textit{float}): it specifies the duration of the driving action of the robot.
+          It calls \texttt{stop\_all\_motors()} after this duration has passed.
+          The default value is \texttt{None}. In this case, the behaviour of this function is equivalent to the non-async \texttt{drive\_wheel\_motors()} one: the wheels will continue to move at that speed until commanded to drive at a new speed.
+\end{itemize}
+
+This method is the same we used to implement the OpenAI Gym environment, allowing the algorithm to interact with the robot just like a human in the driving seat.
+Just as examples, the user can start and stop the episode using the enter button, forget the previous episode with backspace and relocate the robot on the track using W, A, S and D buttons.
+
+\subsection{System Flow} \label{subsec:system-flow}
+
+
+\todomacaluso{Da fare}
 
 \section{Algorithm setup}
 
@@ -408,7 +406,7 @@ It is a vital parameter to make the experiment manageable for the user: in this 
 In this context, the user must be ready to stop, reposition and restart the car in a specific moment.
 Given the evidence that an experiment like this could last thousands of episodes, we aimed to reduce the waiting time for the user to make the experiments last less, or, at least, obtain a good relationship between the duration of the episode and that of the optimisation steps.
 To avoid a long waiting time after each episode, we tried to spread the optimisation phase inserting a single learning step after each action taken by the agent. We found out this approach in some implementation of DDPG algorithm mainly applied to simulated environments. This choice seemed working with the \textit{Pendulum-v0} task because, in a simulated context, the environment stops itself waiting for the next action taken by the agent during the optimisation phase: the system flow is independent of the duration of the last-mentioned phase.
-It is noticeable that this fact does not apply to a real-world scenario like the one we implemented with Cozmo. As we discussed before in this chapter, the robot continues the drive also during the learning process.
+It is noticeable that this fact does not apply to a real-world scenario like the one we implemented with Cozmo. As discussed in \vref{subsec:timing-actions}, the robot continues driving also during the learning process.
 Therefore the system is highly unstable because this process not always has the same length and every action lasts differently: it depends on the specific network topology.
 After the analysis of this behaviour, we decided to maintain the optimisation phase among episodes and to fix a specific duration for each action of Cozmo.
 
@@ -445,7 +443,7 @@ This decision was useful to check the correctness of the architectural decisions
 Despite this fact, the learning context of Cozmo showed its complexity since the first experiments bringing out differences from \textit{Pendulum-v0} environment.
 We found out that, in order to obtain acceptable results that could show as clearly as possible whether the algorithm is working and improving with the selected set of parameters, it was necessary to wait for a large number of epochs corresponding to tens of hours or few days depending on the neural network architecture and the hyper-parameters.
 Furthermore, these experiments can not exploit the advantages of the simulated environment in which the researcher can set the parameter ranges at the beginning, leaving the computer to start and complete the search for each combination of the available parameters.
-The real-world approach we described in this chapter needs the constant presence of a human to carry out the learning process, and the whole procedure is further slowed down by the life of the Cozmo battery and its charging times: both take about 30 minutes.
+The real-world approach we described in this chapter needs the constant presence of a human to carry out the learning process, and the whole procedure is further slowed down by the Cozmo battery lifetime and its charging times: both take about 30 minutes.
 It is noticeable that, in a real-world scenario like this, it is almost impossible to make a humanly manageable workflow capable of doing a sustainable grid search.
 For this reason, we decided to initialise these parameters following the guidelines provided by the DDPG paper.
 After this implementation, we started a search for a reinforcement learning algorithm more suitable for real-world problems.
@@ -453,9 +451,34 @@ The ideal objective would be to find a hyperparameter agnostic algorithm capable
 The last-mentioned aim is still being researched today by the scientific community.
 Despite this fact, we found out an algorithm capable of automatically adapt itself to reduce the hyper-parameter dependency: SAC, an algorithm which was born precisely as an evolution of the DDPG approach to improve its performance in a real-world application and overcome hyper-parameters dependency.
 Therefore, we also implemented this algorithm from scratch by using the implementation of the so-called \textit{parameter auto-tuning} proposed in \cite{haarnoja2018soft, haarnoja2018alg}.
-\Vref{ch5,ch6} will present the performance comparison between these two algorithms both in a \textit{Pendulum-v0} simulated environment and in the real-world Cozmo one.
+\Vref{ch:ch5,ch:ch6} will present the performance comparison between these two algorithms both in a \textit{Pendulum-v0} simulated environment and in the real-world Cozmo one.
 
 \section{Real-World experiments}
+
+\subsection{Timing actions} \label{subsec:timing-actions}
+
+In the first implementation of the environment, the agent was able to make decisions without a specific timing between actions.
+This fact led to different problems in the implementation of reinforcement learning agents.
+The first problem was related to experience memory gathering also caused by the limitation of Cozmo Camera: it is a 30fps camera but, as reported in the documentation of Cozmo SDK, the Cozmo framework emits a new camera image generally up to 15 times per second.
+Therefore, the frequency of image requests was very high because the system did not contain timing implementation constraints in the control of operations.
+These two factors led the system to retrieve the same image both before and after taking the current action.
+
+Consequently, the state of each environment step consisted of the concatenation of two images that were often the same picture.
+This consequence led to a conceptual error that may influence the process of learning if we observe that with a human perspective: a state of this kind represents an action that does not influence the environment of the system whilst it is modifying it.
+We noticed this problem because, in the first part of the experiments, where the agent takes random action to explore the surrounding environment, the robot continued to drive a straight path, even if shaky, without taking a definite step in a specific direction and with an almost constant speed.
+This symptom was strictly related to the robot's inability to have the right time to carry out a specific action before interacting with the environment with the next action.
+Accordingly, the robot ends up navigating with an average speed close to the half of the maximum speed and always going in a straight line only with small and temporary slopes to the right or left.
+After noting this problem, we fixed it by hard-coding a minimum interval between the execution of a specific action and the beginning of the next one in the OpenAI Gym environment: we selected this value according to the constraint given by the Cozmo SDK about robot camera device.
+
+\subsection{Driving Bias}
+
+In this context, the human-robot interaction has a crucial role in the learning process.
+It represents the source of all improvements and imperfections of learning process results: the robot learns which actions are valuable and which are unprofitable or disadvantageous, but it is essential to remember that the human is the one who decides the correctness of each action by stopping the car in a dangerous situation.
+This fact leads to the introduction of unconscious bias in the algorithm that could affect final results.
+We will discuss the experiments and their results thoroughly in \vref{ch:ch5,ch:ch6}.
+
+
+\subsection{Unexpected errors management}
 
 \subsection{The Track}
 
