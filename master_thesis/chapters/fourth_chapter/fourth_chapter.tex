@@ -355,12 +355,26 @@ Just as examples, the user can start and stop the episode using the enter button
 
 The implementation of an algorithm flow to sustain the specific experimental need was necessary due to the continuous interactions between the human and the robot. Starting from the ideas of \cite{kendall2018learning,kendall2019learning}, we decided to divide the learning process in a series of phases highlighted in blue in \vref{fig:system-flow-chart}.
 
+The phases we defined are the following:
+
 \begin{itemize}
- \item \textbf{Action Phase.} This phase consists of a series of subsequent episodes. The early part of this procedure is composed by a warm-up: where the agent makes random actions to randomly explore the environment and take an initial set of entries for experience replay memory. After the agent gathered the minimum amount of entries, the agent starts to exploit the neural network to act using a noisy policy for exploration sake. As reported in \vref{subsec:actions-duration}, the time between two subsequent actions is a parameter we set according to limitations of Cozmo SDK to avoid problems in the learning process.
- \item \textbf{Training Phase.} This phase starts after the initial warm-up phase, and it is located after each Cozmo episode. It manages all neural networks updates with several optimisation steps (or epochs) set as a parameter by the developer.
- \item \textbf{Undo Phase.} As described in \vref{subsec:error-management}, it is possible to invalidate experiments due to a human or a system error. For this reason, we implemented a procedure that the user can trigger to delete the knowledge acquired in the last training episode and restore the previous state.
- \item \textbf{Testing Phase.} This phase disables noisy policies from the algorithm to allow the agent to take the action that the neural network decree as best in that specific iteration. It consists of a repetition of a finite set of episodes after a specified number of epochs: the average reward calculated by the rewards obtained from each episode is the result of this phase. 
- \item \textbf{Checkpoint Phase.} This phase is described in \vref{subsec:error-management}. It consists of saving all data to make the developer able to restart the experiment from the last available checkpoint. It is usually located right after the testing phase.
+    \item \textbf{Episode Phase.} This phase consists of a single episode take.
+          It represents the results of a series of action taken from the agent to solve the task.
+          In the early part of the experiment, the algorithm has to perform a warm-up, a procedure where the agent makes random actions to randomly explore the environment and obtain an initial set of entries for experience replay memory.
+          After the agent gathered the minimum amount of entries, which is usually equal to the batch size or a multiple thereof, the agent starts to exploit the neural network to act using a noisy policy for exploration sake.
+          This last-mentioned part is still an episode phase, but it is never followed by a testing or a checkpoint phase.
+          As reported in \vref{subsec:actions-duration}, the time between two subsequent actions is a parameter we set according to limitations of Cozmo SDK to avoid problems in the learning process.
+
+          The user is the main responsible for this phase. It can interact by toggling enter button on the keyboard. The first hit starts the episode, while the second one determines the end of the episode and attributes zero rewards to the last action taken.
+          
+    \item \textbf{Undo Phase.} As described in \vref{subsec:error-management}, it is possible to invalidate experiments due to a human or a system error. For this reason, we implemented a procedure that the user can trigger to delete the knowledge acquired in the last training episode and restore the previous state. We positioned it right after the episode phase to delete faulty episodes as soon as possible.
+
+          In this case, the user has two possibilities to undo the last episode. The first is to hit the backspace button in substitution of the second enter button hit we cited in the previous point: this choice is the fasted one and it restore the state before the last episode without passing through train, test or checkpoint phases. The second one leads to a delayed reset by hitting the backspace button after the second enter button hit and before the next one: in this scenario, the system has to pass through train, test and checkpoint phase and only afterwards it restores the previous episode.
+    \item \textbf{Training Phase.} This phase starts to be executed after the initial warm-up phase, and it is located after each Cozmo episode. It manages all neural networks updates with several optimisation steps, also known as epochs: the number of optimisation steps is set as a parameter by the developer.
+    \item \textbf{Testing Phase.} This phase disables noisy policies from the algorithm to allow the agent to take the action that the neural network decree as best in that specific iteration. It consists of a repetition of a finite set of episodes that triggers after every specified number of epochs, given as parameter of the system: the average reward calculated by the rewards obtained from each testing episode is the result of this phase. This value is crucial for the reinforcement learning experiments, because we used them to build the average reward performance graph that shows how much the agent learned in the graphs of \vref{ch:ch5} and determines the quality of the learning process itself.
+    \item \textbf{Checkpoint Phase.} This phase is described in \vref{subsec:error-management}. It consists of saving all data to make the developer able to restart the experiment from the last available checkpoint. It is usually located right after the testing phase in order to save all values together with network weights and biases.
+    
+    The user can also trigger this phase manually by toggling C button before starting the next episode by hitting enter button. It is really useful to virtually pause experiments, like the one with Cozmo, that could last tens of hours and that can need multiple days to complete.
 \end{itemize}
 
 \begin{figure}
@@ -368,81 +382,81 @@ The implementation of an algorithm flow to sustain the specific experimental nee
     \scalebox{0.8}{
 
         \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-        
-        \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+
+    \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
         %uncomment if require: \path (0,640); %set diagram left start at 0, and has height of 640
-        
+
         %Shape: Rectangle [id:dp3205555611726546] 
         \draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (261.5,118) -- (396.5,118) -- (396.5,158) -- (261.5,158) -- cycle ;
         %Straight Lines [id:da45650982537203766] 
         \draw    (329.75,85) -- (329.75,115.5) ;
         \draw [shift={(329.75,118.5)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        
+
         %Shape: Diamond [id:dp7100269867943787] 
         \draw  [fill={rgb, 255:red, 248; green, 231; blue, 28 }  ,fill opacity=1 ] (330.38,181.5) -- (396.25,208.75) -- (330.38,236) -- (264.5,208.75) -- cycle ;
         %Straight Lines [id:da33363937943735045] 
         \draw    (163.5,393.75) -- (255.5,393.75) ;
         \draw [shift={(258.5,393.75)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        
+
         %Straight Lines [id:da08256872780772095] 
         \draw    (163.5,353) -- (163.5,393.75) ;
-        
-        
+
+
         %Shape: Rectangle [id:dp6141481346237292] 
         \draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (101.5,117) -- (236.5,117) -- (236.5,157) -- (101.5,157) -- cycle ;
         %Straight Lines [id:da4102417822212999] 
         \draw    (255.5,136) -- (237.5,136) ;
-        
+
         \draw [shift={(258.5,136)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
         %Straight Lines [id:da9410796039373476] 
         \draw    (330.38,158) -- (330.38,178.5) ;
         \draw [shift={(330.38,181.5)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        
+
         %Shape: Diamond [id:dp23419639551228588] 
         \draw  [fill={rgb, 255:red, 248; green, 231; blue, 28 }  ,fill opacity=1 ] (330.38,259.5) -- (403.5,290.25) -- (330.38,321) -- (257.25,290.25) -- cycle ;
         %Straight Lines [id:da4002053530831412] 
         \draw    (330.38,236) -- (330.38,256.5) ;
         \draw [shift={(330.38,259.5)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        
+
         %Straight Lines [id:da1961250189231556] 
         \draw    (163.5,289.75) -- (258.5,289.75) ;
-        
-        
+
+
         %Straight Lines [id:da08341935205642348] 
         \draw    (163.5,309) -- (163.5,289.75) ;
-        
+
         \draw [shift={(163.5,312)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
         %Shape: Rectangle [id:dp8998227827849266] 
         \draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (101.5,312) -- (236.5,312) -- (236.5,352) -- (101.5,352) -- cycle ;
         %Straight Lines [id:da03747681592112351] 
         \draw    (330.38,320) -- (330.38,360) ;
         \draw [shift={(330.38,363)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        
+
         %Shape: Diamond [id:dp05801551745223743] 
         \draw  [fill={rgb, 255:red, 248; green, 231; blue, 28 }  ,fill opacity=1 ] (330.38,362.5) -- (403.5,393.25) -- (330.38,424) -- (257.25,393.25) -- cycle ;
         %Straight Lines [id:da13095592205091366] 
         \draw    (169.5,208.75) -- (264.5,208.75) ;
-        
-        
+
+
         %Straight Lines [id:da6941565717302706] 
         \draw    (169.5,160) -- (169.5,208.75) ;
-        
+
         \draw [shift={(169.5,157)}, rotate = 90] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
         %Straight Lines [id:da30876512932326383] 
         \draw    (440.5,497.75) -- (330.38,497.75) ;
-        
-        
+
+
         %Straight Lines [id:da37637290320114314] 
         \draw    (505.5,457) -- (505.5,471) ;
         \draw [shift={(505.5,474)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        
+
         %Straight Lines [id:da6802339671267228] 
         \draw    (505.5,393.75) -- (403.5,393.75) ;
-        
-        
+
+
         %Straight Lines [id:da04855194568912746] 
         \draw    (505.5,413) -- (505.5,393.75) ;
-        
+
         \draw [shift={(505.5,416)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
         %Shape: Rectangle [id:dp5249336746554131] 
         \draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (443.5,416) -- (578.5,416) -- (578.5,456) -- (443.5,456) -- cycle ;
@@ -450,31 +464,31 @@ The implementation of an algorithm flow to sustain the specific experimental nee
         \draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (261.5,50) .. controls (261.5,45.58) and (265.08,42) .. (269.5,42) -- (388.5,42) .. controls (392.92,42) and (396.5,45.58) .. (396.5,50) -- (396.5,74) .. controls (396.5,78.42) and (392.92,82) .. (388.5,82) -- (269.5,82) .. controls (265.08,82) and (261.5,78.42) .. (261.5,74) -- cycle ;
         %Straight Lines [id:da46969392222154227] 
         \draw    (330.38,424) -- (330.38,497.75) ;
-        
-        
+
+
         %Straight Lines [id:da01473953482461099] 
         \draw    (330.38,497.75) -- (330.38,531.5) ;
-        
-        
+
+
         %Straight Lines [id:da47014594978326474] 
         \draw    (330.38,531.5) -- (596.5,531.5) ;
-        
-        
+
+
         %Straight Lines [id:da42252207031576927] 
         \draw    (596.5,140) -- (596.5,531.5) ;
-        
-        
+
+
         %Straight Lines [id:da5491155657054972] 
         \draw    (401.5,140) -- (596.5,140) ;
-        
+
         \draw [shift={(398.5,140)}, rotate = 0] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
         %Shape: Rectangle [id:dp8147683219865862] 
         \draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (443.5,476) -- (578.5,476) -- (578.5,516) -- (443.5,516) -- cycle ;
-        
+
         % Text Node
         \draw (329,62) node  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,opacity=1 ] [align=left] {Start of the Run};
         % Text Node
-        \draw (329,138) node  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,opacity=1 ] [align=left] {Action Phase};
+        \draw (329,138) node  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,opacity=1 ] [align=left] {Episode Phase};
         % Text Node
         \draw (330.38,208.75) node   [align=left] {Undo?};
         % Text Node
@@ -501,12 +515,12 @@ The implementation of an algorithm flow to sustain the specific experimental nee
         \draw (346,428) node  [font=\scriptsize] [align=left] {No};
         % Text Node
         \draw (511,496) node  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,opacity=1 ] [align=left] {Checkpoint Phase};
-        
-        
-        \end{tikzpicture}
+
+
+    \end{tikzpicture}
     }
-        \caption[Cozmo algorithm flow chart]{This image shows the flow chart of the system we implemented. The most crucial phases are highlighted in blue. Thi chart is deliberately drawn without an end, because, although there was the possibility, we never set a maximum limit of experiments in Cozmo scenario. It is possible to retrieve the warm-up procedure by answering no to the last two decision branch.}
-        \label{fig:system-flow-chart}
+    \caption[Cozmo algorithm flow chart]{This image shows the flow chart of the system we implemented. The most crucial phases are highlighted in blue. This chart is deliberately drawn without an end, because, although there was the possibility, we never set a fixed maximum limit of experiments in Cozmo scenario. It is possible to retrieve the warm-up procedure by answering no to the last two decision branch.}
+    \label{fig:system-flow-chart}
 \end{figure}
 
 \section{Algorithm setup}
@@ -634,7 +648,7 @@ Consequently, the state of each environment step consisted of the concatenation 
 This consequence led to a conceptual error that may influence the process of learning if we observe that with a human perspective: a state of this kind represents an action that does not influence the environment of the system whilst it is modifying it.
 
 We noticed this problem because, in the first part of the experiments, where the agent takes random action to explore the surrounding environment, the robot continued to drive a straight path, even if shaky, without taking a definite step in a specific direction and with an almost constant speed.
-This symptom was strictly related to the robot's inability to have the right time to carry out a specific action before interacting with the environment with the next action.
+This symptom was strictly related to the robot's inability to have the right time to carry out a specific action before interacting with the environment with the next one.
 Accordingly, the robot ends up navigating with an average speed close to the half of the maximum speed and always going in a straight line only with small and temporary slopes to the right or left.
 After noting this problem, we fixed it by hard-coding a minimum interval between the execution of a specific action and the beginning of the next one in the OpenAI Gym environment: we selected this value according to the constraint given by the Cozmo SDK about robot camera device.
 
@@ -668,7 +682,7 @@ We implemented the second type of rescue as soon as the experiments proved to la
 Because the experiments could take many hours or even days, it was necessary to implement a checkpoint system to save the state of the experiment and to restore it in the following days.
 We decided to insert this process at the end of the periodic test phase: values of the neural network and the data of the reinforcement learning algorithm are serialized and stored in the secondary memory storage.
 
-\subsection{The Track}
+\subsection{Track Design}
 
 \begin{figure}
     \centering
