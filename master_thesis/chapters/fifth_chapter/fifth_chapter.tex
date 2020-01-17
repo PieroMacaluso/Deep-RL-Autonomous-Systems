@@ -1,4 +1,4 @@
-\chapter{Experimental results (WIP)} \label{ch:ch5}
+\chapter{Experimental results} \label{ch:ch5}
 
 In the previous chapters, we described the reinforcement learning control system we designed, together with an analysis of the solutions we proposed for the problems we faced during the development process.
 Indeed, this process has not been free from difficulties, both of implementation level and parameter optimisation.
@@ -18,72 +18,265 @@ We have shown all the useful graphs in order to analyse and to comment on the ob
 
 \section{Experimental Methodology}
 
-This pre-trial section is essential to better understand the tasks we tried to get the reinforcement learning algorithms to solve and what approach we used to evaluate experiments results.
+This pre-trial section is essential to understand better the tasks we tried to get the reinforcement learning algorithms to solve and what approach we used to evaluate experiments results.
 
 \subsection{Hardware and Software details}
 
-In order to carry out the experiments contained in this chapter we have made use of a personal computer.
+In order to carry out the experiments contained in this chapter, we have made use of a personal laptop.
+We chose this solution because the machine has excellent specifications to support the computational power required by the experiments both in terms of GPU and RAM.
+
+Despite these considerations, we still had problems in terms of RAM memory. This type of experiment requires a very large experience memory replay to allow optimal batch extraction. Despite the large amount of RAM present and the reduction of the size of the input image, we were still forced to reduce the maximum size of the replay memory to complete the experiments.
+
+We collected the essential information about hardware and software that we have used to perform experiments in \vref{table:hw_spec,table:sw_spec}.
+
+\begin{table}[!h]
+	\centering
+	\caption{Development Machine Hardware Specifications}
+	\label{table:hw_spec}
+	\begin{tabular}{@{}lllll@{}}
+		\toprule
+		\textbf{Component} & \textbf{Details}                                                                      \\
+		\midrule
+		\textbf{Laptop}    & Dell Inspiron 15 7559                                                                 \\\midrule
+		\textbf{CPU}       & Intel\textsuperscript{\textregistered} Core\textsuperscript{\texttrademark} i7-6700HQ \\
+		                   & \# of Cores: 4                                                                        \\
+		                   & \# of Threads: 8                                                                      \\
+		                   & Processor Base Frequency: 2.60 GHz                                                    \\
+		                   & Max Turbo Frequency: 3.50 GHz                                                         \\\midrule
+		\textbf{GPU}       & NVIDIA GeForce GTX 960M                                                               \\
+		                   & CUDA Cores: 640                                                                       \\
+		                   & Memory: 4GB GDDR5, 2500 MHz                                                           \\\midrule
+		\textbf{RAM}       & 12GB DDR3L, 1600 MHz                                                                  \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+	\centering
+	\caption{Development Machine Software Specifications}
+	\label{table:sw_spec}
+	\begin{tabular}{@{}lllll@{}}
+		\toprule
+		\textbf{Component}        & \textbf{Details}                   \\
+		\midrule
+		\textbf{Operating System} & Ubuntu 18.04.3 LTS (Bionic Beaver) \\\midrule
+		\textbf{Python}           & v.3.6.8                            \\\midrule
+		\textbf{PyTorch}          & v.1.4.0                            \\\midrule
+		\textbf{OpenAI Gym}       & v.0.15.4                           \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \subsection{Pendulum-v0 Environment}
 
-The inverted pendulum swingup problem is a classic problem in the control literature. In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up so it stays upright.
-	%\begin{figure}[ht!]
-	%	\centering
-	%	\includegraphics[height=0.2\paperwidth]{img/pendulum.png}
-	%	\caption{Frame of Pendulum-v0 environment}
-	%	\label{fig:pendulum}
-	%\end{figure}
-	\paragraph{Observation}
-	Type: Box(3)
-	\begin{table}[!h]
-		\centering
-		% \caption{MountainCarContinuous-v0 Observation}
-		\label{mountain_observation}
-		\begin{tabular}{@{}lllll@{}}
-			\toprule
-			Index	& Observation		& Min 		& Max 		\\ \midrule
-			0			& cos($\theta$)	 	&  $-1.0$	& $+1.0$ 	\\
-			1			& sin($\theta$)	 	&  $-1.0$		& $+1.0$ \\
-			2			& $\dot{\theta}$	 	&  $-8.0$		& $+8.0$ \\
-			\bottomrule
-		\end{tabular}
-	\end{table}
-	\paragraph{Actions}
-	Type: Box(1)
-	\begin{table}[!h]
-		\centering
-		% \caption{MountainCarContinuous-v0 Actions }
-		\label{mountain_action}
-		\begin{tabular}{@{}lllll@{}}
-			\toprule
-			Index	& Action	& Min 		& Max 		\\ \midrule
-			0			& Joint effort &  $-2.0$	& $+2.0$ 	\\
-			\bottomrule
-		\end{tabular}
-	\end{table}
-	
-	\paragraph{Reward}
-	The reward for each timestep $t$ is given by \[r_t = -(\theta_t^2 + 0.1 \dot{\theta}^2 + 0.001 a_t^2)\]
-	where theta is normalized between $-\pi$ and $\pi$. Therefore, the lowest cost is $-(\pi^2 + 0.1*8^2 + 0.001*2^2) = -16.2736044$, and the highest cost is $0$. In essence, the goal is to remain at zero angle (vertical), with the least rotational velocity, and the least effort.
-	
-	\paragraph{Starting State}
-	Random angle from $-\pi$ to $\pi$, and random velocity between $-1$ and $1$
-	\paragraph{Episode Termination}
-	There is no specified termination. Adding a maximum number of steps might be a good idea. In this case 200.
-	\paragraph{Solved Requirements}
-	It is an unsolved environment, which means it does not have a specified reward threshold at which it is considered solved.
-	
+OpenAI Gym \textit{Pendulum-v0} environment formalise the inverted pendulum swing-up problem, a classic problem in the control literature. In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up so it stays upright.
 
+We have also decided to include in this thesis the experiments we have carried out on this simulated environment, because the results obtained and the problems faced were essential to have a more prepared approach to deal with the real-world experiment and the environment we designed for Cozmo.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[height=0.2\paperwidth]{img/pendulum.png}
+	\caption[Frame of Pendulum-v0 environment]{Frame of Pendulum-v0 environment. We decided to use a set of two subsequent 64$\times$64 images.}
+	\label{fig:pendulum}
+\end{figure}
+
+\subsubsection{Observation}
+
+The original implementation of this environment is based on an state represented by a \texttt{Box(3)} type, a data structure defined by OpenAI Gym that extends functionalities of a standard array. It contains values related to the current angle of the pendulum as described in \vref{table:pendulum_obs}.
+
+Since the goal of our thesis was to apply DDPG and SAC to a problem such as the autonomous driving one where input data is composed of images, we decided to build a wrapper (\texttt{gym.ObservationWrapper}) for the original environment in order to receive observations as raw pixels. In this way we could apply the same considerations and the same convolutional neural network that we used in the Cozmo environment.
+
+We have started many experiments on this environment to find the most suitable number of images to use as a state, looking for a trade-off between the algorithm’s needs and the space constraints imposed by the hardware we used. The agent revealed instability using a single frame, while leading to excellent results using two images. Finally, for space issues, we decided to resize the image to 64$\times$64 pixels.
+
+A sample screenshot of the environment in action is shown in \vref{fig:pendulum}.
+
+\begin{table}[!h]
+	\centering
+	\caption{Original Observation \texttt{Pendulum-v0} environment}
+	\label{table:pendulum_obs}
+	\begin{tabular}{@{}lllll@{}}
+		\toprule
+		Index & Observation    & Min    & Max    \\ \midrule
+		0     & cos($\theta$)  & $-1.0$ & $+1.0$ \\
+		1     & sin($\theta$)  & $-1.0$ & $+1.0$ \\
+		2     & $\dot{\theta}$ & $-8.0$ & $+8.0$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsubsection{Actions}
+
+The actions that the agent can perform within this environment are described through a \texttt{Box(1)} object containing only one element. This value corresponds to the joint effort, which allows the agent to swing the pendulum. The action space has been maintained also in the modified environment.
+
+\begin{table}[!h]
+	\centering
+	\caption{Pendulum-v0 Actions }
+	\label{mountain_action}
+	\begin{tabular}{@{}lllll@{}}
+		\toprule
+		Index & Action       & Min    & Max    \\ \midrule
+		0     & Joint effort & $-2.0$ & $+2.0$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsubsection{Reward}
+The reward for each timestep $t$ is given by \[r_t = -(\theta_t^2 + 0.1 \dot{\theta}^2 + 0.001 a_t^2)\]
+where theta is normalized between $-\pi$ and $\pi$. Therefore, the lowest cost is $-(\pi^2 + 0.1*8^2 + 0.001*2^2) = -16.2736044$, and the highest cost is $0$. In essence, the goal is to remain at zero angle (vertical), with the least rotational velocity, and the least effort.
+The reward design has been maintained also in the modified environment.
+
+\subsubsection{Starting State}
+
+The initial state of the environment in question is chosen randomly.
+Two values are extracted: the first is an angle between  $-\pi$ to $\pi$, the second is a speed between -1 and 1.
+A zero angle corresponds to the standing pendulum.
+
+\subsubsection{Episode Termination}
+
+OpenAI Gym documentation does not specify a particular episode termination for this environment: the choice is left to the user.
+In our case, after some attempts, we decided to set a limit value of 200 steps for each episode.
+
+\subsubsection{Solved Requirements}
+
+Also in this case, OpenAI Gym documentation does not specify any indications in order to understand whether an episode has been solved.
+Indeed, \textit{Pendulum-v0} is an unsolved environment, which means it does not have a specified reward threshold at which it is considered correctly completed.
 
 \subsection{CozmoEnv-v0 Environment}
 
-\section{Pendulum-v0 Experiments}
+\textit{CozmoEnv-v0}, the reinforcement learning environment we implemented, is one of the contribution of this thesis.
+This section aims to present as schematically as possible the basic parameters that characterize the environment we have designed.
+Further details on the implementation choices, problems encountered and solutions we have adopted to solve them are available in \vref{ch:ch4}.
+
+\subsubsection{Observation}
+
+The observations we decided to use in \textit{CozmoEnv-v0} are the same as those we exploited in the \textit{Pendulum-v0} environment.
+In fact, our agent will obtain, for each action carried out, a queue composed of two images from the front camera of Cozmo resized to 64x64 pixels.
+As in the previous environment, we decided to resize the images obtained in order to remain within the limits placed by the RAM memory available in the development machine.
+
+The first image represents the state before the action, while the second represents the consequences of the action taken.
+The number of images was set to two after performing some experiments on \textit{Pendulum-v0} environment that revealed instability in the use of a single image.
+We decided to limit ourselves to two images, as we would increase the size of a single entry in replay memory by adding more of them.
+This choice would require a counterbalance that would materialize in the decrease of the maximum size of replay memory.
+
+As we mentioned in \vref{ch:ch3}, Anki Cozmo has a front camera inserted inside its tilting head and one forklift.
+In order to obtain more valuable images for our experiments we decided to tilt the head as much as possible down and raise the forklift: in this way the image is focused as much as possible on the lane, leaving everything that could distract the learning process outside the view.
+
+An example of two subsequent frame received by Cozmo is available in \vref{fig:cozmo_frames}.
+\begin{figure}
+
+	\begin{minipage}[t]{0.5\linewidth}
+		\centering
+		\includegraphics[height=0.25\paperwidth]{img/cozmo_frame_1.jpg}
+	\end{minipage}
+	\begin{minipage}[t]{0.5\linewidth}
+		\centering
+		\includegraphics[height=0.25\paperwidth]{img/cozmo_frame_2.jpg}
+	\end{minipage}
+
+	\caption[Example of two subsequent frame of CozmoEnv-v0]{An example of a two subsequent frame of CozmoEnv-v0 environment. We decided to resize the image returned by Cozmo to 64$\times$64 for memory reason: a higher resolution would lead to a further decrease in experience replay memory.}
+	\label{fig:cozmo_frames}
+\end{figure}
+
+\subsubsection{Actions}
+
+We have already discussed in \vref{subsubsec:mdp_form} the decisions taken to implement the management of actions within the environment that we have built.
+
+To describe the actions that the agent can perform within this environment, we used a \texttt{Box(2)}. The first value of this object corresponds to the desired speed, while the second one represent the steering wheel position. \Vref{table:cozmo_actions} describes schematically this object.
+
+\begin{table}[!h]
+	\centering
+	\caption{CozmoEnv-v0 Actions}
+	\label{table:cozmo_actions}
+	\begin{tabular}{@{}lllll@{}}
+		\toprule
+		Index & Action                        & Min    & Max    \\ \midrule
+		0     & Desired Speed ($v$)           & $0.0$  & $+1.0$ \\
+		1     & Steering Wheel Position ($w$) & $-1.0$ & $+1.0$ \\
+
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsubsection{Reward}
+
+The reward we chose for our experiment was the second one provided by \vref{subsubsec:mdp_form}.
+The decision has fallen on the \textit{Lane Distance Reward} because it describes with simplicity the final goal of the task, but above all because it allows the user to have a direct counterproof of the effectiveness of the algorithm, by matching the reward to the distance travelled.
+\Vref{eq:reward_fun} reports the calculation that is executed to every timestep to calculate the reward to the carried out action.
+$c$ is the time expressed in seconds between one action and the next one, imposed as system constant, while $v_t$ is the desired speed taken by the current action expressed in millimetres per second.
+
+\begin{equation}
+	\label{eq:reward_fun}
+	r_t = v_t \cdot c
+\end{equation}
+
+\subsubsection{Starting State}
+
+The starting state position of the system is not constant, but changes from episode to episode.
+This approach was preferred over the one with a fixed starting position for two simple reasons:
+\begin{itemize}
+	\item Reduces the path that has to be traveled by the robot in order to be able to reposition, speeding up the experiments as it saves more battery.
+	      In this approach, the robot is repositioned on the road closest to where the previous episode ended.
+	\item It allows the agent to accumulate experiences that do not always refer to the same road segment.
+	      With this methodology, the experiences will most always begin and end in different states, leading the agent to put more effort in generalization.
+\end{itemize}
+
+The episode starts as soon as the user receives the start signal.
+
+\subsubsection{Episode Termination}
+
+The episode ends when the robot goes off the road or reaches a a dangerous situation.
+Even this time, the episode ends when the user receives the stop sign.
+
+\subsubsection{Solved Requirements}
+
+We have not provided a well-defined parameter to understand whether the task has been solved or not, because it depends on the path and the particular needs of the programmer.
+Potentially the episode could last forever if the robot could learn to run an entire circuit.
+
+No mechanism has been implemented to communicate to the robot that the episode ended in a positive way.
+For this reason, we suggest to apply this environment to circuits and not paths where beginning and end do not coincide.
+
+In our case, the route used is almost 3 meters long.
+So we decided to use this value as a target to reach to determine the resolution of the task.
+
+\subsection{Measuring Performance}
+
+In recent years, we have witnessed the rapid growth of interest in deep reinforcement learning by the entire scientific community.
+This growth has led to an increase in experiments and work on this subject, which are often easily available.
+However, reproducing reinforcement learning experiments is not always as intuitive and straightforward as expected.
+Often, the measurements reported by papers and studies of this kind are difficult to interpret due to the non-determinism inherent in most environments in which these algorithms are applied.
+Without appropriate and meaningful metrics accompanied by standardization in presenting the results, it becomes difficult to determine conclusively the improvements made to the-state-of-the-art.
+
+Going through the literature, it is noticeable that reinforcement learning algorithms are often evaluated by presenting tables and graphs showing cumulative average rewards or the maximum reward achieved on a pre-set number of timesteps.
+But the combined features of environments and algorithms make these values typically inadequate for fair comparison.
+This is due to the fact that there are numerous factors that come into play, such as seeds and trials that lead to different performances and that do not contribute to make clearer the actual performance of an algorithm.
+However, when these are accompanied by confidence intervals, based on a fairly large number of attempts, then there are the premises to make decisions and formulate more informed considerations.
+
+Once again, however, we have been forced to come to terms with reality.
+We were able to produce as honest and specific an analysis as possible regarding experiments on \textit{Pendulum-v0}.
+In this case, we could easily repeat the experiments 10 times for each algorithm, so that we could report graphs containing more useful information, such as confidence margins.
+
+On the other hand, experiments with Cozmo took a much larger number of episodes before starting to show the first improvements.
+We managed to maintain an average of just under 1000 episodes per day: this underlines how difficult it was to get to conclude even a single experiment.
+For this experiment, we reported the results obtained without any confidence margin, but focusing on the best training results as opposed to the results obtained during the test.
+
+\Vref{sec:pendulum-exp,sec:cozmo-exp} will show the most important results and graphs obtained from the respective experiments.
+The final part of each section will be accompanied by a comment on the results obtained paying particular attention to the comparison between the two algorithms.
+
+\section{Pendulum-v0 Experiments} \label{sec:pendulum-exp}
+
+\subsection{DDPG Hyperparameters}
+
+\subsection{SAC Hyperparameters}
 
 \subsection{Comparative Analysis}
 
 \subsection{Results}
 
-\section{CozmoEnv-v0 Experiments}
+\section{CozmoEnv-v0 Experiments} \label{sec:cozmo-exp}
+
+\subsection{DDPG Hyperparameters}
+
+\subsection{SAC Hyperparameters}
 
 \subsection{Comparative Analysis}
 
