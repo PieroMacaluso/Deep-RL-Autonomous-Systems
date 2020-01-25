@@ -236,7 +236,7 @@ if __name__ == '__main__':
                 logger.info('Saving models...')
                 logger.info("----------------------------------------")
                 
-            if i_episode > args.num_episode:
+            if i_episode >= args.num_episode:
                 break
         
         env.close()
