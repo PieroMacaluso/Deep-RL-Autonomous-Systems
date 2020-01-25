@@ -266,11 +266,550 @@ The final part of each section will be accompanied by a comment on the results o
 
 \subsection{DDPG Hyperparameters}
 
+The hyper-parameters we exploited in this experiment are shown in \vref{table:ddpg_pendulum}.
+\begin{table}[!h]
+	\centering
+	\caption{SAC Hyper-parameter setup for Pendulum-v0 environment}
+	\label{table:ddpg_pendulum}
+	\resizebox{0.9\textwidth}{!}{
+		\begin{tabular}{@{}lllll@{}}
+			\toprule
+			\textbf{Hyper-parameters}             & \textbf{Value}                                                    \\
+			\midrule
+			\textbf{Policy Network}               & \textbf{Learning Rate}: $1 \times 10^{-4}$                        \\
+			                                      & \textbf{Architecture}                                             \\
+			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0            \\
+			                                      & 2 FC Layer with hidden size = 256                                 \\
+			                                      & 1 Output value                                                    \\\midrule
+			\textbf{Q Network}                    & \textbf{Learning Rate}: $1 \times 10^{-4}$                        \\
+			                                      & \textbf{Architecture}                                             \\
+			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0            \\
+			                                      & 2 FC Layer with hidden size = 256                                 \\
+			                                      & 1 Output value                                                    \\\midrule
+			\textbf{Ornstein Uhlenbeck Noise}     & $\mu = 0.0 \;\; \sigma = 0.3 \;\; \theta = 0.15$                  \\\midrule
+			\textbf{Epsilon Decay Noise}          & \textbf{Start}: $0.9$, \textbf{End}: $0.2$, \textbf{Decay}: $200$ \\\midrule
+			\textbf{Gamma ($\gamma$)}             & 0.99                                                              \\\midrule
+			\textbf{Tau ($\tau$)}                 & $1 \times 10^{-3}$                                                \\\midrule
+			\textbf{Observation}                  & \textbf{Buffer Size}: 2                                           \\
+			                                      & \textbf{Image Size}: 64 $\times$ 64                               \\\midrule
+			\textbf{Batch Size}                   & 64                                                                \\\midrule
+			\textbf{Max Number of episode steps}  & 205                                                               \\\midrule
+			\textbf{Replay Memory Size}           & 10000                                                             \\\midrule
+
+			\textbf{\#Epoch per Episode}          & 250                                                               \\\midrule
+			\textbf{Soft Target Update per Epoch} & 1                                                                 \\\midrule
+			\textbf{Test Phase}                   & \textbf{Test frequency}: every 5000 epochs                        \\
+			                                      & \textbf{Test episodes}: 10                                        \\
+			\bottomrule
+		\end{tabular}}
+\end{table}
+
+\FloatBarrier
+
 \subsection{SAC Hyperparameters}
+
+The hyper-parameters we exploited in this experiment are shown in \vref{table:sac_pendulum}.
+\begin{table}[!h]
+	\centering
+	\caption{SAC Hyper-parameter setup for Pendulum-v0 environment}
+	\label{table:sac_pendulum}
+	\resizebox{0.9\textwidth}{!}{
+		\begin{tabular}{@{}lllll@{}}
+			\toprule
+			\textbf{Hyper-parameters}             & \textbf{Value}                                         \\
+			\midrule
+			\textbf{Policy Network}               & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
+			                                      & \textbf{Type}: Gaussian Policy                         \\
+			                                      & \textbf{Architecture}                                  \\
+			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
+			                                      & 2 FC Layer with hidden size = 256                      \\
+			                                      & 1 Output value                                         \\\midrule
+			\textbf{Q Network}                    & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
+			                                      & \textbf{Architecture}                                  \\
+			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
+			                                      & 2 FC Layer with hidden size = 256                      \\
+			                                      & 1 Output value                                         \\\midrule
+			\textbf{Gamma ($\gamma$)}             & 0.99                                                   \\\midrule
+			\textbf{Tau ($\tau$)}                 & $5 \times 10^{-3}$                                     \\\midrule
+			\textbf{Entropy Autotune}             & Enabled                                                \\\midrule
+			\textbf{Observation}                  & \textbf{Buffer Size}: 2                                \\
+			                                      & \textbf{Image Size}: 64 $\times$ 64                    \\\midrule
+			\textbf{Batch Size}                   & 64                                                     \\\midrule
+			\textbf{Max Number of episode steps}  & 200                                                    \\\midrule
+			\textbf{Replay Memory Size}           & 10000                                                  \\\midrule
+
+			\textbf{\#Epoch per Episode}          & 250                                                    \\\midrule
+			\textbf{Soft Target Update per Epoch} & 1                                                      \\\midrule
+			\textbf{Test Phase}                   & \textbf{Test frequency}: every 5000 epochs             \\
+			                                      & \textbf{Test episodes}: 10                             \\
+			\bottomrule
+		\end{tabular}}
+\end{table}
+
+\FloatBarrier
 
 \subsection{Comparative Analysis}
 
-\subsection{Results}
+This section aims to present the most important plots we obtained from the experiments carried out on Pendulum-v0 environment.
+The results obtained exploiting SAC algorithm are presented in \vref{fig:sac_pendulum_reward,fig:sac_pendulum_test_reward}, while the ones gathered with DDPG algorithm are presented in \vref{fig:ddpg_pendulum_reward,fig:ddpg_pendulum_test_reward}.
+
+\Vref{fig:ddpg_pendulum_reward,fig:sac_pendulum_reward} shows the result of the training phase.
+These plots has the number of episodes in the abscissa and the reward obtained in the ordinate.
+
+The results of these graphs are unstable both in the average value and in margins sizes.
+This phenomenon is mainly caused by the noise introduced during training: it allows the agent to explore the space in the environment without focusing on the current best action but trying to explore entirely and randomly the totality of environment space.
+In the first case, the DDPG noise is given by the Ornstein Uhnlebeck process noise, while SAC exploits a Gaussian Policy by sampling a random action from the current distribution given by the network.
+Therefore, SAC algorithms exploit the \textit{entropy autotune} presented by its authors: its main aim is to reduce the impact of hyper-parameters by automatically tuning the $\alpha$ temperature parameter.
+This lead to a more straightforward setup of the experiment without requiring manual optimal temperature setup, which is non-trivial needs to be tuned for each task.
+
+It is possible to investigate about these two trends in \vref{fig:ddpg_noise,fig:sac_temperature}. \todomacaluso{talks about ddpg noise and sac}
+
+It is noticeable that SAC results seem more valuable than DDPG ones: the SAC agent manages to touch the zero value after about 30 episodes and reaches a sort of asymptote between 100 and 200 after about 60 episodes.
+On the other hand, the DDPG agent obtained a worse performance by touching the zero value after about 100 episodes and the corresponding values of SAC asymptote only in the last part of the experiment.
+This fact is even more remarkable if we analyze the average of the previous 100 episodes carried out in training as shown in \vref{fig:ddpg_pendulum_last100,fig:sac_pendulum_last100}.
+
+A criticism that can be made to this analysis is represented by the different amounts of noise present in different episodes.
+If that were the case, the testing phase of the DDPG algorithm, where any noise is removed, should produce better performance or, at least, comparable to those of SAC.
+However, analysing the result of the test phase shown in \vref{fig:ddpg_pendulum_test_reward,fig:sac_pendulum_test_reward}, it is clear that the different trends described above remain unchanged.
+As mentioned before in this work, we decided to start a test phase every specified amount of epochs correctly executed.
+For this reason, these plots has the number of epochs in the abscissa and the average reward obtained from 10 testing episode in the ordinate.
+Even in this case, the outstanding performance of SAC is not achieved by the DDPG one even in the most testing phase, the most important.
+
+%%%%%%%%%%%%%%%%%%%%%%
+%
+% REWARD PLOTS
+%
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis on top,
+				xmin=1,
+				xmax=205,
+				ymax=0,
+				width=\textwidth*0.9,
+				height=\textheight*0.4,
+				set layers=standard,
+				cycle list name=train,
+				grid=both,
+				grid style={solid,gray!30!white},
+				% axis lines=middle,
+				xlabel=Episode,
+				ylabel style={align=center}, ylabel=Reward Value,
+				%legend style={at={(0.99,0.3)},anchor=east},
+				legend pos=south east,
+				% extra y ticks = {90},
+				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
+				% 		/pgf/number format/.cd,precision=10
+				%}},
+				% x label style={at={(axis description cs:0.5,0)},anchor=north},
+				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+			]
+
+			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+			%\addlegendentry{Mean Reward of last 100 episode};
+
+			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+
+			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+
+			\addplot [fill=train_color_3] fill between[of=upper and lower];
+
+			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+
+			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+
+			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+
+			\addlegendentry{Mean $\mu$};
+			\addlegendentry{Area $[min, max]$};
+			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+
+		\end{axis}
+	\end{tikzpicture}
+	\caption[DDPG Pendulum-v0 Reward Plot]{DDPG Pendulum-v0 Reward Plot. The graph reports mean, standard deviation range and min-max range of the reward of each episode over 10 runs with different seeds.}
+	\label{fig:ddpg_pendulum_reward}
+\end{figure}
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis on top,
+				xmin=1,
+				xmax=205,
+				ymax=0,
+				width=\textwidth*0.9,
+				height=\textheight*0.4,
+				set layers=standard,
+				cycle list name=train,
+				grid=both,
+				grid style={solid,gray!30!white},
+				% axis lines=middle,
+				xlabel=Episode,
+				ylabel style={align=center}, ylabel=Reward Value,
+				%legend style={at={(0.99,0.3)},anchor=east},
+				legend pos=south east,
+				% extra y ticks = {90},
+				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
+				% 		/pgf/number format/.cd,precision=10
+				%}},
+				% x label style={at={(axis description cs:0.5,0)},anchor=north},
+				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+			]
+
+			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+			%\addlegendentry{Mean Reward of last 100 episode};
+
+			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+
+			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+
+			\addplot [fill=train_color_3] fill between[of=upper and lower];
+
+			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+
+			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+
+			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+
+			\addlegendentry{Mean $\mu$};
+			\addlegendentry{Area $[min, max]$};
+			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+
+		\end{axis}
+	\end{tikzpicture}
+	\caption[SAC Pendulum-v0 Reward Plot]{SAC Pendulum-v0 Reward Plot. The graph reports mean, standard deviation range and min-max range of the reward of each episode over 10 runs with different seeds.}
+	\label{fig:sac_pendulum_reward}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%
+% TEST PLOTS
+%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis on top,
+				width=\textwidth*0.9,
+				height=\textheight*0.38,
+				xmin=5000,
+				xmax=50000,
+				ymax=0,
+				set layers=standard,
+				cycle list name=test,
+				grid=both,
+				grid style={solid,gray!30!white},
+				% axis lines=middle,
+				xlabel=Epochs,
+				ylabel style={align=center}, ylabel=Average Reward Value,
+				%legend style={at={(0.99,0.3)},anchor=east},
+				legend pos=south east,
+				% extra y ticks = {90},
+				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
+				% 		/pgf/number format/.cd,precision=10
+				%}},
+				% x label style={at={(axis description cs:0.5,0)},anchor=north},
+				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+			]
+
+			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+			%\addlegendentry{Mean Reward of last 100 episode};
+
+			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+
+			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+
+			\addplot [fill=test_color_3] fill between[of=upper and lower];
+
+			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+
+			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+
+			\addplot [fill=test_color_2] fill between[of=upper1 and lower1];
+
+			\addlegendentry{Mean $\mu$};
+			\addlegendentry{Area $[min, max]$};
+			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+
+		\end{axis}
+	\end{tikzpicture}
+	\caption[DDPG Pendulum-v0 Test Average Reward Plot]{DDPG Pendulum-v0 Test Average Reward Plot. The graph reports mean, standard deviation range and min-max range of the average reward obtained from 10 test episodes every 5000 epochs. They are calculated on 10 runs with different seeds.
+	}
+	\label{fig:ddpg_pendulum_test_reward}
+\end{figure}
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis on top,
+				width=\textwidth*0.9,
+				height=\textheight*0.38,
+				xmin=5000,
+				xmax=50000,
+				ymax=0,
+				set layers=standard,
+				cycle list name=test,
+				grid=both,
+				grid style={solid,gray!30!white},
+				% axis lines=middle,
+				xlabel=Epochs,
+				ylabel style={align=center}, ylabel=Average Reward Value,
+				%legend style={at={(0.99,0.3)},anchor=east},
+				legend pos=south east,
+				% extra y ticks = {90},
+				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
+				% 		/pgf/number format/.cd,precision=10
+				%}},
+				% x label style={at={(axis description cs:0.5,0)},anchor=north},
+				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+			]
+
+			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+			%\addlegendentry{Mean Reward of last 100 episode};
+
+			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+
+			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+
+			\addplot [fill=test_color_3] fill between[of=upper and lower];
+
+			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+
+			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+
+			\addplot [fill=test_color_2] fill between[of=upper1 and lower1];
+
+			\addlegendentry{Mean $\mu$};
+			\addlegendentry{Area $[min, max]$};
+			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+
+		\end{axis}
+	\end{tikzpicture}
+	\caption[SAC Pendulum-v0 Test Average Reward Plot]{SAC Pendulum-v0 Test Average Reward Plot. The graph reports mean, standard deviation range and min-max range of the average reward obtained from 10 test episodes every 5000 epochs. They are calculated on 10 runs with different seeds.}
+	\label{fig:sac_pendulum_test_reward}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%
+% LAST 100 STEPS MEAN
+%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis on top,
+				width=\textwidth*0.9,
+				height=\textheight*0.4,
+				xmin=1,
+				xmax=205,
+				ymax=0,
+				set layers=standard,
+				cycle list name=train,
+				grid=both,
+				grid style={solid,gray!30!white},
+				% axis lines=middle,
+				xlabel=Epochs,
+				ylabel style={align=center}, ylabel=Average Reward Value,
+				%legend style={at={(0.99,0.3)},anchor=east},
+				legend pos=south east,
+				% extra y ticks = {90},
+				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
+				% 		/pgf/number format/.cd,precision=10
+				%}},
+				% x label style={at={(axis description cs:0.5,0)},anchor=north},
+				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+			]
+
+			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+			%\addlegendentry{Mean Reward of last 100 episode};
+
+			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+
+			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+
+			\addplot [fill=train_color_3] fill between[of=upper and lower];
+
+			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+
+			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+
+			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+
+			\addlegendentry{Mean $\mu$};
+			\addlegendentry{Area $[min, max]$};
+			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+
+		\end{axis}
+	\end{tikzpicture}
+	\caption[DDPG Pendulum-v0 Last 100 Episode Average Reward Plot]{DDPG Pendulum-v0 Last 100 Episode Average Reward Plot. The graph reports mean, standard deviation range and min-max range of the last 100 episode average reward for each episode over 10 runs with different seeds.}
+	\label{fig:ddpg_pendulum_last100}
+\end{figure}
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis on top,
+				width=\textwidth*0.9,
+				height=\textheight*0.4,
+				xmin=1,
+				xmax=205,
+				ymax=0,
+				set layers=standard,
+				cycle list name=train,
+				grid=both,
+				grid style={solid,gray!30!white},
+				% axis lines=middle,
+				xlabel=Epochs,
+				ylabel style={align=center}, ylabel=Average Reward Value,
+				%legend style={at={(0.99,0.3)},anchor=east},
+				legend pos=south east,
+				% extra y ticks = {90},
+				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
+				% 		/pgf/number format/.cd,precision=10
+				%}},
+				% x label style={at={(axis description cs:0.5,0)},anchor=north},
+				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+			]
+
+			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+			%\addlegendentry{Mean Reward of last 100 episode};
+
+			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+
+			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+
+			\addplot [fill=train_color_3] fill between[of=upper and lower];
+
+			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+
+			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+
+			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+
+			\addlegendentry{Mean $\mu$};
+			\addlegendentry{Area $[min, max]$};
+			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+
+		\end{axis}
+	\end{tikzpicture}
+	\caption[SAC Pendulum-v0 Last 100 Episode Average Reward Plot]{SAC Pendulum-v0 Last 100 Episode Average Reward Plot. The graph reports mean, standard deviation range and min-max range of the last 100 episode average reward for each episode over 10 runs with different seeds.}
+	\label{fig:sac_pendulum_last100}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%
+% NOISE PLOT
+%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis on top,
+				width=\textwidth*0.9,
+				height=\textheight*0.4,
+				xmin=1,
+				xmax=205,
+				ymax=1,
+				ymin=0,
+				set layers=standard,
+				cycle list name=train,
+				grid=both,
+				grid style={solid,gray!30!white},
+				% axis lines=middle,
+				xlabel=Epochs,
+				ylabel style={align=center}, ylabel=Average Reward Value,
+				%legend style={at={(0.99,0.3)},anchor=east},
+				legend pos=north east,
+				% extra y ticks = {90},
+				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
+				% 		/pgf/number format/.cd,precision=10
+				%}},
+				% x label style={at={(axis description cs:0.5,0)},anchor=north},
+				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+			]
+
+			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+			%\addlegendentry{Mean Reward of last 100 episode};
+
+			% \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+
+			% \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+
+			% \addplot [fill=train_color_3] fill between[of=upper and lower];
+
+			% \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+
+			% \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+
+			% \addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+
+			\addlegendentry{Epsilon value $\epsilon$};
+			\addlegendentry{Area $[min, max]$};
+			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+
+		\end{axis}
+	\end{tikzpicture}
+	\caption[DDPG Pendulum-v0 Noise Epsilon Decay]{DDPG Pendulum-v0 Noise Epsilon Decay. The graph shows the trend of the noise epsilon decay applied to the Ornstein Uhlenbeck noise in DDPG.}
+	\label{fig:ddpg_noise}
+\end{figure}
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis on top,
+				width=\textwidth*0.9,
+				height=\textheight*0.4,
+				xmin=1,
+				xmax=50000,
+				ymax=1,
+				ymin=0,
+				set layers=standard,
+				cycle list name=train,
+				grid=both,
+				grid style={solid,gray!30!white},
+				% axis lines=middle,
+				xlabel=Epochs,
+				ylabel style={align=center}, ylabel=Temperature Value ($\alpha$),
+				%legend style={at={(0.99,0.3)},anchor=east},
+				legend pos=north east,
+				% extra y ticks = {90},
+				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
+				% 		/pgf/number format/.cd,precision=10
+				%}},
+				% x label style={at={(axis description cs:0.5,0)},anchor=north},
+				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+			]
+
+			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+			%\addlegendentry{Mean Reward of last 100 episode};
+
+			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+
+			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+
+			\addplot [fill=train_color_3] fill between[of=upper and lower];
+
+			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+
+			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+
+			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+
+			\addlegendentry{Mean $\mu$};
+			\addlegendentry{Area $[min, max]$};
+			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+
+		\end{axis}
+	\end{tikzpicture}
+	\caption[SAC Pendulum-v0 auto-tuning temperature]{SAC Pendulum-v0 auto-tuning temperature. The graph shows the trend of the temperature parameter learned through the auto-tune process proposed by SAC authors.}
+	\label{fig:sac_temperature}
+\end{figure}
+
+\FloatBarrier
 
 \section{CozmoEnv-v0 Experiments} \label{sec:cozmo-exp}
 

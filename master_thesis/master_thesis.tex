@@ -126,7 +126,42 @@ numerazioneromana
 \makeglossaries
 \input{other/glossary.tex}
 
+\usepackage{pgfplots}
+\usepackage{varwidth}
 \usepackage{tikz}
+\usepackage{placeins}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
+	decorations.pathreplacing,decorations.pathmorphing,shapes,%
+	matrix,shapes.symbols}
+% COLORS FOR GRAPHS
+
+\pgfplotsset{width=\textwidth, height=\textheight*0.33,compat=newest}
+
+\definecolor{train_color_1}{HTML}{8b402a}
+\definecolor{train_color_2}{HTML}{e45e2d}
+\definecolor{train_color_3}{HTML}{ef9c49}
+\definecolor{train_color_4}{HTML}{fdea6f}
+
+\definecolor{test_color_1}{HTML}{192574}
+\definecolor{test_color_2}{HTML}{2e62a1}
+\definecolor{test_color_3}{HTML}{43a7cb}
+\definecolor{test_color_4}{HTML}{9ed5cd}
+
+\pgfplotscreateplotcyclelist{train}{
+	semithick,train_color_1\\%
+	semithick,train_color_2\\%
+	semithick,train_color_3\\%
+	semithick,train_color_4\\%
+}
+
+\pgfplotscreateplotcyclelist{test}{
+	semithick,test_color_1\\%
+	semithick,test_color_2\\%
+	semithick,test_color_3\\%
+	semithick,test_color_4\\%
+}
+
 \usepackage{graphicx}
 \usetikzlibrary{arrows,positioning}
 \usetikzlibrary{calc} % for manimulation of coordinates
