@@ -99,12 +99,16 @@ class DDPG:
             self.test = self.test_cnn
             self.h = env.observation_space.shape[1]
             self.w = env.observation_space.shape[2]
-            self.critic_net = CriticCNN(self.size_state_buffer, self.state_batch_size, self.action_dim, self.h, self.w).to(
+            self.critic_net = CriticCNN(self.size_state_buffer, self.state_batch_size, self.action_dim, self.h,
+                                        self.w).to(
                 self.device)
-            self.actor_net = ActorCNN(self.size_state_buffer, self.state_batch_size, self.action_dim, self.h, self.w).to(self.device)
-            self.target_value_net = CriticCNN(self.size_state_buffer, self.state_batch_size, self.action_dim, self.h, self.w).to(
+            self.actor_net = ActorCNN(self.size_state_buffer, self.state_batch_size, self.action_dim, self.h,
+                                      self.w).to(self.device)
+            self.target_value_net = CriticCNN(self.size_state_buffer, self.state_batch_size, self.action_dim, self.h,
+                                              self.w).to(
                 self.device)
-            self.target_policy_net = ActorCNN(self.size_state_buffer, self.state_batch_size, self.action_dim, self.h, self.w).to(
+            self.target_policy_net = ActorCNN(self.size_state_buffer, self.state_batch_size, self.action_dim, self.h,
+                                              self.w).to(
                 self.device)
         else:
             # NN
@@ -146,7 +150,7 @@ class DDPG:
         self.actor_weight_decay = actor_weight_decay
         self.critic_loss = nn.MSELoss()
         
-        self.eval_samples = eval_samples
+        self.eval_samples = eval_samples[0]
         self.soft_target_tau = soft_target_tau
         self.n_updates_per_sample = n_updates_per_sample
         
@@ -278,9 +282,10 @@ class DDPG:
         self.episode = running_episode_reward_100 = running_episode_reward = frame_idx = 0
         rewards = []
         best_reward = None
+        upgrade_steps = 0
         while self.episode < self.n_episode:
             ts = time.time()
-            episode_reward = upgrade_steps = running_ploss = running_vloss = step = 0
+            episode_reward = running_ploss = running_vloss = step = 0
             done = False
             old = self.reset()
             state_buffer = StateBuffer(self.state_batch_size, old)
@@ -297,13 +302,6 @@ class DDPG:
                     next_state, reward, done = self.step(action)
                 state_buffer.push(next_state)
                 self.replay_buffer.push(state, action, reward, state_buffer.get_state(), done)
-                if frame_idx > self.replay_min_size:
-                    # pl, vl = self.update()
-                    experience = self.replay_buffer.sample(self.batch_size)
-                    pl, vl = self.learn(experience, self.discount)
-                    
-                    running_ploss += (pl - running_ploss) / (upgrade_steps + 1)
-                    running_vloss += (vl - running_vloss) / (upgrade_steps + 1)
                 
                 episode_reward += reward
                 step += 1
@@ -314,9 +312,18 @@ class DDPG:
                     break
             if not done:
                 self.episode += 1
+            if frame_idx > self.replay_min_size:
+                # pl, vl = self.update()
+                for i in range(250):
+                    experience = self.replay_buffer.sample(self.batch_size)
+                    pl, vl = self.learn(experience, self.discount)
+                    upgrade_steps += 1
+                    
+                    running_ploss += (pl - running_ploss) / (upgrade_steps + 1)
+                    running_vloss += (vl - running_vloss) / (upgrade_steps + 1)
             
-            if self.episode % self.eval_samples == 0:
-                best_reward = self.evaluation(best_reward, self.episode)
+            if upgrade_steps % self.eval_samples == 0 and upgrade_steps != 0:
+                best_reward = self.evaluation(best_reward, self.episode, upgrade_steps)
             
             rewards.append(episode_reward)
             running_episode_reward += (episode_reward - running_episode_reward) / self.episode
@@ -331,11 +338,12 @@ class DDPG:
             self.writer_train.add_scalar('reward/episode', episode_reward, self.episode)
             self.writer_train.add_scalar('reward/running_mean', running_episode_reward, self.episode)
             self.writer_train.add_scalar('reward/running_mean_last_100', running_episode_reward_100, self.episode)
-            print("ep {}/{}, t {}, r_t {}, 100_mean {}, time_spent {}s ".format(self.episode, self.n_episode,
-                                                                               step,
-                                                                               round(episode_reward, 2),
-                                                                               round(running_episode_reward_100, 2),
-                                                                               round(time.time() - ts, 2)))
+            print("ep {}/{}, t {}, r_t {}, u {} 100_mean {}, time_spent {}s ".format(self.episode, self.n_episode,
+                                                                                step,
+                                                                                round(episode_reward, 2),
+                                                                                     upgrade_steps,
+                                                                                round(running_episode_reward_100, 2),
+                                                                                round(time.time() - ts, 2)))
         self.writer_train.close()
     
     def train_nn(self):
@@ -441,7 +449,7 @@ class DDPG:
         
         return actor_loss.item(), critic_loss.item()
     
-    def evaluation(self, best_reward, episode):
+    def evaluation(self, best_reward, episode, up_steps):
         """
         Evaluation of the model currently discovered.
 
@@ -451,19 +459,21 @@ class DDPG:
         """
         print("----------------------------------------")
         ts = time.time()
-        rewards, steps = self.test()
+
+        rewards, steps = self.test(10)
         print("Test done in %.2f sec, reward %.3f, steps %d" % (
             time.time() - ts, rewards, steps))
-        self.writer_test.add_scalar("test/reward_mean", rewards, episode)
-        self.writer_test.add_scalar("test/steps_mean", steps, episode)
+        self.writer_test.add_scalar("test/reward_mean", rewards, up_steps)
+        self.writer_test.add_scalar("test/steps_mean", steps, up_steps)
         if best_reward is None or best_reward < rewards:
             if best_reward is not None:
                 print("Best reward updated: %.3f -> %.3f" % (best_reward, rewards))
-            fname = self.checkpoint_dir + "best_%+.3f_%d.pth" % (rewards, episode)
-            # fname = os.path.join(self.checkpoint_dir, name)
-            self.save_model(self.env.spec.id)
-            # torch.save(self.actor_net.state_dict(), fname)
-            best_reward = rewards
+                best_reward = rewards
+        
+
+        # fname = os.path.join(self.checkpoint_dir, name)
+        self.save_model(self.env.spec.id, self.checkpoint_dir, up_steps)
+        # torch.save(self.actor_net.state_dict(), fname)
         print("----------------------------------------")
         
         return best_reward
@@ -479,20 +489,18 @@ class DDPG:
         """
         for target_param, local_param in zip(target_net.parameters(), local_net.parameters()):
             target_param.data.copy_(tau * local_param.data + (1.0 - tau) * target_param.data)
-    
+
     # Save model parameters
-    def save_model(self, env_name, suffix="", actor_path=None, critic_path=None):
-        if not os.path.exists('models/'):
-            os.makedirs('models/')
-        
-        if actor_path is None:
-            actor_path = "models/{}_actor_{}_{}".format(self.id, env_name, suffix)
-        if critic_path is None:
-            critic_path = "models/{}_critic_{}_{}".format(self.id, env_name, suffix)
-        print('Saving models to {} and {}'.format(actor_path, critic_path))
+    def save_model(self, env_name, folder, i_episode, suffix=""):
+        model_f = folder + '/models/' + f"episode_{i_episode}/"
+        if not os.path.exists(model_f):
+            os.makedirs(model_f)
+
+        actor_path = model_f + f"sac_actor_{env_name}_episode{i_episode}"
+        critic_path = model_f + f"sac_critic_{env_name}_episode{i_episode}"
         torch.save(self.actor_net.state_dict(), actor_path)
         torch.save(self.critic_net.state_dict(), critic_path)
-    
+
     # Load model parameters
     def load_model(self, actor_path, critic_path):
         print('Loading models from {} and {}'.format(actor_path, critic_path))

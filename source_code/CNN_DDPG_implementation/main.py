@@ -2,7 +2,6 @@ import argparse
 import datetime
 
 import gc
-import roboschool
 import gym
 import torch
 
@@ -30,9 +29,9 @@ def get_args():
     parser.add_argument('-env', default='CarRacing-v0', type=str, help='Name of the Gym Environment')
     parser.add_argument('-noise', nargs=3, default=[0.0, 0.3, 0.15], metavar=('mu', 'sigma', 'theta'), type=float,
                         help='Ornstein Uhlenbeck process noise parameters')
-    parser.add_argument('-eps', nargs=3, default=[0.9, 0.2, 300], metavar=('start', 'end', 'decay'), type=float,
+    parser.add_argument('-eps', nargs=3, default=[0.9, 0.2, 200], metavar=('start', 'end', 'decay'), type=float,
                         help='Epsilon Decay process to decay the noise')
-    parser.add_argument('-replay', nargs=3, default=[100, 2500, 10000000],
+    parser.add_argument('-replay', nargs=3, default=[100, 2500, 10000],
                         metavar=('batch_size', 'replay_min_size', 'replay_max_size'), type=int,
                         help='Replay Buffer parameters')
     parser.add_argument('-sim', nargs=2, default=[1000, 1000],
@@ -63,7 +62,7 @@ if __name__ == '__main__':
         sim.simulate()
         env.close()
     else:
-        for i in range(20):
+        for i in range(10):
             print("----------------------------------------")
             print("Run: {}".format(i))
             print("Algorithm: {}".format('DDPG'))

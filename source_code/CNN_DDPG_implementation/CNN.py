@@ -47,19 +47,25 @@ class ActorCNN(nn.Module):
         super(ActorCNN, self).__init__()
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
-            'conv1': [num_channel * num_stack, 16, 8, 4, 0],
-            'conv2': [16, 32, 5, 2, 0]
+            'conv1': [num_channel * num_stack, 16, 3, 2, 0],
+            'conv2': [16, 16, 3, 2, 0],
+            'conv3': [16, 16, 3, 2, 0]
+    
         }
         fc = {
             # 0:fin, 1:fout,
-            'fc1': [conv2d_size_out(w, conv) * conv2d_size_out(w, conv) * conv['conv2'][1], 256],
-            'fc2': [256, num_actions]
+            'fc1': [conv2d_size_out(w, conv) * conv2d_size_out(w, conv) * conv['conv3'][1], 256],
+            'fc2': [256, 256],
+            'fc3': [256, num_actions]
         }
         
         self.conv1, self.bn1 = convolutional(conv['conv1'])
         self.conv2, self.bn2 = convolutional(conv['conv2'])
+        self.conv3, self.bn3 = convolutional(conv['conv2'])
+
         self.fc1 = linear(fc['fc1'])
         self.fc2 = linear(fc['fc2'])
+        self.fc3 = linear(fc['fc3'])
         self.apply(weights_init_)
     
     # Called with either one element to determine next action, or a batch
@@ -67,9 +73,12 @@ class ActorCNN(nn.Module):
     def forward(self, x):
         x = F.relu(self.bn1(self.conv1(x)))
         x = F.relu(self.bn2(self.conv2(x)))
+        x = F.relu(self.bn3(self.conv3(x)))
+
         x = x.view(x.shape[0], -1)
         x = F.relu(self.fc1(x))
-        x = torch.tanh(self.fc2(x))
+        x = F.relu(self.fc2(x))
+        x = torch.tanh(self.fc3(x))
         return x
 
 
@@ -79,19 +88,25 @@ class CriticCNN(nn.Module):
         super(CriticCNN, self).__init__()
         conv = {
             # 0:fin, 1:fout, 2:kernel, 3:stride, 4:padding
-            'conv1': [num_channel * num_stack, 16, 8, 4, 0],
-            'conv2': [16, 32, 5, 2, 0]
+            'conv1': [num_channel * num_stack, 16, 3, 2, 0],
+            'conv2': [16, 16, 3, 2, 0],
+            'conv3': [16, 16, 3, 2, 0]
+    
         }
         fc = {
             # 0:fin, 1:fout,
-            'fc1': [conv2d_size_out(w, conv) * conv2d_size_out(w, conv) * conv['conv2'][1] + num_actions, 256],
-            'fc2': [256, 1]
+            'fc1': [conv2d_size_out(w, conv) * conv2d_size_out(w, conv) * conv['conv3'][1] + num_actions, 256],
+            'fc2': [256, 256],
+            'fc3': [256, num_actions]
         }
-    
+
         self.conv1, self.bn1 = convolutional(conv['conv1'])
         self.conv2, self.bn2 = convolutional(conv['conv2'])
+        self.conv3, self.bn3 = convolutional(conv['conv2'])
+
         self.fc1 = linear(fc['fc1'])
         self.fc2 = linear(fc['fc2'])
+        self.fc3 = linear(fc['fc3'])
         self.apply(weights_init_)
     
     # Called with either one element to determine next action, or a batch
@@ -100,9 +115,11 @@ class CriticCNN(nn.Module):
     def forward(self, x, a):
         x = F.relu(self.bn1(self.conv1(x)))
         x = F.relu(self.bn2(self.conv2(x)))
+        x = F.relu(self.bn3(self.conv3(x)))
         x = x.view(x.shape[0], -1)
         a = a.view(a.shape[0], -1)
         x = torch.cat([x, a], dim=1)
         x = F.relu(self.fc1(x))
-        x = self.fc2(x)
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
         return x
