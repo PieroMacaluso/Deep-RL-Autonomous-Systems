@@ -13,13 +13,13 @@ import math
 from tensorboard import program
 
 from my_logging import Log
-from sac import SAC
+from ddpg import DDPG
 
 
 def initial_setup() -> (argparse.Namespace, str, Log, bool):
     """
     Initialization of default parameters and parsing of command line arguments.
-    
+
     :return: arguments, name of the main folder of the experiment and logger.
     :rtype: (argparse.Namespace, str, Log, bool)
     """
@@ -32,13 +32,20 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     eval_every = 50
     eval_episode = 10
     
+    # Net and DDPG parameters
+    eps_start = 0.9
+    eps_end = 0.2
+    eps_decay = 1000
+    
+    # Noise
+    mu = 0.0
+    sigma = 0.3
+    theta = 0.15
+    
     # Net and SAC parameters
-    policy = "Gaussian"
     gamma = 0.99
     tau = 0.005
     lr = 0.0003
-    alpha = 0.2
-    autotune_entropy = True
     hidden_size = 256
     img_h = 64
     img_w = 64
@@ -56,15 +63,17 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     
     parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')
     parser.add_argument('--env_name', default=env_name, help='Name of the OpenAI Gym environment to run')
-    parser.add_argument('--policy', default=policy, help='Gaussian | Deterministic policy to use in the algorithm')
+    parser.add_argument('--eps_start', type=float, default=eps_start, help='eps_start')
+    parser.add_argument('--eps_end', type=float, default=eps_end, help='eps_end')
+    parser.add_argument('--eps_decay', type=float, default=eps_decay, help='eps_decay')
+    parser.add_argument('-noise', nargs=3, default=[mu, sigma, theta], metavar=('mu', 'sigma', 'theta'), type=float,
+                        help='Ornstein Uhlenbeck process noise parameters')
     parser.add_argument('--eval', type=bool, default=eval, help='Enable eval of the learned policy')
     parser.add_argument('--eval_every', type=int, default=eval_every, help='Evaluate every X episodes')
     parser.add_argument('--eval_episode', type=int, default=eval_episode, help='Number of episode to test')
     parser.add_argument('--gamma', type=float, default=gamma, metavar='G', help='Discount factor for reward')
     parser.add_argument('--tau', type=float, default=tau, metavar='G', help='Tau coefficient (Target)')
     parser.add_argument('--lr', type=float, default=lr, metavar='G', help='learning rate')
-    parser.add_argument('--alpha', type=float, default=alpha, metavar='G', help='Alpha Temperature parameter')
-    parser.add_argument('--autotune_entropy', type=bool, default=autotune_entropy, metavar='G', help='Alpha Autotune')
     parser.add_argument('--seed', type=int, default=seed, metavar='N', help='Specify a Seed')
     parser.add_argument('--batch_size', type=int, default=batch_size, metavar='N', help='Batch size')
     parser.add_argument('--max_num_run', type=int, default=max_num_run, metavar='N', help='Max number of runs')
@@ -125,7 +134,7 @@ class TensorBoardTool:
     def __init__(self, dir_path: str):
         """
         Constructor
-        
+
         :param dir_path: path of TensorBoardX experiment files
         :type dir_path:  str
         """
@@ -135,7 +144,7 @@ class TensorBoardTool:
     def run(self) -> str:
         """
         Run TensorBoardX using the args specified in the code.
-        
+
         :return: url
         :rtype: str
         """
@@ -155,7 +164,7 @@ def run(sdk_conn: cozmo.conn):
     """
     Container of the main loop. It is necessary to work with Cozmo. This is called by the cozmo.connect
     presents in the main loop of this file.
-    
+
     :param sdk_conn: SDK connection to Anki Cozmo
     :type sdk_conn: cozmo.conn
     :return: nothing
@@ -175,8 +184,8 @@ def run(sdk_conn: cozmo.conn):
     # Setting up Hyper-Parameters
     args, folder, logger, restore = initial_setup()
     # if not debug:
-        # tb_tool = TensorBoardTool(folder)
-        # tb_tool.run()
+    # tb_tool = TensorBoardTool(folder)
+    # tb_tool.run()
     logger.debug("Initial setup completed.")
     
     # Create JSON of Hyper-Parameters for reproducibility
@@ -188,8 +197,11 @@ def run(sdk_conn: cozmo.conn):
     env = gym.make(args.env_name)
     
     # Setup the agent
-    agent = SAC(args.state_buffer_size, env.action_space, env, args, folder, logger)
-    agent.train(args.max_num_run, restore)
+    agent = DDPG(args.state_buffer_size, env.action_space, env, args, folder, logger)
+    i_run = args.run
+    i_epi = args.episode
+    agent.load_model_to_play(args.env_name, folder, i_run, i_epi)
+    agent.play()
     env.close()
     logger.important("Program closed correctly!")
 
