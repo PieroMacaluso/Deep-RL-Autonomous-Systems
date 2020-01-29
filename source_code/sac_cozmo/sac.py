@@ -314,7 +314,8 @@ class SAC(object):
                                                    i)
                     
                     if len(memory) > self.min_replay_size and ep_print > self.warm_up_episodes:
-                        updates = self.learning_phase(last_episode_steps, memory, updates, writer_learn)
+                        updates = self.learning_phase((last_episode_steps // 10) * 10 + 10, memory, updates,
+                                                      writer_learn)
                     self.print_nets(writer_train, ep_print)
                     rewards.append(episode_reward)
                     running_episode_reward += (episode_reward - running_episode_reward) / (ep_print + 1)
@@ -340,7 +341,7 @@ class SAC(object):
                 # Let's test (if it is the case)
                 if i_episode % self.eval_every == 0 and self.eval and i_episode != 0 and not restore:
                     # print('test')
-                    self.test_phase(writer_test, i_run, i_episode)
+                    self.test_phase(writer_test, i_run, updates)
                     # Wait for the human to leave the command
                     while self.env.is_human_controlled():
                         pass
@@ -403,8 +404,6 @@ class SAC(object):
                     
                     assert action.shape == self.env.action_space.shape
                     assert action is not None
-                    # TODO: problem with histograms!
-                    # print(action)
                     writer_train.add_histogram('action_speed/episode_{}'
                                                .format(str(i_episode)), torch.tensor(action[0]), episode_steps)
                     writer_train.add_histogram('action_turn/episode_{}'
@@ -428,14 +427,6 @@ class SAC(object):
                         memory.push(state, action, reward, next_state, mask)
                     state = next_state
                 print("Memory {}/{}".format(len(memory), self.replay_size))
-                # self.logger.info("#TotalUpdates={})"
-                #                  .format(updates))
-                # self.scheduler_alpha.step()
-                # self.scheduler_critic.step()
-                # self.scheduler_policy.step()
-                # print("{} {} {}"
-                #       .format(self.scheduler_policy.get_lr(), self.scheduler_critic.get_lr(),
-                #               self.scheduler_alpha.get_lr()))
                 timing = time.time() - ts
                 total_timing = time.time() - in_ts
                 start_episode = 0
@@ -468,12 +459,12 @@ class SAC(object):
         critic_path = model_f + f"sac_critic_{env_name}_episode{i_episode}"
         torch.save(self.policy.state_dict(), actor_path)
         torch.save(self.critic.state_dict(), critic_path)
-
+    
     def load_model_to_play(self, env_name, folder, i_run, i_episode, suffix=""):
         model_f = folder + f'run_{i_run}/' + 'models/' + f"episode_{i_episode}/"
         if not os.path.exists(model_f):
             os.makedirs(model_f)
-    
+        
         actor_path = model_f + f"sac_actor_{env_name}_episode{i_episode}"
         critic_path = model_f + f"sac_critic_{env_name}_episode{i_episode}"
         self.load_model(actor_path, critic_path);
@@ -525,8 +516,9 @@ class SAC(object):
     def test_phase(self, writer_test, i_run, i_episode):
         n_tests = 0
         ts = time.time()
-        total_reward = 0
-        while True:
+        rewards = []
+        while n_tests < self.eval_episode:
+            
             episode_reward = self.do_one_test()
             while self.env.is_human_controlled():
                 pass
@@ -534,19 +526,23 @@ class SAC(object):
                 self.logger.info("Last Test Episode Forgotten")
                 self.env.reset_forget()
             else:
+                rewards.append(episode_reward)
                 n_tests += 1
-                total_reward += episode_reward
-            # TODO: fix this with >=
-            if n_tests > self.eval_episode:
-                break
         
-        writer_test.add_scalar('reward/test', total_reward / n_tests, i_episode)
+        rewards = np.array(rewards)
+        writer_test.add_scalar('test/average_reward', rewards.mean(), i_episode)
+        writer_test.add_scalar('test/max_reward', rewards.max(), i_episode)
+        writer_test.add_scalar('test/min_reward', rewards.min(), i_episode)
+        writer_test.add_scalar('test/stdev_reward', rewards.std(), i_episode)
         
         self.logger.info("----------------------------------------")
-        self.logger.info("Test {} ep.: {}, mean_r: {}, time_spent {}s"
+        self.logger.info("Test {} ep.: {}, m_r: {}, max: {}, min: {}, std: {} time_spent {}s"
                          .format(self.eval_episode,
                                  i_episode,
-                                 round(total_reward / self.eval_episode, 2),
+                                 round(rewards.mean(), 2),
+                                 round(rewards.max(), 2),
+                                 round(rewards.min(), 2),
+                                 round(rewards.std(), 2),
                                  round(time.time() - ts, 2)))
         self.save_model(self.env_name, self.folder + f"run_{i_run}/", i_episode)
         self.logger.info('Saving models...')
@@ -568,7 +564,6 @@ class SAC(object):
             writer_learn.add_scalar('entropy_temperature/alpha', alpha, updates)
             writer_learn.add_scalar('entropy_temperature/learning_rate', torch.tensor(self.learning_rate),
                                     updates)
-            
             updates += 1
         # print(updates)
         self.logger.info("Update (up. {})took {}s"

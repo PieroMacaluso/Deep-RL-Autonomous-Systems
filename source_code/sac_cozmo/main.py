@@ -29,8 +29,8 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     
     # Evaluation
     eval = True
-    eval_every = 20
-    eval_episode = 5
+    eval_every = 50
+    eval_episode = 10
     
     # Net and SAC parameters
     policy = "Gaussian"
@@ -47,11 +47,11 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     warm_up_episodes = 10
     num_episode = 10000
     max_num_run = 5
-    batch_size = 256
+    batch_size = 64
     replay_size = 30000
     min_replay_size = 300
     state_buffer_size = 2
-    updates_per_episode = 100
+    updates_per_episode = 250
     target_update = 1
     
     parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')
