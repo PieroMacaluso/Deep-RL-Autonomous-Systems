@@ -267,6 +267,8 @@ The final part of each section will be accompanied by a comment on the results o
 \subsection{DDPG Hyperparameters}
 
 The hyper-parameters we exploited in this experiment are shown in \vref{table:ddpg_pendulum}.
+The epsilon decay function is presented in \vref{eq:epsilon_decay} where $e$ is the current episode number. It is used to decrease the impact of the noise on the actions in function of the number of episode. When it reaches the $\epsilon_{\text{end}}$, it will become a constant.
+
 \begin{table}[!h]
 	\centering
 	\caption{SAC Hyper-parameter setup for Pendulum-v0 environment}
@@ -303,6 +305,11 @@ The hyper-parameters we exploited in this experiment are shown in \vref{table:dd
 			\bottomrule
 		\end{tabular}}
 \end{table}
+
+\begin{equation}
+	\label{eq:epsilon_decay}
+	\epsilon = \epsilon_{\text{start}} - (\epsilon_{\text{start}} -\epsilon_{\text{end}})\min(1.0, \frac{e}{\epsilon_{\text{decay}}})
+\end{equation}
 
 \FloatBarrier
 
@@ -356,13 +363,18 @@ The results obtained exploiting SAC algorithm are presented in \vref{fig:sac_pen
 \Vref{fig:ddpg_pendulum_reward,fig:sac_pendulum_reward} shows the result of the training phase.
 These plots has the number of episodes in the abscissa and the reward obtained in the ordinate.
 
+
 The results of these graphs are unstable both in the average value and in margins sizes.
 This phenomenon is mainly caused by the noise introduced during training: it allows the agent to explore the space in the environment without focusing on the current best action but trying to explore entirely and randomly the totality of environment space.
 In the first case, the DDPG noise is given by the Ornstein Uhnlebeck process noise, while SAC exploits a Gaussian Policy by sampling a random action from the current distribution given by the network.
 Therefore, SAC algorithms exploit the \textit{entropy autotune} presented by its authors: its main aim is to reduce the impact of hyper-parameters by automatically tuning the $\alpha$ temperature parameter.
 This lead to a more straightforward setup of the experiment without requiring manual optimal temperature setup, which is non-trivial needs to be tuned for each task.
 
-It is possible to investigate about these two trends in \vref{fig:ddpg_noise,fig:sac_temperature}. \todomacaluso{talks about ddpg noise and sac}
+It is possible to investigate about these two trends in \vref{fig:ddpg_noise,fig:sac_temperature}.
+We exploited \vref{eq:epsilon_decay} to manipulate the importance of the noise through the whole set of episode for each run.
+The contribution of the noise decreases directly proportional to the number of episodes completed to enhance exploration in the initial part of the experiment.
+On the other side, the auto-tuning approach of SAC influence the way the reward is calculated and used to train the network. The objective is to give more reward to actions that has an higher entropy, that is more unpredictable. This approach is motivated by the fact that an unpredictable situation can bring more information to the learning process than a more predictable one.
+In D
 
 It is noticeable that SAC results seem more valuable than DDPG ones: the SAC agent manages to touch the zero value after about 30 episodes and reaches a sort of asymptote between 100 and 200 after about 60 episodes.
 On the other hand, the DDPG agent obtained a worse performance by touching the zero value after about 100 episodes and the corresponding values of SAC asymptote only in the last part of the experiment.
