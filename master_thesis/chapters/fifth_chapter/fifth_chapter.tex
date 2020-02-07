@@ -2,9 +2,9 @@
 
 In the previous chapters, we described the reinforcement learning control system we designed, together with an analysis of the solutions we proposed for the problems we faced during the development process.
 Indeed, this process has not been free from difficulties, both of implementation level and parameter optimisation.
-After completing the design of this architecture, our second goal was to look for an algorithm that could better adapt to a real context, exceeding the limits set by DDPG.
-The ideal would have been to find an algorithm altogether parameter agnostic: an enabling feature to achieve excellent performance regardless of the specific configuration.
-During our research we came across the SAC algorithm and, after a careful analysis of the paper and having understood the considerations made by the authors about SAC real-world applications, we thought it might be the right choice to get better performance than the DDPG experiments.
+After completing the design of this architecture, our second goal was to look for an algorithm that could better adapt to a real context, exceeding the limits set by DDPG in hyper-parameter tuning.
+The ideal would have been to find a parameter agnostic algorithm: an enabling feature to achieve excellent performance regardless of the specific configuration and hyper-parameter selection.
+During our research, we came across the SAC algorithm and, after a careful analysis of the paper and having understood the considerations made by the authors about SAC real-world applications, we thought it might be the right choice to get better performance than the DDPG experiments.
 For this reason, this chapter aims to present a detailed comparison of the experiments carried out on both algorithms.
 
 The first section of this chapter focuses on the experimental methodology.
@@ -18,14 +18,14 @@ We have shown all the useful graphs in order to analyse and to comment on the ob
 
 \section{Experimental Methodology}
 
-This pre-trial section is essential to understand better the tasks we tried to get the reinforcement learning algorithms to solve and what approach we used to evaluate experiments results.
+This preliminar section is essential to understand better the tasks we tried to solve throught the usage of reinforcement learning algorithms and what approach we used to evaluate experiments results.
 
 \subsection{Hardware and Software details}
 
-In order to carry out the experiments contained in this chapter, we have made use of a personal laptop.
-We chose this solution because the machine has excellent specifications to support the computational power required by the experiments both in terms of GPU and RAM.
+In order to carry out the experiments contained in this chapter, we used a personal laptop.
+We chose this solution because the machine has excellent specifications to support the computational power required by the machine learning experiments both in terms of GPU and RAM.
 
-Despite these considerations, we still had problems in terms of RAM memory. This type of experiment requires a very large experience memory replay to allow optimal batch extraction. Despite the large amount of RAM present and the reduction of the size of the input image, we were still forced to reduce the maximum size of the replay memory to complete the experiments.
+Despite these initial considerations, we still had problems in terms of RAM memory. This type of experiment requires a very large experience memory replay to allow optimal batch extraction. Despite the large amount of RAM present and the reduction of the size of the input image, we were still forced to reduce the maximum size of the replay memory to complete the experiments.
 
 We collected the essential information about hardware and software that we have used to perform experiments in \vref{table:hw_spec,table:sw_spec}.
 
@@ -82,11 +82,11 @@ We have also decided to include in this thesis the experiments we have carried o
 
 \subsubsection{Observation}
 
-The original implementation of this environment is based on an state represented by a \texttt{Box(3)} type, a data structure defined by OpenAI Gym that extends functionalities of a standard array. It contains values related to the current angle of the pendulum as described in \vref{table:pendulum_obs}.
+The original implementation of this environment is based on a state represented by a \texttt{Box(3)} type, a data structure defined by OpenAI Gym that extends functionalities of a standard array. It contains values related to the current angle of the pendulum as described in \vref{table:pendulum_obs}.
 
-Since the goal of our thesis was to apply DDPG and SAC to a problem such as the autonomous driving one where input data is composed of images, we decided to build a wrapper (\texttt{gym.ObservationWrapper}) for the original environment in order to receive observations as raw pixels. In this way we could apply the same considerations and the same convolutional neural network that we used in the Cozmo environment.
+Since the goal of our thesis was to apply deep reinforcement learning algorithms to a problem such as the autonomous driving one where input data is composed of images, we decided to build a wrapper (\texttt{gym.ObservationWrapper}) for the original environment in order to receive observations as raw pixels. Thanks to this approach, we were able to apply the same considerations and the same convolutional neural networks that we used in the Cozmo environment.
 
-We have started many experiments on this environment to find the most suitable number of images to use as a state, looking for a trade-off between the algorithm’s needs and the space constraints imposed by the hardware we used. The agent revealed instability using a single frame, while leading to excellent results using two images. Finally, for space issues, we decided to resize the image to 64$\times$64 pixels.
+We have started many experiments on this environment to find the most suitable number of images to use as a state, looking for a trade-off between the algorithm’s needs and the memory constraints imposed by the hardware we used. The agent revealed instability using a single frame, while it led to excellent results using two images. In the end, we decided to resize the image to 64$\times$64 pixels to overcome hardware limitations.
 
 A sample screenshot of the environment in action is shown in \vref{fig:pendulum}.
 
@@ -122,7 +122,7 @@ The actions that the agent can perform within this environment are described thr
 
 \subsubsection{Reward}
 The reward for each timestep $t$ is given by \[r_t = -(\theta_t^2 + 0.1 \dot{\theta}^2 + 0.001 a_t^2)\]
-where theta is normalized between $-\pi$ and $\pi$. Therefore, the lowest cost is $-(\pi^2 + 0.1*8^2 + 0.001*2^2) = -16.2736044$, and the highest cost is $0$. In essence, the goal is to remain at zero angle (vertical), with the least rotational velocity, and the least effort.
+where $\theta$ is normalized between $-\pi$ and $\pi$. Therefore, the lowest cost is $-(\pi^2 + 0.1*8^2 + 0.001*2^2) = -16.2736044$, and the highest cost is $0$. In essence, the goal is to remain at zero angle (vertical), with the least rotational velocity, and the least effort.
 The reward design has been maintained also in the modified environment.
 
 \subsubsection{Starting State}
@@ -156,10 +156,10 @@ As in the previous environment, we decided to resize the images obtained in orde
 The first image represents the state before the action, while the second represents the consequences of the action taken.
 The number of images was set to two after performing some experiments on \textit{Pendulum-v0} environment that revealed instability in the use of a single image.
 We decided to limit ourselves to two images, as we would increase the size of a single entry in replay memory by adding more of them.
-This choice would require a counterbalance that would materialize in the decrease of the maximum size of replay memory.
+This choice would have required a counterbalance such as the decrease of the maximum size of replay memory.
 
 As we mentioned in \vref{ch:ch3}, Anki Cozmo has a front camera inserted inside its tilting head and one forklift.
-In order to obtain more valuable images for our experiments we decided to tilt the head as much as possible down and raise the forklift: in this way the image is focused as much as possible on the lane, leaving everything that could distract the learning process outside the view.
+In order to obtain more valuable images for our experiments we decided to tilt the head as much as possible down and raise the forklift: in this way, the image is focused as much as possible on the lane, leaving everything that could distract the learning process outside the view.
 
 An example of two subsequent frame received by Cozmo is available in \vref{fig:cozmo_frames}.
 \begin{figure}
@@ -220,12 +220,12 @@ This approach was preferred over the one with a fixed starting position for two 
 	      With this methodology, the experiences will most always begin and end in different states, leading the agent to put more effort in generalization.
 \end{itemize}
 
-The episode starts as soon as the user receives the start signal.
+The episode starts as soon as the agent receives the start signal.
 
 \subsubsection{Episode Termination}
 
 The episode ends when the robot goes off the road or reaches a a dangerous situation.
-Even this time, the episode ends when the user receives the stop sign.
+Even this time, the episode ends when the agent receives the stop signal.
 
 \subsubsection{Solved Requirements}
 
@@ -252,7 +252,7 @@ This is due to the fact that there are numerous factors that come into play, suc
 However, when these are accompanied by confidence intervals, based on a fairly large number of attempts, then there are the premises to make decisions and formulate more informed considerations.
 
 Once again, however, we have been forced to come to terms with reality.
-We were able to produce as honest and specific an analysis as possible regarding experiments on \textit{Pendulum-v0}.
+We were able to produce an analysis as honest and specific as possible regarding experiments on \textit{Pendulum-v0}.
 In this case, we could easily repeat the experiments 10 times for each algorithm, so that we could report graphs containing more useful information, such as confidence margins.
 
 On the other hand, experiments with Cozmo took a much larger number of episodes before starting to show the first improvements.
@@ -263,7 +263,7 @@ Another crucial consideration is the one concerning loss functions results: the 
 
 \begin{itemize}
 	\item Data distribution depends on the current parameters. In supervised learning we are used to working with loss functions that are defined on a fixed data distribution. They are independent of the parameter that the process aims to optimise. In reinforcement learning, this characteristic does not apply, because the data must be sampled from the current and most recent policy.
-	\item A loss function can not determine and measure the performance of an algorithm. Even in this case, it could be useful to make a comparison with supervised learning: in this approach a loss function evaluates the performance metric that we want to optimise. On the other hand, in the reinforcement learning scenario, researchers are interested in the expected return. Therefore, the loss function can not be useful to approximate this value. It is useful only when evaluated at the current parameters, with data generated by the current parameters.
+	\item A loss function can not determine and measure the performance of an algorithm. Even in this case, it could be useful to make a comparison with supervised learning: in this approach a loss function evaluates the performance metric that we want to optimise. On the other hand, in the reinforcement learning scenario, researchers are interested in the expected return. Therefore, the loss function can not be useful to approximate this value. It is useful only when evaluated with the current parameters, with data generated by the current parameters.
 \end{itemize}
 
 The connection between loss function and performance does not apply immediately after the first step of gradient descent.
@@ -382,13 +382,13 @@ The results of these graphs are unstable both in the average value and in margin
 This phenomenon is mainly caused by the noise introduced during training: it allows the agent to explore the space in the environment without focusing on the current best action but trying to explore entirely and randomly the totality of environment space.
 In the first case, the DDPG noise is given by the Ornstein Uhnlebeck process noise, while SAC exploits a Gaussian Policy by sampling a random action from the current distribution given by the network.
 Therefore, SAC algorithms exploit the \textit{entropy autotune} presented by its authors: its main aim is to reduce the impact of hyper-parameters by automatically tuning the $\alpha$ temperature parameter.
-This lead to a more straightforward setup of the experiment without requiring manual optimal temperature setup, which is non-trivial needs to be tuned for each task.
+This lead to a more straightforward setup of the experiment without requiring manual optimal temperature setup, which is non-trivial and needs to be tuned for each task.
 
 It is possible to investigate about these two trends in \vref{fig:ddpg_noise,fig:sac_temperature}.
 We exploited \vref{eq:epsilon_decay} to manipulate the importance of the noise through the whole set of episode for each run.
 The contribution of the noise decreases directly proportional to the number of episodes completed to enhance exploration in the initial part of the experiment.
 On the other side, the auto-tuning approach of SAC influence the way the reward is calculated and used to train the network. The objective is to give more reward to actions that has an higher entropy, that is more unpredictable. This approach is motivated by the fact that an unpredictable situation can bring more information to the learning process than a more predictable one.
-In D
+In DDPG the noise is regulated by the combination of Ornstein Uhlenbeck noise process and an epsilon decay function that regulates how the noise influences actions with the growth in the number of episodes completed.
 
 It is noticeable that SAC results seem more valuable than DDPG ones: the SAC agent manages to touch the zero value after about 30 episodes and reaches a sort of asymptote between 100 and 200 after about 60 episodes.
 On the other hand, the DDPG agent obtained a worse performance by touching the zero value after about 100 episodes and the corresponding values of SAC asymptote only in the last part of the experiment.
@@ -399,7 +399,7 @@ If that were the case, the testing phase of the DDPG algorithm, where any noise 
 However, analysing the result of the test phase shown in \vref{fig:ddpg_pendulum_test_reward,fig:sac_pendulum_test_reward}, it is clear that the different trends described above remain unchanged.
 As mentioned before in this work, we decided to start a test phase every specified amount of epochs correctly executed.
 For this reason, these plots has the number of epochs in the abscissa and the average reward obtained from 10 testing episode in the ordinate.
-Even in this case, the outstanding performance of SAC is not achieved by the DDPG one even in the most testing phase, the most important.
+Even in this case, the outstanding performance of SAC is not achieved by the DDPG one even in the testing phase, the most important.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%
@@ -841,10 +841,10 @@ Even in this case, the outstanding performance of SAC is not achieved by the DDP
 
 After the completion of the experiments carried out with \textit{Pendulum-v0} environment, we started to implement the corresponding algorithm to work with the specific features of \textit{CozmoDriver-v0}. We decided to implement the SAC algorithm directly for this type of task after the great results reached in previous experiments and its adaptability to various kind of problems, especially real-world ones, reported by its authors.
 
-In the first implementation we decided to maintain the number of epochs for each episode equal to 250. However, these decision revealed soon its fragility. In \textit{Pendulum-v0} environment the number of steps per episode were a constant number chosen in the initial setup of hyper-parameters. On the other hand, in \textit{CozmoDriver-v0} environment every episode can have a different number of steps because this value is not a constant, but it depends on the decision of the user that is teaching Cozmo how to drive by stopping episodes. The behavior of these two experiments also influences the way the replay memory is filled with brand new experiences. Considering the fact that each step results in a tuple to insert in this memory, it is noticeable that the agent performance in the \textit{CozmoDriver-v0} experiment has consequences in how fast the memory is filled. Therefore, starting 250 learning epochs after the completion of a short episode that inserted little information in the replay memory can lead the algorithm to learn by fetching batches of experiences almost from an almost identical group to the previous one.
+In the first implementation we decided to maintain the number of epochs for each episode equal to 250. However, these decision revealed soon its fragility. In \textit{Pendulum-v0} environment the number of steps per episode were a constant number chosen in the initial setup of hyper-parameters. On the other hand, in \textit{CozmoDriver-v0} environment every episode can have a different number of steps because this value is not a constant, but it depends on the decision of the user that is teaching Cozmo how to drive by stopping episodes. The behavior of these two experiments also influences the filling of the replay memory. Considering the fact that each step results in a tuple to insert in this memory, it is noticeable that the agent performance in the \textit{CozmoDriver-v0} experiment has consequences in how fast the memory is filled. Therefore, starting 250 learning epochs after the completion of a short episode that inserted little information in the replay memory can lead the algorithm to learn by fetching batches of experiences from an almost identical group to the previous one.
 The performance of this learning setup resulted in a strange policy where the robot manages to perform correctly straight section of the track and steer in the wrong direction at each turn after almost 700 episodes. Furthermore, the temperature ($\alpha$) increased till an asymptote of 4: a very strange tendency considering the experiment carried out with the \textit{Pendulum-v0} environment.
 
-After the analysis of the previous experiment, we decided to set a dynamic approach in the number of epoch to take for each timestep. We decided to work with multiples of 10 and follow \vref{eq:learning-step} to determine how many steps of learning to take after each episode. In \vref{eq:learning-step}, $x$ variable determines how many epochs the algorithm must do for each set of ten steps in the episode in question, while $y$ specify the minimum number of epochs for the learning phase for each episode, without depending on the number of steps. In the experiment in question we chose to set both values to 10. The results improved from the initial implementation leading to a reduction in the gap time between two consecutive episodes. Thanks to this method, the learning process depends on episodes lengths and led to more manageable experiments flow.
+After the analysis of the previous experiment, we decided to set a dynamic approach in the number of epoch to take for each timestep. We decided to work with multiples of 10 and follow \vref{eq:learning-step} to determine how many steps of learning to take after each episode. In \vref{eq:learning-step}, $x$ variable determines how many epochs the algorithm must do for each set of ten steps in the episode in question, while $y$ specify the minimum number of epochs for the learning phase for each episode, without depending on the number of steps. In the experiment in question we chose to set both values to 10. The results improved from the initial implementation leading to a reduction in the gap time between two consecutive episodes and a performance increase. Thanks to this method, the learning process depends on episodes lengths and led to more manageable experiments flow.
 
 
 \begin{equation}
@@ -852,7 +852,7 @@ After the analysis of the previous experiment, we decided to set a dynamic appro
 	\text{learning\_epochs} = \bigg\lfloor\frac{\text{episode\_steps}}{10}\bigg\rfloor \cdot x + y
 \end{equation}
 
-Since the number of learning epochs is not predictable a priori, we decided to manage the frequency of the test phases by starting them every 50 episodes, showing in the graphs the number of learning periods carried out up to that moment.
+Since the number of learning epochs is not predictable a priori, we decided to manage the frequency of the test phases by starting them every 50 episodes, showing in the graphs the number of learning epochs carried out up to that moment.
 
 
 % \subsection{DDPG Hyperparameters}
@@ -926,7 +926,7 @@ However, the agent reached the most crucial results in the testing phase present
 To report the testing phase in a more appropriate way, we decided to calculate minimum and maximum values obtained in every set of ten episode together with the mean and the standard deviation.
 These values are reported in the graph by using confidence intervals.
 Following this approach we noticed a performance increase with a maximum mean reached of almost 1 metre as highlighted by \vref{fig:sac_cozmo_test_mean}.
-Furthermore, the maximum value reached among all tests episodes was equal to almost 3.5 metres which equals one complete tour of the track plus another stretch of road.
+Furthermore, the maximum value reached among all tests episodes was equal to almost 3.5 metres which equals more than one complete tour of the track.
 It is noticeable that the results are not stable as we expected after the experiments we carried with \textit{Pendulum-v0} environment: the reward values do not improve uniformly with increasing epochs.
 However, carrying out the experiments episode by episode, we noticed a marked improvement in the performance obtained in the tests. The robot learnt to approach turns and to stay on the lane of a straight road.
 
@@ -943,14 +943,14 @@ These facts made us reflect on the critic points of our experiment setup that ma
 	      However, this process needed a lot of RAM memory to store a serialised version of the whole set of variables used in the learning process, such as neural network weights and biases or experience memory replay.
 	      To avoid problems with memory and slowdowns due to the usage of swap space, we had to reduce the dimension of the replay memory further.
 	      We think that this decision have influenced the flow of the learning process: the first motivation is the small dimension of the set used to do batch learning.
-	      This factor influence directly the experiment because only the latest experiences are available for the agent usage and this leads inexorably to a lack of generalisation.
+	      This factor influences directly the experiment because only the latest experiences are available for the agent usage and this leads inexorably to a lack of generalisation.
 	\item Another problem that emerged from this experiment was the one concerning the behavior of the robot on straight road.
 	      Even after numerous learning epochs, the agent often showed a curvilinear approach.
 	      After noticing this fact, we started to analyse episode image to find out some correlation to understand this behavior better.
 	      We noticed that the image obtained from the view of one side of the straight road was very similar to the turning point situation.
 	      It was probably this similarity that caused the oddity in Cozmo behavior.
 	      Indeed, the viewing angle of the Cozmo camera was not large enough to detect both lane lines at the same time.
-	      It would be also difficult for a human to understand the best decision to make using the image provided by Cozmo SDK.
+	      It would be also difficult for a human to understand the best decision to make, using the image provided by Cozmo SDK.
 	      We tried to reduce the width of the road, but, instead of finding a considerable improvement, it became more difficult to keep the robot between the lines.
 	      In the end, we opted for maintaining the initial width of the lane to preserve the proportion with the autonomous driving problem with a real car.
 	\item Another particular behavior adopted by the reinforcement learning agent we trained was caused by the combination of two factor: the particular design of the track we build and the narrow viewing angle of the Cozmo camera.
