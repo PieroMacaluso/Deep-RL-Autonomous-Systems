@@ -34,7 +34,7 @@ The importance related to the high quantity of environment is fundamental to bui
 
 \subsubsection{Interface Functions}
 
-EExploring OpenAI Gym, it is essential to focus on the most crucial interface functions that the agent will exploit to interact with the environment.
+Exploring OpenAI Gym, it is essential to focus on the most crucial interface functions that the agent will exploit to interact with the environment.
 The functions which constitute the skeleton of an OpenAI Gym environment are the following:
 \begin{itemize}
 	\item \texttt{def step(self, action)}: through this function, the agent can communicate the action it wants to take. The input data depends on the type and number of variables in the actions space (e.g.\ discrete or continuous). As will be discussed in \vref{subsec:observations}, the values returned by this function represent the environment state after the manipulation caused by the agent action. Thanks to these data, the agent will be able to select the next action following the reinforcement learning loop.
@@ -95,111 +95,19 @@ On first glance, Cozmo might appear as one of the cutest toy robots: not surpris
 Therefore, it can interact with people using a small display screen together with audio effects to mimic human emotional reactions and responses.
 The result is a toy robot WALL-E-inspired both aesthetically and personality-wise, powered up by artificial intelligence to move and discover the surrounding environment. Thanks to the built-in camera, Cozmo can remember faces and recite names, but also to plan paths and play various games with its three cubes that carry sensors and lighting.
 
-Despite these entertaining, but not so technical facts, Cozmo hides a lot of powerful features under the hood. Anki developers produced a high-quality Python SDK that allows developers to take control of the whole set of Cozmo sensors and actuators thanks to interaction granularity offered by functions and interfaces.
-This section aims to outline the hardware and software architecture hidden underneath the cute Cozmo bodyworks, together with a comparison with the alternatives available to design the reinforcement learning system of this thesis. An essential inspiration in the writing of this section came from \cite{mellon2017cognitive}, \cite{touretzky2018cozmopedia} and Cozmo SDK Forums \footnote{Link: \href{https://forums.anki.com/}{https://forums.anki.com/}}.
+Despite these entertaining, but not so technical facts, Cozmo hides a lot of powerful features under the hood. Anki developers produced a high-quality Python SDK that allows developers to take control of the whole set of Cozmo sensors and actuators thanks to the interaction granularity offered by functions and interfaces.
+This section aims to outline the hardware and software architecture hidden underneath the cute Cozmo bodyworks, together with a comparison with the alternatives available to design the reinforcement learning system of this thesis. An essential inspiration in the writing of this section came from \cite{mellon2017cognitive}, \cite{touretzky2018cozmopedia} and Anki Forums \footnote{Anki Cozmo SDK Forums: \href{https://forums.anki.com/}{https://forums.anki.com/}}.
 
 \subsection{Cozmo Architecture}
 
 It is possible to define Cozmo as a vision-guided mobile manipulator, one of the first consumer robot which can boast vision among its features. However, as reported before, the features it shows during the normal toy usage, do not equal the number of interfaces and functions made available to developers. The hardware and the software developed for Cozmo makes it the right choice to fast prototyping computer science projects: it is the main reason why we decided to exploit Anki Cozmo instead of other alternatives.
 The SDK provided by Anki consists of a comprehensive set of low- and high-level functions which grants full access to sensor data providing the right flexibility, simplicity and granularity to satisfy every developer needs. It is versatile because it could be easily connected with hundreds of third-party libraries to augment Cozmo capabilities. Therefore, it is an entirely open-source SDK to give the community the freedom to customise and contribute.
 
-\Vref{fig:cozmotear1,fig:cozmotear2} shows technologies, the hardware and software involved in the production of Cozmo. The first image represents stacks and connections between the robot core and the mobile application provided by Anki, while the second one shows the interaction between the last-mentioned application and the Python user program on the personal computer. The reader can retrieve a global perspective about the whole Cozmo architecture by merging these two figures.
+\Vref{fig:cozmotear1,fig:cozmotear2} shows technologies, the hardware and software involved in the production of Cozmo. The first image represents stacks and connections between the robot core and the mobile application provided by Anki, while the second one shows the interaction between the last-mentioned application and the Python user program on the development machine. The reader can retrieve a global perspective about the whole Cozmo architecture by merging these two figures.
 
 \begin{figure}
-	\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-	\scalebox{0.9}{
-		\centering
-		\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
-			%uncomment if require: \path (0,466); %set diagram left start at 0, and has height of 466
-
-			%Shape: Rectangle [id:dp32857133822425977] 
-			\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (17.71,52.71) .. controls (17.71,49.95) and (19.95,47.71) .. (22.71,47.71) -- (82.14,47.71) .. controls (84.9,47.71) and (87.14,49.95) .. (87.14,52.71) -- (87.14,73.57) .. controls (87.14,76.33) and (84.9,78.57) .. (82.14,78.57) -- (22.71,78.57) .. controls (19.95,78.57) and (17.71,76.33) .. (17.71,73.57) -- cycle ;
-			%Shape: Rectangle [id:dp46039429837534274] 
-			\draw   (17.71,91.29) .. controls (17.71,88.52) and (19.95,86.29) .. (22.71,86.29) -- (82.14,86.29) .. controls (84.9,86.29) and (87.14,88.52) .. (87.14,91.29) -- (87.14,112.14) .. controls (87.14,114.9) and (84.9,117.14) .. (82.14,117.14) -- (22.71,117.14) .. controls (19.95,117.14) and (17.71,114.9) .. (17.71,112.14) -- cycle ;
-			%Shape: Rectangle [id:dp38741871235010394] 
-			\draw   (17.71,129.86) .. controls (17.71,127.1) and (19.95,124.86) .. (22.71,124.86) -- (82.14,124.86) .. controls (84.9,124.86) and (87.14,127.1) .. (87.14,129.86) -- (87.14,150.71) .. controls (87.14,153.48) and (84.9,155.71) .. (82.14,155.71) -- (22.71,155.71) .. controls (19.95,155.71) and (17.71,153.48) .. (17.71,150.71) -- cycle ;
-			%Shape: Rectangle [id:dp004700439400786571] 
-			\draw   (17.71,168.43) .. controls (17.71,165.67) and (19.95,163.43) .. (22.71,163.43) -- (82.14,163.43) .. controls (84.9,163.43) and (87.14,165.67) .. (87.14,168.43) -- (87.14,189.29) .. controls (87.14,192.05) and (84.9,194.29) .. (82.14,194.29) -- (22.71,194.29) .. controls (19.95,194.29) and (17.71,192.05) .. (17.71,189.29) -- cycle ;
-			%Shape: Rectangle [id:dp6758338534339963] 
-			\draw   (94.86,91.29) .. controls (94.86,88.52) and (97.1,86.29) .. (99.86,86.29) -- (159.29,86.29) .. controls (162.05,86.29) and (164.29,88.52) .. (164.29,91.29) -- (164.29,112.14) .. controls (164.29,114.9) and (162.05,117.14) .. (159.29,117.14) -- (99.86,117.14) .. controls (97.1,117.14) and (94.86,114.9) .. (94.86,112.14) -- cycle ;
-			%Shape: Rectangle [id:dp39145715867558895] 
-			\draw   (94.86,129.86) .. controls (94.86,127.1) and (97.1,124.86) .. (99.86,124.86) -- (159.29,124.86) .. controls (162.05,124.86) and (164.29,127.1) .. (164.29,129.86) -- (164.29,150.71) .. controls (164.29,153.48) and (162.05,155.71) .. (159.29,155.71) -- (99.86,155.71) .. controls (97.1,155.71) and (94.86,153.48) .. (94.86,150.71) -- cycle ;
-			%Shape: Rectangle [id:dp4252881368662953] 
-			\draw   (94.86,168.43) .. controls (94.86,165.67) and (97.1,163.43) .. (99.86,163.43) -- (159.29,163.43) .. controls (162.05,163.43) and (164.29,165.67) .. (164.29,168.43) -- (164.29,189.29) .. controls (164.29,192.05) and (162.05,194.29) .. (159.29,194.29) -- (99.86,194.29) .. controls (97.1,194.29) and (94.86,192.05) .. (94.86,189.29) -- cycle ;
-			%Shape: Rectangle [id:dp8211794883898887] 
-			\draw   (172,129.86) .. controls (172,127.1) and (174.24,124.86) .. (177,124.86) -- (213.29,124.86) .. controls (216.05,124.86) and (218.29,127.1) .. (218.29,129.86) -- (218.29,189.29) .. controls (218.29,192.05) and (216.05,194.29) .. (213.29,194.29) -- (177,194.29) .. controls (174.24,194.29) and (172,192.05) .. (172,189.29) -- cycle ;
-			%Shape: Rectangle [id:dp01326013235082557] 
-			\draw   (226,129.86) .. controls (226,127.1) and (228.24,124.86) .. (231,124.86) -- (267.29,124.86) .. controls (270.05,124.86) and (272.29,127.1) .. (272.29,129.86) -- (272.29,189.29) .. controls (272.29,192.05) and (270.05,194.29) .. (267.29,194.29) -- (231,194.29) .. controls (228.24,194.29) and (226,192.05) .. (226,189.29) -- cycle ;
-			%Shape: Rectangle [id:dp7658070686999401] 
-			\draw   (172,52.71) .. controls (172,49.95) and (174.24,47.71) .. (177,47.71) -- (267.29,47.71) .. controls (270.05,47.71) and (272.29,49.95) .. (272.29,52.71) -- (272.29,112.14) .. controls (272.29,114.9) and (270.05,117.14) .. (267.29,117.14) -- (177,117.14) .. controls (174.24,117.14) and (172,114.9) .. (172,112.14) -- cycle ;
-			%Rounded Rect [id:dp6707545818557623] 
-			\draw   (10,51.19) .. controls (10,45.01) and (15.01,40) .. (21.19,40) -- (268.81,40) .. controls (274.99,40) and (280,45.01) .. (280,51.19) -- (280,213.96) .. controls (280,220.13) and (274.99,225.14) .. (268.81,225.14) -- (21.19,225.14) .. controls (15.01,225.14) and (10,220.13) .. (10,213.96) -- cycle ;
-			%Shape: Rectangle [id:dp1247876053058975] 
-			\draw   (397.71,52.71) .. controls (397.71,49.95) and (399.95,47.71) .. (402.71,47.71) -- (583.5,47.71) .. controls (586.26,47.71) and (588.5,49.95) .. (588.5,52.71) -- (588.5,73.57) .. controls (588.5,76.33) and (586.26,78.57) .. (583.5,78.57) -- (402.71,78.57) .. controls (399.95,78.57) and (397.71,76.33) .. (397.71,73.57) -- cycle ;
-			%Shape: Rectangle [id:dp5285084620933563] 
-			\draw   (397.71,110) .. controls (397.71,104.48) and (402.19,100) .. (407.71,100) -- (500,100) .. controls (505.52,100) and (510,104.48) .. (510,110) -- (510,170) .. controls (510,175.52) and (505.52,180) .. (500,180) -- (407.71,180) .. controls (402.19,180) and (397.71,175.52) .. (397.71,170) -- cycle ;
-			%Shape: Rectangle [id:dp1411259106243823] 
-			\draw   (400,194.14) .. controls (400,191.38) and (402.24,189.14) .. (405,189.14) -- (586.21,189.14) .. controls (588.97,189.14) and (591.21,191.38) .. (591.21,194.14) -- (591.21,215) .. controls (591.21,217.76) and (588.97,220) .. (586.21,220) -- (405,220) .. controls (402.24,220) and (400,217.76) .. (400,215) -- cycle ;
-			%Rounded Rect [id:dp924085976000878] 
-			\draw   (390,51.19) .. controls (390,45.01) and (395.01,40) .. (401.19,40) -- (588.81,40) .. controls (594.99,40) and (600,45.01) .. (600,51.19) -- (600,213.96) .. controls (600,220.13) and (594.99,225.14) .. (588.81,225.14) -- (401.19,225.14) .. controls (395.01,225.14) and (390,220.13) .. (390,213.96) -- cycle ;
-			%Shape: Rectangle [id:dp5178962107538444] 
-			\draw   (510,105) .. controls (510,102.24) and (512.24,100) .. (515,100) -- (585,100) .. controls (587.76,100) and (590,102.24) .. (590,105) -- (590,175) .. controls (590,177.76) and (587.76,180) .. (585,180) -- (515,180) .. controls (512.24,180) and (510,177.76) .. (510,175) -- cycle ;
-			%Straight Lines [id:da3605271488149666] 
-			\draw    (550,80) -- (550,100) ;
-
-
-			%Straight Lines [id:da2112054558095744] 
-			\draw    (273,110) -- (397,110) ;
-			\draw [shift={(400,110)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-			\draw [shift={(270,110)}, rotate = 0] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-
-			% Text Node
-			\draw (52.81,62.76) node  [scale=0.7] [align=left] {Accelerometer};
-			% Text Node
-			\draw (52.43,101.71) node  [scale=0.7] [align=left] {Gyroscope};
-			% Text Node
-			\draw (52.43,140.29) node  [scale=0.9] [align=left] {IR Sensor};
-			% Text Node
-			\draw (52.43,178.86) node  [scale=0.7] [align=left] {VGA Camera};
-			% Text Node
-			\draw (129.57,101.71) node  [scale=0.7] [align=left] {Speakers};
-			% Text Node
-			\draw (129.57,140.29) node  [scale=0.7] [align=left] {OLED Screen};
-			% Text Node
-			\draw (129.57,178.86) node  [scale=0.9] [align=left] {Motors};
-			% Text Node
-			\draw (195.14,159.57) node  [scale=0.9] [align=left] {CPU};
-			% Text Node
-			\draw (246.83,147.61) node  [scale=0.9] [align=left] {WiFi};
-			% Text Node
-			\draw (247.6,170.76) node  [scale=0.9] [align=left] {AP};
-			% Text Node
-			\draw (222.14,82.43) node  [scale=0.8] [align=left] {Main Program};
-			% Text Node
-			\draw (48.96,209.33) node   [align=left] {\textit{Sensors}};
-			% Text Node
-			\draw (128.41,209.33) node   [align=left] {\textit{Actuators}};
-			% Text Node
-			\draw (493.11,63.14) node  [scale=0.9] [align=left] {Game App (Unity/C\#)};
-			% Text Node
-			\draw (453.86,124.71) node  [scale=0.9] [align=left] {Cozmo Engine\\(C++)};
-			% Text Node
-			\draw (495.61,204.57) node  [scale=0.9] [align=left] {Mobile App (iOS/Android)};
-			% Text Node
-			\draw (550,140) node  [scale=0.8] [align=left] {CLAD\\\\Message\\Queue};
-			% Text Node
-			\draw (570,89.5) node  [scale=0.8] [align=left] {uses};
-			% Text Node
-			\draw (335,93) node  [scale=0.8] [align=left] {Proprietary TCP\\Protocol};
-			% Text Node
-			\draw (330.9,160.6) node  [rotate=-269.43] [align=left] {Adhoc WiFi};
-			% Text Node
-			\draw (152,21.5) node   [align=left] {\textbf{Hardware (Robot)}};
-			% Text Node
-			\draw (495,21.5) node   [align=left] {\textbf{Application (phone/tablet)}};
-
-		\end{tikzpicture}
-	}
+	\centering
+	\includegraphics[width=\textwidth]{img/cozmo-hw.png}
 	\caption[Interaction Robot/Application]{Interaction between the Robot and the mobile application stack. The robot main program interacts with the Cozmo Engine (C++) implemented in the mobile application through a proprietary TCP protocol established using and ad-hoc WiFi connection. \cite{mellon2017cognitive}}
 	\label{fig:cozmotear1}
 \end{figure}
@@ -230,97 +138,20 @@ After connecting the chosen personal device to the robot through a simple WiFi c
 The creators of Cozmo developed this mobile application using C++ to implement the \textit{Cozmo Engine}, the component which shall be responsible for the TCP communication with the robot. To design and implement the game experience and the graphical user interface, they used Unity and C\#.
 
 This last-mentioned part utilises the component internally designed and implemented by Anki to provide a contact point between the Cozmo SDK installed in the development machine, as shown in \vref{fig:cozmotear2}: the C-like Abstract Data language (CLAD).
-The fundamental idea behind this tool is to make the process of serialisation, communication and deserialisation of data structures written in Python easier for the developer. In practice, for every data which has to pass over the wire, files with extension \texttt{.clad} to define enums, structures and messages are generated: their syntax is similar to C struct one. After that phase, this tool auto-generates Python, C++ and C\# code for each structure previously defined. This process allows the user to define a specific message in Python and to send it over the network to C++ where it will be deserialised automatically, avoiding problems and sources of bugs coming from intricate underlying details.
+The fundamental idea behind this tool is to make the process of serialisation, communication and deserialisation of data structures written in Python easier for the developer. In practice, for every data which has to pass over the wire, files with extension \texttt{.clad} to define enums, structures and messages are generated: their syntax is similar to C struct one. After that phase, this tool auto-generates Python, C++ and C\# code for each structure previously defined. This process allows the user to define a specific message in Python and to send it to the C++ engine where it will be deserialised automatically, avoiding problems and sources of bugs coming from intricate underlying details.
 
 \begin{figure}
-	\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-	\scalebox{0.9}{
-		\centering
-		\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
-			%uncomment if require: \path (0,466); %set diagram left start at 0, and has height of 466
-
-			%Shape: Rectangle [id:dp01326013235082557] 
-			\draw   (353.71,55.57) .. controls (353.71,52.81) and (355.95,50.57) .. (358.71,50.57) -- (435,50.57) .. controls (437.76,50.57) and (440,52.81) .. (440,55.57) -- (440,105) .. controls (440,107.76) and (437.76,110) .. (435,110) -- (358.71,110) .. controls (355.95,110) and (353.71,107.76) .. (353.71,105) -- cycle ;
-			%Rounded Rect [id:dp6707545818557623] 
-			\draw   (340,50.19) .. controls (340,44.01) and (345.01,39) .. (351.19,39) -- (598.81,39) .. controls (604.99,39) and (610,44.01) .. (610,50.19) -- (610,212.96) .. controls (610,219.13) and (604.99,224.14) .. (598.81,224.14) -- (351.19,224.14) .. controls (345.01,224.14) and (340,219.13) .. (340,212.96) -- cycle ;
-			%Shape: Rectangle [id:dp1247876053058975] 
-			\draw   (17.71,51.71) .. controls (17.71,48.95) and (19.95,46.71) .. (22.71,46.71) -- (203.5,46.71) .. controls (206.26,46.71) and (208.5,48.95) .. (208.5,51.71) -- (208.5,72.57) .. controls (208.5,75.33) and (206.26,77.57) .. (203.5,77.57) -- (22.71,77.57) .. controls (19.95,77.57) and (17.71,75.33) .. (17.71,72.57) -- cycle ;
-			%Shape: Rectangle [id:dp5285084620933563] 
-			\draw   (17.71,109) .. controls (17.71,103.48) and (22.19,99) .. (27.71,99) -- (120,99) .. controls (125.52,99) and (130,103.48) .. (130,109) -- (130,169) .. controls (130,174.52) and (125.52,179) .. (120,179) -- (27.71,179) .. controls (22.19,179) and (17.71,174.52) .. (17.71,169) -- cycle ;
-			%Shape: Rectangle [id:dp1411259106243823] 
-			\draw   (20,193.14) .. controls (20,190.38) and (22.24,188.14) .. (25,188.14) -- (206.21,188.14) .. controls (208.97,188.14) and (211.21,190.38) .. (211.21,193.14) -- (211.21,214) .. controls (211.21,216.76) and (208.97,219) .. (206.21,219) -- (25,219) .. controls (22.24,219) and (20,216.76) .. (20,214) -- cycle ;
-			%Rounded Rect [id:dp924085976000878] 
-			\draw   (10,50.19) .. controls (10,44.01) and (15.01,39) .. (21.19,39) -- (208.81,39) .. controls (214.99,39) and (220,44.01) .. (220,50.19) -- (220,212.96) .. controls (220,219.13) and (214.99,224.14) .. (208.81,224.14) -- (21.19,224.14) .. controls (15.01,224.14) and (10,219.13) .. (10,212.96) -- cycle ;
-			%Shape: Rectangle [id:dp5178962107538444] 
-			\draw   (130,104) .. controls (130,101.24) and (132.24,99) .. (135,99) -- (205,99) .. controls (207.76,99) and (210,101.24) .. (210,104) -- (210,174) .. controls (210,176.76) and (207.76,179) .. (205,179) -- (135,179) .. controls (132.24,179) and (130,176.76) .. (130,174) -- cycle ;
-			%Straight Lines [id:da3605271488149666] 
-			\draw    (170,79) -- (170,99) ;
-
-
-			%Shape: Rectangle [id:dp18789236199658887] 
-			\draw   (490,55.57) .. controls (490,52.81) and (492.24,50.57) .. (495,50.57) -- (595,50.57) .. controls (597.76,50.57) and (600,52.81) .. (600,55.57) -- (600,115) .. controls (600,117.76) and (597.76,120) .. (595,120) -- (495,120) .. controls (492.24,120) and (490,117.76) .. (490,115) -- cycle ;
-			%Shape: Rectangle [id:dp06226066777668593] 
-			\draw   (353.71,145) .. controls (353.71,142.24) and (355.95,140) .. (358.71,140) -- (435,140) .. controls (437.76,140) and (440,142.24) .. (440,145) -- (440,204.43) .. controls (440,207.19) and (437.76,209.43) .. (435,209.43) -- (358.71,209.43) .. controls (355.95,209.43) and (353.71,207.19) .. (353.71,204.43) -- cycle ;
-			%Straight Lines [id:da26247537190243575] 
-			\draw    (213,150) -- (347,150) ;
-			\draw [shift={(350,150)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-			\draw [shift={(210,150)}, rotate = 0] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-			%Straight Lines [id:da8910764864061073] 
-			\draw    (370,110) -- (370,140) ;
-
-
-			%Straight Lines [id:da7025332895008514] 
-			\draw    (490,100) -- (440,100) ;
-
-
-			%Flowchart: Multidocument [id:dp4320351285174221] 
-			\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (572,140) -- (500,140) -- (500,186.2) .. controls (545,186.2) and (536,202.86) .. (572,192.08) -- cycle ; \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (581,147) -- (509,147) -- (509,193.2) .. controls (554,193.2) and (545,209.86) .. (581,199.08) -- cycle ; \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (590,154) -- (518,154) -- (518,200.2) .. controls (563,200.2) and (554,216.86) .. (590,206.08) -- cycle ;
-			%Straight Lines [id:da0995629449951837] 
-			\draw    (530,120) -- (530,140) ;
-
-
-
-			% Text Node
-			\draw (113.11,62.14) node  [scale=0.9] [align=left] {Game App (Unity/C\#)};
-			% Text Node
-			\draw (73.86,123.71) node  [scale=0.9] [align=left] {Cozmo Engine\\(C++)};
-			% Text Node
-			\draw (115.61,203.57) node  [scale=0.9] [align=left] {Mobile App (iOS/Android)};
-			% Text Node
-			\draw (170,139) node  [scale=0.8] [align=left] {CLAD\\\\Message\\Queue};
-			% Text Node
-			\draw (190,88.5) node  [scale=0.8] [align=left] {uses};
-			% Text Node
-			\draw (482,20.5) node   [align=left] {\textbf{SDK (PC)}};
-			% Text Node
-			\draw (115,20.5) node   [align=left] {\textbf{Application (phone/tablet)}};
-			% Text Node
-			\draw (396.86,80.29) node   [align=left] {SDK\\(Python)};
-			% Text Node
-			\draw (545,85.29) node   [align=left] {User Program\\(Python)};
-			% Text Node
-			\draw (396.86,174.71) node  [scale=0.8] [align=left] {CLAD Client\\(Python)};
-			% Text Node
-			\draw (387.5,121.5) node  [scale=0.8] [align=left] {uses};
-			% Text Node
-			\draw (465.5,88.5) node  [scale=0.8] [align=left] {uses};
-			% Text Node
-			\draw (551.5,179) node   [scale=0.8,align=left] {3rd party\\libs};
-			% Text Node
-			\draw (547.5,129.5) node  [scale=0.8] [align=left] {uses};
-			% Text Node
-			\draw (278,130.5) node   [align=left] {CLAD};
-		\end{tikzpicture}
-	}
+	\centering
+	\includegraphics[width=\textwidth]{img/cozmo-sw.png}
 	\caption[Interaction Application/PC]{Interaction between the mobile application stack and the Python user program. Anki designed a C-like Abstract Data Language (CLAD) to implement the connection between the Cozmo SDK and the Cozmo Engine on the mobile application. This approach puts a decoupling layer between Python interfaces and low-level functions to make prototyping easier and fast-forwarding for developers. \cite{mellon2017cognitive}}
 	\label{fig:cozmotear2}
 \end{figure}
 
 This approach results in a process method much lighter than the one provided by \textit{Protocol Buffers (Protobuf)} by Google: even then, the main aim of this implementation choice was reducing the network bandwidth.
-Taking all arguments into account, CLAD is the protocol used for the interaction between the SDK ant the C++ Engine that allows the developer to not care about the low-level part of the code and to focus on the high-level logic using Python. It is also useful to maintain the same interface for the user even if low-level logic changes occur.
+Taking all arguments into account, CLAD is the protocol used for the interaction between the SDK and the C++ Engine that allows the developer to not care about the low-level part of the code and to focus on the high-level logic using Python. It is also useful to maintain the same interface for the user even if low-level logic changes occur.
 
 In this case, the CLAD communication messages exploit a wired connection between the mobile device and the computer with a simple USB cable. In this thesis, we used an Android tablet to run the experiments, and for this reason, we used the \textit{Android Debug Bridge (ADB)} to make this exchange possible.
-It is a command-line tool included in the \textit{Android SDK Platform-Tools} package that allows the communication between the computer and Android devices. It facilitates many device actions such as installing, debugging apps or running a variety of commands on a device. It is a client-server program that includes three components: it includes a \textit{client} hosted in the development machine, a \textit{daemon (adbd)} which runs the commands on the device as a background process and finally a \textit{server}, a background process in the development machine that manages the communication between the two previous components.
+It is a command-line tool included in the \textit{Android SDK Platform-Tools} package that allows the communication between the computer and Android devices. It facilitates many device actions such as installing, debugging apps or running a variety of commands on a device. It is a client-server program that consists of three components: it includes a \textit{client} hosted in the development machine, a \textit{daemon (adbd)} which runs the commands on the device as a background process and finally a \textit{server}, a background process in the development machine that manages the communication between the two previous components.
 
 The last step to start programming with Cozmo SDK is to install it in a development machine following the instruction provided by its documentation \footnote{Cozmo SDK Documentation: \href{http://cozmosdk.anki.com/docs/index.html}{http://cozmosdk.anki.com/docs/}}.
 
@@ -334,7 +165,7 @@ This section part aims to briefly describe the main alternatives to Anki Cozmo l
 
 \subsubsection{AWS DeepRacer}
 
-\textit{AWS DeepRacer} is a platform developed by Amazon to learn and refine machine learning and reinforcement learning algorithms and techniques on AWS DeepRacer vehicle.
+\textit{AWS DeepRacer} is a platform developed by Amazon to learn and refine machine learning, reinforcement learning algorithms and techniques on AWS DeepRacer vehicle.
 
 The whole ecosystem consists of two main part:
 \begin{itemize}
@@ -370,7 +201,7 @@ A crucial factor in reaching the final decision was the dimension of the car: as
 Therefore, the connection between the development machine and the robot is suitable for implementing an OpenAI Gym environment, and it is similar, at least in the premises, to the distributed off-board computation approach. The main algorithm, the neural network, the reinforcement learning framework and the other cognitive parts are computed and managed by the workstation, instead of being stored in the vehicle as happens in Amazon DeepRacer and Donkey car approaches.
 
 Taking into account the perspective of autonomous cars in the real world, on-board and off-board computation approaches are still under research. With the on-board method, cars have much computational hardware inside in order to manage every aspect of autonomous driving by themselves, but it requires more powerful batteries to counterbalance energy consumption. On the other hand, the connection to off-board computer facilities or the clouds leads to new vectors of attack but also enables companies to monitor the behaviour the vehicle fleet to identify malicious activities early.
-To date, both approaches are still under research, and there it is not possible to decree a legitimate winner. For what concerns the thesis, the designed system emulate an off-board approach.
+To date, both approaches are still under research, and it is not possible to decree a legitimate winner. For what concerns the thesis, the designed system emulate an off-board approach.
 
 In the end, Cozmo provides plain and straightforward control of the car and a rich Python SDK to use with OpenAI Gym and it is the best trade-off between functionalities and fast-developing.
 
@@ -419,7 +250,7 @@ After the advent of deep learning, many companies decided to put their efforts t
 
 Implementing the same neural network in these two frameworks will lead to different results because of the training process has many parameters that depend on the underlying technologies provided by the specific framework. For instance, the training process in PyTorch is enhanced by CUDA GPU usage, while TensorFlow can access to GPU through its GPU acceleration.
 The choice between these two frameworks is not straightforward because it depends on the perspective and the needs of the specific projects to develop.
-For this reason, this section aims to outline differences between these two libraries without aiming to decree the best one but to motivate the decision to use PyTorch.
+For this reason, this section aims to outline differences between these two libraries without aiming to decree the best one but to motivate the decision we made using PyTorch.
 
 \subsubsection{Dynamic versus Static}
 
