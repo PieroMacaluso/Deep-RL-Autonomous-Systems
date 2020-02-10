@@ -133,7 +133,8 @@ numerazioneromana
 \usepgfplotslibrary{fillbetween}
 \usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
 	decorations.pathreplacing,decorations.pathmorphing,shapes,%
-	matrix,shapes.symbols}
+	matrix,shapes.symbols, patterns,shadows.blur}
+\tikzset{every picture/.style={/utils/exec={\sffamily}}}
 % COLORS FOR GRAPHS
 
 \pgfplotsset{width=\textwidth, height=\textheight*0.33,compat=newest}

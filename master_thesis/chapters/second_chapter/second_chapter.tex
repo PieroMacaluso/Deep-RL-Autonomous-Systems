@@ -705,9 +705,9 @@ The first formalisation of the Q-value function is shown by \vref{eq:qvalueddqn0
 
 \subsection{Policy gradient methods}
 
-Policy gradient algorithms aim to optimise the policy's performance measure in \vref{eq:pgperf} by finding a suitable policy $\pi_\theta(s|a)$ capable of generating a trajectory $\tau$ that maximises the expected rewards \vref{eq:pgmax} instead of learning a  value function. Indeed the objective function in policy gradient methods consists of maximising $J(\theta)$ value by finding a proper policy updating $\theta$ parameters directly.
+Policy gradient algorithms aim to optimise the policy performance measure in \vref{eq:pgperf} by finding a suitable policy $\pi_\theta(s|a)$ capable of generating a trajectory $\tau$ that maximises the expected rewards \vref{eq:pgmax} instead of learning a  value function. Indeed the objective function in policy gradient methods consists of maximising $J(\theta)$ value by finding a proper policy by updating $\theta$ parameters directly.
 \begin{gather}
-	J(\theta) = \mathbb{E}\big[\sum_{t=0}^{N}r(s_t,a_t); \pi_\theta\big] = \sum_{\tau}P(\tau;\theta)r(\tau) \label{eq:pgperf}\\
+	J(\theta) = \mathbb{E}\Bigg[\sum_{t=0}^{N}r(s_t,a_t); \pi_\theta\Bigg] = \sum_{\tau}P(\tau;\theta)r(\tau) \label{eq:pgperf}\\
 	\theta^* = \operatornamewithlimits{argmax}_\theta J(\theta) \label{eq:pgmax}
 \end{gather}
 Stochastic gradient ascent is used to refresh the parameters of the policy $\theta$. Gradient ascent is the inverse of gradient descent and updates the parameters $\theta_t$ in the positive direction of the gradient of the policy’s performance measure $\nabla_\theta J(\theta)$ following \vref{eq:pgascent} where $\alpha$ is the learning rate which defines the strength of the steps in the direction of the gradient.
@@ -729,7 +729,7 @@ Standard practice is to update both networks with the \textit{TD-Error}, discuss
 \begin{figure}[!h]
 	\centering
 	\includegraphics[height=0.4\textwidth]{img/actorcritic.png}
-	\caption{ Actor-critic architecture schema: the actor represents the policy and maps the input state to an output action, while the critic represents the value function. Both networks can be updated with, e.g.  the TD-error, using the contribution of the critic. It is noticeable that the actor uses the critic during the learning process \cite{sutton2018reinforcement}.}
+	\caption[Actor-Critic architecture schema]{Actor-critic architecture schema: the actor represents the policy and maps the input state to an output action, while the critic represents the value function. Both networks can be updated using the contribution of the critic. It is noticeable that the actor uses the critic during the learning process \cite{sutton2018reinforcement}.}
 	\label{fig:actorcritic}
 \end{figure}
 
@@ -738,7 +738,7 @@ Standard practice is to update both networks with the \textit{TD-Error}, discuss
 Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous} is a policy gradient algorithm that works learning a Q-function and a policy, and that grows from the deterministic policy gradient algorithm (DPG) \cite{silver2014deterministic}. It is a model-free, off-policy, actor-critic algorithm which utilises deep function approximators to learn policies in high-dimensional, continuous action spaces. It can be applied to situations that can not be solved using \textit{DQN} algorithm \cite{mnih2015human} because of the presence of continuous action spaces. A fine discretisation of the action space to adapt the situation to DQN would lead to an explosion in the number of discrete actions and the curse of dimensionality.
 \textit{Bellman equation} and \textit{Q-learning} are integral parts of this algorithm. The algorithm concurrently learns a Q-value function and a policy: it uses off-policy data and the Bellman equation to learn the Q-value function and uses the Q-value function to learn the policy.
 
-Usually, in Reinforcement Learning, if the optimal action-value function $Q^*(s,a)$ is known, then in any given state, the optimal action $a^*(s)$ can be found by solving \vref{eq:besta}.
+Usually, in reinforcement learning, if the optimal action-value function $Q^*(s,a)$ is known, then in any given state, the optimal action $a^*(s)$ can be found by solving \vref{eq:besta}.
 \begin{equation} \label{eq:besta}
 	a^*(s) = \arg \max_a Q^*(s,a)
 \end{equation}
@@ -748,7 +748,7 @@ Because the action space is continuous, the function $Q^*(s,a)$ is presumed to b
 
 \subsubsection{Target Networks} \label{targetnet}
 
-DDPG algorithm exploits 4 neural networks: the \textit{local actor}, the \textit{local critic}, the \textit{target actor} and the \textit{target critic}. Actor networks aim is to approximate the policy using parameters $\theta$ while critic networks approximate the Q-Value function using parameters $\phi$.
+DDPG algorithm exploits 4 neural networks: the \textit{local actor $\pi$}, the \textit{local critic $Q$}, the \textit{target actor $\pi'$} and the \textit{target critic $Q'$}. Actor networks aim is to approximate the policy using parameters $\theta$ while critic networks approximate the Q-Value function using parameters $\phi$.
 
 Initially, actor and critic networks have both randomly initialised parameters. Then the local actor -- the current policy -- starts to propose actions to the agent, given the current state, starting to populate the experience replay buffer.
 
@@ -766,7 +766,7 @@ Also the target networks are updated in this \textit{learning step}. A mere copy
 
 \subsubsection{Learning Equations}
 
-The two fundamental functions in Reinforcement Learning exploited in DDPG are the \textit{action-value function} -- see \vref{eq:actionvalue} -- and the correspondent \textit{Bellman equation} -- see \vref{eq:bellman}.
+The two fundamental functions in reinforcement learning exploited in DDPG are the \textit{action-value function} -- see \vref{eq:actionvalue} -- and the correspondent \textit{Bellman equation} -- see \vref{eq:bellman}.
 If this policy is deterministic we can describe it as a function $ \pi : \mathcal{S} \leftarrow \mathcal{A}$ obtaining \vref{eq:bellman2} which depends only on the environment.
 \begin{equation}\label{eq:bellman2}
 	Q^\pi(s_t, a_t) = \mathbb{E}_{r_t,s_{t+1}\sim \mathit{E}}[r(s_t, a_t) + \gamma Q^\pi(s_{t+1}, \pi(s_{t+1}))]
@@ -777,7 +777,7 @@ Focusing more and more on DDPG, the Bellman equation is the starting point for l
 \begin{equation}\label{eq:ddpgloss}
 	\begin{gathered}
 		L(\phi) = \mathbb{E}_{s_t\sim \rho^\beta, a_t\sim \beta,r_t\sim E}[(Q(s_t, a_t|\phi)-y_t)^2] \\
-		y_t = r(s_t, a_t) + \gamma (1-d_t)Q(s_{t+1}, \pi(s_t+1)|\phi)
+		y_t = r(s_t, a_t) + \gamma (1-d_t)Q'(s_{t+1}, \pi'(s_t+1|\bar{\theta})|\bar{\phi})
 	\end{gathered}
 \end{equation}
 It is clear from the \vref{eq:ddpgloss} that the loss is calculated starting from the transitions generated by the policy $\beta$. For this reason a great importance in this algorithm is given to \textit{replay buffer} -- see \vref{experience} -- and \textit{target networks} -- see \vref{targetnet}.
@@ -818,29 +818,28 @@ In reinforcement learning for discrete action spaces, exploration is done select
 	\small
 	\DontPrintSemicolon
 	\LinesNumbered
-	\KwIn{Initial critic network parameter $\phi$ and actor network parameter $\theta$}
+	\KwIn{Initial critic network Q with parameter $\phi$ and actor network $\pi$ with parameter $\theta$}
 
-	Initialise target network weights $\bar{\phi} \leftarrow \phi$, $\bar{\theta} \leftarrow \theta$\;
-	Initialise a random process $\mathcal{N}$ for action exploration\;
+	Initialise target networks $Q'$ and $\pi'$ with weights $\bar{\phi} \leftarrow \phi$, $\bar{\theta} \leftarrow \theta$\;
+	Initialise replay buffer $\mathcal{D}$\;
 	\For{episode = 1, M}{
-		Receive the initial observation state $s_t \leftarrow s_1$\;
-		\Repeat{$s_t$ is terminal}{
-			Select action $a_t = \pi(s_t|\theta) + \mathcal{N}$ and \textit{clip} results\;
-			Execute action $a_t$ and obtain tuple $(r_t, s_{t+1}, d_t)$\;
-			Store transition $(s_t, a_t, r_t, s_{t+1}, d_t)$ in $\mathcal{D}$\;
-			\If{it is time to update}{
-				Sample random minibatch of $N$ transitions $(s_t, a_t, r_t, s_{t+1}, d_t)$ from $\mathcal{D}$\;
-				Compute the target $y_i = r_i + \gamma (1-d_i) Q'(s_{i+1}, \pi'(s_{i+1}|\theta)|\phi)$\;
-				$\phi \leftarrow \phi - \lambda_Q \nabla_{\phi}J_Q(\phi)$ \tcp*{Update critic}
-				$\theta \leftarrow \theta - \lambda_\pi \nabla_\theta J_\pi(\theta)$\tcp*{Update actor}
-				$\phi \leftarrow \tau \phi +(1-\tau)\phi$ \tcp*{Soft update critic}
-				$\theta \leftarrow \tau \theta +(1-\tau)\theta$\tcp*{Soft update critic}
-			}
-			$s_t \leftarrow s_{t+1}$
-		}
+	Initialise a random process $\mathcal{N}$ for action exploration\;
+	Receive the initial observation state $s_t \leftarrow s_1$\;
+	\Repeat{$s_t$ is terminal}{
+	Select action $a_t = \pi(s_t|\theta) + \mathcal{N}$ and \textit{clip} results\;
+	Execute action $a_t$, obtain tuple $(s_t, a_t, r_t, s_{t+1}, d_t)$ and store in $\mathcal{D}$\;
+	\If{it is time to update}{
+	Sample random minibatch of $N$ transitions $(s_t, a_t, r_t, s_{t+1}, d_t)$ from $\mathcal{D}$\;
+	Compute the target $y_t = r_t + \gamma (1-d_t) Q'(s_{t+1}, \pi'(s_{t+1}|\bar{\theta})|\bar{\phi})$\;
+	Update the critic by minimising the loss: $L = \frac{1}{N}\sum_i(y_i -Q(s_i, a_i | \phi))$\;
+	Update the policy using the sampled policy gradient: $\nabla_\theta J \approx \frac{1}{N} \sum_i \nabla_a Q(s,a|\phi)|_{s = s_i, a = \pi(s_i)} \nabla_\theta \pi(s |\theta)|_{s_i}$\;
+	Soft update Target Critic: $\bar{\phi} \leftarrow \tau \phi +(1-\tau)\bar{\phi}$\;
+	Soft update Target Policy: $\bar{\theta} \leftarrow \tau \theta +(1-\tau)\bar{\theta}$\;
+	}
+	$s_t \leftarrow s_{t+1}$
+	}
 
 	}
-	\KwOut{Optimised parameters $\theta$ and $\phi$\;}
 	\caption{DDPG Algorithm \cite{lillicrap2015continuous}}
 	\label{ddpgalg}
 \end{algorithm}
@@ -891,7 +890,7 @@ In reinforcement learning for discrete action spaces, exploration is done select
 \subsection{Soft Actor-Critic (SAC)} \label{sac}
 
 Soft Actor-Critic (SAC) \cite{haarnoja2018soft, haarnoja2018alg} combines the off-policy actor-critic setup with a stochastic policy (actor), devising a bridge between stochastic policy optimisation and DDPG-style approaches.
-As DDPG, SAC can work in situations characterised by the presence of continuous action spaces, and it is a model-free, off-policy and actor-critic algorithm.
+As DDPG, SAC can work in situations characterised by the presence of continuous action spaces, and it is a model-free.
 
 SAC algorithm can overcome some of the problems of DDPG.
 The latter can achieve excellent performance, but the interaction between the deterministic actor-network and the Q-function makes it difficult to stabilise and brittle concerning hyperparameters and other kinds of tuning \cite{duan2016benchmarking,henderson2018deep}. The learned Q-function begins to dramatically overestimate Q-values, which then leads to the policy breaking because it exploits the errors in the Q-function. For this reason, SAC exploits \textit{Clipped Double-Q Learning} also used by Twin Delayed DDPG (TD3) \cite{fujimoto2018addressing}. It learns two Q-functions instead of one and uses the smaller of the two Q-values to form the targets in the Bellman error loss functions.
@@ -941,7 +940,7 @@ From these equations is possible to derive the connection between state-value an
 \subsubsection{Learning Equations}
 SAC algorithm learns a policy $\pi_\theta$ with $\theta$ parameter set and two Q-functions $Q_{\phi_1}$,  $Q_{\phi_2}$ with $\phi_1$ and $\phi_2$ parameter sets respectively.
 The state-value function is implicitly parametrised through the soft Q-function parameters thanks to \vref{eq:vsac}.
-In \cite{haarnoja2018soft} a function approximator for this function was introduced, but later \cite{haarnoja2018alg} the authors found it to be unnecessary.
+In \cite{haarnoja2018soft} a function approximator for this function was introduced, but in \cite{haarnoja2018alg} the authors found it to be unnecessary.
 \begin{equation} \label{eq:vsac}
 	\begin{aligned}
 		V^{\pi}(s) & = \mathbb{E}_{a \sim \pi}[Q^{\pi}(s,a)] + \alpha \mathcal{H} \left(\pi(\cdot|s)\right)               \\
@@ -972,7 +971,7 @@ Therefore, it is possible to rewrite the expectation over actions in \vref{eq:po
 \begin{equation} \label{eq:policysac1}
 	J_\pi(\theta) = \mathbb{E}_{s_t \sim \mathcal{D}, \epsilon_t \sim \mathcal{N}}[\alpha \log \pi_\theta(f_\theta(\epsilon_t; s_t)|s_t) - Q_\phi(s_t,f_\theta(\epsilon_t; s_t))]
 \end{equation}
-To get the policy loss, the final step is to substitute $Q_{\phi}$ with one of our function approximators: the choice falls $\min_{i=1,2}Q_{\phi_i}(s_t, f_\theta(\epsilon_t; s_t))$, as suggested from the authors of \cite{haarnoja2018alg}.
+To get the policy loss, the final step is to substitute $Q_{\phi}$ with one of our function approximators: the choice falls on $\min_{i=1,2}Q_{\phi_i}(s_t, f_\theta(\epsilon_t; s_t))$, as the authors of \cite{haarnoja2018alg} suggest.
 
 \subsubsection{Exploration vs. Exploitation} \label{alphasac}
 SAC algorithm trains a stochastic policy using \textit{entropy regularisation}. $\alpha$ is the entropy regularisation coefficient which is the parameter that explicitly controls the exploration-exploitation trade-off. A higher $\alpha$ corresponds to more exploration, while a lower $\alpha$ corresponds to more exploitation.
@@ -984,13 +983,6 @@ The gradients are computed using \vref{eq:alphalearn}
 	J(\alpha) = \mathbb{E}_{a_t \sim \pi}[-\alpha \log\pi(a_t|s_t) - \alpha \bar{\mathcal{H}}]
 \end{equation}
 During the test phase, the algorithm uses the mean action instead of a  sample from the distribution learned. This choice tends to improve performance over the original stochastic policy, allowing to see how well the policy exploits what it has learned.
-
-\subsubsection{Hyperparameters}
-
-\paragraph{Entropy regularisation parameter} The only parameter of this section is $\alpha$. It can be set as constant through all the training or it can be learned thanks to the approach described in \cite{haarnoja2018alg}. Further details in \vref{alphasac}.
-\paragraph{Replay buffer} See \vref{hpddpg}.
-\paragraph{Neural Network} See \vref{hpddpg}.
-\paragraph{Learning Update} See \vref{hpddpg}.
 
 \begin{algorithm}[!h]
 	\SetAlgoLined
@@ -1012,16 +1004,25 @@ During the test phase, the algorithm uses the mean action instead of a  sample f
 	\If{it is time to update}{
 		Sample random minibatch of $N$ transitions $(s_t, a_t, r_t, s_{t+1}, d_t)$ from $\mathcal{D}$\;
 		Calculate targets\;
-		$\phi_i \leftarrow \phi_i - \lambda_Q \nabla_{\phi_i}J_Q(\phi_i)$, for $i \in \{1, 2\}$\;
-		$\theta \leftarrow \theta - \lambda_\pi \nabla_\theta J_\pi(\theta)$\;
-		$\alpha \leftarrow \alpha - \lambda \nabla_\alpha J(\alpha)$\;
-		$\bar{\phi_i} \leftarrow \tau \phi_i + (1-\tau) \bar{\phi_i}$, for $i \in \{1, 2\}$\\
+		Critics Update: $\phi_i \leftarrow \phi_i - \lambda_Q \nabla_{\phi_i}J_Q(\phi_i)$, for $i \in \{1, 2\}$\;
+		Actor Update: $\theta \leftarrow \theta - \lambda_\pi \nabla_\theta J_\pi(\theta)$\;
+		Temperature Update: $\alpha \leftarrow \alpha - \lambda \nabla_\alpha J(\alpha)$\;
+		Soft Critics Update:$\bar{\phi_i} \leftarrow \tau \phi_i + (1-\tau) \bar{\phi_i}$, for $i \in \{1, 2\}$\\
 	}
 	\KwOut{Optimised policy parameter $\theta$ and Q-function parameters $\phi_1,\phi_2$\;}
 
 	\caption{Soft Actor-Critic \cite{haarnoja2018alg}}
 	\label{sacalg}
 \end{algorithm}
+\FloatBarrier
+
+\subsubsection{Hyperparameters}
+
+\paragraph{Entropy regularisation parameter} The only parameter of this section is $\alpha$. It can be set as constant through all the training or it can be learned thanks to the approach described in \cite{haarnoja2018alg}. Further details in \vref{alphasac}.
+\paragraph{Replay buffer} See \vref{hpddpg}.
+\paragraph{Neural Network} See \vref{hpddpg}.
+\paragraph{Learning Update} See \vref{hpddpg}.
+
 
 \section{Related Work} \label{sec:related-work}
 
@@ -1046,12 +1047,24 @@ The authors decided to exploit Deep Deterministic Policy Gradient (DDPG) \cite{l
 Firstly, they developed a 3D driving simulator using Unreal Engine 4 to tune reinforcement learning hyperparameters such as learning rates and number of gradient steps to take after each training episode. Then, they tried to apply the DDPG algorithm in the real world using the parameters learnt. They also did some experiments using a compressed state representation provided by a Variational Autoencoder \cite{kingma2013auto,rezende2014stochastic}.
 The excellent results obtained in \cite{kendall2019learning} have been exceeded by the same authors in \cite{wayve2019human} that shows astonishing performances driving on narrow and crowded urban road never-seen during training.
 
+
 Starting from all these outlined ideas, we decided to investigate ways and approach to autonomous driving with reinforcement learning without using simulators or prior data in order to make a step towards the so-called \textit{reinforcement learning in the wild} \cite{chara2018wild}. The most popular and prominent achievements in reinforcement learning to date consist of experiments done using simulated environments or ones which exploit the knowledge acquired in simulated environments in real ones.
 The team of the DeepMind manages to develop smart agents capable of performing super-human results in numerous games and videogames such as \textit{Go} \cite{silver2016mastering,silver2017mastering}, while OpenAI engineers an agent capable of beating the world champion of the multi-player Dota 2 game \cite{openai2018dota,openai2019dota}.  These problems are not easy to solve but have the benefit of having a training environment equal to the test one. This fact does not apply to the approach which exploits simulated experiments results in real environments.
 
 The last-mentioned method encloses a critical caveat: the awareness that the simulator has limits.
 Unlike what happens in some environments where there are many similarities between the simulator and the environment -- e.g.\ games and videogames --, in harder environments -- e.g.\ autonomous vehicle on public roads, ads marketplaces, biology, and applications around human behaviour -- is very difficult to get a simulator capable of reproducing with  high-fidelity the wild environment because of approximations that could mislead the learning.
 On the other hand, learning directly on the environment need a fast learning cycle because of the significant number of interaction with the environment and, above all, cheap or low-risk exploration cost: millions of self-driving episodes in simulator ending with a crash of the car has a small cost in respect of one episode with the same ending crash in the real world.
+
+Despite all these problem, the introduction of reinforcement learning in future application may revolutionise the actual learning approach as shown in \vref{fig:futureai}. Nowadays, deep learning is mainly focused on perception in autonomous driving and most artificial intelligence applications. Concrete decisions on what to do in specific situations are entrusted to hard-coded and human-designed rules through optimal control algorithms. The aim of reinforcement learning is to create a direct path from data to value to learn how to perceive data, but also how to make valuable decisions to perform a specific task. This cutting-edge approach brings out new questions like ethics that both research and industry are starting to discuss and address to understand and protect from data biases onto the algorithm behaviors.
+
+
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\textwidth]{img/reinforcement-learning.png}
+	\caption[Future transition in AI Applications]{Most AI applications today exploit deep learning and machine learning for image detection and computer vision. Decisions are made by optimal control algorithms which are hard-coded and designed by humans. The reinforcement learning approach aims to inject machine learning algorithms in the decision component of the algorithm to make steps towards Artificial General Intelligence (AGI) \cite{chara2018wild}.}
+	\label{fig:futureai}
+\end{figure}
 
 Between the end of 2018 and the beginning of 2019, UC Berkeley and Google developed jointly a state-of-the-art off-policy model-free reinforcement learning algorithm called soft actor-critic (SAC) (see \vref{sac}). The critical goal is to provide a deep RL algorithm suitable for real-world problems and the related new challenges that they pose.
 They outlined the desired properties of the ideal deep reinforcement learning algorithm:
@@ -1066,7 +1079,7 @@ Not only it shows great performances in numerous challenging tasks compared to d
 
 The real-world robotic task involving a 3-finger dexterous robotic hand to manipulate an object similar to a sink faucet with a coloured end presented in \cite[Section 7.3]{haarnoja2018alg} shows similar concepts to the task analysed in this thesis for what concerns the framework of deep reinforcement learning exploited. The algorithm exploits raw RGB images and processes them through a convolutional neural network. The final goal of the robot is to rotate the valve into the correct position -- with the coloured part pointing to the right -- starting from a random position for each episode. The results obtained represents one of the most sophisticated real-world robotic manipulation tasks learned end-to-end with deep reinforcement learning, starting from raw images and without any previous simulation or pretraining phase.
 
-Taking all arguments into account, we decided to follow \cite{kendall2019learning} implementing a similar self-driving framework based on the design of a control system for a small toy robot called Anki Cozmo (see \vref{ch:ch4}). Therefore, we formalise the autonomous driving learning problem as a Markov decision process to enable the application of reinforcement learning algorithms, taking into account the improvements mentioned in this section about model-free reinforcement learning algorithms applied to real-world robotic problems. \Vref{ch:ch4} provides a detailed description of the choice made and the system design.
+Taking all arguments into account, we decided to follow \cite{kendall2019learning} implementing a similar self-driving framework based on the design of a control system for a small toy robot called Anki Cozmo (see \vref{ch:ch4}). Therefore, we formalise the autonomous driving learning problem as a Markov decision process to enable the application of reinforcement learning algorithms, taking into account the improvements mentioned in this section about model-free reinforcement learning algorithms applied to real-world robotic problems. \Vref{ch:ch4} provides a detailed description of the choice made and the system design. \Vref{ch:ch5} reports the experiment we carried out in the environment we designed.
 
 
 
