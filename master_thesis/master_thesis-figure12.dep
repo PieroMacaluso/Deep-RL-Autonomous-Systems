@@ -1,0 +1,5 @@
+master_thesis-figure12.pdf: plots/pendulum/ddpg_pendulum_last100.csv
+master_thesis-figure12.pdf: plots/pendulum/ddpg_pendulum_last100.csv
+master_thesis-figure12.pdf: plots/pendulum/ddpg_pendulum_last100.csv
+master_thesis-figure12.pdf: plots/pendulum/ddpg_pendulum_last100.csv
+master_thesis-figure12.pdf: plots/pendulum/ddpg_pendulum_last100.csv
