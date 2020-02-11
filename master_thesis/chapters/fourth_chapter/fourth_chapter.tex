@@ -2,7 +2,7 @@
 % 	\begin{itemize}
 % 		\item Introduction to the chapter
 % 		\item General description of the control systems with a diagram representing all the technologies involved.
-%       \item Setup and implementation of CozmoEnv
+%       \item Setup and implementation of CozmoDriver
 % 		      \begin{itemize}
 % 			      \item Technologies used to implement the interaction between the Cozmo SDK and OpenAI Gym.
 % 			      \item Differences from the simulated environment caused by the need for direct human interaction.
@@ -46,7 +46,8 @@ In the final section of this chapter, we will present some relevant problem we f
 
 \section{Outline of the system}\label{sec:outline-of-the-system}
 
-The development of the control system for Anki Cozmo was the main contribution of the thesis, together with the implementation of DDPG and SAC algorithm.
+% TODO: DDPG-SAC?
+The development of the control system for Anki Cozmo was the main contribution of the thesis, together with the implementation of SAC algorithm.
 The main aim of this work was to create an OpenAI Gym environment capable of interacting with a robot in the real world without any interaction, fine-tuning or prior knowledge obtained through the use of a simulator.
 OpenAI Gym usually provides plain and straightforward interfaces to interact with simulated environments: we decided to exploit these functions to allow the application of reinforcement learning algorithm directly in the real-world decision of the robot.
 
@@ -66,127 +67,9 @@ This section aims to describe as clearly as possible all the components of the c
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 
 \begin{figure}
-    \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt
-    \centering
-    \scalebox{0.75}{
-
-
-        \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt
-
-    \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
-        %uncomment if require: \path (0,438); %set diagram left start at 0, and has height of 438
-
-        %Image [id:dp06991158821872456]
-        \draw (239.75,55) node  {\includegraphics[width=115.13pt,height=52.5pt]{img/python.png}};
-        %Image [id:dp3729269645681633]
-        \draw (240.25,198.5) node  {\includegraphics[width=46.88pt,height=50.25pt]{img/gym.png}};
-        %Image [id:dp09149607927009118]
-        \draw (94.75,200.91) node  {\includegraphics[width=124.13pt,height=25.37pt]{img/pytorch.png}};
-        %Image [id:dp30806594376010465]
-        \draw (351.92,200) node  {\includegraphics[width=40.38pt,height=52.5pt]{img/flask.png}};
-        %Straight Lines [id:da3933293266418665]
-        \draw    (239.98,93) -- (239.52,159) ;
-        \draw [shift={(239.5,162)}, rotate = 270.4] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        \draw [shift={(240,90)}, rotate = 90.4] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        %Straight Lines [id:da24057878811893751]
-        \draw    (167.75,200.25) -- (203.75,200.25) ;
-        \draw [shift={(206.75,200.25)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        \draw [shift={(164.75,200.25)}, rotate = 0] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        %Straight Lines [id:da10061083103025648]
-        \draw    (283.75,199.58) -- (318.5,199.58) ;
-        \draw [shift={(321.5,199.58)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        \draw [shift={(280.75,199.58)}, rotate = 0] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        %Image [id:dp8556439958741602]
-        \draw (567,186) node  {\includegraphics[width=52.5pt,height=52.5pt]{img/user.png}};
-        %Straight Lines [id:da26821981951432505]
-        \draw    (385.5,184.58) -- (499.5,184.58) ;
-        \draw [shift={(502.5,184.58)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-
-        %Straight Lines [id:da7643998387312995]
-        \draw    (388.5,214.58) -- (412.5,214.58) -- (500.5,214.58) ;
-
-        \draw [shift={(385.5,214.58)}, rotate = 0] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        %Straight Lines [id:da5051570254396728]
-        \draw    (240.5,256) -- (240.5,278) ;
-        \draw [shift={(240.5,281)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        \draw [shift={(240.5,253)}, rotate = 90] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        %Rounded Rect [id:dp9694318857670313]
-        \draw   (2,25.5) .. controls (2,15.28) and (10.28,7) .. (20.5,7) -- (464,7) .. controls (474.22,7) and (482.5,15.28) .. (482.5,25.5) -- (482.5,300.5) .. controls (482.5,310.72) and (474.22,319) .. (464,319) -- (20.5,319) .. controls (10.28,319) and (2,310.72) .. (2,300.5) -- cycle ;
-        %Image [id:dp9562999520117128]
-        \draw (99,377) node  {\includegraphics[width=52.5pt,height=52.5pt]{img/tablet.png}};
-        %Straight Lines [id:da22030012036466173]
-        \draw    (98.5,295) -- (186.5,295) ;
-        \draw [shift={(189.5,295)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-
-        %Straight Lines [id:da28839463654139263]
-        \draw    (98.5,295) -- (98.5,339) ;
-        \draw [shift={(98.5,342)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-
-        %Straight Lines [id:da2120925552884272]
-        \draw  [dash pattern={on 0.84pt off 2.51pt}]  (154.75,380.58) -- (473.5,380.58) ;
-
-        \draw [shift={(151.75,380.58)}, rotate = 0] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-        %Image [id:dp7151280650926004]
-        \draw (535.32,366) node  {\includegraphics[width=96.27pt,height=69.12pt]{img/cozmo.png}};
-        %Straight Lines [id:da948112813701837]
-        \draw  [dash pattern={on 0.84pt off 2.51pt}]  (151.75,402.58) -- (470.5,402.58) ;
-        \draw [shift={(473.5,402.58)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-
-        %Image [id:dp8991970614844648]
-        \draw (332,113) node  {\includegraphics[width=36pt,height=36pt]{img/tensorflow.png}};
-        %Straight Lines [id:da8686562029937168]
-        \draw    (257.5,118) -- (297.5,118) ;
-        \draw [shift={(300.5,118)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-
-        %Straight Lines [id:da7903500333471788]
-        \draw    (257.5,118) -- (257.5,165) ;
-
-
-        %Straight Lines [id:da017309376357115047]
-        \draw    (557.15,117.91) -- (557.15,93) ;
-        \draw [shift={(557.15,90)}, rotate = 450] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle ;
-
-        %Straight Lines [id:da46777924457369235]
-        \draw    (557.15,117.91) -- (453.67,117.91) ;
-
-
-        %Image [id:dp9871015067821471]
-        \draw (559,44) node  {\includegraphics[width=42pt,height=42pt]{img/analysis.png}};
-
-        % Text Node
-        \draw (569,227) node  [font=\footnotesize] [align=left] {Human-Robot Interaction};
-        % Text Node
-        \draw (435,175) node  [font=\footnotesize] [align=left] {Image};
-        % Text Node
-        \draw (436,204) node  [font=\footnotesize] [align=left] {Commands};
-        % Text Node
-        \draw (114,22) node   [align=left] {\textbf{Development Machine}};
-        % Text Node
-        \draw    (196.5,282.5) -- (287.5,282.5) -- (287.5,307.5) -- (196.5,307.5) -- cycle ;
-        \draw (242,295) node   [align=left] {Cozmo SDK};
-        % Text Node
-        \draw (100,423) node   [align=left] {\textbf{Android Device}};
-        % Text Node
-        \draw (120,276) node   [align=left] {{\footnotesize ADB}};
-        % Text Node
-        \draw (323,420) node   [align=left] {Wi-Fi Connection};
-        % Text Node
-        \draw (536,420) node   [align=left] {\textbf{Cozmo}};
-        % Text Node
-        \draw (319,370) node  [font=\footnotesize] [align=left] {Image};
-        % Text Node
-        \draw (320,394) node  [font=\footnotesize] [align=left] {Commands};
-        % Text Node
-        \draw (396,119) node   [align=left] {TensorBoard};
-        % Text Node
-        \draw (559,75) node  [font=\footnotesize,] [align=left] {Data Analysis};
-        % Text Node
-        \draw (241,242) node   [align=left] {OpenAI Gym};
-
-
-    \end{tikzpicture}
-    }
-    \caption[Interaction Human/Robot]{ Interaction between the user and Anki Cozmo.
+	\centering
+	\includegraphics[width=\textwidth]{img/cozmo-system.png}
+    \caption[Outline of the control system]{The interaction between the user and Anki Cozmo has a crucial role in this system.
         The main Python script utilises OpenAI Gym for the reinforcement learning component and PyTorch for the deep learning one.
         The user can interact with the flow of the system through a simple web app that uses OpenAI Gym and the Cozmo SDK directly to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands).
         The last component consists of TensorBoard thanks to which the script can store results that can be retrieved later by the user.}
@@ -195,7 +78,7 @@ This section aims to describe as clearly as possible all the components of the c
 
 \subsection{OpenAI Gym Cozmo Environment}
 
-Before starting the description of the system we designed to carry out reinforcement learning experiments it is necessary to outline the decisions we made about what to implement in \textit{CozmoEnv}, the OpenAI Gym environment we developed to apply, train and test reinforcement learning algorithms with Cozmo.
+Before starting the description of the system we designed to carry out reinforcement learning experiments it is necessary to outline the decisions we made about what to implement in \textit{CozmoDriver}, the OpenAI Gym environment we developed to apply, train and test reinforcement learning algorithms with Cozmo.
 
 The path of this section will follow the steps of a typical formalisation of the Markov Decision Process (MDP), bringing out the problems encountered, the reasoning behind them and solutions proposed as they go.
 
@@ -221,7 +104,7 @@ The original version of this environment utilises angle position and trigonometr
 However, this environment offers to the user the access to the images provided by the OpenAI Gym \texttt{render} interface.
 It represents an entirely different kind of experiment from Cozmo driving task, but they have in common the improvement in trajectory inference brought by the presence of a number of pictures greater than one.
 In order to make this environment suitable for convolutional neural networks, we decided to appropriately modify it to exploit raw images as observations instead of the original information.
-Therefore, we noticed that the usage of a single picture as observation leads to unstable and worse results than the ones obtained by combining two subsequential images to feed the algorithm.
+Therefore, we noticed that the usage of a single picture as observation led to unstable and worse results than the ones obtained by combining two subsequential images to feed the algorithm.
 For this reason, we decided to use two consecutive raw images provided by Cozmo by using a queue data structure with size two.
 In the code flow, the developer merely has to push the next image obtained from the robot and use the specific queue function implemented to obtain the concatenation of the last two images, only when necessary.
 
@@ -240,7 +123,7 @@ We chose to define the desired speed value in a range of 0 to 1, while we opted 
 These limits allow the agent to manipulate simple values in the decision-making process and to facilitate the manipulation of neural network results.
 At the same time, the underlying logic of the environment takes care to translate these values into a compatible format for the Cozmo SDK.
 Indeed, as reported in \vref{subsec:human-robot-interaction}, the Cozmo SDK function exploited to manoeuvre the robot needs at least the speed of each tread.
-\Vref{conversionCozmoEnv} reports key steps of this translation.
+\Vref{conversionCozmoDriver} reports key steps of this translation.
 Therefore we decided to raise acceleration parameters by setting them equal to 4 times the velocity of each thread to reach the desired speed as fast as possible.
 
 \begin{algorithm}[!h]
@@ -254,8 +137,8 @@ Therefore we decided to raise acceleration parameters by setting them equal to 4
     Right tread speed: $ts_{\text{right}} = s_t \cdot s^{\text{forward}}_{\text{max}} - w_t \cdot s^{\text{turning}}_{\text{max}}$
 
     \KwOut{Left tread speed $ts_{\text{left}}$ \newline Right tread speed: $ts_{\text{right}}$}
-    \caption{CozmoEnv actions conversion from virtual to real}
-    \label{conversionCozmoEnv}
+    \caption{CozmoDriver actions conversion from virtual to real}
+    \label{conversionCozmoDriver}
 \end{algorithm}
 
 
@@ -320,7 +203,7 @@ In the real world, the situation is more complicated not only because of the nee
 The most critical factor is that the failure of an episode in the simulator has no threats or costs, while real-world experiments failures could lead to high costs and severe damage to the car and equipment.
 Despite this point, the application of such experiment typology in a real environment instead of a mere simulation represents an exciting challenge that could bring reinforcement learning to the next level.
 In order to make experiments as safe as possible, the authors of~\cite{kendall2018learning,kendall2019learning} implemented a self-driving system designed explicitly for self-driving reinforcement learning experiments where the car driver has the faculty of stopping the car when it is going to run off the road or in a dangerous situation and relocating it in the nearest safe position to start the next learning episode.
-By simply pressing a button, the logic of the car disables reinforcement learning algorithm decision and gives full control to the real driver of the car.
+By simply pressing a button, the logic of the car disables reinforcement learning algorithm decisions and gives full control to the real driver of the car.
 
 We aimed to implement this kind of user-robot interaction also in our setup.
 The requirements were almost the same as the ones described in the paper, but this case could not rely on steering wheel, brakes and accelerator as in the car scenario where they are directly accessible by the user.
@@ -355,6 +238,13 @@ Just as examples, the user can start and stop the episode using the enter button
 
 The implementation of an algorithm flow to sustain the specific experimental need was necessary due to the continuous interactions between the human and the robot. Starting from the ideas of \cite{kendall2018learning,kendall2019learning}, we decided to divide the learning process in a series of phases highlighted in blue in \vref{fig:system-flow-chart}.
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{img/system-flow.png}
+    \caption[Cozmo algorithm flow chart]{This image shows the flow chart of the system we implemented. The most crucial phases are highlighted in blue. This chart is deliberately drawn without an end, because, although there was the possibility, we never set a fixed maximum limit of experiments in Cozmo scenario. It is possible to retrieve the warm-up procedure by answering no to the last two decision branch.}
+    \label{fig:system-flow-chart}
+\end{figure}
+
 The phases we defined are the following:
 
 \begin{itemize}
@@ -379,184 +269,19 @@ The phases we defined are the following:
           The user can also trigger this phase manually by toggling the C button before starting the next episode by hitting the enter button. It allows to virtually pause experiments, like the one with Cozmo, that could last tens of hours, and that can need multiple days to complete.
 \end{itemize}
 
-\begin{figure}
-    \centering
-    \scalebox{0.8}{
 
-
-        \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-
-    \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
-        %uncomment if require: \path (0,640); %set diagram left start at 0, and has height of 640
-
-        %Shape: Rectangle [id:dp3205555611726546] 
-        \draw  [fill={rgb, 255:red, 171; green, 200; blue, 240 }  ,fill opacity=1 ] (288.5,118) -- (423.5,118) -- (423.5,158) -- (288.5,158) -- cycle ;
-        %Straight Lines [id:da45650982537203766] 
-        \draw    (356.75,85) -- (356.75,115.5) ;
-        \draw [shift={(356.75,118.5)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-
-        %Straight Lines [id:da33363937943735045] 
-        \draw    (123.5,423.75) -- (281.25,423.26) ;
-        \draw [shift={(284.25,423.25)}, rotate = 539.8199999999999] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-
-        %Straight Lines [id:da08256872780772095] 
-        \draw    (123.5,383) -- (123.5,423.75) ;
-
-
-        %Shape: Rectangle [id:dp6141481346237292] 
-        \draw  [fill={rgb, 255:red, 171; green, 200; blue, 240 }  ,fill opacity=1 ] (24.5,117) -- (159.5,117) -- (159.5,157) -- (24.5,157) -- cycle ;
-        %Straight Lines [id:da4102417822212999] 
-        \draw    (283.5,136) -- (160.5,136) ;
-
-        \draw [shift={(286.5,136)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        %Straight Lines [id:da9410796039373476] 
-        \draw    (357.38,188) -- (357.38,204.5) ;
-        \draw [shift={(357.38,207.5)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-
-        %Shape: Diamond [id:dp23419639551228588] 
-        \draw  [fill={rgb, 255:red, 240; green, 232; blue, 168 }  ,fill opacity=1 ] (357.38,289.5) -- (430.5,320.25) -- (357.38,351) -- (284.25,320.25) -- cycle ;
-        %Straight Lines [id:da4002053530831412] 
-        \draw    (357.38,269) -- (357.38,286.5) ;
-        \draw [shift={(357.38,289.5)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-
-        %Straight Lines [id:da1961250189231556] 
-        \draw    (123.5,319.75) -- (284.25,320.25) ;
-
-
-        %Straight Lines [id:da08341935205642348] 
-        \draw    (123.5,339) -- (123.5,319.75) ;
-
-        \draw [shift={(123.5,342)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        %Shape: Rectangle [id:dp8998227827849266] 
-        \draw  [fill={rgb, 255:red, 171; green, 200; blue, 240 }  ,fill opacity=1 ] (57.5,342) -- (192.5,342) -- (192.5,382) -- (57.5,382) -- cycle ;
-        %Straight Lines [id:da03747681592112351] 
-        \draw    (357.38,350) -- (357.38,390) ;
-        \draw [shift={(357.38,393)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-
-        %Shape: Diamond [id:dp05801551745223743] 
-        \draw  [fill={rgb, 255:red, 240; green, 232; blue, 168 }  ,fill opacity=1 ] (357.38,392.5) -- (430.5,423.25) -- (357.38,454) -- (284.25,423.25) -- cycle ;
-        %Straight Lines [id:da13095592205091366] 
-        \draw    (129.5,238.75) -- (284.25,238.25) ;
-
-
-        %Straight Lines [id:da6941565717302706] 
-        \draw    (129.5,162) -- (129.5,238.75) ;
-
-        \draw [shift={(129.5,159)}, rotate = 90] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        %Straight Lines [id:da30876512932326383] 
-        \draw    (443.5,527.75) -- (357.38,527.75) ;
-
-
-        %Straight Lines [id:da37637290320114314] 
-        \draw    (505.5,487) -- (505.5,501) ;
-        \draw [shift={(505.5,504)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-
-        %Straight Lines [id:da6802339671267228] 
-        \draw    (505.5,423.75) -- (430.5,423.75) ;
-
-
-        %Straight Lines [id:da04855194568912746] 
-        \draw    (505.5,443) -- (505.5,423.75) ;
-
-        \draw [shift={(505.5,446)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        %Shape: Rectangle [id:dp5249336746554131] 
-        \draw  [fill={rgb, 255:red, 171; green, 200; blue, 240 }  ,fill opacity=1 ] (443.5,446) -- (578.5,446) -- (578.5,486) -- (443.5,486) -- cycle ;
-        %Rounded Rect [id:dp5401419126637466] 
-        \draw  [fill={rgb, 255:red, 255; green, 179; blue, 188 }  ,fill opacity=1 ] (288.5,50) .. controls (288.5,45.58) and (292.08,42) .. (296.5,42) -- (415.5,42) .. controls (419.92,42) and (423.5,45.58) .. (423.5,50) -- (423.5,74) .. controls (423.5,78.42) and (419.92,82) .. (415.5,82) -- (296.5,82) .. controls (292.08,82) and (288.5,78.42) .. (288.5,74) -- cycle ;
-        %Straight Lines [id:da46969392222154227] 
-        \draw    (357.38,454) -- (357.38,527.75) ;
-
-
-        %Straight Lines [id:da01473953482461099] 
-        \draw    (357.38,527.75) -- (357.38,561.5) ;
-
-
-        %Straight Lines [id:da47014594978326474] 
-        \draw    (357.38,561.5) -- (596.5,561.5) ;
-
-
-        %Straight Lines [id:da42252207031576927] 
-        \draw    (596.5,140) -- (596.5,561.5) ;
-
-
-        %Straight Lines [id:da5491155657054972] 
-        \draw    (428.5,140) -- (596.5,140) ;
-
-        \draw [shift={(425.5,140)}, rotate = 0] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
-        %Shape: Rectangle [id:dp8147683219865862] 
-        \draw  [fill={rgb, 255:red, 171; green, 200; blue, 240 }  ,fill opacity=1 ] (443.5,506) -- (578.5,506) -- (578.5,546) -- (443.5,546) -- cycle ;
-        %Shape: Diamond [id:dp18316247825346643] 
-        \draw  [fill={rgb, 255:red, 240; green, 232; blue, 168 }  ,fill opacity=1 ] (357.38,207.5) -- (430.5,238.25) -- (357.38,269) -- (284.25,238.25) -- cycle ;
-        %Straight Lines [id:da5800471205362333] 
-        \draw    (357.38,157) -- (357.38,176.5) ;
-
-
-        %Shape: Circle [id:dp4555341347715042] 
-        \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (491.5,140) .. controls (491.5,131.99) and (497.99,125.5) .. (506,125.5) .. controls (514.01,125.5) and (520.5,131.99) .. (520.5,140) .. controls (520.5,148.01) and (514.01,154.5) .. (506,154.5) .. controls (497.99,154.5) and (491.5,148.01) .. (491.5,140) -- cycle ;
-        %Image [id:dp6587688127348926] 
-        \draw (505.75,139.75) node  {\includegraphics[width=15.38pt,height=15.38pt]{img/wait.png}};
-
-        %Shape: Circle [id:dp9207976284695367] 
-        \draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (207.5,137) .. controls (207.5,128.99) and (213.99,122.5) .. (222,122.5) .. controls (230.01,122.5) and (236.5,128.99) .. (236.5,137) .. controls (236.5,145.01) and (230.01,151.5) .. (222,151.5) .. controls (213.99,151.5) and (207.5,145.01) .. (207.5,137) -- cycle ;
-        %Image [id:dp17911119291107824] 
-        \draw (221.75,136.75) node  {\includegraphics[width=15.38pt,height=15.38pt]{img/wait.png}};
-
-
-        % Text Node
-        \draw (356,62) node  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,opacity=1 ] [align=left] {Start of the Run};
-        % Text Node
-        \draw (356,138) node  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,opacity=1 ] [align=left] {Episode Phase};
-        % Text Node
-        \draw (357.38,238.75) node  [font=\footnotesize] [align=left] {Undo Signal?};
-        % Text Node
-        \draw (92,137) node  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,opacity=1 ] [align=left] {Undo Phase};
-        % Text Node
-        \draw (358.38,319.75) node  [font=\footnotesize] [align=left] {Is it time to learn?};
-        % Text Node
-        \draw (125,362) node  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,opacity=1 ] [align=left] {Training Phase};
-        % Text Node
-        \draw (269,230) node  [font=\scriptsize] [align=left] {Yes};
-        % Text Node
-        \draw (373,273) node  [font=\scriptsize] [align=left] {No};
-        % Text Node
-        \draw (270,311) node  [font=\scriptsize] [align=left] {Yes};
-        % Text Node
-        \draw (373,356) node  [font=\scriptsize] [align=left] {No};
-        % Text Node
-        \draw (358.38,422.75) node  [font=\footnotesize] [align=left] {Is it time to test?};
-        % Text Node
-        \draw (511,466) node  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,opacity=1 ] [align=left] {Testing Phase};
-        % Text Node
-        \draw (440,414) node  [font=\scriptsize] [align=left] {Yes};
-        % Text Node
-        \draw (373,458) node  [font=\scriptsize] [align=left] {No};
-        % Text Node
-        \draw (511,526) node  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,opacity=1 ] [align=left] {Checkpoint Phase};
-        % Text Node
-        \draw (361,181) node  [font=\scriptsize] [align=left] {End Episode Signal};
-        % Text Node
-        \draw (507,161) node   [align=left] {{\scriptsize Wait for user start signal}};
-        % Text Node
-        \draw (224,160) node   [align=left] {{\scriptsize Wait for user start signal}};
-
-
-    \end{tikzpicture}
-
-    }
-    \caption[Cozmo algorithm flow chart]{This image shows the flow chart of the system we implemented. The most crucial phases are highlighted in blue. This chart is deliberately drawn without an end, because, although there was the possibility, we never set a fixed maximum limit of experiments in Cozmo scenario. It is possible to retrieve the warm-up procedure by answering no to the last two decision branch.}
-    \label{fig:system-flow-chart}
-\end{figure}
 
 \section{Algorithm setup}
 
+% TODO: DDPG-SAC?
 Another crucial step in the design of the system is the setup of reinforcement learning algorithms we exploited.
-This thesis aims to show a comparison between DDPG and SAC algorithms implemented to solve a real-world driving task, so it is essential to include in this document ideas and implemented choices we used to develop our system.
+This thesis aims to show results and challenges of the implementation of SAC algorithm to solve a real-world driving task, so it is essential to include in this document ideas and implemented choices we used to develop our system.
 
 Given the fervour that has led to an impressive development of reinforcement learning in recent years, numerous repositories were born to be able to offer ready-made implementations of these algorithms in order to speed up the implementation process in the most suitable experiments.
 Nowadays, the most famous and exploited reinforcement learning repository available for developers is \textit{OpenAI Baselines} \footnote{OpenAI Baselines Github Repository: \href{https://github.com/openai/baselines}{https://github.com/openai/baselines}} which provides a set of high-quality implementations of reinforcement learning algorithms realised using \textit{Tensorflow} deep learning library.
 In addition to this last-mentioned project, there are many new forks of this project which offers improvements, refactorings or additional implementations of the latest algorithms offered by the continuous scientific research in this field.
 
-Despite this fact, we decided to implement our versions of DDPG and SAC from scratch taking the last-mentioned implementations as guidelines to follow in the developing process instead of exploiting them directly.
+Despite this fact, we decided to implement our versions of reinforcement learning algorithms from scratch taking the last-mentioned implementations as guidelines to follow in the developing process instead of exploiting them directly.
 We chose to follow this workflow primarily for didactical reasons.
 Implementing an algorithm from scratch, starting from the theory provided by the related paper escorted by the numerous implementations available is probably the best way to understand the whole set of ideas underlying algorithms properly.
 Furthermore, we made this decision to have the opportunity to manage and implement architectural choices to create a suitable workflow for the episodes carried out in Cozmo experiments that could be compatible with the human-robot interaction of Cozmo.
@@ -602,10 +327,10 @@ We exploited the network architectures that passed this selection to made experi
 However, before finding a good architecture to exploit, we started little experiments with Cozmo to analyse changes in the behaviour policy of the robot.
 There we noticed a crucial factor to take into account to decide what network to use for our experiment: the optimisation phase duration.
 It is a vital parameter to make the experiment manageable for the user: in this thesis work, the agent is not in a simulation where the computer automatically decides when to restart the episode so that the human can let the experiment running by itself.
-In this context, the user must be ready to stop, reposition and restart the car in a specific moment.
+In this context, the user must be ready to stop, reposition and restart the car at any moment.
 Given the evidence that an experiment like this could last thousands of episodes, we aimed to reduce the waiting time for the user to make the experiments last less, or, at least, obtain a good relationship between the duration of the episode and that of the optimisation steps.
 To avoid a long waiting time after each episode, we tried to spread the optimisation phase inserting a single learning step after each action taken by the agent. We found out this approach in some implementation of DDPG algorithm mainly applied to simulated environments. This choice seemed working with the \textit{Pendulum-v0} task because, in a simulated context, the environment stops itself waiting for the next action taken by the agent during the optimisation phase: the system flow is independent of the duration of the last-mentioned phase.
-It is noticeable that this fact does not apply to a real-world scenario like the one we implemented with Cozmo. As discussed in \vref{subsec:actions-duration}, the robot continues also driving during the learning process.
+It is noticeable that this fact does not apply to a real-world scenario like the one we implemented with Cozmo. As discussed in \vref{subsec:actions-duration}, the robot continues to drive even during the learning process.
 Therefore the system is highly unstable because this process not always has the same length and every action lasts differently: it depends on the specific network topology.
 After the analysis of this behaviour, we decided to maintain the optimisation phase among episodes and to fix a specific duration for each action of Cozmo.
 
@@ -640,19 +365,22 @@ At the beginning of this thesis work, we implemented the DDPG algorithm followin
 This process was carried out in parallel with the implementation of the same algorithms for a simulated environment offered by the OpenAI Gym framework, \textit{Pendulum-v0}.
 This decision was useful to check the correctness of the architectural decisions we made step by step.
 Despite this fact, the learning context of Cozmo showed its complexity since the first experiments bringing out differences from \textit{Pendulum-v0} environment.
-We found out that, in order to obtain acceptable results that could show as clearly as possible whether the algorithm is working and improving with the selected set of parameters, it was necessary to wait for a large number of epochs corresponding to tens of hours or few days depending on the neural network architecture and the hyper-parameters.
+We found out that, in order to obtain results that could show as clearly as possible whether the algorithm is working and improving with the selected set of parameters, it was necessary to wait for a large number of epochs corresponding to tens of hours or few days depending on the neural network architecture and the hyper-parameters.
 
+% TODO: DDPG SAC ?
 Furthermore, these experiments can not exploit the advantages of the simulated environment in which the researcher can set the parameter ranges at the beginning, leaving the computer to start and complete the search for each combination of the available parameters.
 The real-world approach we described in this chapter needs the constant presence of a human to carry out the learning process, and the whole procedure is further slowed down by the Cozmo battery lifetime and its charging time: both take about 30 minutes.
 It is noticeable that, in a real-world scenario like this, it is almost impossible to make a humanly manageable workflow capable of doing a sustainable grid search.
-For this reason, we decided to initialise these parameters following the guidelines provided by the DDPG paper.
+For this reason, we decided to initialise these parameters following the guidelines provided by the DDPG paper. The results in this case were not as good as we expected: the robot showed no tangible progress even after numerous episodes.
+The policy learned led to strange behavior with sharp turns in a direction and episodes that ended almost immediately.
 
+% TODO: DDPG SAC ?
 After this implementation, we started a search for a reinforcement learning algorithm more suitable for real-world problems.
 The ideal objective would be to find a hyperparameter agnostic algorithm capable of performing well regardless of algorithm configuration and ensuring the absence of unfairness introduced from external sources \cite{henderson2018deep}.
 The last-mentioned aim is still being researched today by the scientific community.
 Despite this fact, we found out an algorithm capable of automatically adapt itself to reduce the hyper-parameter dependency: SAC, an algorithm which was born precisely as an evolution of the DDPG approach to improve its performance in a real-world application and overcome hyper-parameters dependency.
 Therefore, we also implemented this algorithm from scratch by using the implementation of the so-called \textit{parameter auto-tuning} proposed in \cite{haarnoja2018soft, haarnoja2018alg}.
-\Vref{ch:ch5,ch:ch6} will present the performance comparison between these two algorithms both in a \textit{Pendulum-v0} simulated environment and in the real-world Cozmo one.
+\Vref{ch:ch5,ch:ch6} will present the performance comparison between these two algorithms in a \textit{Pendulum-v0} simulated environment and the performance of SAC in the real-world Cozmo one.
 
 \section{Real-World experiments}
 
@@ -713,8 +441,8 @@ For this reason, we spent some time to search for the most reliable way to build
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.7\textwidth]{img/track.png}
-    \caption[CozmoEnv Racing Track]{ Picture from above of the track we designed and build to carry out experiments with Anki Cozmo robot. The route is a mixed track that includes two straights, a narrow hairpin and a wide one that, united by a curve elbow, make up a serpentine. The track length is about 3 metres.}
+    \includegraphics[width=0.64\textwidth]{img/track.png}
+    \caption[CozmoDriver Racing Track]{ Picture from above of the track we designed and build to carry out experiments with Anki Cozmo robot. The route is a mixed track that includes two straights, a narrow hairpin and a wide one that, united by a curve elbow, make up a serpentine. The track length is about 3 metres.}
     \label{fig:track_cozmo}
 \end{figure}
 
@@ -742,4 +470,4 @@ In our study, we utilised the width of a typical family car and utilised the ave
 Therefore, we measured the Cozmo width that was about $5.5$cm for a resulting ratio of $\frac{1}{30}$.
 Accordingly, the scaled lane width obtained was between $9$cm and $12.5$cm.
 The other component to take into account was the material to use to draw the lane. In this case, we used a simple paper tape of width equal to $2.5$cm. Because of the narrow and limited angle of vision provided by Cozmo camera, we opted for a total width of about $10$cm: the size of the road changes slightly throughout the path emulating what can happen in a hypothetical real road. Therefore, we chose this dimension because positioning the tape with a distance greater than $10$cm would result in a significant part of the tape outside the view of the camera.
-A track picture from above is shown in \vref{fig:track_cozmo}.
+A track picture is available in \vref{fig:track_cozmo}.
