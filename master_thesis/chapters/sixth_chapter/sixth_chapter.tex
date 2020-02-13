@@ -1,6 +1,23 @@
 \chapter{Conclusions} \label{ch:ch6}
 
-\todomacaluso{Conclusions}
+The growing interest in deep reinforcement learning approaches to real-world problems together with the fervour behind the development of autonomous driving has motivated and stimulated our research.
+Reinforcement learning proposes a brand new method to address decision-making problems, that is capable, in the premises, of replacing hand-made algorithms in the most varied tasks.
+For this reason, it is considered one of the enabling technologies to take a further concrete step towards Artificial General Intelligence (AGI).
+Although it achieved its best results in simulated environments such as video games, the interest of research in recent times has shifted to applications in the real world, looking for algorithms more and more easily configurable and parameter agnostic.
+
+The first contribution of this thesis consists of the design of a control system to apply reinforcement learning algorithms in the real world.
+To achieve this aim, we decided to use the standardised approach provided by OpenAI Gym to project environments.
+We implemented the same interface used by simulated environments binding OpenAI Gym methods to features and functions offered from Anki Cozmo SDK.
+The approach used in the development of this system has allowed obtaining an environment in which any researcher can apply their algorithms interfacing directly with the reinforcement learning, without worrying about direct interfacing with the robot. 
+The designed system allowed us to perform reinforcement learning experiments straightforwardly, meeting the specifications required, such as the possibility to backup and restore their state.
+
+The second contribution of this thesis consists of the application of a reinforcement learning algorithm suitable for experiments in the real world. We designed our implementation of Soft Actor-Critic (SAC) by modifying its original flow to match the requirements of the environment. Firstly, we implemented a revised environment of a traditional control problem to apply deep reinforcement learning algorithms instead of traditional ones, using the same convolutional neural network used with Cozmo experiments.
+Therefore, we performed and reported an experiment of 3000 episodes with the environment designed for Cozmo.
+We based our approach on SAC algorithm after the analysis of the performance comparison between DDPG and SAC experiments in the previously mentioned revised environment, which showed better performances with SAC.
+The results were not so astonishing as we expected from the results presented in \cite{kendall2018learning,kendall2019learning}, but they appear aligned with those obtained by \cite{haarnoja2018alg}.
+We notice a constant improvement in the behaviour of the robot, especially in the testing phase, reaching a maximum value of more than 3 meters and an average of about 1 meter on 10 test episodes.
+After the conclusion of the experiments, as reported in \label{ch5:results}, we focused on what might have been the most significant factors that led to these results.
+
 
 \section{Future Work}
 
