@@ -8,7 +8,7 @@ Although it achieved its best results in simulated environments such as video ga
 The first contribution of this thesis consists of the design of a control system to apply reinforcement learning algorithms in the real world.
 To achieve this aim, we decided to use the standardised approach provided by OpenAI Gym to project environments.
 We implemented the same interface used by simulated environments binding OpenAI Gym methods to features and functions offered from Anki Cozmo SDK.
-The approach used in the development of this system has allowed obtaining an environment in which any researcher can apply their algorithms interfacing directly with the reinforcement learning, without worrying about direct interfacing with the robot. 
+The approach used in the development of this system has allowed obtaining an environment in which any researcher can apply their algorithms interfacing directly with the reinforcement learning framework, without worrying about direct interfacing with the robot. 
 The designed system allowed us to perform reinforcement learning experiments straightforwardly, meeting the specifications required, such as the possibility to backup and restore their state.
 
 The second contribution of this thesis consists of the application of a reinforcement learning algorithm suitable for experiments in the real world. We designed our implementation of Soft Actor-Critic (SAC) by modifying its original flow to match the requirements of the environment. Firstly, we implemented a revised environment of a traditional control problem to apply deep reinforcement learning algorithms instead of traditional ones, using the same convolutional neural network used with Cozmo experiments.
@@ -16,15 +16,31 @@ Therefore, we performed and reported an experiment of 3000 episodes with the env
 We based our approach on SAC algorithm after the analysis of the performance comparison between DDPG and SAC experiments in the previously mentioned revised environment, which showed better performances with SAC.
 The results were not so astonishing as we expected from the results presented in \cite{kendall2018learning,kendall2019learning}, but they appear aligned with those obtained by \cite{haarnoja2018alg}.
 We notice a constant improvement in the behaviour of the robot, especially in the testing phase, reaching a maximum value of more than 3 meters and an average of about 1 meter on 10 test episodes.
-After the conclusion of the experiments, as reported in \label{ch5:results}, we focused on what might have been the most significant factors that led to these results.
+After the conclusion of the experiments, as reported in \vref{ch5:results}, we focused on what might have been the most significant factors that led to these results.
+
+We localised two major problems which, in our opinion, have had a particular influence on the results obtained.
+The first factor was the amount of RAM available in the development machine.
+Off-policy reinforcement learning algorithms require a memory replay in which to store past experiences and, in particular in our implementation, a portion of free RAM to be able to back up disk easily. This limitation forced us to decrease the size of the replay memory and a consequent early deletion of less recent episodes. Analysing the plots, we noticed that this fact translated in the increase of the temperature: this symptom underlines the need for the algorithm to explore more the solution space.
+The second major problem was the limitation of the camera sensor on the robot, particularly its viewing angle. The features offered by the Anki Cozmo camera proved to be inadequate to observe the track we designed.
+We noticed this fact after many episodes when the robot started to improve its performance: it began to adopt a wave behaviour on the straights, interpreting the vision of a single road line as a curve.
+Moreover, we noticed the difficulty of the algorithm in detecting differences between left and right lines: an excessive approach to one of them led the agent to recognise that line as the opposite one and then to steer abruptly, making a mistake.
+The last-mentioned problem may be related to the fact that the colour of the road is identical to the part beyond road lines.
+However, Anki developers primarily designed the Cozmo camera for facial recognition, so it does not have a viewing angle large enough to allow a comprehensive view of the road.
 
 
 \section{Future Work}
 
+Our proposals about future improvements to the project grow from the weakness in our approach that we just described.
+Our attempt to make the system data-efficient by decreasing the experience memory replay did not work. It could be interesting to execute these algorithms on a device with a bigger RAM, but also to design this approach with a Variational Auto-Encoder (VAE) \cite{kingma2013auto} to reduce the dimensionality of the information retrieved during experiments.
+This method revealed improvements in many applications and in particular in the one reported in \cite{kendall2018learning,kendall2019learning}.
+
+
+To improve SAC algorithm performance, it may be useful to enhance sensors installed on the self-driving robot, especially the camera, to have a viewing angle large enough to visualise the whole width of the track.
+
 \todomacaluso{Future Work}
 \todomacaluso{
     \begin{itemize}
-        \item Comments on the results obtained
+        \item Comments on the results obtained\cite{kendall2018learning,kendall2019learning}
         \item Strong points and weaknesses
         \item Autocriticism about weaknesses that affect the final result
         \item Future Work
