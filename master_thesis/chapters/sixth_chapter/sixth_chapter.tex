@@ -34,20 +34,11 @@ Our proposals about future improvements to the project grow from the weakness in
 Our attempt to make the system data-efficient by decreasing the experience memory replay did not work. It could be interesting to execute these algorithms on a device with a bigger RAM, but also to design this approach with a Variational Auto-Encoder (VAE) \cite{kingma2013auto} to reduce the dimensionality of the information retrieved during experiments.
 This method revealed improvements in many applications and in particular in the one reported in \cite{kendall2018learning,kendall2019learning}.
 
+It may be useful to enhance sensors installed in the self-driving robot to improve SAC algorithm performances.
+We suggest, in particular, to substitute the camera with one that has a viewing angle large enough to visualise the whole width of the track.
+A possible alternative to Anki Cozmo could be Anki Vector, the successor of Cozmo which mounts a 720p camera with 120 Ultra Wide FOV or to build up a personal \textit{Donkey Car} with custom specifications.
+Using Anki Vector, it could be interesting to perform reinforcement learning algorithms with the usage of the renewed front camera together with the infrared laser scanner on-board to investigate approaches to data fusion with more sensors.
 
-To improve SAC algorithm performance, it may be useful to enhance sensors installed on the self-driving robot, especially the camera, to have a viewing angle large enough to visualise the whole width of the track.
-
-\todomacaluso{Future Work}
-\todomacaluso{
-    \begin{itemize}
-        \item Comments on the results obtained\cite{kendall2018learning,kendall2019learning}
-        \item Strong points and weaknesses
-        \item Autocriticism about weaknesses that affect the final result
-        \item Future Work
-              \begin{itemize}
-                  \item Data efficiency and Model-based approaches through a better study of bibliography
-                  \item Usage of Variational Auto Encoder (VAE): this is a possible additional step towards the creation of the model (VAE used for data generation as a generative model). It must not overwrite the first future work.
-                  \item New Version of Cozmo (Vector) with a better camera and LIDAR (Data fusion);
-              \end{itemize}
-    \end{itemize}
-}
+In this thesis, we focused on model-free reinforcement learning algorithms to solve the self-driving task we proposed.
+However, we think that another intriguing research to carry out is an investigation about the application of model-based reinforcement learning algorithms to autonomous driving.
+A more in-depth review of the literature to better understand the feasibility of this approach, focusing on its strengths and weaknesses compared to model-free ones can be the right starting point.
