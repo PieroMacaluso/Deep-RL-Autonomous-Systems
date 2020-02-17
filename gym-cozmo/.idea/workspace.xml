@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="fa7c2d06-eee5-4599-bd6f-df0a15201155" name="Default Changelist" comment="Review of CozmoEnv and adding few comments">
+      <change afterPath="$PROJECT_DIR$/.idea/gym-cozmo.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/rSettings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/PKG-INFO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/SOURCES.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/dependency_links.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/requires.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/top_level.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/CNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/CNN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/OUNoise.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/OUNoise.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/ddpg.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/ddpg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/play_cozmo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/play_cozmo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../source_code/sac_cozmo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/sac_cozmo/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+        <option value="CSS File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>speed</find>
+      <find>forward_speed</find>
+      <find>updateCozmo</find>
+      <find>DebugInfoId</find>
+      <find>reinforcem</find>
+      <find>id</find>
+      <find>mt-4</find>
+      <find>mb-2</find>
+      <find>card-header</find>
+      <find>handle_key</find>
+      <find>warning</find>
+      <find>card</find>
+      <find>card-header bg-dark</find>
+      <find>card-header bg-danger</find>
+      <find>card border-dark</find>
+      <find>human</find>
+      <find>card-header bg-info</find>
+      <find>say</find>
+      <find>url</find>
+      <find>Thread</find>
+      <find>discardedId</find>
+      <find>info</find>
+      <find>update</find>
+      <find>robot</find>
+      <find>cozmoIm</find>
+      <find>image_d</find>
+      <find>image_si</find>
+      <find>is_human_controlled</find>
+      <find>human_controlled</find>
+      <find>last_action</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>IMAGE_SIZE</replace>
+      <replace>col-md</replace>
+      <replace>mt-4</replace>
+      <replace>mt-3</replace>
+      <replace>mb-4</replace>
+      <replace>border-danger</replace>
+      <replace>card-header border-danger</replace>
+      <replace>card-header border-dark</replace>
+      <replace>card-header bg-danger text-white</replace>
+      <replace>card border-danger</replace>
+      <replace>card-header bg-danger</replace>
+      <replace>card-header bg-dark</replace>
+      <replace>card border-secondary</replace>
+      <replace>card border-white</replace>
+      <replace>primary</replace>
+      <replace>card</replace>
+      <replace>card-header bg-cozmo</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectConfigurationFiles">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/.idea/gym-cozmo.iml" />
+        <option value="$PROJECT_DIR$/.idea/misc.xml" />
+        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
+        <option value="$PROJECT_DIR$/.idea/modules.xml" />
+        <option value="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" />
+        <option value="$PROJECT_DIR$/../untitled/.idea/untitled.iml" />
+        <option value="$PROJECT_DIR$/../report_SAC/.idea/report_SAC.iml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1Qy0UQMVgGMrt0ZJEuUA26Ay14d" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="TODO_SCOPE" value="All Places" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.intentionPowerPack" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/gym_cozmo/envs/static/img" />
+      <recent name="$PROJECT_DIR$/gym_cozmo/envs/static/css" />
+      <recent name="$PROJECT_DIR$/gym_cozmo/envs/templates" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/gym_cozmo/envs" />
+      <recent name="$PROJECT_DIR$/gym_cozmo/envs/static/svg" />
+      <recent name="$PROJECT_DIR$/gym_cozmo/envs/static/img" />
+      <recent name="$PROJECT_DIR$/gym_cozmo/envs/templates" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.main">
+    <configuration name="backend" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="gym-cozmo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/gym_cozmo/envs" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/gym_cozmo/envs/backend.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="gym-cozmo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="--pics --cuda" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="remote_control" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="gym-cozmo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/gym_cozmo/envs" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/gym_cozmo/envs/remote_control.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="gym-cozmo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/virtualenv/cozmo-env/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test1" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="gym-cozmo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.test" />
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.backend" />
+      <item itemvalue="Python.test1" />
+      <item itemvalue="Python.remote_control" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.remote_control" />
+        <item itemvalue="Python.test1" />
+        <item itemvalue="Python.backend" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fa7c2d06-eee5-4599-bd6f-df0a15201155" name="Default Changelist" comment="" />
+      <created>1556552580410</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1556552580410</updated>
+      <workItem from="1556552581863" duration="4898000" />
+      <workItem from="1556792050899" duration="15473000" />
+      <workItem from="1556874077690" duration="4714000" />
+      <workItem from="1556882538397" duration="10369000" />
+      <workItem from="1557125990381" duration="8810000" />
+      <workItem from="1557141175402" duration="10002000" />
+      <workItem from="1557217268450" duration="19301000" />
+      <workItem from="1557382711268" duration="2668000" />
+      <workItem from="1557385955729" duration="311000" />
+      <workItem from="1557389786119" duration="1390000" />
+      <workItem from="1557399818357" duration="11574000" />
+      <workItem from="1557415415110" duration="1159000" />
+      <workItem from="1557416767594" duration="295000" />
+      <workItem from="1557468903276" duration="4349000" />
+      <workItem from="1557487119996" duration="714000" />
+      <workItem from="1557488146070" duration="147000" />
+      <workItem from="1557488701404" duration="3925000" />
+      <workItem from="1557512851204" duration="15000" />
+      <workItem from="1557732631468" duration="4991000" />
+      <workItem from="1557755874513" duration="1835000" />
+      <workItem from="1557821038552" duration="2538000" />
+      <workItem from="1557842819391" duration="609000" />
+      <workItem from="1557919235757" duration="1696000" />
+      <workItem from="1557922812055" duration="351000" />
+      <workItem from="1557990919927" duration="4501000" />
+      <workItem from="1558080530125" duration="664000" />
+      <workItem from="1558086132108" duration="1234000" />
+      <workItem from="1558093078348" duration="623000" />
+      <workItem from="1558194788406" duration="1239000" />
+      <workItem from="1558209369484" duration="972000" />
+      <workItem from="1558422757612" duration="11277000" />
+      <workItem from="1558787636742" duration="4861000" />
+      <workItem from="1558938296566" duration="2611000" />
+      <workItem from="1558943500154" duration="4122000" />
+      <workItem from="1559119373819" duration="4241000" />
+      <workItem from="1559549983213" duration="4755000" />
+      <workItem from="1559561219398" duration="662000" />
+      <workItem from="1565539333682" duration="3800000" />
+      <workItem from="1565632972417" duration="11000" />
+      <workItem from="1566061620506" duration="44000" />
+      <workItem from="1566061842905" duration="35000" />
+      <workItem from="1566384596994" duration="1532000" />
+      <workItem from="1566458451704" duration="517000" />
+      <workItem from="1566459259078" duration="621000" />
+      <workItem from="1568010875648" duration="704000" />
+      <workItem from="1568035064042" duration="678000" />
+      <workItem from="1568100657489" duration="2431000" />
+      <workItem from="1568123138856" duration="3063000" />
+      <workItem from="1568184473820" duration="3486000" />
+      <workItem from="1568195397033" duration="941000" />
+      <workItem from="1568197316115" duration="13000" />
+      <workItem from="1568727545578" duration="1011000" />
+      <workItem from="1568790210452" duration="987000" />
+      <workItem from="1568805499190" duration="600000" />
+      <workItem from="1568832150568" duration="108000" />
+      <workItem from="1574286111904" duration="669000" />
+      <workItem from="1577095159093" duration="3499000" />
+      <workItem from="1577113926076" duration="44000" />
+      <workItem from="1577122012381" duration="352000" />
+      <workItem from="1577125895585" duration="1836000" />
+      <workItem from="1577958223137" duration="8000" />
+      <workItem from="1581963409496" duration="19000" />
+      <workItem from="1581963444537" duration="444000" />
+    </task>
+    <task id="LOCAL-00001" summary="Work Advance SAC Report&#10;&#10;- Refactoring notation&#10;- Correction of mistakes">
+      <created>1557922892390</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1557922892390</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Review of CozmoEnv and adding few comments">
+      <created>1568123936121</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1568123936121</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added gitignore to SAC Pendulum&#10;&#10;(cherry picked from commit a4e3871cdf72f19fdaa556142d1ebfbb810d4917)">
+      <created>1568196656800</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1568196656800</updated>
+    </task>
+    <task id="LOCAL-00004" summary="SAC Cozmo Gitignore&#10;&#10;(cherry picked from commit 70787c50f39b39d35ac11fcea19365d60987bb29)">
+      <created>1568196662221</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1568196662221</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Angle of head of Cozmo modified to avoid warning in output">
+      <created>1568196728257</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1568196728257</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Change of features in the second layer of CNN to satisfy bettere 64px">
+      <created>1568196754280</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1568196754280</updated>
+    </task>
+    <task id="LOCAL-00007" summary="[COZMOENV] From local to GIT">
+      <created>1581963641645</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1581963641645</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TodoView" selected-index="1">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Work Advance SAC Report&#10;&#10;- Refactoring notation&#10;- Correction of mistakes" />
+    <MESSAGE value="Review of CozmoEnv and adding few comments" />
+    <MESSAGE value="Added gitignore to SAC Pendulum&#10;&#10;(cherry picked from commit a4e3871cdf72f19fdaa556142d1ebfbb810d4917)" />
+    <MESSAGE value="SAC Cozmo Gitignore&#10;&#10;(cherry picked from commit 70787c50f39b39d35ac11fcea19365d60987bb29)" />
+    <MESSAGE value="Angle of head of Cozmo modified to avoid warning in output" />
+    <MESSAGE value="Change of features in the second layer of CNN to satisfy bettere 64px" />
+    <MESSAGE value="[COZMOENV] From local to GIT" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COZMOENV] From local to GIT" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="641" y="156" width="1147" height="805" key="CommitChangelistDialog2" timestamp="1581963884659">
+      <screen x="50" y="27" width="1870" height="1026" />
+    </state>
+    <state x="641" y="156" width="1147" height="805" key="CommitChangelistDialog2/50.27.1870.1026@50.27.1870.1026" timestamp="1581963884659" />
+    <state x="826" y="273" width="777" height="572" key="RollbackChangesDialog" timestamp="1581963905210">
+      <screen x="50" y="27" width="1870" height="1026" />
+    </state>
+    <state x="826" y="273" width="777" height="572" key="RollbackChangesDialog/50.27.1870.1026@50.27.1870.1026" timestamp="1581963905210" />
+    <state x="815" y="296" width="800" height="526" key="Vcs.Push.Dialog.v2" timestamp="1581963667319">
+      <screen x="50" y="27" width="1870" height="1026" />
+    </state>
+    <state x="815" y="296" width="800" height="526" key="Vcs.Push.Dialog.v2/50.27.1870.1026@50.27.1870.1026" timestamp="1581963667319" />
+    <state x="641" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1581963444451">
+      <screen x="50" y="27" width="1870" height="1026" />
+    </state>
+    <state x="641" y="347" key="com.intellij.ide.util.TipDialog/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1577125899446" />
+    <state x="641" y="347" key="com.intellij.ide.util.TipDialog/50.27.1870.1026@50.27.1870.1026" timestamp="1581963444451" />
+    <state width="609" height="385" key="javadoc.popup.new" timestamp="1577095543311">
+      <screen x="50" y="27" width="1870" height="1026" />
+    </state>
+    <state width="609" height="385" key="javadoc.popup.new/50.27.1870.1026@50.27.1870.1026" timestamp="1577095543311" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test.py</url>
+          <line>48</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test1.py</url>
+          <line>8</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gym_cozmo/envs/remote_control.py</url>
+          <line>271</line>
+          <option name="timeStamp" value="90" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/sac_cozmo/image_wrapper.py</url>
+          <line>27</line>
+          <option name="timeStamp" value="94" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gym_cozmo/envs/cozmo_env.py</url>
+          <line>96</line>
+          <option name="timeStamp" value="102" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/virtualenv/cozmo-env/lib/python3.6/site-packages/gym/wrappers/time_limit.py</url>
+          <line>30</line>
+          <option name="timeStamp" value="103" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test.py</url>
+          <line>23</line>
+          <option name="timeStamp" value="105" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gym_cozmo/envs/cozmo_mock.py</url>
+          <line>94</line>
+          <option name="timeStamp" value="106" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gym_cozmo/envs/cozmo_mock.py</url>
+          <line>91</line>
+          <option name="timeStamp" value="107" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gym_cozmo/envs/cozmo_mock.py</url>
+          <line>88</line>
+          <option name="timeStamp" value="108" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test.py</url>
+          <line>20</line>
+          <option name="timeStamp" value="109" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/gym_cozmo/envs/templates/index.html</url>
+          <line>351</line>
+          <option name="timeStamp" value="93" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="self.head.sample()" language="Python" />
+        <watch expression="plt.imshow(screen)" language="Python" />
+        <watch expression="plt.show()" language="Python" />
+        <watch expression="listener" language="Python" />
+        <watch expression="ord('\n')" language="Python" />
+        <watch expression="np.ascontiguousarray(observation, dtype=np.float32)" language="Python" />
+        <watch expression="cv2.resize(observation, (84, 84,3)" language="Python" />
+        <watch expression="cv2.resize(screen, (84, 84))" language="Python" />
+        <watch expression="flask_app" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/gym_cozmo$main.coverage" NAME="main Coverage Results" MODIFIED="1568184881133" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gym_cozmo$test.coverage" NAME="test Coverage Results" MODIFIED="1558947019943" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gym_cozmo$backend.coverage" NAME="backend Coverage Results" MODIFIED="1556890305486" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/gym_cozmo/envs" />
+    <SUITE FILE_PATH="coverage/gym_cozmo$remote_control.coverage" NAME="remote_control Coverage Results" MODIFIED="1557469809758" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/gym_cozmo/envs" />
+    <SUITE FILE_PATH="coverage/gym_cozmo$test1.coverage" NAME="test1 Coverage Results" MODIFIED="1557132507840" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>flask_app</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cv2.resize(screen, (84, 84))</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cv2.resize(observation, (84, 84,3)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cv2.resize(observation, (84, self.image_size)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cv2.resize(observation, (self.image_size, self.image_size)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>np.ascontiguousarray(observation, dtype=np.float32)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>np.ascontiguousarray(screen, dtype=np.float32)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ord('\n')</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>listener</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>plt.show()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+</project>
