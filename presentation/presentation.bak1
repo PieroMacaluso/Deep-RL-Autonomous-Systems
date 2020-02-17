@@ -1,0 +1,53 @@
+\documentclass{beamer}
+\usetheme[
+outer/progressbar=foot,
+outer/numbering=none
+]{metropolis} 
+
+%\titlegraphic{%
+%	\includegraphics[width=.2\textwidth]{example-image-a}\hfill\hfill
+%	\includegraphics[width=.2\textwidth]{example-image-b}
+%	
+%}          % Use metropolis theme
+\title{Deep Reinforcement Learning algorithms for autonomous systems}
+
+\date{\today}
+\author{Piero Macaluso}
+\setbeamercolor{background canvas in title}{parent=palette primary}
+\setbeamercolor{progress bar}{use=palette primary}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+  
+\begin{document}
+\metroset{background=dark} % change background theme according to manual
+\usebeamercolor[fg]{normal text}
+\maketitle
+\metroset{background=light} % change background theme according to manual
+\usebeamercolor[fg]{normal text}
+
+\begin{frame}{Table of contents}
+	\setbeamertemplate{section in toc}[sections numbered]
+	\tableofcontents[hideallsubsections]
+\end{frame}
+\section{Reinforcement Learning Fundamentals}
+\begin{frame}{Reinforcement Learning Fundamentals Frame}
+	Hello, world!
+\end{frame}
+\section{Deep Reinforcement Learning}
+\begin{frame}{Deep Reinforcement Learning Frame}
+	Hello, world!
+\end{frame}
+\section{Conclusions}
+\begin{frame}{Conclusions Frame}
+Hello, world!
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+
+	\bibliography{demo}
+	\bibliographystyle{abbrv}
+
+\end{frame}
+\begin{frame}[standout]
+	Thank you!
+\end{frame}
+\end{document}
