@@ -1,0 +1,10 @@
+\begin {longtable}{@{}ll>{\hsize =\vhAuthorColWidth }X>{\hsize =\vhChangeColWidth }X@{}}
+\textbf {\vhversionname }
+ & \textbf {\vhdatename }
+ & \textbf {\vhauthorname }
+ & \textbf {\vhchangename }\\[1ex]
+1.0
+ & April, 26 2019
+ & \listset {PM}
+ & - Created. \par - Added SAC description and implementation. \par - Added Environments Description \par - Added Uniform/Prioritized Replay implementation and simulation. \\
+\end {longtable}

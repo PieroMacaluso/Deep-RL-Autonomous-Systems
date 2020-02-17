@@ -1,0 +1,144 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{vhistory}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{blindtext}
+\usepackage[inline]{enumitem}
+\usepackage{xcolor}
+\usepackage{amsmath, amssymb, lmodern}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{svg}
+\usepackage{color}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{varioref}
+\usepackage{hyperref} 
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[section]{placeins}
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{graphicx}
+\usepackage{lipsum} %This package just generates Lorem Ipsum filler text. 
+\usepackage{fullpage} % changes the margin
+\usepackage{cleveref}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+%Includes "References" in the table of contents
+\usepackage[nottoc]{tocbibind}
+
+\DeclareMathOperator*{\argmax}{argmax} % thin space, limits underneath in displays
+
+\newenvironment{conditions}
+{\par\vspace{\abovedisplayskip}\noindent\begin{tabular}{>{$}l<{$} @{${}={}$} l}}
+	{\end{tabular}\par\vspace{\belowdisplayskip}}
+
+\renewcommand{\lstlistingname}{Algorithm}% Listing -> Algorithm
+\renewcommand{\lstlistlistingname}{List of \lstlistingname s}% List of Listings -> List of Algorithms
+\crefname{listing}{algorithm}{algorithms}  
+\Crefname{listing}{Algorithm}{Algorithms}
+\floatname{algorithm}{Procedure}
+
+\lstset{frame=tb,
+	language=Python,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3,
+	inputencoding=latin1
+}
+
+%\setlength{\belowcaptionskip}{-10pt}
+\makeatletter
+\renewcommand{\paragraph}{%
+	\@startsection{paragraph}{4}%
+	{\z@}{1.0ex \@plus 1ex \@minus .2ex}{-1em}%
+	{\normalfont\normalsize\bfseries}%
+}
+\makeatother
+
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage{varwidth}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
+	decorations.pathreplacing,decorations.pathmorphing,shapes,%
+	matrix,shapes.symbols}
+
+\tikzstyle{object} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=white]
+\tikzstyle{element} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
+\tikzstyle{xor} = [diamond, minimum width=1cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\pgfplotsset{width=\textwidth, height=\textheight*0.33,compat=newest}
+
+\definecolor{train_color_1}{HTML}{8b402a}
+\definecolor{train_color_2}{HTML}{e45e2d}
+\definecolor{train_color_3}{HTML}{ef9c49}
+\definecolor{train_color_4}{HTML}{fdea6f}
+
+\definecolor{test_color_1}{HTML}{192574}
+\definecolor{test_color_2}{HTML}{2e62a1}
+\definecolor{test_color_3}{HTML}{43a7cb}
+\definecolor{test_color_4}{HTML}{9ed5cd}
+
+\pgfplotscreateplotcyclelist{train}{
+	semithick,train_color_1\\%
+	semithick,train_color_2\\%
+	semithick,train_color_3\\%
+	semithick,train_color_4\\%
+}
+
+\pgfplotscreateplotcyclelist{test}{
+	semithick,test_color_1\\%
+	semithick,test_color_2\\%
+	semithick,test_color_3\\%
+	semithick,test_color_4\\%
+}
+
+
+
+%\captionsetup[figure]{skip=0pt}
+
+
+\begin{document}
+	%Header-Make sure you update this information!!!!
+	\noindent
+	\large\textbf{Deep Reinforcement Learning algorithms for autonomous systems}  \\
+	\normalsize Prof. Pietro Michiardi - Eurecom \hfill \textbf{Week Report 16/09/2019}\\
+	\normalsize Prof. Elena Baralis - Politecnico di Torino  \hfill Piero Macaluso
+	
+		\tableofcontents
+	\section{Steps Made}
+	
+	 
+	\subsection{Cozmo-DDPG}
+	
+	The first work carried out this week was to implement the DDPG algorithm for Cozmo. The changes were painless, but the ultimate goal would be to propose a sort of baseline for both SAC and DDPG. This enhancement could be a help for those who want to develop their code: it would give the possibility to exploit the common elements of the algorithms (e.g. train loop, test loop) by implementing only the changed parts (e.g. update phase). 
+	
+	\subsection{Refactoring Replay-Memory and Save'n'Restore}
+	
+	Another enhancement in the code was the refactoring of the class Replay Buffer using Python deque instead of a simple buffer in order to optimize the process of insertion and deletion of the experience memory. Therefore, we made the mechanism of "Save and Restore" process lighter, optimizing the process of dumping and loading.
+	
+	\subsection{Experiments}
+	
+	
+	
+	
+	\newpage
+	
+	%\bibliographystyle{unsrt}
+	%\bibliography{references}
+	
+\end{document}
