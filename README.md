@@ -1,75 +1,118 @@
-# A Study Of Reinforcement Learning
-The official report of my Master Thesis in Computer Engineering at Politecnico di Torino.
-The project was developed at Eurecom (Biot, France) with prof. Pietro Michiardi (Eurecom) and prof. Elena Baralis (Politecnico di Torino) from March 2019 to TBD.
+<h1 align="center">
+  <a href="https://github.com/pieromacaluso/RoomMonitor" title="RoomMonitor Documentation">
+    <img alt="RoomMonitor" src="stuff/logo.svg" width="200px" height="200px" />
+  </a>
+  <br/>
+  Deep Reinforcement Learning for autonomous systems
+</h1>
 
-- [Ideas](IDEAS.md)
+<p align="center">
+  Designing a control system to exploit model-free deep reinforcement learning algorithms to solve a real-world autonomous driving task of a small robot.
+</p>
+
+<p align="center">
+ <img alt="Languages" src="https://img.shields.io/badge/Languages-Python-orange"/>
+ <img alt="Framework" src="https://img.shields.io/badge/Framework-PyTorch%20|_OpenAI_Gym%20|_Flask-green"/>
+<img alt="Status" src="https://img.shields.io/badge/Status-Work In Progress-orange"/>
+</p>
 
 ## Table of Contents
-- **Reports**
-    - [Deep Deterministic Policy Gradient (DDPG)](report_DDPG)
-    - [Soft Actor-Critic (SAC)](report_SAC)
-    
-- **Source Code**
-    - DDPG Implementations
-        - [Neural Network](source_code/NN_DDPG_implementation)
-        - [Convolutional Neural Network](source_code/CNN_DDPG_implementation)
-    - SAC Implementations
-        - [Convolutional Neural Network](source_code/SAC_implementation)
-    - Cozmo Agents Implementations
-        - [SAC](source_code/sac_cozmo)
 
-- **OpenAI Environment**
-    - [gym-cozmo](gym-cozmo)
-    
-- **Master Thesis**
-    - [Thesis TeX](master_thesis)
-    - [Presentation TeX](presentation)
-    
-## Path of my Master Thesis
-- [x] **Fundamentals of Reinforcement Learning**
-    - **Main Steps**
-        - Studying the fundamentals using **[v1](#video-lectures)**, reading some chapters from **[b1](#books)** and doing some personal research.
-- [x] **Deep Learning and PyTorch review**
-    - **Main Steps**
-        - Reading some chapters from **[b2](#books)**, a practical guide through Deep Reinforcement Learning, OpenAI Gym and PyTorch.
-- [x] **Deep Deterministic Policy Gradient (DDPG)**
-    - **Main Steps**
-        - Studying **[p1](#papers)** and **[p2](#papers)** in order to understand the algorithm to reproduce.
-        - Producing an initial working code of **DDPG algorithm** on a continuous and well-known environment on the OpenAI Gym environment using simple NNs.
-        - Generalizing the code to work with CNN and images in an environment as similar as possible to the target one ([Anki Cozmo](https://www.anki.com/en-us/cozmo))
-    - **Main aim:** try to implement the algorithm as generic as possible in order to mantain flexibility
-- [ ] **Soft Actor-Critic (SAC)**
-    - **Main Steps**
-        - Studying **[p4](#papers)** and **[p5](#papers)** in order to understand the algorithm to reproduce.
-        - Producing an initial working code of **SAC algorithm** on a continuous and well-known environment on the OpenAI Gym environment using simple NNs.
-        - Generalizing the code to work with CNN and images in an environment as similar as possible to the target one ([Anki Cozmo](https://www.anki.com/en-us/cozmo))
-    - **Main aim:** try to implement the algorithm as generic as possible in order to mantain flexibility
-- [ ] **Implement the code on Anki Cozmo creating an interface between it and OpenAI Gym**
-    - **Main Steps**
-        - Exploring documentation and example from [Cozmo SDK](https://github.com/anki/cozmo-python-sdk)
-        - Producing an initial working environment for Anki Cozmo
-            - Design State, Action and Reward of RL problem
-            - Find a way to remotely control the robot in the event of an episode failure
-            - Try to use also Cozmo World Model as Observation 
-        - Test the code with the studied algorithm in order to produce results.
-    - **Main aim:** The code must be easy to read and must be portable to other code.
-     
-- **Possible future developments**:
-    - Find out if it could be better to develop the code with **[D4PG (Deep Distributed Distributional Deterministic Policy Gradients) ](https://arxiv.org/pdf/1804.08617.pdf)** or **[TD3 (Twin Delayed Deep Deterministic Policy Gradients) ](https://arxiv.org/pdf/1802.09477)**..
-    - ... ***TBD*** ...
- 
+- [Table of Contents](#table-of-contents)
+- [Introduction](#introduction)
+  - [Candidate](#candidate)
+  - [Supervisors](#supervisors)
+- [Abstract](#abstract)
+- [Repository Structure](#repository-structure)
+  - [Reports](#reports)
+  - [OpenAI Gym Environment](#openai-gym-environment)
+  - [Source Code](#source-code)
+  - [Master Thesis](#master-thesis)
+- [Contibutions and License](#contibutions-and-license)
+- [References](#references)
+  - [Video Lectures](#video-lectures)
+  - [Books](#books)
+  - [Papers](#papers)
+  - [Repositories](#repositories)
+
+## Introduction
+
+The Official repository of my master thesis in Computer Engineering at Politecnico di Torino.
+
+The project was developed at Eurecom (Biot, France) with prof. Pietro Michiardi (Eurecom) and prof. Elena Baralis (Politecnico di Torino).
+
+### Candidate
+
+- <img alt="avatar" src="https://github.com/pieromacaluso.png" width="20px" height="20px"> **Piero Macaluso** - [pieromacaluso](https://github.com/pieromacaluso)
+
+### Supervisors
+
+- <img alt="avatar" src="https://github.com/michiard.png" width="20px" height="20px"> **Prof. Pietro Michiardi** - [michiard](https://github.com/michiard)
+- <img alt="avatar" src="https://dbdmg.polito.it/wordpress/wp-content/uploads/2010/12/Elena_tessera-150x150.jpg" width="20px" height="20px"> **Prof. Elena Baralis** - [elena.baralis](https://dbdmg.polito.it/wordpress/people/elena-baralis/)
+
+## Abstract
+
+Because of its potential to thoroughly change mobility and transport, autonomous systems and self-driving vehicles are attracting much attention from both the research community and industry.
+Recent work has demonstrated that it is possible to rely on a comprehensive understanding of the immediate environment while following simple high-level directions, to obtain a more scalable approach that can revolutionise autonomous driving by making it a ubiquitous technology.
+However, to date, the majority of the methods concentrates on deterministic control optimisation algorithms to select the right action, while the usage of deep learning and machine learning is entirely dedicated to object detection and recognition.
+
+Recently, we have witnessed a remarkable increase in interest in Reinforcement Learning (RL). It is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to act in an environment by mapping situations and actions, trying to maximise some reward function. It learns to make decisions according to the information it gathers from the surrounding environment and from the reward it receives.
+As researchers discovered, it can be surprisingly useful to solve tasks in simulated environments like games and computer games, and it showed encouraging performance in tasks with robotic manipulators. Furthermore, the great fervour produced by the widespread exploitation of deep learning opened the doors to function approximation with convolutional neural networks, developing what is nowadays known as deep reinforcement learning.
+
+In this thesis, we argue that the generality of reinforcement learning makes it a useful framework where to apply autonomous driving to inject artificial intelligence not only in the detection component but also in the decision-making one.
+The focus of the majority of reinforcement learning projects is on a simulated environment. However, a more challenging approach of reinforcement learning consists of the application of this type of algorithms in the real world.
+To develop our considerations in following the last mentioned approach, we designed and implemented a control system for Cozmo, a small toy robot developed by Anki company, by exploiting the Cozmo SDK and OpenAI Gym to build up a standardised environment in which apply any reinforcement learning algorithm. This implementation represents the first contribution of our thesis. The second contribution of our work consists of the implementation of state-of-the-art model-free deep reinforcement learning algorithms together with a discussion about the result obtained. We adopted Soft Actor-Critic (SAC), a model-free reinforcement learning algorithm suitable for real-world experiments, to solve the self-driving task, focusing on what could be next steps to make this cutting-edge technology concrete and efficient.
+
+## Repository Structure
+
+### Reports
+
+- [Deep Deterministic Policy Gradient (DDPG)](report_DDPG)
+- [Soft Actor-Critic (SAC)](report_SAC)
+
+### OpenAI Gym Environment
+
+- [gym-cozmo](gym-cozmo)
+
+### Source Code
+
+- DDPG Implementations
+    - [Neural Network](source_code/NN_DDPG_implementation)
+    - [Convolutional Neural Network](source_code/CNN_DDPG_implementation)
+- SAC Implementations
+    - [Convolutional Neural Network](source_code/SAC_implementation)
+- Cozmo Agents Implementations
+    - [SAC](source_code/sac_cozmo)
+
+### Master Thesis
+
+- [Thesis TeX](master_thesis)
+- [Presentation TeX](presentation)
+
+## Contibutions and License
+
+It is possible to fork the project and create your own one following the rules given by the [LICENSE](LICENSE).
+
+If you want to contribute or to request a new features, you can do that via the ISSUE sections.
+
+If you need any help to setup the project or to have information about it, feel free to join us at <a href="https://t.me/PieroMacaluso">`@PieroMacaluso` on Telegram</a> and ask away.
+
+## References
   
-## Video Lectures
+### Video Lectures
+
 **[v1]** [David Silver's Reinforcement Learning Course](http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html)
 
 **[v2]** [Reinforcement Learning Udacity Course](https://classroom.udacity.com/courses/ud600)
 
-## Books
+### Books
+
 **[b1]** [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/RLbook2018.pdf) (2018) by Richard S. Sutton and Andrew G. Barto
 
 **[b2]** [Deep Reinforcement Learning Hands-On](https://www.packtpub.com/big-data-and-business-intelligence/deep-reinforcement-learning-hands) (2018) by Maxim Lapan
 
-## Papers
+### Papers
+
 **[p1]** [Learning to Drive in a Day](https://arxiv.org/pdf/1807.00412.pdf) (Sep 2018) by Alex Kendall, Jeffrey Hawke, David Janz, Przemyslaw Mazur, Daniele Reda, John-Mark Allen, Vinh-Dieu Lam, Alex Bewley & Amar Shah
 
 **[p2]** [Continuous Control with Deep Reinforcement Learning](https://arxiv.org/pdf/1509.02971.pdf) (Feb 2016) by Timothy P. Lillicrap, Jonathan J. Hunt, Alexander Pritzel, Nicolas Heess, Tom Erez, Yuval Tassa, David Silver & Daan Wierstra
@@ -80,9 +123,6 @@ The project was developed at Eurecom (Biot, France) with prof. Pietro Michiardi 
 
 **[p5]** [Soft Actor-Critic Algorithms and Applications](http://proceedings.mlr.press/v32/silver14.pdf) (2018) Tuomas Haarnoja, Aurick Zhou, Kristian Hartikainen, George Tucker, Sehoon Ha, Jie Tan, Vikash Kumar, Henry Zhu, Abhishek Gupta, Pieter Abbeel, Sergey Levine
 
+### Repositories
 
-
-
-
-## Repositories
 - [Exercises about Silver's videolectures](https://github.com/dennybritz/reinforcement-learning)
