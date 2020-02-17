@@ -24,10 +24,12 @@
   - [Supervisors](#supervisors)
 - [Abstract](#abstract)
 - [Repository Structure](#repository-structure)
-  - [Reports](#reports)
-  - [OpenAI Gym Environment](#openai-gym-environment)
-  - [Source Code](#source-code)
   - [Master Thesis](#master-thesis)
+  - [Source Code](#source-code)
+    - [OpenAI Gym Environment](#openai-gym-environment)
+    - [Pendulum-v0 Implementations](#pendulum-v0-implementations)
+    - [CozmoDriver-v0 Implementations](#cozmodriver-v0-implementations)
+  - [Reports](#reports)
 - [Contibutions and License](#contibutions-and-license)
 - [References](#references)
   - [Video Lectures](#video-lectures)
@@ -65,29 +67,33 @@ To develop our considerations in following the last mentioned approach, we desig
 
 ## Repository Structure
 
-### Reports
-
-- [Deep Deterministic Policy Gradient (DDPG)](report_DDPG)
-- [Soft Actor-Critic (SAC)](report_SAC)
-
-### OpenAI Gym Environment
-
-- [gym-cozmo](gym-cozmo)
-
-### Source Code
-
-- DDPG Implementations
-    - [Neural Network](source_code/NN_DDPG_implementation)
-    - [Convolutional Neural Network](source_code/CNN_DDPG_implementation)
-- SAC Implementations
-    - [Convolutional Neural Network](source_code/SAC_implementation)
-- Cozmo Agents Implementations
-    - [SAC](source_code/sac_cozmo)
-
 ### Master Thesis
 
 - [Thesis TeX](master_thesis)
 - [Presentation TeX](presentation)
+
+### Source Code
+
+#### OpenAI Gym Environment
+
+- [Gym-Cozmo](gym-cozmo)
+
+#### Pendulum-v0 Implementations
+
+- [DDPG NN](source_code/NN_DDPG_implementation)
+- [DDPG CNN](source_code/CNN_DDPG_implementation)
+- [SAC CNN](source_code/SAC_implementation)
+
+#### CozmoDriver-v0 Implementations
+
+- [DDPG](source_code/ddpg_cozmo)
+- [SAC](source_code/sac_cozmo)
+
+### Reports
+
+- April 2019: Deep Deterministic Policy Gradient (DDPG) - [REPORT](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/reports/report_DDPG/report_DDPG.pdf)
+- May 2019: Soft Actor-Critic (SAC) - [REPORT](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/reports/report_SAC/report_SAC.pdf)
+- September 2019: Experiment Flow - [REPORT](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/reports/report_09092019/report_09092019.pdf)
 
 ## Contibutions and License
 
