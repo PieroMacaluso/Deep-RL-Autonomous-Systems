@@ -1,4 +1,5 @@
 import numpy as np
+from gym import spaces
 
 
 class OUNoise(object):
@@ -9,10 +10,10 @@ class OUNoise(object):
     where theta, mu and sigma are hyper-parameters.
     """
     
-    def __init__(self, action_space, mu=0.0, sigma=0.3, theta=0.15):
+    def __init__(self, action_space, mu=0.0, sigma=0.2, theta=0.15):
         """
         Constructor of the OU Noise
-        
+
         :param action_space: action_ space of Gym Env
         :param mu: mu hyperparameter
         :param theta: theta hyperparameter
@@ -43,7 +44,7 @@ class OUNoise(object):
         x = self.state
         dx = self.theta * (self.mu - x) + self.sigma * np.random.randn(self.action_dim)
         self.state = x + dx
-        return self.state
+        return self.state * 0.5
     
     def get_action(self, action_: np.ndarray, eps: float = 1.0) -> np.ndarray:
         """
@@ -59,19 +60,13 @@ class OUNoise(object):
 
 
 if __name__ == '__main__':
-    import gym
+    action_space = spaces.Box(np.array([0, -1]), np.array([+1, +1]), dtype=np.float32)
     
-    env = gym.make("MountainCarContinuous-v0")
-    ou = OUNoise(env.action_space)
+    ou = OUNoise(action_space)
     states = []
-    values = []
-    env.reset()
-    for i in range(100):
-        action = env.action_space.sample()
-        values.append(action)
-        states.append(ou.get_action(action))
+    for i in range(1000):
+        states.append(ou.evolve_state())
     import matplotlib.pyplot as plt
     
-    plt.plot(values)
     plt.plot(states)
     plt.show()

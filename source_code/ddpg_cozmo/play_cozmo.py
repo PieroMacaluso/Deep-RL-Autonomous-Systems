@@ -42,7 +42,7 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     sigma = 0.3
     theta = 0.15
     
-    # Net and SAC parameters
+    # Net and DDPG parameters
     gamma = 0.99
     tau = 0.005
     lr = 0.0003
@@ -61,7 +61,7 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     updates_per_episode = 250
     target_update = 1
     
-    parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')
+    parser = argparse.ArgumentParser(description='DDPG Implementation with CNN or NN')
     parser.add_argument('--env_name', default=env_name, help='Name of the OpenAI Gym environment to run')
     parser.add_argument('--eps_start', type=float, default=eps_start, help='eps_start')
     parser.add_argument('--eps_end', type=float, default=eps_end, help='eps_end')
@@ -100,7 +100,7 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
         folder_ = args.restore
         restore = True
     else:
-        folder_ = './runs/{}_SAC_CozmoDriver-v0/'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+        folder_ = './runs/{}_DDPG_CozmoDriver-v0/'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
         restore = False
         os.mkdir(folder_)
     logger_ = Log(folder_)

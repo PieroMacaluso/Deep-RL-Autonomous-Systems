@@ -1,3 +1,25 @@
+# Experiments Ignored
+__pycache__/
+checkpoint
+checkpoints
+models
+runs
+pendulum-p-range
+pendulum-r-range
+prioritized-100
+prioritized-100-acrobot
+prioritized-100-mountain
+prioritized-100-pendulum
+prova
+replay-100
+replay-100-check
+replay-100-mountain
+replay-100-pendulum
+replay-100-pendulum-300
+replay-100-pendulum-300-back
+svg_plots
+utils
+walker
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 

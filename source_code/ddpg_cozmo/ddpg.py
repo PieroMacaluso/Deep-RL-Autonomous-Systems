@@ -21,7 +21,7 @@ from utils import soft_update, hard_update
 
 class DDPG(object):
     """
-    This is the class of SAC Cozmo. It can be used as a starting draft to build your own implementation of SAC on Cozmo.
+    This is the class of DDPG Cozmo. It can be used as a starting draft to build your own implementation of DDPG on Cozmo.
     The main function to modify as desire is the `train` one.
     """
     
@@ -117,12 +117,12 @@ class DDPG(object):
         :return: Array with the action proposed by the policy network
         :rtype: np.array
         """
-
+        
         state = torch.FloatTensor(state).to(self.device).unsqueeze(0)
         action = self.actor_net.sample(state)
         action = action.detach().cpu().numpy()
         action = action[0]
-
+        
         # The next 3 lines of code are used to
         mod = (self.env.action_space.high - self.env.action_space.low) / 2
         tra = (self.env.action_space.high + self.env.action_space.low) / 2
@@ -132,6 +132,7 @@ class DDPG(object):
             action = self.noise.get_action(action, self.eps)
         else:
             action = self.noise.get_action(action, 0.0)
+        
         assert not np.isnan(action).all()
         return action
     
@@ -195,7 +196,7 @@ class DDPG(object):
         start_episode_steps = 0
         start_timing = 0
         start_total_timing = 0
-
+        
         # Restore Phase
         if restore:
             # TODO: Not tested deeply yet
@@ -219,7 +220,7 @@ class DDPG(object):
             # Break the loop if the phase "Save'n'Close" is triggered
             if self.env.is_save_and_close():
                 break
-                
+            
             self.logger.important(f"START TRAINING RUN {i_run}")
             
             # Set Seed for repeatability
@@ -262,7 +263,7 @@ class DDPG(object):
                 # Wait for the human to leave the command
                 while self.env.is_human_controlled():
                     pass
-
+                
                 # Let's forget (if it is the case)
                 if self.env.is_forget_enabled():
                     # print('forget')
@@ -285,9 +286,9 @@ class DDPG(object):
                             writer_train.add_image('episode_{}'
                                                    .format(str(ep_print)), image.unsqueeze(0),
                                                    i)
-    
+                    
                     if len(memory) > self.min_replay_size and ep_print > self.warm_up_episodes:
-                        updates = self.learning_phase((last_episode_steps // 10) * 10 + 10, memory, updates,
+                        updates = self.learning_phase(self.updates_per_episode, memory, updates,
                                                       writer_learn)
                     self.print_nets(writer_train, ep_print)
                     rewards.append(episode_reward)
@@ -297,7 +298,8 @@ class DDPG(object):
                     else:
                         last_100 = rewards[-100:]
                         running_episode_reward_100 = np.array(last_100).mean()
-    
+                    
+                    writer_train.add_scalar('hp/epsilon', self.eps, ep_print)
                     writer_train.add_scalar('reward/train', episode_reward, ep_print)
                     writer_train.add_scalar('reward/steps', last_episode_steps, ep_print)
                     writer_train.add_scalar('reward/running_mean', running_episode_reward, ep_print)
@@ -306,11 +308,11 @@ class DDPG(object):
                                      .format(ep_print, self.num_episode, episode_steps, round(episode_reward, 2),
                                              round(running_episode_reward_100, 2), round(timing, 2),
                                              str(datetime.timedelta(seconds=total_timing))))
-
+                
                 # Security Wall, useful for longer training Phase
                 while self.env.is_human_controlled():
                     pass
-
+                
                 # Let's test (if it is the case)
                 if i_episode % self.eval_every == 0 and self.eval and i_episode != 0 and not restore:
                     # print('test')
@@ -318,7 +320,7 @@ class DDPG(object):
                     # Wait for the human to leave the command
                     while self.env.is_human_controlled():
                         pass
-
+                
                 # TODO: HP Checkpoint and check correctness of checkpoint restoring
                 if i_episode % self.eval_every == 0 and i_episode != 0 and not restore:
                     self.logger.important("Saving context...")
@@ -355,36 +357,39 @@ class DDPG(object):
                 done = False
                 info = {'undo': False}
                 state = self.env.reset()
+                self.noise.reset()
                 state_buffer = None
                 
                 # If you use CNNs, the use of StateBuffer is enabled (see doc).
                 if self.pics:
                     state_buffer = StateBuffer(self.state_buffer_size, state)
                     state = state_buffer.get_state()
+                    episode_images = list()
+
                 updates_episode = 0
                 
                 # Start of the episode
                 while not done:
                     if self.pics:
                         episode_images.append(state_buffer.get_tensor()[0])
-    
+                    
                     if i_episode < self.warm_up_episodes or len(memory) < self.min_replay_size:
                         # Warm_up phase -> Completely random choice of an action
                         action = self.env.action_space.sample()
                     else:
                         # Training phase -> Action sampled from policy
                         action = self.select_action(state, i_episode)
-
+                    
                     assert action.shape == self.env.action_space.shape
                     assert action is not None
                     writer_train.add_histogram('action_speed/episode_{}'
                                                .format(str(i_episode)), torch.tensor(action[0]), episode_steps)
                     writer_train.add_histogram('action_turn/episode_{}'
                                                .format(str(i_episode)), torch.tensor(action[1]), episode_steps)
-
+                    
                     # Make the action
                     next_state, reward, done, info = self.env.step(action)
-
+                    
                     # Save the step
                     if self.pics:
                         state_buffer.push(next_state)
@@ -393,7 +398,7 @@ class DDPG(object):
                     total_numsteps += 1
                     episode_reward += reward
                     mask = 1 if done else float(not done)
-
+                    
                     # Push the transition in the memory only if n steps is greater than 5
                     # print('push')
                     if episode_steps > 5:
@@ -414,11 +419,11 @@ class DDPG(object):
         done = False
         while not done:
             state = state_buffer.get_state()
-            action = self.select_action(state, eval=True)
-        
+            action = self.select_action(state, 0, eval=True)
+            
             next_state, reward, done, _ = self.env.step(action)
             episode_reward += reward
-        
+            
             state_buffer.push(next_state)
         return episode_reward
     
@@ -432,13 +437,13 @@ class DDPG(object):
         critic_path = model_f + f"ddpg_critic_{env_name}_episode{i_episode}"
         torch.save(self.actor_net.state_dict(), actor_path)
         torch.save(self.critic_net.state_dict(), critic_path)
-
+    
     # Load model parameters
     def load_model_to_play(self, env_name, folder, i_run, i_episode, suffix=""):
         model_f = folder + f'run_{i_run}/' + 'models/' + f"episode_{i_episode}/"
         if not os.path.exists(model_f):
             os.makedirs(model_f)
-    
+        
         actor_path = model_f + f"ddpg_actor_{env_name}_episode{i_episode}"
         critic_path = model_f + f"ddpg_critic_{env_name}_episode{i_episode}"
         self.load_model(actor_path, critic_path)
@@ -486,7 +491,7 @@ class DDPG(object):
         ts = time.time()
         rewards = []
         while n_tests < self.eval_episode:
-        
+            
             episode_reward = self.do_one_test()
             while self.env.is_human_controlled():
                 pass
@@ -496,13 +501,13 @@ class DDPG(object):
             else:
                 rewards.append(episode_reward)
                 n_tests += 1
-    
+        
         rewards = np.array(rewards)
         writer_test.add_scalar('test/average_reward', rewards.mean(), i_episode)
         writer_test.add_scalar('test/max_reward', rewards.max(), i_episode)
         writer_test.add_scalar('test/min_reward', rewards.min(), i_episode)
         writer_test.add_scalar('test/stdev_reward', rewards.std(), i_episode)
-    
+        
         self.logger.info("----------------------------------------")
         self.logger.info("Test {} ep.: {}, m_r: {}, max: {}, min: {}, std: {} time_spent {}s"
                          .format(self.eval_episode,
@@ -535,17 +540,17 @@ class DDPG(object):
     def print_nets(self, writer_train: SummaryWriter, ep_print: int):
         for k, v in self.actor_net.state_dict().items():
             # print(k)
-            if (k.endswith('bias') or k.endswith('weight')) and (k.startswith('conv') or k.startswith('conv')):
+            if k.endswith('bias') or k.endswith('weight'):
                 writer_train.add_histogram('policy/' + k, v, global_step=ep_print)
         for k, v in self.target_policy_net.state_dict().items():
             # print(k)
-            if (k.endswith('bias') or k.endswith('weight')) and (k.startswith('conv') or k.startswith('conv')):
+            if k.endswith('bias') or k.endswith('weight'):
                 writer_train.add_histogram('policy/' + k, v, global_step=ep_print)
         for k, v in self.critic_net.state_dict().items():
-            if (k.endswith('bias') or k.endswith('weight')) and (k.startswith('conv') or k.startswith('conv')):
+            if k.endswith('bias') or k.endswith('weight'):
                 writer_train.add_histogram('critic/' + k, v, global_step=ep_print)
         for k, v in self.target_value_net.state_dict().items():
-            if (k.endswith('bias') or k.endswith('weight')) and (k.startswith('conv') or k.startswith('conv')):
+            if k.endswith('bias') or k.endswith('weight'):
                 writer_train.add_histogram('critic_target/' + k, v, global_step=ep_print)
         
         pass

@@ -2,121 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ef743253-c2f3-4766-bec0-c81d9e126177" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../CNN_DDPG_implementation/.idea/CNN_DDPG_implementation.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SAC_implementation/.idea/SAC_implementation.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/ddpg_cozmo.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/rSettings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CNN.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NN.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OUNoise.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ddpg.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/image_wrapper.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model_complex.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/my_logging.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/normalized_actions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/play_cozmo.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/replay_memory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-45-08_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-45-08_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-00_SAC_CozmoDriver-v0/backup/ddpg_actor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-00_SAC_CozmoDriver-v0/backup/ddpg_actor_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-00_SAC_CozmoDriver-v0/backup/ddpg_critic" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-00_SAC_CozmoDriver-v0/backup/ddpg_critic_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-00_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-00_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-00_SAC_CozmoDriver-v0/run_0/learn/events.out.tfevents.1568702767.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-00_SAC_CozmoDriver-v0/run_0/test/events.out.tfevents.1568702767.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-00_SAC_CozmoDriver-v0/run_0/train/events.out.tfevents.1568702767.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-38_SAC_CozmoDriver-v0/backup/ddpg_actor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-38_SAC_CozmoDriver-v0/backup/ddpg_actor_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-38_SAC_CozmoDriver-v0/backup/ddpg_critic" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-38_SAC_CozmoDriver-v0/backup/ddpg_critic_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-38_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-38_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-38_SAC_CozmoDriver-v0/run_0/learn/events.out.tfevents.1568702804.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-38_SAC_CozmoDriver-v0/run_0/test/events.out.tfevents.1568702804.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-46-38_SAC_CozmoDriver-v0/run_0/train/events.out.tfevents.1568702804.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-48-07_SAC_CozmoDriver-v0/backup/ddpg_actor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-48-07_SAC_CozmoDriver-v0/backup/ddpg_actor_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-48-07_SAC_CozmoDriver-v0/backup/ddpg_critic" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-48-07_SAC_CozmoDriver-v0/backup/ddpg_critic_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-48-07_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-48-07_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-48-07_SAC_CozmoDriver-v0/run_0/learn/events.out.tfevents.1568702892.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-48-07_SAC_CozmoDriver-v0/run_0/test/events.out.tfevents.1568702892.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-48-07_SAC_CozmoDriver-v0/run_0/train/events.out.tfevents.1568702892.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-11_SAC_CozmoDriver-v0/backup/ddpg_actor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-11_SAC_CozmoDriver-v0/backup/ddpg_actor_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-11_SAC_CozmoDriver-v0/backup/ddpg_critic" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-11_SAC_CozmoDriver-v0/backup/ddpg_critic_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-11_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-11_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-11_SAC_CozmoDriver-v0/run_0/learn/events.out.tfevents.1568702955.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-11_SAC_CozmoDriver-v0/run_0/test/events.out.tfevents.1568702955.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-11_SAC_CozmoDriver-v0/run_0/train/events.out.tfevents.1568702955.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-39_SAC_CozmoDriver-v0/backup/ddpg_actor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-39_SAC_CozmoDriver-v0/backup/ddpg_actor_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-39_SAC_CozmoDriver-v0/backup/ddpg_critic" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-39_SAC_CozmoDriver-v0/backup/ddpg_critic_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-39_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-39_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-39_SAC_CozmoDriver-v0/run_0/learn/events.out.tfevents.1568702983.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-39_SAC_CozmoDriver-v0/run_0/test/events.out.tfevents.1568702983.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-49-39_SAC_CozmoDriver-v0/run_0/train/events.out.tfevents.1568702983.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-57-04_SAC_CozmoDriver-v0/backup/ddpg_actor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-57-04_SAC_CozmoDriver-v0/backup/ddpg_actor_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-57-04_SAC_CozmoDriver-v0/backup/ddpg_critic" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-57-04_SAC_CozmoDriver-v0/backup/ddpg_critic_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-57-04_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-57-04_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-57-04_SAC_CozmoDriver-v0/run_0/learn/events.out.tfevents.1568703428.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-57-04_SAC_CozmoDriver-v0/run_0/test/events.out.tfevents.1568703428.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_08-57-04_SAC_CozmoDriver-v0/run_0/train/events.out.tfevents.1568703428.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-01-03_SAC_CozmoDriver-v0/backup/ddpg_actor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-01-03_SAC_CozmoDriver-v0/backup/ddpg_actor_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-01-03_SAC_CozmoDriver-v0/backup/ddpg_critic" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-01-03_SAC_CozmoDriver-v0/backup/ddpg_critic_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-01-03_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-01-03_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-01-03_SAC_CozmoDriver-v0/run_0/learn/events.out.tfevents.1568703667.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-01-03_SAC_CozmoDriver-v0/run_0/test/events.out.tfevents.1568703667.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-01-03_SAC_CozmoDriver-v0/run_0/train/events.out.tfevents.1568703666.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-02-00_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-02-00_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-04-26_SAC_CozmoDriver-v0/backup/ddpg_actor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-04-26_SAC_CozmoDriver-v0/backup/ddpg_actor_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-04-26_SAC_CozmoDriver-v0/backup/ddpg_critic" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-04-26_SAC_CozmoDriver-v0/backup/ddpg_critic_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-04-26_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-04-26_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-04-26_SAC_CozmoDriver-v0/run_0/learn/events.out.tfevents.1568703876.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-04-26_SAC_CozmoDriver-v0/run_0/test/events.out.tfevents.1568703876.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-04-26_SAC_CozmoDriver-v0/run_0/train/events.out.tfevents.1568703876.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-06-25_SAC_CozmoDriver-v0/backup/ddpg_actor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-06-25_SAC_CozmoDriver-v0/backup/ddpg_actor_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-06-25_SAC_CozmoDriver-v0/backup/ddpg_critic" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-06-25_SAC_CozmoDriver-v0/backup/ddpg_critic_t" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-06-25_SAC_CozmoDriver-v0/hp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-06-25_SAC_CozmoDriver-v0/logfile.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-06-25_SAC_CozmoDriver-v0/run_0/learn/events.out.tfevents.1568703989.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-06-25_SAC_CozmoDriver-v0/run_0/test/events.out.tfevents.1568703989.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runs/2019-09-17_09-06-25_SAC_CozmoDriver-v0/run_0/train/events.out.tfevents.1568703988.warthog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/state_buffer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sac_cozmo/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../sac_cozmo/.idea/rSettings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/CNN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OUNoise.py" beforeDir="false" afterPath="$PROJECT_DIR$/OUNoise.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ddpg.py" beforeDir="false" afterPath="$PROJECT_DIR$/ddpg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/play_cozmo.py" beforeDir="false" afterPath="$PROJECT_DIR$/play_cozmo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../sac_cozmo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../sac_cozmo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../sac_cozmo/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../sac_cozmo/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../sac_cozmo/sac.py" beforeDir="false" afterPath="$PROJECT_DIR$/../sac_cozmo/sac.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,14 +35,39 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="add_unversioned_files" value="$PROJECT_DIR$/runs/2020-01-30_17-15-07_DDPG_CozmoDriver-v0/memory.pkl" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/runs" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/runs" />
+      <recent name="$PROJECT_DIR$/runs/2020-01-30_17-08-15_DDPG_CozmoDriver-v0" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.mock">
+  <component name="RunManager" selected="Python.main">
+    <configuration name="OUNoise" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ddpg_cozmo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/OUNoise.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="ddpg_cozmo" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -195,10 +112,39 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="restore" type="PythonConfigurationType" factoryName="Python">
+      <module name="ddpg_cozmo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/virtualenv/cozmo-env/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="--cuda --pics --restore ./runs/2020-01-30_17-15-07_DDPG_CozmoDriver-v0/" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.main" />
+      <item itemvalue="Python.restore" />
       <item itemvalue="Python.mock" />
+      <item itemvalue="Python.OUNoise" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.OUNoise" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -222,38 +168,102 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1580304627321</updated>
-      <workItem from="1580304629138" duration="3956000" />
+      <workItem from="1580304629138" duration="10113000" />
+      <workItem from="1580379792472" duration="13789000" />
+      <workItem from="1580406631837" duration="3972000" />
     </task>
+    <task id="LOCAL-00001" summary="[DDPG] Added DDPG Code for Cozmo and other improvements in SAC">
+      <created>1580313454293</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1580313454293</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[DDPG] Added DDPG Code for Cozmo and other improvements in SAC" />
+    <option name="LAST_COMMIT_MESSAGE" value="[DDPG] Added DDPG Code for Cozmo and other improvements in SAC" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="2756" y="198" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1580312919247">
+    <state x="2377" y="170" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1580407376794">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2756" y="198" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580312919247" />
+    <state x="2377" y="170" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580407376794" />
+    <state x="495" y="189" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580381746339" />
+    <state x="2280" y="136" width="1239" height="805" key="CommitChangelistDialog2" timestamp="1580313449546">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2280" y="136" width="1239" height="805" key="CommitChangelistDialog2/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580313449546" />
     <state x="3081" y="298" width="424" height="482" key="FileChooserDialogImpl" timestamp="1580306748712">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="3081" y="298" width="424" height="482" key="FileChooserDialogImpl/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580306748712" />
-    <state width="1824" height="261" key="GridCell.Tab.0.bottom" timestamp="1580313013475">
+    <state width="1824" height="258" key="GridCell.Tab.0.bottom" timestamp="1580417704491">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1824" height="261" key="GridCell.Tab.0.bottom/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580313013475" />
-    <state width="1824" height="261" key="GridCell.Tab.0.center" timestamp="1580313013475">
+    <state width="1824" height="258" key="GridCell.Tab.0.bottom/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580417704491" />
+    <state width="912" height="276" key="GridCell.Tab.0.bottom/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580401527770" />
+    <state width="1824" height="258" key="GridCell.Tab.0.center" timestamp="1580417704491">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1824" height="261" key="GridCell.Tab.0.center/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580313013475" />
-    <state width="1824" height="261" key="GridCell.Tab.0.left" timestamp="1580313013475">
+    <state width="1824" height="258" key="GridCell.Tab.0.center/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580417704491" />
+    <state width="912" height="276" key="GridCell.Tab.0.center/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580401527770" />
+    <state width="1824" height="258" key="GridCell.Tab.0.left" timestamp="1580417704491">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1824" height="261" key="GridCell.Tab.0.left/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580313013475" />
-    <state width="1824" height="261" key="GridCell.Tab.0.right" timestamp="1580313013475">
+    <state width="1824" height="258" key="GridCell.Tab.0.left/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580417704491" />
+    <state width="912" height="276" key="GridCell.Tab.0.left/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580401527770" />
+    <state width="1824" height="258" key="GridCell.Tab.0.right" timestamp="1580417704491">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1824" height="261" key="GridCell.Tab.0.right/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580313013475" />
+    <state width="1824" height="258" key="GridCell.Tab.0.right/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580417704491" />
+    <state width="912" height="276" key="GridCell.Tab.0.right/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580401527770" />
+    <state width="1824" height="323" key="GridCell.Tab.1.bottom" timestamp="1580417704488">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1824" height="323" key="GridCell.Tab.1.bottom/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580417704488" />
+    <state width="1824" height="323" key="GridCell.Tab.1.bottom/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580343904891" />
+    <state width="1824" height="323" key="GridCell.Tab.1.center" timestamp="1580417704487">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1824" height="323" key="GridCell.Tab.1.center/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580417704487" />
+    <state width="1824" height="323" key="GridCell.Tab.1.center/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580343904891" />
+    <state width="1824" height="323" key="GridCell.Tab.1.left" timestamp="1580417704487">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1824" height="323" key="GridCell.Tab.1.left/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580417704487" />
+    <state width="1824" height="323" key="GridCell.Tab.1.left/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580343904891" />
+    <state width="1824" height="323" key="GridCell.Tab.1.right" timestamp="1580417704487">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1824" height="323" key="GridCell.Tab.1.right/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580417704487" />
+    <state width="1824" height="323" key="GridCell.Tab.1.right/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580343904891" />
+    <state x="2070" y="127" width="735" height="826" key="VCS.FileHistoryDialog" timestamp="1580405775709">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2070" y="127" width="735" height="826" key="VCS.FileHistoryDialog/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580405775708" />
+    <state x="2500" y="276" width="800" height="526" key="Vcs.Push.Dialog.v2" timestamp="1580313460974">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2500" y="276" width="800" height="526" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580313460974" />
+    <state width="935" height="513" key="XDebugger.FullValuePopup" timestamp="1580407240237">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="935" height="513" key="XDebugger.FullValuePopup/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580407240237" />
+    <state x="2527" y="358" key="com.intellij.ide.util.TipDialog" timestamp="1580406630919">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2527" y="358" key="com.intellij.ide.util.TipDialog/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580406630919" />
+    <state x="641" y="367" key="com.intellij.ide.util.TipDialog/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1580380040910" />
+    <state x="2551" y="144" width="866" height="792" key="find.popup" timestamp="1580380230399">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2551" y="144" width="866" height="792" key="find.popup/1920.0.1920.1080/50.27.1870.1026@1920.0.1920.1080" timestamp="1580380230399" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -262,10 +272,28 @@
           <url>file://$PROJECT_DIR$/play_cozmo.py</url>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ddpg.py</url>
+          <line>474</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ddpg.py</url>
+          <line>540</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="self.actor_net.state_dict().items()" language="Python" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ddpg_cozmo$mock.coverage" NAME="mock Coverage Results" MODIFIED="1580313013465" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ddpg_cozmo$restore.coverage" NAME="restore Coverage Results" MODIFIED="1580407428034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ddpg_cozmo$OUNoise.coverage" NAME="OUNoise Coverage Results" MODIFIED="1580398524762" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ddpg_cozmo$mock.coverage" NAME="mock Coverage Results" MODIFIED="1580318579675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ddpg_cozmo$main.coverage" NAME="main Coverage Results" MODIFIED="1580407451795" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

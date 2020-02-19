@@ -1,5 +1,10 @@
+# Experiments Ignored
+__pycache__/
+checkpoint
+checkpoints
+models
 runs
-
+*.pkl
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
 # Byte-compiled / optimized / DLL files

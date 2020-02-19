@@ -40,10 +40,10 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     
     # Noise
     mu = 0.0
-    sigma = 0.3
+    sigma = 0.2
     theta = 0.15
     
-    # Net and SAC parameters
+    # Net and DDPG parameters
     gamma = 0.99
     tau = 0.005
     lr = 0.0003
@@ -62,7 +62,7 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
     updates_per_episode = 250
     target_update = 1
     
-    parser = argparse.ArgumentParser(description='SAC Implementation with CNN or NN')
+    parser = argparse.ArgumentParser(description='DDPG Implementation with CNN or NN')
     parser.add_argument('--env_name', default=env_name, help='Name of the OpenAI Gym environment to run')
     parser.add_argument('--eps_start', type=float, default=eps_start, help='eps_start')
     parser.add_argument('--eps_end', type=float, default=eps_end, help='eps_end')
@@ -101,7 +101,7 @@ def initial_setup() -> (argparse.Namespace, str, Log, bool):
         folder_ = args.restore
         restore = True
     else:
-        folder_ = './runs/{}_SAC_CozmoDriver-v0/'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+        folder_ = './runs/{}_DDPG_CozmoDriver-v0/'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
         restore = False
         os.mkdir(folder_)
     logger_ = Log(folder_)
@@ -184,9 +184,9 @@ def run(sdk_conn: cozmo.conn):
     
     # Setting up Hyper-Parameters
     args, folder, logger, restore = initial_setup()
-    if not debug:
-        tb_tool = TensorBoardTool(folder)
-        tb_tool.run()
+    # if not debug:
+    #     tb_tool = TensorBoardTool(folder)
+    #     tb_tool.run()
     logger.debug("Initial setup completed.")
     
     # Create JSON of Hyper-Parameters for reproducibility
