@@ -69,8 +69,9 @@ To develop our considerations in following the last mentioned approach, we desig
 
 ### Master Thesis
 
-- [Thesis TeX](master_thesis)
-- [Presentation TeX](presentation)
+- Master Thesis: [LaTeX](master_thesis) | [PDF](master_thesis/master_thesis.pdf)
+- Summary [LaTex](summary) | [PDF](summary/summary.pdf)
+- Presentation: [LaTex](presentation) | [PDF](presentation/presentation.pdf)
 
 ### Source Code
 
