@@ -28,21 +28,21 @@
 \title{Deep Reinforcement Learning for Autonomous Systems}
 
 \author{Piero Macaluso - s252894\\
-Candidate\\
-Politecnico di Torino\\
-% For a paper whose authors are all at the same institution,
-% omit the following lines up until the closing ``}''.
-% Additional authors and addresses can be added with ``\and'',
-% just like the second author.
-% To save space, use either the email address or home page, not both
-\and
-Prof. Pietro Michiardi\\
-Supervisor\\
-EURECOM\\
-\and
-Prof. Elena Baralis\\
-Supervisor\\
-Politecnico di Torino\\
+    Candidate\\
+    Politecnico di Torino\\
+    % For a paper whose authors are all at the same institution,
+    % omit the following lines up until the closing ``}''.
+    % Additional authors and addresses can be added with ``\and'',
+    % just like the second author.
+    % To save space, use either the email address or home page, not both
+    \and
+    Prof. Pietro Michiardi\\
+    Supervisor\\
+    EURECOM\\
+    \and
+    Prof. Elena Baralis\\
+    Supervisor\\
+    Politecnico di Torino\\
 }
 
 \maketitle
@@ -64,24 +64,49 @@ Politecnico di Torino\\
 \section{Introduction}
 
 Because of its potential to thoroughly change mobility and transport, autonomous systems and self-driving vehicles are attracting much attention from both the research community and industry.
-Recent work has demonstrated that it is possible to rely on a comprehensive understanding of the immediate environment while following simple high-level directions, to obtain a more scalable approach that can revolutionise autonomous driving by making it a ubiquitous technology.
-However, to date, the majority of the methods concentrate on deterministic control optimisation algorithms to select the right action, while the usage of deep learning and machine learning is entirely dedicated to object detection and recognition.
+Recent work has demonstrated that it is possible to rely on a comprehensive understanding of the immediate environment while following simple high-level directions, to obtain a more scalable approach that can make autonomous driving a ubiquitous technology.
+However, to date, the majority of the methods concentrates on deterministic control optimisation algorithms to select the right action, while the usage of deep learning and machine learning is entirely dedicated to object detection and recognition.
 
-Recently, we have witnessed a remarkable increase in interest in Reinforcement Learning (RL).
-It is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to act in an environment by mapping situations and actions, trying to maximise some reward function.
-It learns to make decisions according to the information it gathers from the surrounding environment and from the reward it receives.
-As researchers discovered, it can be surprisingly useful to solve tasks in simulated environments like games and computer games, and it showed encouraging performance in tasks with robotic manipulators.
-Furthermore, the great fervour produced by the widespread exploitation of deep learning opened the doors to function approximation with convolutional neural networks, developing what is nowadays known as deep reinforcement learning.
+Recently, we have witnessed a remarkable increase in interest in Reinforcement Learning (RL). It is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to act in an environment by mapping situations and actions, trying to maximise some reward function. It learns to make decisions according to the information it gathers from the surrounding environment and from the reward it receives.
+As researchers discovered, it can be surprisingly useful to solve tasks in simulated environments like games and computer games, and it showed encouraging performance in tasks with robotic manipulators. Furthermore, the great fervour produced by the widespread exploitation of deep learning opened the doors to function approximation with convolutional neural networks, developing what is nowadays known as deep reinforcement learning.
 
 \subsection{Objective}
+
 In this Thesis, we argue that the generality of reinforcement learning makes it a useful framework where to apply autonomous driving to inject artificial intelligence not only in the detection component but also in the decision-making one.
 The focus of the majority of reinforcement learning projects is on a simulated environment. However, a more challenging approach of reinforcement learning consists of the application of this type of algorithms in the real world.
-For this reason, we designed and implemented a control system for Cozmo, a small toy robot developed by Anki company, by exploiting the Cozmo SDK and OpenAI Gym to build up a standardised environment in which to apply any reinforcement learning algorithm. This implementation represents the first contribution of our thesis. The second contribution of our work consists of the implementation of Soft Actor-Critic (SAC), a model-free reinforcement learning algorithm suitable for real-world experiments, to solve the self-driving task. The maximum value reached in the testing phase by the agent is beyond 3 metres with a mean of almost 1 metre. However, because of the instability of the results obtained, we focused on strength and weaknesses of this approach outlining what could be next steps to make this cutting-edge technology concrete and efficient.
+For this reason, we designed and implemented a control system for Cozmo, a small toy robot developed by Anki company, by exploiting the Cozmo SDK and OpenAI Gym to build up a standardised environment in which to apply any reinforcement learning algorithm. This implementation represents the first contribution of our thesis. The second contribution of our work consists of the implementation of Soft Actor-Critic (SAC), a model-free reinforcement learning algorithm suitable for real-world experiments, to solve the self-driving task. During the test phase, the robot reached a maximum of more than 3 meters before the human intervention, succeeding in completing the track. However, the mean value we obtained is about 1 metre over 10 test episodes. Because of the instability of the results obtained, we focused on strength and weaknesses of this approach outlining what could be next steps to make this cutting-edge technology concrete and efficient.
 
 %-------------------------------------------------------------------------
 \section{Design of the control system}
 
+After an initial phase where we studied the state-of-the-art literature about reinforcement learning and analysed the set of possible alternatives about technologies to use, we started the development of the control system, the first contribution of our thesis.
+We based our project on Cozmo, a little toy robot produced by Anki, whose developers offered a granular and fully-featured SDK with many interfaces to allow a direct control of the robot. Our aim was to apply deep reinforcement learning algorithms, so we decided to use PyTorch as deep learning framework and OpenAI Gym as reinforcement learning one.
+
+Our idea was to build up a system where the human could directly teach to the robot how to drive.
+The intention was to give the human the total control on the flow of experiments: he is able to start the episode and to stop it when the robot reaches a pernicious situation, so the human can reposition the robot in the closest safe situation and restart the loop. In this scenario, the human has total responsibility for how the robot is trained: he is the one who decides when an action is dangerous or not.
+
+\begin{figure}[tbp]
+    \centering
+    \includegraphics[width=0.97\columnwidth]{cozmo-system.png}
+    \caption[Outline of the control system]{Outline of the control system that shows the most crucial technologies and component involved.}
+    \label{system}
+\end{figure}
+
+To obtain this configuration, we managed to design a simple and intuitive user interface that prompt the user when he started an experiment. This interface provides a live stream from Cozmo on-board camera and a set of key with the related function. It works through Javascript to communicate to a Flask server that communicates directly to Cozmo SDK and the OpenAI Gym environment we designed to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands). The system we obtained is outlined in figure \ref{system}.
+
+TODO:
+\begin{itemize}
+    \item MDP formalisation
+\end{itemize}
+
 \section{Experiments}
+
+TODO:
+\begin{itemize}
+    \item Experiment Setup
+    \item Cite preliminary experiment
+    \item Showcase and comment about results with Cozmo Driver
+\end{itemize}
 
 \subsection{Experiments with Pendulum-v0}
 
@@ -89,12 +114,18 @@ For this reason, we designed and implemented a control system for Cozmo, a small
 
 \section{Conclusions}
 
+TODO:
+\begin{itemize}
+    \item Conclusion
+    \item Future Work
+\end{itemize}
+
 \subsection{Future Work}
 
 
 {\small
-\bibliographystyle{ieee_fullname}
-\bibliography{egbib}
+    \bibliographystyle{ieee_fullname}
+    \bibliography{egbib}
 }
 
 \end{document}
