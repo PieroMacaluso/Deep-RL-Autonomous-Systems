@@ -2,20 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa7c2d06-eee5-4599-bd6f-df0a15201155" name="Default Changelist" comment="Review of CozmoEnv and adding few comments">
-      <change afterPath="$PROJECT_DIR$/.idea/gym-cozmo.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/rSettings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/PKG-INFO" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/SOURCES.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/dependency_links.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/requires.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gym_cozmo.egg-info/top_level.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gym-cozmo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gym-cozmo.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym_cozmo/envs/cozmo_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/gym_cozmo/envs/cozmo_env.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/CNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/CNN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/OUNoise.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/OUNoise.py" afterDir="false" />
@@ -144,7 +133,7 @@
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.intentionPowerPack" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -371,7 +360,8 @@
       <workItem from="1577125895585" duration="1836000" />
       <workItem from="1577958223137" duration="8000" />
       <workItem from="1581963409496" duration="19000" />
-      <workItem from="1581963444537" duration="444000" />
+      <workItem from="1581963444537" duration="1822000" />
+      <workItem from="1582136122219" duration="117000" />
     </task>
     <task id="LOCAL-00001" summary="Work Advance SAC Report&#10;&#10;- Refactoring notation&#10;- Correction of mistakes">
       <created>1557922892390</created>
@@ -422,7 +412,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581963641645</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="[COZMOENV] Gitignore">
+      <created>1581963960741</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1581963960741</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -472,26 +469,31 @@
     <MESSAGE value="Angle of head of Cozmo modified to avoid warning in output" />
     <MESSAGE value="Change of features in the second layer of CNN to satisfy bettere 64px" />
     <MESSAGE value="[COZMOENV] From local to GIT" />
-    <option name="LAST_COMMIT_MESSAGE" value="[COZMOENV] From local to GIT" />
+    <MESSAGE value="[COZMOENV] Gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COZMOENV] Gitignore" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="641" y="156" width="1147" height="805" key="CommitChangelistDialog2" timestamp="1581963884659">
+    <state x="641" y="156" width="1147" height="805" key="CommitChangelistDialog2" timestamp="1581963960613">
       <screen x="50" y="27" width="1870" height="1026" />
     </state>
-    <state x="641" y="156" width="1147" height="805" key="CommitChangelistDialog2/50.27.1870.1026@50.27.1870.1026" timestamp="1581963884659" />
+    <state x="641" y="156" width="1147" height="805" key="CommitChangelistDialog2/50.27.1870.1026@50.27.1870.1026" timestamp="1581963960613" />
     <state x="826" y="273" width="777" height="572" key="RollbackChangesDialog" timestamp="1581963905210">
       <screen x="50" y="27" width="1870" height="1026" />
     </state>
     <state x="826" y="273" width="777" height="572" key="RollbackChangesDialog/50.27.1870.1026@50.27.1870.1026" timestamp="1581963905210" />
-    <state x="815" y="296" width="800" height="526" key="Vcs.Push.Dialog.v2" timestamp="1581963667319">
+    <state x="474" y="175" key="SettingsEditor" timestamp="1581964196903">
       <screen x="50" y="27" width="1870" height="1026" />
     </state>
-    <state x="815" y="296" width="800" height="526" key="Vcs.Push.Dialog.v2/50.27.1870.1026@50.27.1870.1026" timestamp="1581963667319" />
-    <state x="641" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1581963444451">
+    <state x="474" y="175" key="SettingsEditor/50.27.1870.1026@50.27.1870.1026" timestamp="1581964196903" />
+    <state x="815" y="296" width="800" height="526" key="Vcs.Push.Dialog.v2" timestamp="1581963966971">
+      <screen x="50" y="27" width="1870" height="1026" />
+    </state>
+    <state x="815" y="296" width="800" height="526" key="Vcs.Push.Dialog.v2/50.27.1870.1026@50.27.1870.1026" timestamp="1581963966971" />
+    <state x="641" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1582136121866">
       <screen x="50" y="27" width="1870" height="1026" />
     </state>
     <state x="641" y="347" key="com.intellij.ide.util.TipDialog/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1577125899446" />
-    <state x="641" y="347" key="com.intellij.ide.util.TipDialog/50.27.1870.1026@50.27.1870.1026" timestamp="1581963444451" />
+    <state x="641" y="347" key="com.intellij.ide.util.TipDialog/50.27.1870.1026@50.27.1870.1026" timestamp="1582136121866" />
     <state width="609" height="385" key="javadoc.popup.new" timestamp="1577095543311">
       <screen x="50" y="27" width="1870" height="1026" />
     </state>
@@ -522,7 +524,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/gym_cozmo/envs/cozmo_env.py</url>
-          <line>96</line>
+          <line>149</line>
           <option name="timeStamp" value="102" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
