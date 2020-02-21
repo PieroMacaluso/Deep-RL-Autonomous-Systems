@@ -59,7 +59,7 @@
 %   Look at previous CVPR abstracts to get a feel for style and length.
 %\end{abstract}
 
-\textit{This document represents the summary of my master thesis project. The source code of this work is publicly available at \url{https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems}}
+\textit{This document represents the summary of the master thesis project. The source code of this work is publicly available at \url{https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems}}
 %%%%%%%%% BODY TEXT
 \section{Introduction}
 
@@ -67,7 +67,7 @@ Because of its potential to thoroughly change mobility and transport, autonomous
 Recent work has demonstrated that it is possible to rely on a comprehensive understanding of the immediate environment while following simple high-level directions, to obtain a more scalable approach that can make autonomous driving a ubiquitous technology.
 However, to date, the majority of the methods concentrates on deterministic control optimisation algorithms to select the right action, while the usage of deep learning and machine learning is entirely dedicated to object detection and recognition.
 
-Recently, we have witnessed a remarkable increase in interest in Reinforcement Learning (RL). It is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to act in an environment by mapping situations and actions, trying to maximise some reward function. It learns to make decisions according to the information it gathers from the surrounding environment and from the reward it receives.
+Recently, we have witnessed a remarkable increase in interest in Reinforcement Learning (RL). It is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to make decisions by mapping situations and actions according to the information it gathers from the surrounding environment and from the reward it receives, trying to maximise it.
 As researchers discovered, it can be surprisingly useful to solve tasks in simulated environments like games and computer games, and it showed encouraging performance in tasks with robotic manipulators. Furthermore, the great fervour produced by the widespread exploitation of deep learning opened the doors to function approximation with convolutional neural networks, developing what is nowadays known as deep reinforcement learning.
 
 \subsection{Objective}
@@ -75,24 +75,25 @@ As researchers discovered, it can be surprisingly useful to solve tasks in simul
 In this Thesis, we argue that the generality of reinforcement learning makes it a useful framework where to apply autonomous driving to inject artificial intelligence not only in the detection component but also in the decision-making one.
 The focus of the majority of reinforcement learning projects is on a simulated environment. However, a more challenging approach of reinforcement learning consists of the application of this type of algorithms in the real world.
 
-We started our project from the ideas contained in \cite{kendall2019learning}, where the authors were able to train a self-driving vehicle by using Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous} by tuning hyper-parameters in simulation. We decided to not use simulators in our approach, therefore we researched an algorithm suitable for real-world experiments and capable of work fine without an expensive hyper-parameter tuning needed by DDPG. We found in Soft Actor-Critic (SAC) \cite{haarnoja2018soft} the algorithm we needed.
+After an initial phase where we studied the state-of-the-art literature about reinforcement learning and analysed the set of possible alternatives about technologies to use, we started our project starting from the ideas contained in \cite{kendall2019learning}, where the authors were able to train a self-driving vehicle by using Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous} by tuning hyper-parameters in simulation. We decided to not use simulators in our approach, therefore we researched an algorithm suitable for real-world experiments and capable of work fine without an expensive real-world hyper-parameter tuning. We found in Soft Actor-Critic (SAC) \cite{haarnoja2018soft} the algorithm we needed.
 
 Therefore, our thesis consisted of two main contribution:
-\begin{itemize}
-    \item Design of the Control System to let all components of the environment interact;
-    \item Experiments with SAC algorithm.
-\end{itemize}
+\begin{enumerate}
+    \item Designing of the Control System to let all components and technologies involved interact;
+    \item Setting up the experimental framework with SAC algorithm and carrying out an experiment to analyse strengths and weaknesses.
+\end{enumerate}
 
 % For this reason, we designed and implemented a control system for Cozmo, a small toy robot developed by Anki company, by exploiting the Cozmo SDK and OpenAI Gym to build up a standardised environment in which to apply any reinforcement learning algorithm. This implementation represents the first contribution of our thesis. The second contribution of our work consists of the implementation of Soft Actor-Critic (SAC), a model-free reinforcement learning algorithm suitable for real-world experiments, to solve the self-driving task. During the test phase, the robot reached a maximum of more than 3 meters before the human intervention, succeeding in completing the track. However, the mean value we obtained is about 1 metre over 10 test episodes. Because of the instability of the results obtained, we focused on strength and weaknesses of this approach outlining what could be next steps to make this cutting-edge technology concrete and efficient.
 
 %-------------------------------------------------------------------------
 \section{Design of the control system}
 
-After an initial phase where we studied the state-of-the-art literature about reinforcement learning and analysed the set of possible alternatives about technologies to use, we started the development of the control system, the first contribution of our thesis.
-We based our project on Cozmo, a little toy robot produced by Anki, whose developers offered a granular and fully-featured SDK with many interfaces to allow a direct control of the robot. Our aim was to apply deep reinforcement learning algorithms, so we decided to use PyTorch as deep learning framework and OpenAI Gym as reinforcement learning one.
+We based our project on Cozmo, a little toy robot produced by Anki, whose developers offered a granular and fully-featured Python SDK with many interfaces to allow a direct control of the robot.
+We found it to be suitable for our experimental needs: it mounts a grayscale camera with 60 FOV and has two tracks to steer and drive.
+Our aim was to apply deep reinforcement learning algorithms, so we decided to use PyTorch as deep learning framework and the standardisation approach provided by OpenAI Gym to build up the reinforcement learning environment for the experiment.
 
 Our idea was to build up a system where the human could directly teach to the robot how to drive.
-The intention was to give the human the total control on the flow of experiments: he is able to start the episode and to stop it when the robot reaches a pernicious situation, so the human can reposition the robot in the closest safe situation and restart the loop. In this scenario, the human has total responsibility for how the robot is trained: he is the one who decides when an action is dangerous or not.
+The intention was to give the human the total control on the flow of experiments: he is able to start the episode and to stop it when the robot reaches a pernicious situation, so the human can reposition the robot in the closest safe situation and restart the loop. In this scenario, the human has total responsibility for how the robot is trained: he is the one who decides when an action is dangerous or not by disengaging reinforcement learning algorithms decision.
 
 \begin{figure}[tbp]
     \centering
@@ -101,12 +102,13 @@ The intention was to give the human the total control on the flow of experiments
     \label{system}
 \end{figure}
 
-To obtain this configuration, we managed to design a simple and intuitive user interface that prompt the user when he started an experiment. This interface provides a live stream from Cozmo on-board camera and a set of key with the related function. It works through Javascript to communicate to a Flask server that communicates directly to Cozmo SDK and the OpenAI Gym environment we designed to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands). The system we obtained is outlined in figure \ref{system}.
+To obtain this configuration, we managed to design a simple and intuitive user interface that prompt the user when he started an experiment. This interface provides a live stream from Cozmo on-board camera and a set of key with the related function. It works through Javascript to communicate to a Flask server that communicates directly to Cozmo SDK and the OpenAI Gym environment we designed to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands). We used TensorBoard to gather data for posterior analysis and representations. The system we obtained is outlined in figure \ref{system}.
 
-TODO:
-\begin{itemize}
-    \item MDP formalisation
-\end{itemize}
+In order to start the experiment, we formalised the problem as a MDP obtaining the following setup:
+
+\paragraph{State Space} The representation of the current state consists of two subsequent $64 \times 64$ grayscale images. They represent the situation before and after the action respectively. We opted for resizing the images provided by Cozmo SDK for memory consumption reason due to the large experience replay memory needed for off-policy reinforcement learning algorithms.
+\paragraph{Action Space} The representation of how the robot can interact with the surrouding environment is given by a vector of two real value. The first value represents the desired speed and its range is between 0 and 1, while the second one represent the steering of the vehicle and its range is between -1 and 1. Both values are the result of a simplification useful in the learning phase. In practise, the system designed converts these values to properly interact with the robot.
+\paragraph{Reward Function}
 
 \section{Experiments}
 
