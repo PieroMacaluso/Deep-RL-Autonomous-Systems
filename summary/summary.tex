@@ -108,9 +108,13 @@ In order to start the experiment, we formalised the problem as a MDP obtaining t
 
 \paragraph{State Space} The representation of the current state consists of two subsequent $64 \times 64$ grayscale images. They represent the situation before and after the action respectively. We opted for resizing the images provided by Cozmo SDK for memory consumption reason due to the large experience replay memory needed for off-policy reinforcement learning algorithms.
 \paragraph{Action Space} The representation of how the robot can interact with the surrouding environment is given by a vector of two real value. The first value represents the desired speed and its range is between 0 and 1, while the second one represent the steering of the vehicle and its range is between -1 and 1. Both values are the result of a simplification useful in the learning phase. In practise, the system designed converts these values to properly interact with the robot.
-\paragraph{Reward Function}
+\paragraph{Reward Function} The reward function defines what is the ultimate objective of the task formalised. After an analysis of the literature available, we decided to formalise this function as the total length of track crossed by the robot after each action taken. This decision revealed its simplicity, but also its effectiveness. Furthermore, this choice leads to match reward with length traveled, useful factor to allow the developer to easily quantify the agent improvements and have a better feedback.
 
 \section{Experiments}
+
+The path that led to the final implementation of the algorithm allowed us to detect some specific requirements and to overcome them with appropriate countermeasures.
+We decided to firstly implement a simplified environment to test functionalities and reinforcement learning algorithms we aimed to use in Cozmo environment. We used the inverted pendulum swing-up problem, a classic problem in the control literature and available in OpenAI Gym. 
+The original implementation of this environment consisted of observations with values related to the current angle and speed of the pendulum. For this reason we decided to build a wrapper for the original environment in order to receive observations as raw pixels, since the goal was to apply the same considerations and the same convolutional neural networks that we would use in the Cozmo environment.
 
 TODO:
 \begin{itemize}
