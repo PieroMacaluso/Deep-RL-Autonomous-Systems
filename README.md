@@ -100,6 +100,17 @@ To develop our considerations in following the last mentioned approach, we desig
 
 It is possible to fork the project and create your own one following the rules given by the [LICENSE](LICENSE).
 
+Please cite using the following BibTex entry:
+
+```latex
+@mastersthesis{macaluso2020deep,
+  author  = {Piero Macaluso},
+  title   = {{Deep Reinforcement Learning for Autonomous Systems}},
+  school  = {{Politecnico di Torino}, {Eurecom}}
+  year    = {2020}
+}
+```
+
 If you want to contribute or to request a new features, you can do that via the ISSUE sections.
 
 If you need any help to setup the project or to have information about it, feel free to join us at <a href="https://t.me/PieroMacaluso">`@PieroMacaluso` on Telegram</a> and ask away.
