@@ -79,27 +79,31 @@ As researchers discovered, it can be surprisingly useful to solve tasks in simul
 
 \subsection{Objective}
 
-In this Thesis, we argue that the generality of reinforcement learning makes it a useful framework where to apply autonomous driving to inject artificial intelligence not only in the detection component but also in the decision-making one.
+In this thesis, we argue that the generality of reinforcement learning makes it a useful framework where to apply autonomous driving to inject artificial intelligence not only in the detection component but also in the decision-making one.
 The focus of the majority of reinforcement learning projects is on a simulated environment. However, a more challenging approach of reinforcement learning consists of the application of this type of algorithms in the real world.
 
-After an initial phase where we studied the state-of-the-art literature about reinforcement learning and analysed the set of possible alternatives about technologies to use, we started our project starting from the ideas contained in \cite{kendall2019learning}, where the authors were able to train a self-driving vehicle by using Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous} by tuning hyper-parameters in simulation. We decided to not use simulators in our approach, therefore we researched an algorithm suitable for real-world experiments and capable of work fine without an expensive real-world hyper-parameter tuning. We found in Soft Actor-Critic (SAC) \cite{haarnoja2018soft} the algorithm we needed.
+After an initial phase where we studied the state-of-the-art literature about reinforcement learning and analysed the set of possible alternatives about technologies to use, we started our project starting from the ideas contained in \cite{kendall2019learning}, where the authors were able to train a self-driving vehicle by using Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous} by tuning hyper-parameters in simulation.
+Our approach was different: we researched an algorithm which suitable for real-world experiments and able to operate correctly without an expensive real-world hyper-parameter tuning made in simulators.
+We found in Soft Actor-Critic (SAC) \cite{haarnoja2018soft} the algorithm we needed.
 
-Therefore, our thesis consisted of two main contribution:
+Therefore, our thesis consisted of two main contributions:
 \begin{enumerate}
-    \item Designing of the Control System to let all components and technologies involved interact;
-    \item Setting up the experimental framework with SAC algorithm and carrying out an experiment to analyse strengths and weaknesses of this approach.
+    \item Designing of the Control System to let all components and technologies involved interact.
+    \item Setting up the experimental framework with SAC algorithm and carrying out an experiment to analyse the strengths and weaknesses of this approach.
 \end{enumerate}
+
 
 % For this reason, we designed and implemented a control system for Cozmo, a small toy robot developed by Anki company, by exploiting the Cozmo SDK and OpenAI Gym to build up a standardised environment in which to apply any reinforcement learning algorithm. This implementation represents the first contribution of our thesis. The second contribution of our work consists of the implementation of Soft Actor-Critic (SAC), a model-free reinforcement learning algorithm suitable for real-world experiments, to solve the self-driving task. During the test phase, the robot reached a maximum of more than 3 meters before the human intervention, succeeding in completing the track. However, the mean value we obtained is about 1 metre over 10 test episodes. Because of the instability of the results obtained, we focused on strength and weaknesses of this approach outlining what could be next steps to make this cutting-edge technology concrete and efficient.
 
 %-------------------------------------------------------------------------
 \section{Design of the control system}
 
-We based our project on Cozmo, a little toy robot produced by Anki, whose developers offered a granular and fully-featured Python SDK with many interfaces to allow a direct control of the robot.
+We based our project on Cozmo, a little toy robot produced by Anki, whose developers offered a granular and fully-featured Python SDK with many interfaces to allow direct control of the robot.
 We found it to be suitable for our experimental needs: it mounts a grayscale camera with 60 FOV and has two tracks to steer and drive.
-Our aim was to apply deep reinforcement learning algorithms, so we decided to use PyTorch as deep learning framework and the standardised approach provided by OpenAI Gym to build up the reinforcement learning environment for the experiment.
+We aimed to apply deep reinforcement learning algorithms, so we decided to use PyTorch as deep learning framework and the standardised approach provided by OpenAI Gym to build up the reinforcement learning environment for the experiment.
 
-Our idea was to build up a system where the human has the total control on the experiment flow to directly teach to the robot how to drive: he is able to start the episode and to stop it when the robot reaches a pernicious situation in order to reposition it in the closest safe situation and restart the loop. In this scenario, the human has total responsibility for how the robot is trained: he is the one who decides when an action is dangerous or not by disengaging reinforcement learning algorithms decision.
+Our idea was to build a system where the human holds complete control over the experiment progress: he can start the episode and suspend it when the robot reaches a fatal state to reposition it in the closest stable situation and restart the loop.
+In this scenario, the human has total responsibility for the robot training: he is the one who decides when an action is dangerous or not by disengaging reinforcement learning algorithms decision.
 
 \begin{figure}[tbp]
     \centering
@@ -108,20 +112,25 @@ Our idea was to build up a system where the human has the total control on the e
     \label{system}
 \end{figure}
 
-To obtain this configuration, we managed to design a simple and intuitive user interface that prompts the user when he started an experiment. This interface provides a live stream from Cozmo on-board camera and a set of key with the related function. It works through Javascript to communicate to a Flask server that communicates directly to Cozmo SDK and the OpenAI Gym environment to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands). We used TensorBoard to gather data for posterior analysis and representations. The system we obtained is outlined in figure \ref{system}.
+To obtain this configuration, we managed to design a simple and intuitive user interface that prompts the user when a new experiment starts. This interface provides a live stream from Cozmo on-board camera and a set of keys with the related function. It works through Javascript to communicate to a Flask server that interfaces directly to Cozmo SDK and the OpenAI Gym environment to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands). We used TensorBoard to gather data for posterior analysis and representations. The outline of the system we obtained is available in figure \ref{system}.
 
-In order to start the experiment, we formalised the problem as a MDP obtaining the following setup:
+% TODO: Grammarly error
+\textit{CozmoDriver-v0} is the Cozmo environment we designed. It represents the result of continuous development and testing to solve all the problems and particularities that we have found along the way. We implemented all the requirements and needs dictated by the type of experiment, putting in place all the compromises to manage the available RAM and make experiments manageable by reducing the learning time between one episode and the next one.
+One of the most crucial features we implemented is the rescue system, useful in a context where experiments last tens of hours and unexpected errors can occur.
+It consists of two main part. The first one is a volatile backup system: it stores the state status before the episode to allow the user to restore it in case of a broken episode. The second one is a checkpoint system to save the state of the experiment and allow the user to restore it in the following days.
+%
 
-\paragraph{State Space} The current state observation consists of two subsequent $64 \times 64$ grayscale images which represent the situation before and after the action respectively. We opted for resizing the images provided by Cozmo SDK for memory consumption reason due to the large experience replay memory needed for off-policy  algorithms.
+We spent some time to search for the most reliable way to build a transportable track where to train Cozmo efficiently without influencing it through the presence of reflections, but providing a path as close as possible to reality.
+We also designed it by using grey cotton fabric as a baseline and a white paper tape of width equal to $2.5$cm to draw the lane.
 
-\paragraph{Action Space} The representation of how the robot can interact with the surrounding environment is given by a vector of two real value. The first value represents the desired speed and its range is between 0 and 1, while the second one represents the steering of the vehicle and its range is between -1 and 1. Both values are the result of a simplification useful in the learning phase. In practise, the system designed converts these values to properly interact with the robot. The maximum speed reachable is 150mm/s.
+Before starting the experiment, we formalised the problem as an MDP obtaining the following setup:
 
-\paragraph{Reward Function} The reward function defines what is the ultimate objective of the task formalised. After an analysis of the literature available, we decided to formalise this function as the total length of track crossed by the robot after each action taken. This decision revealed its simplicity, but also its effectiveness. Furthermore, this choice leads to match reward with length traveled, useful factor to allow the developer to easily quantify the agent improvements and have a better feedback.
+\paragraph{State Space} The current state observation consists of two $64 \times 64$ grayscale images which represent the situation before and after the action respectively. We decided to resize images provided by Cozmo SDK for memory reason due to the experience replay memory needed for off-policy algorithms.
 
-% TODO: Move this section before MDP? Other important things?
-\textit{CozmoDriver-v0} is the Cozmo environment we designed. It represents the result of a continuous development and testing to solve all the problems and particularities that we have found along the way. We implemented all the requirements and needs dictated by the type of experiment, putting in place all the compromises to manage the available RAM memory and make experiments manageable by reducing the learning time between one episode and the next one.
-One of the most crucial features we implemented is the rescue system, useful in a context where experiments last tens of hours and unexpected fails can occur.
-It consists of two main part: the first is a volatile backup system for every single episode that is discarded after the start of the next one and allows the user to make the agent forget a faulty episode, while the second one is a checkpoint system to save the state of the experiment and allow the user to restore it in the following days.
+\paragraph{Action Space} We used a vector of two real value to represent how the robot can interact with the surrounding environment: the first value represents the desired speed with a range between 0 and 1, while the second one describes the vehicle steer with a range between -1 and 1. Both values are the result of a simplification useful in the learning phase. In practice, the system designed converts these values to correctly interact with the robot. The maximum speed reachable is 150mm/s.
+
+\paragraph{Reward Function}. The reward function defines which is the purpose of the task to solve. After an analysis of the literature available, we decided to formalise this function as the total length of track crossed by the robot after each action taken. Despite its simple formulation, this choice revealed to be effective.
+Furthermore, this choice leads to match reward with length covered, useful fact to support the developer in quantifying agent improvements and have better feedback.
 
 \section{Experiments}
 
