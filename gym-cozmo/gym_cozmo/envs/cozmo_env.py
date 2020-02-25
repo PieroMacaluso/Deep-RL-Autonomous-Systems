@@ -197,7 +197,7 @@ class CozmoEnv(gym.Env):
         """
         Return true if the human has control, false otherwise
         @return: result of the operation
-        @rtype: 
+        @rtype:
         """
         return self.rc.is_human_controlled()
     

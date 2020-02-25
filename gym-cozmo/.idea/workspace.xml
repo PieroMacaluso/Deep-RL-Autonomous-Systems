@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa7c2d06-eee5-4599-bd6f-df0a15201155" name="Default Changelist" comment="Review of CozmoEnv and adding few comments">
-      <change beforePath="$PROJECT_DIR$/.idea/gym-cozmo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gym-cozmo.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gym_cozmo/envs/cozmo_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/gym_cozmo/envs/cozmo_env.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/CNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/CNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/OUNoise.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/OUNoise.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/ddpg.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/ddpg.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../source_code/ddpg_cozmo/play_cozmo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/ddpg_cozmo/play_cozmo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../source_code/sac_cozmo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../source_code/sac_cozmo/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -361,7 +353,8 @@
       <workItem from="1577958223137" duration="8000" />
       <workItem from="1581963409496" duration="19000" />
       <workItem from="1581963444537" duration="1822000" />
-      <workItem from="1582136122219" duration="117000" />
+      <workItem from="1582136122219" duration="779000" />
+      <workItem from="1582305211979" duration="17000" />
     </task>
     <task id="LOCAL-00001" summary="Work Advance SAC Report&#10;&#10;- Refactoring notation&#10;- Correction of mistakes">
       <created>1557922892390</created>
@@ -489,11 +482,11 @@
       <screen x="50" y="27" width="1870" height="1026" />
     </state>
     <state x="815" y="296" width="800" height="526" key="Vcs.Push.Dialog.v2/50.27.1870.1026@50.27.1870.1026" timestamp="1581963966971" />
-    <state x="641" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1582136121866">
+    <state x="641" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1582305211778">
       <screen x="50" y="27" width="1870" height="1026" />
     </state>
     <state x="641" y="347" key="com.intellij.ide.util.TipDialog/1920.0.1920.1080/50.27.1870.1026@50.27.1870.1026" timestamp="1577125899446" />
-    <state x="641" y="347" key="com.intellij.ide.util.TipDialog/50.27.1870.1026@50.27.1870.1026" timestamp="1582136121866" />
+    <state x="641" y="347" key="com.intellij.ide.util.TipDialog/50.27.1870.1026@50.27.1870.1026" timestamp="1582305211778" />
     <state width="609" height="385" key="javadoc.popup.new" timestamp="1577095543311">
       <screen x="50" y="27" width="1870" height="1026" />
     </state>
