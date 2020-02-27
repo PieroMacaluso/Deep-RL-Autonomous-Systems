@@ -73,10 +73,10 @@ Therefore, we implemented our version of Soft Actor-Critic (SAC), a model-free r
 
 ### Master Thesis
 
-- Master Thesis: [LaTeX Project](master_thesis) | [PDF](https://raw.githubusercontent.com/pieromacaluso/Deep-RL-Autonomous-Systems/master_thesis/master_thesis.pdf)
-- Summary [LaTex](summary) | [PDF](https://raw.githubusercontent.com/pieromacaluso/Deep-RL-Autonomous-Systems/summary/summary.pdf)
-- Presentation: [LaTex](presentation) | [PDF](https://raw.githubusercontent.com/pieromacaluso/Deep-RL-Autonomous-Systems/presentation/presentation.pdf)
-
+- Master Thesis:  | [:page_facing_up: PDF Document](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/master_thesis/master_thesis.pdf) | [:file_folder: Project Folder](master_thesis)
+- Summary [:page_facing_up: PDF Document](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/summary/summary.pdf) | [:file_folder: Project Folder](summary)
+- Presentation: [:page_facing_up: PDF Document](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/presentation/presentation.pdf)
+ | [:file_folder: Project Folder](presentation)
 ### Source Code
 
 #### OpenAI Gym Environment
