@@ -73,9 +73,9 @@ Therefore, we implemented our version of Soft Actor-Critic (SAC), a model-free r
 
 ### Master Thesis
 
-- Master Thesis: [LaTeX](master_thesis) | [PDF](master_thesis/master_thesis.pdf)
-- Summary [LaTex](summary) | [PDF](summary/summary.pdf)
-- Presentation: [LaTex](presentation) | [PDF](presentation/presentation.pdf)
+- Master Thesis: [LaTeX Project](master_thesis) | [PDF](https://raw.githubusercontent.com/pieromacaluso/Deep-RL-Autonomous-Systems/master_thesis/master_thesis.pdf)
+- Summary [LaTex](summary) | [PDF](https://raw.githubusercontent.com/pieromacaluso/Deep-RL-Autonomous-Systems/summary/summary.pdf)
+- Presentation: [LaTex](presentation) | [PDF](https://raw.githubusercontent.com/pieromacaluso/Deep-RL-Autonomous-Systems/presentation/presentation.pdf)
 
 ### Source Code
 
