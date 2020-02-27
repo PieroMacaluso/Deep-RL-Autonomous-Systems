@@ -73,10 +73,12 @@ Therefore, we implemented our version of Soft Actor-Critic (SAC), a model-free r
 
 ### Master Thesis
 
-- Master Thesis:  | [:page_facing_up: PDF Document](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/master_thesis/master_thesis.pdf) | [:file_folder: Project Folder](master_thesis)
-- Summary [:page_facing_up: PDF Document](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/summary/summary.pdf) | [:file_folder: Project Folder](summary)
-- Presentation: [:page_facing_up: PDF Document](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/presentation/presentation.pdf)
- | [:file_folder: Project Folder](presentation)
+| Document      | Status |                                                            PDF                                                             |         Project Folder         |
+| :------------ | :----: | :------------------------------------------------------------------------------------------------------------------------: | :----------------------------: |
+| Master Thesis |  WIP   | [:page_facing_up:](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/master_thesis/master_thesis.pdf) | [:file_folder:](master_thesis) |
+| Summary       |  WIP   |       [:page_facing_up:](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/summary/summary.pdf)       |    [:file_folder:](summary)    |
+| Presentation  |  WIP   |  [:page_facing_up:](https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems/raw/master/presentation/presentation.pdf)  | [:file_folder:](presentation)  |
+
 ### Source Code
 
 #### OpenAI Gym Environment
