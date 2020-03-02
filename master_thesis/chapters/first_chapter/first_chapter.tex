@@ -1,33 +1,43 @@
 \chapter{Introduction} \label{ch:ch1}
 
-Autonomous systems and in particular self-driving for unsupervised robots and vehicles (e.g.\ self-driving cars) are becoming more and more an integral part of human lives. This topic attracted much attention from both the research community and industry, due to its potential to radically change mobility and transport. In general, most approaches to date focus on formal logic methods, which define driving behaviour in annotated geometric maps. These methods can be challenging to scale, as they rely heavily on an external mapping infrastructure rather than using and understanding the local scene, leaving fully autonomous driving in a real urban environment an essential but elusive goal.
+Autonomous systems and in particular self-driving for unsupervised robots and vehicles (e.g.\ self-driving cars) are becoming more and more an integral part of human lives.
+This topic attracted much attention from both the research community and industry, due to its potential to radically change mobility and transport.
+In general, most approaches to date focus on formal logic methods, which define driving behaviour in annotated geometric maps.
+These methods can be challenging to scale, as they rely heavily on an external mapping infrastructure rather than using and understanding the local scene, leaving fully autonomous driving in a real urban environment an essential but elusive goal.
 
-However, recent work on autonomous driving has demonstrated that it is possible to exploit the knowledge about the surrounding environment to obtain a more scalable method for self-driving vehicles. The work in \cite{ort2018autonomous} demonstrated that this approach is feasible on rural country roads, using GPS for coarse localisation and LIDAR to understand the local scene. The ability to drive and navigate in the absence of maps and explicit rules, relying – just like humans do – on a comprehensive understanding of the immediate environment while following simple high-level directions (e.g.\ turn-by-turn route commands) may be the correct approach to revolutionise autonomous driving by making it a truly ubiquitous technology.
+However, recent work on autonomous driving has demonstrated that it is possible to exploit the knowledge about the surrounding environment to obtain a more scalable method for self-driving vehicles.
+The work in \cite{ort2018autonomous} demonstrated that this approach is feasible on rural country roads, using GPS for coarse localisation and LIDAR to understand the local scene.
+The ability to drive and navigate in the absence of maps and explicit rules, relying – just like humans do – on a comprehensive understanding of the immediate environment while following simple high-level directions (e.g.\ turn-by-turn route commands) may be the correct approach to revolutionise autonomous driving by making it a genuinely ubiquitous technology.
 
-To date, the majority of the methods adopted to exploit the local scene and to learn how to drive, concentrates on deterministic algorithms to recognize the surroundings and select the right action (e.g.\ lane following problem on well-marked structured highways). However, these methods, like the previous ones, are not able to generalize proficiently in a different environment because of their deterministic nature.
+To date, the majority of the methods adopted to exploit the local scene and to learn how to drive concentrates on deterministic algorithms to recognise the surroundings and select the right action (e.g.\ lane following problem on well-marked structured highways).
+However, these methods, like the previous ones, are not able to generalise proficiently in a different environment because of their deterministic nature.
 
-In this context, the usage of deep learning and machine learning is entirely dedicated to object detection and recognition while the decision-making aspect is left to control optimization algorithms \cite{huval2015empirical}.
+In this context, the usage of deep learning and machine learning is entirely dedicated to object detection and recognition, while the decision-making aspect is left to control optimisation algorithms \cite{huval2015empirical}.
 
-Recently, we have witnessed a remarkable increase of interest in Reinforcement Learning (RL).
-Reinforcement Learning is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to act in an environment by mapping situations and actions, trying to maximize some reward function.
-To date, it represents the closest example of learning approach that mimics the ability of humans to learn from experiences.
+Recently, we have witnessed a remarkable increase in interest in Reinforcement Learning (RL).
+Reinforcement Learning is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to act in an environment by mapping situations and actions, trying to maximise some reward function.
+To date, it represents the closest example of a learning approach that mimics the ability of humans to learn from experiences.
 The agent, the brain of reinforcement learning, learns to make decisions according to the information it receives from the surrounding environment and from the positive (or negative) reward it receives.
 It represents a crucial step towards Artificial General Intelligence (AGI).
 This machine learning paradigm achieved super-human results at games such as Go \cite{silver2016mastering} or chess \cite{silver2017mastering}.
 Therefore, researchers found out that it can be surprisingly useful to solve tasks in simulated environments like computer games \cite{mnih2013playing}, and it possesses promising features to perform tasks with robotic manipulators \cite{gu2017deep}.
 Furthermore, the great fervour produced by the widespread exploitation of deep learning opened the doors to function approximation with neural networks and convolutional neural networks, developing what is nowadays known as Deep Reinforcement Learning.
 
-In this thesis, we argue that the generality of reinforcement learning makes it a useful framework where to apply autonomous driving to inject artificial intelligence not only in the detection component, but also in the decision-making one.
-The majority of the work in this research field are focused on simulated environment where experiments with a large number of iterations can be straightforwardly completed without a direct human interaction.
-However, to date, the more challenging approach of reinforcement learning consists of the application of this type of algorithms in the real world \cite{kendall2019nowisthetime}. In this context, the crucial challenges are the one related to hyper-parameters configurations that requires numerous and expensive iterations in order to obtain valuable results, but also the data noisiness and exploration.
-Despite these obstacles, the results that could derive from the application of these technologies to a real context, could be really powerful and revolutionary.
-For this reason, we decided to accept the challenge and, letting ourselves be inspired by \cite{kendall2018learning}, we decided to apply reinforcement learning algorithms to an autonomous driving problem.
+In this thesis, we argue that the generality of reinforcement learning makes it a useful framework where to apply autonomous driving to inject artificial intelligence not only in the detection component but also in the decision-making one.
+The majority of the work in this research field are focused on simulated environments where experiments with a large number of iterations can be straightforwardly completed without direct human interaction.
+However, to date, the more challenging approach of reinforcement learning consists of the application of this type of algorithms in the real world \cite{kendall2019nowisthetime}.
+In this context, the crucial challenges are the one related to hyper-parameters configurations that requires numerous and expensive iterations in order to obtain valuable results, but also the data noisiness and exploration.
+Despite these obstacles, the results that could derive from the application of these technologies to a real context could be compelling and revolutionary.
+For this reason, we accepted this challenge, and we decided to apply reinforcement learning algorithms to an autonomous driving problem, following the inspiring research of \cite{kendall2018learning}.
 
-To develop our considerations about the particular application of this research field, we designed and implemented a control system to control Cozmo, a small toy robot developed by Anki company, by exploiting the Cozmo SDK and OpenAI Gym to build up a standardised environment where to apply any reinforcement learning algorithm. This implementation represents the first contribution of our thesis. As second contribution of our work, we aimed to implement state-of-the-art model-free deep reinforcement learning algorithms and discuss about the result obtained: we opted for Soft Actor-Critic (SAC) \cite{haarnoja2018alg,haarnoja2018soft}, a model-free reinforcement learning algorithm suitable for real-world experiments whose authors managed to overcame hyper-parameters configuration dependency of Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous}, focusing on what could be next steps to make this cutting-edge technology concrete and efficient.
+To develop our considerations about the particular application of this research field, we designed and implemented a control system to control Cozmo, a small toy robot developed by Anki company, by exploiting the Cozmo SDK and OpenAI Gym to build up a standardised environment in which to apply any reinforcement learning algorithm.
+This implementation represents the first contribution of our thesis.
+In the second contribution of our work, we aimed to implement state-of-the-art model-free deep reinforcement learning algorithms and discuss the result obtained.
+We opted for Soft Actor-Critic (SAC) \cite{haarnoja2018alg,haarnoja2018soft}, a model-free reinforcement learning algorithm suitable for real-world experiments whose authors managed to overcame hyper-parameters configuration dependency of Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous}, focusing on what could be next steps to make this cutting-edge technology concrete and efficient.
 
 \section{Structure of the thesis}
 
-The aim of this section is to describe the main structure of the thesis.
+This section aims to describe the main structure of the thesis.
 
 \subsubsection*{Chapter 1 - Introduction}
 
@@ -35,15 +45,19 @@ The current chapter contains the motivation underlying this work and the structu
 
 \subsubsection*{Chapter 2 - Reinforcement Learning}
 
-The aim of this chapter is to present a description as detailed as possible about reinforcement learning state-of-the-art in order to provide the reader with useful tools to enter in this research field. The chapter is divided into two principal parts: the first one aims to describe traditional reinforcement learning fundamentals, while the second one focuses reader's attention to the deep approach to reinforcement learning, providing an outline of deep learning and presenting Deep Deterministic Policy Gradient (DDPG) and Soft Actor-Critic (SAC) algorithms.
+This chapter aims to offer a description as detailed as possible about reinforcement learning state-of-the-art in order to provide the reader with useful tools to enter in this research field.
+The chapter consists of three principal parts.
+The first one aims to describe traditional reinforcement learning fundamentals.
+In contrast, the second one focuses reader's attention to the \textit{deep} approach to reinforcement learning, providing an outline of deep learning and presenting Deep Deterministic Policy Gradient (DDPG) and Soft Actor-Critic (SAC) algorithms.
 
 The last part of this chapter contains a related work review to introduce to the reader the problem we aimed to solve.
 
 \subsubsection*{Chapter 3 - Tools and Frameworks} 
 
-This chapter explains briefly what are the main tools, frameworks and languages that we used in this thesis. There will be a particular focus on \textit{OpenAI Gym}, one of the most popular reinforcement learning framework nowadays, \textit{Anki Cozmo}, the robot we used to carry out reinforcement learning experiments, and \textit{PyTorch}, the deep learning framework we used to use convolutional neural network in reinforcement learning.
+This chapter explains which are the primary tools, frameworks and languages that we used in this thesis.
+There will be a particular focus on \textit{OpenAI Gym}, one of the most popular reinforcement learning framework nowadays, \textit{Anki Cozmo}, the robot we used to carry out reinforcement learning experiments, and \textit{PyTorch}, the deep learning framework we used to use convolutional neural networks in reinforcement learning.
 
-The presentation of these tools is accompanied by the motivations behind the choices made, through the analysis of the alternatives present at the time of the thesis development.
+Furthermore, we outlined the motivations behind the choices made through the analysis of the alternatives present at the time of the thesis development.
 
 \subsubsection*{Chapter 4 - Design of the control system}
 
@@ -53,10 +67,12 @@ The fourth chapter aims to present the whole set of features we implemented toge
 
 \subsubsection*{Chapter 5 - Experimental results} 
 
-The second contribution of our thesis consists of the experiments we carried out with Soft Actor-Critic (SAC) algorithm to solve an autonomous driving task in the real world with Anki Cozmo robot. This chapter aims to present the results we obtained starting from the preliminar experiments on a modified environment to tests features and functionalities and concluding the chapter with the discussion about the learning process of the robot.
+The second contribution of our thesis consists of the experiments we carried out with Soft Actor-Critic (SAC) algorithm to solve an autonomous driving task in the real world with Anki Cozmo robot.
+This chapter aims to present the results we obtained starting from the preliminary experiments on a modified environment to tests features and functionalities and concluding the chapter with the discussion about the learning process of the robot.
 
-It contains also some considerations about the approach taken and a general discussion on how to measure performances in reinforcement learning algorithms.
+It also contains some considerations about the approach taken and a general discussion on how to measure performances in reinforcement learning algorithms.
 
 \subsubsection*{Chapter 6 - Conclusions} 
 
-This chapter provides a summary of the results obtained from experiments together with a detailed critic part. Furthermore, the thesis will conclude with a specific part dedicated to possible future improvements of this work.
+This chapter provides a summary of the results obtained from experiments together with a specific critic part.
+Furthermore, the thesis will conclude with a specific part dedicated to possible future improvements to this work.
