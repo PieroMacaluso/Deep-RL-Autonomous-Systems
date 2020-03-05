@@ -1,14 +1,14 @@
 \chapter{Tools and Frameworks} \label{ch:ch3}
 
 This chapter aims to describe the main tools and frameworks used to develop the project of this thesis.
-The first section will describe OpenAI Gym framework, a central toolkit for developing and comparing reinforcement learning algorithms, and explain why this tool is essential for reinforcement learning research.
+The first section will describe the OpenAI Gym framework, a central toolkit for developing and comparing reinforcement learning algorithms, and explain why this tool is essential for reinforcement learning research.
 The second part of this chapter will outline Cozmo, the powerful toy robot developed by Anki that we used as an agent in the reinforcement learning scenario to apply algorithms to try solving autonomous self-driving tasks: \vref{ch:ch5} will report the analysis and description of these experiments.
 This section will also report a set of available alternatives to Cozmo, explaining the motivations underlying the final choice.
 The description about PyTorch, an optimised tensor library for deep learning using GPUs and CPUs used to build up the convolutional neural network of this work, and the related comparison with TensorFlow will occupy the last part of this chapter.
 
 \section{OpenAI Gym}
 
-Nowadays, OpenAI Gym, released in 2016 with its public beta, is one of the most popular toolkits and frameworks in the reinforcement learning scenario.
+Nowadays, OpenAI Gym \cite{brockman2016openai}, released in 2016 with its public beta, is one of the most popular toolkits and frameworks in the reinforcement learning scenario.
 A brief analysis of reinforcement learning research could be useful to outline the motivations underlying the need for a reinforcement learning framework.
 
 As reported previously in  \vref{ch:ch2}, reinforcement learning is a subfield of machine learning dedicated to the world of decision making and motor control: researchers study how an agent can learn and improve to achieve a specific goal in a complex, usually unknown environment.
@@ -63,8 +63,8 @@ It enables the visual render (if available) of the environment.
 To date, OpenAI Gym includes the following environments:
 \begin{itemize}
 	\item \textbf{Algorithms}: learning to imitate computations, such as copying or reversing symbols from the input tape, is the main aim of this typology.
-These environments might seem easy to be solved by a computer, but it is important to remember that the objective here is to learn to solve these tasks purely from examples.
-Therefore, it is possible to vary the sequence length to increase or decrease task difficulties easily.
+These environments might seem easy to be solved by a computer, but it is essential to remember that the objective here is to learn to solve these tasks purely from examples.
+Therefore, it is possible to vary the sequence length to increase or decrease task difficulties quickly.
 	\item \textbf{Atari}: \textit{Atari 2600} is a home video game console developed in 1977 which spread the use of general-purpose CPUs into gaming with game code distributed through cartridges.
 This environment section provides a database which contains more than 100 environments emulating Atari 2600 videogames.
 OpenAI Gym exploits \textit{Arcade Learning Environment (ALE)} \cite{bellemare2013arcade} providing RAW pixel images or RAM as observation of the environment.
@@ -76,7 +76,7 @@ This physics engine aims to facilitate research and development in robotics, bio
 The simulator is particularly suitable for model-based optimisation allowing to scale up computationally-intensive techniques.
 	      Thanks to its features, it became useful as a source for reinforcement learning algorithms.
 \cite{todorov2012mujoco}
-	\item \textbf{Robotics}: OpenAI released this algorithm typology to provide eight robotics environments with manipulation tasks significantly more difficult than the MoJoCo ones.
+	\item \textbf{Robotics}: OpenAI released this algorithm typology to provide eight robotics environments with manipulation tasks significantly more complicated than the MoJoCo ones.
 It contains \textit{Fetch}, a robotic arm to move and grab objects, and \textit{ShadowHand}, a robotic hand to manipulate and grab pens, cubes and balls.
 \cite{ingredientsRoboticsResearch}
 \end{itemize}
@@ -100,11 +100,11 @@ The reward for each action can change among environments, but this is the crucia
 The agent could use it as additional information in the learning process, but the documentation of OpenAI Gym does not recommend to use this data in the learning process to maintain the coherence with the reinforcement learning loop.
 \end{itemize}
 
-The last important thing to report about OpenAI Gym framework is the definition of \texttt{Spaces}.
+The last important thing to report about the OpenAI Gym framework is the definition of \texttt{Spaces}.
 As reported in the second chapter, an environment consists of the action space and the observation space.
 Both can provide discrete or continuous values: this distinction is fundamental to determine the usage of a specific algorithm rather than others to solve a given task better.
 For this reason, OpenAI Gym provides \texttt{Discrete} and \texttt{Box} to initialise discrete and continuous spaces, respectively.
-It allows the user to define a lot of features useful in the learning process, such as a maximum and minimum value setup or a default function to instantly sample a random value from the defined space.
+It allows the user to define a lot of features useful in the learning process, such as a maximum and minimum value setup or a default function to sample a random value from the defined space instantly.
 
 \section{Anki Cozmo}
 
@@ -125,7 +125,7 @@ It allows the user to define a lot of features useful in the learning process, s
 
 Especially in the latest decades, human beings have started a complicated relationship with robots.
 They are very fascinated by the prospect of artificial intelligence offered by recent researches and applications.
-However, they are apprehensive and worried at the same time because of the apocalyptic plot that many sci-fi films show and the big promise of automation, capable of replacing human workers in the future.
+However, they are apprehensive and worried at the same time because of the apocalyptic plot that many sci-fi films show and the significant promise of automation, capable of replacing human workers in the future.
 However, all these concerns disappear after meeting Cozmo, the palm-sized toy robot developed by the San Francisco-based company Anki and available on the market since 2016.
 On first glance, Cozmo might appear as one of the cutest toy robots: not surprisingly Anki employed the guidance of Carlos Baena, the former Pixar animator, to design this robot.
 Therefore, it can interact with people using a small display screen together with audio effects to mimic human emotional reactions and responses.
@@ -153,13 +153,13 @@ The reader can retrieve a global perspective about the whole Cozmo architecture 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{img/cozmo-hw.png}
-	\caption[Interaction Robot/Application]{Interaction between the Robot and the mobile application stack.
-The robot main program interacts with the Cozmo Engine (C++) implemented in the mobile application through a proprietary TCP protocol established using and ad-hoc WiFi connection.
+	\caption[Interaction Robot / Mobile Application]{Interaction between the Robot and the mobile application stack.
+The main program of the robot interacts with the Cozmo Engine (C++) implemented in the mobile application through a proprietary TCP protocol established using an ad-hoc WiFi connection.
 \cite{mellon2017cognitive}}
 	\label{fig:cozmotear1}
 \end{figure}
 
-Starting from \vref{fig:cozmotear1}, it is noticeable that Cozmo has a lot of sensors and actuators, which enable it to move and understand the surrounding environment.
+Analysing \vref{fig:cozmotear1}, it is noticeable that Cozmo has a lot of sensors and actuators, which enable it to move and understand the surrounding environment.
 For what concerns the sensor part, the VGA Camera is the crucial component exploited in the thesis.
 This camera provides a grayscale image with 320$\times$240.
 Anki reported a camera resolution equal to 640$\times$480, but the latest firmware version supports only the lower resolution.
@@ -190,7 +190,7 @@ Cozmo software architecture holds seven independent action tracks:
 The project of this thesis mainly exploited the body action track to move the robot in the environment: it also employed head and lift tracks, but only to position the robot head to provide images about the track to the main program and the reinforcement learning agent.
 The usage of parallel operations was not necessary.
 
-The Cozmo hardware includes an onboard CPU and a WiFi access point, thanks to which the user can interact with the robot.
+The Cozmo hardware includes an on-board CPU and a WiFi access point, thanks to which the user can interact with the robot.
 However, to activate this communication, it is necessary to install the Cozmo Android/iOS application on a personal tablet or smartphone.
 This application is the same used to play with the toy-side of Cozmo, but in its settings, there is a function to enable Cozmo development mode.
 After connecting the chosen personal device to the robot through a simple WiFi connection, the application manages to create a proprietary TCP protocol to interact directly with the main robot program.
@@ -206,7 +206,7 @@ This process allows the user to define a specific message in Python and to send 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{img/cozmo-sw.png}
-	\caption[Interaction Application/PC]{Interaction between the mobile application stack and the Python user program.
+	\caption[Interaction Mobile Application / Computer]{Interaction between the mobile application stack and the Python user program.
 Anki designed a C-like Abstract Data Language (CLAD) to implement the connection between the Cozmo SDK and the Cozmo Engine on the mobile application.
 This approach puts a decoupling layer between Python interfaces and low-level functions to make prototyping easier and fast-forwarding for developers.
 \cite{mellon2017cognitive}}
@@ -229,7 +229,7 @@ The last step to start programming with Cozmo SDK is to install it in a developm
 \subsection{Why Cozmo?}
 
 Before starting the development of this thesis project, we spent some time analysing the small car market situation in order to find out the right choice for our specific needs.
-In addition to Anki Cozmo, the ideal alternatives in the self-driving scenario when we started this thesis were \textit{AWS DeepRacer Vehicle} and a customised car implemented from scratch exploiting \textit{Donkey \textregistered
+In addition to Anki Cozmo, the ideal alternatives in the self-driving scenario when we started this thesis were \textit{AWS DeepRacer Vehicle} and a customised vehicle implemented from scratch exploiting \textit{Donkey \textregistered
 	Car library}.
 
 This section part aims to briefly describe the main alternatives to Anki Cozmo listing strengths and weaknesses for each approach to motivate the final choice made.
@@ -243,7 +243,7 @@ The whole ecosystem consists of two main part:
 	\item \textbf{AWS DeepRacer Car}.
 It is a 1/18 scale race car developed and built to test reinforcement learning algorithms on a real track.
 It aims to show how the reinforcement learning model trained in a simulated environment can be conveyed to the real-world by using cameras to view the track and the model to control throttle and steering.
-It has a lot of interesting specifications under the hood such as Intel Atom \textsuperscript{\textregistered} Processor, 4GB of RAM, an expandable 32GB of storage to accommodate the trained model and a 4-megapixel camera with MJPEG.
+It has a lot of impressive specifications under the hood such as Intel Atom \textsuperscript{\textregistered} Processor, 4GB of RAM, an expandable 32GB of storage to accommodate the trained model and a 4-megapixel camera with MJPEG.
 	\item \textbf{AWS DeepRacer Simulator}.
 The user can build his models in \textit{Amazon SageMaker} and train, test and iterate the learning process using the racing simulator.
 It offers an integrated environment hosted on the AWS cloud to experiment and optimise algorithms to apply to the autonomous driving model.
@@ -269,13 +269,13 @@ Another important withdraw consists of the strict correlation between the simula
 The second important alternative to Cozmo was to develop a small car from scratch using integrated boards such as \textit{RaspberryPi} or \textit{NVIDIA Jetson Nano}, sensors and camera to personalise the device and satisfy specific project needs.
 \textit{Donkey\textregistered Car} \footnote{Donkey Car community website: \href{https://www.donkeycar.com}{https://www.donkeycar.com}} is the most popular choice to build a personal self driving toy car.
 It is an open-source community project powered by volunteers who are interested in build their own self-driving cars.
-They cooperated to build up a high-level self-driving library written in Python, focusing on enabling fast experimentation and easy contribution.
-They provide detailed instructions to build a personal Donkey, providing kits or lists of components to use: the whole kit costs among 250-300\$.
+They cooperated to build up a high-level self-driving library written in Python, focusing on enabling fast experimentation and contribution.
+They provide detailed instructions to build a personal Donkey vehicle, providing kits or lists of components to use: the whole kit costs among 250-300\$.
 
 It is also possible to install the Donkey library on any RC car to make it self-driving and autonomous.
 Despite this fact, Donkey developers suggest building the \textit{Donkey2} car, which is a tested hardware and software setup, to avoid problems such as incompatibilities or bugs and make the most out of the presence of a dense community.
 
-The main strength of this choice is the freedom to develop a completely customised car to better suit the needs and requirements of a great set of autonomous driving projects.
+The main strength of this choice is the freedom to develop a completely customised car to suit better the needs and requirements of a great set of autonomous driving projects.
 In the last releases of the library, Donkey developers released a complete sandbox simulator for training a self-driving car.
 The languages used to develop it are Unity for simulation and Python with Keras and Tensorflow for training.
 They also provide an OpenAI Gym environment to use with such simulator.
@@ -289,7 +289,7 @@ The real obstacle consists of the setup of a connection similar to the Cozmo one
 
 As easily predictable, the final choice fell on Anki Cozmo.
 It provides a fast-forwarding SDK ready to be exploited in prototyping a brand new project together with the strictly necessary sensors to perform the reinforcement learning experiments in the real world.
-A crucial factor in reaching the final decision was the dimension of the car: as reported before, both Donkey car and Amazon DeepRacer are 1/10 and 1/18 scale race car respectively, while Cozmo is just 5.5cm wide, which results in a ratio of about 1/30.
+A crucial factor in reaching the final decision was the dimension of the car: Donkey and Amazon DeepRacer are 1/10 and 1/18 scale race cars respectively, while Cozmo is just 5.5cm wide, which results in a ratio of about 1/30.
 This fact not only makes Cozmo an easily transportable solution to speed up experiments and to restart episodes effortlessly but also a solution that supports the design of a track in a restrict space such as the one in the laboratory of Eurecom.
 
 Therefore, the connection between the development machine and the robot is suitable for implementing an OpenAI Gym environment, and it is similar, at least in the premises, to the distributed off-board computation approach.
@@ -297,12 +297,11 @@ The main algorithm, the neural network, the reinforcement learning framework and
 
 Taking into account the perspective of autonomous cars in the real world, on-board and off-board computation approaches are still under research.
 With the on-board method, cars have much computational hardware inside in order to manage every aspect of autonomous driving by themselves, but it requires more powerful batteries to counterbalance energy consumption.
-On the other hand, the connection to off-board computer facilities or the clouds leads to new vectors of attack but also enables companies to monitor the behaviour the vehicle fleet to identify malicious activities early.
+On the other hand, the connection to off-board computer facilities or the clouds leads to new vectors of attack but also enables companies to monitor the behaviour of the vehicle fleet to identify malicious activities early.
 To date, both approaches are still under research, and it is not possible to decree a legitimate winner.
-For what concerns the thesis, the designed system emulate an off-board approach.
+For what concerns the thesis, the designed system emulates an off-board approach.
 
-In the end, Cozmo provides plain and straightforward control of the car and a rich Python SDK to use with OpenAI Gym and it is the best trade-off between functionalities and fast-developing.
-
+In the end, Cozmo provides plain and straightforward control of the car, a rich Python SDK to use with OpenAI Gym, and it is the best trade-off between functionalities and fast-developing.
 
 \section{PyTorch}
 
@@ -344,7 +343,7 @@ The main improvement that this approach brings is allowing the user to change th
 
 \subsection{TensorboardX}
 
-One of the most crucial means that every machine learning researchers need is a tool to visualise and measure data efficiently: this fact is significant because to improve models, projects and results, we need to measure.
+One of the most crucial means that every machine learning researchers need is a tool to visualise and measure data efficiently: this fact is significant because we need to measure in order to improve models, projects and results.
 However, one of the main problem in PyTorch is the absence of such a tool, specifically designed for the Facebook framework.
 It can always use powerful tools such as \textit{Matplotlib}, but it offers a synchronous approach that leads to slow down the main program since the primary process has to wait for the data rendering before starting next operations.
 
@@ -357,7 +356,7 @@ Therefore, it will be the webserver to take care of elaborate data for rendering
 
 Fortunately, PyTorch can exploit the features of Tensorboard thanks to a library called \textit{TensorboardX} \footnote{TensorBoardX documentation: \href{https://tensorboardx.readthedocs.io/en/latest/index.html}{https://tensorboardx.readthedocs.io/}} that stands for \textit{Tensorboard for X} to highlight developers aim to make Tensorboard available for all deep learning framework.
 
-\subsection{PyTorch vs. TensorFlow}
+\subsection{Comparison with TensorFlow}
 
 After the advent of deep learning, many companies decided to put their efforts to design architectures and frameworks to vehiculate this new technology.
 The two most popular frameworks in this research field are TensorFlow \cite{abadi2016tensorflow} by Google released in 2015 and PyTorch \cite{paszke2017automatic}  by Facebook released in 2017.
@@ -380,7 +379,7 @@ Only with TensorFlow 2.0, Google decided to implement dynamic computational grap
 As mentioned above, PyTorch approach to computational graphs is dynamic.
 This characteristic means that the graph is built incrementally at runtime without using particular data structures as placeholders.
 This feature supports projects where the author needs to change the computational graph on-the-fly avoiding the application restart.
-In this sense, PyTorch is more pythonic than TensorFlow.
+In this sense, PyTorch is more pythonic than TensorFlow \cite{builtin2019pytorch}.
 
 \subsubsection{Distributed Training}
 
