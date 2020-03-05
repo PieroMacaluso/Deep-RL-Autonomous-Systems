@@ -10,14 +10,13 @@ The work presented in this part represents one of the contributions of our thesi
 The outline of the whole ecosystem with the description of interfaces, frameworks and technologies used occupies the first section of the chapter.
 This part also comprehends the description about the implementation of the OpenAI Gym environment to make reinforcement learning algorithms interact with Cozmo, emphasising its differences from a typical simulated environment: we will start from the problem formalisation as Markov Decision Process (MDP) to conclude with the implementation of human-robot interaction.
 
-We already presented the theory underlying DDPG~\cite{lillicrap2015continuous} and SAC~\cite{haarnoja2018soft, haarnoja2018alg} algorithms in \vref{ch:ch2}.
+We already presented the theory underlying DDPG~\cite{lillicrap2015continuous} and SAC~\cite{haarnoja2018soft, haarnoja2018alg} algorithms in \vref{ddpg,sac} respectively.
 For this reason, the second section consists of a discussion about the specificities of reinforcement learning implementations we built with references to the choice we made in terms of hyper-parameters and neural network design in a real-world application.
-In the final section of this chapter, we will present some relevant problem we faced in the design and setup of the real-world track together with the decision we made to overcome them.
+In the final section of this chapter, we will present some relevant problems we faced in the design and setup of the real-world track together with the decision we made to overcome them.
 
 \section{Outline of the system}\label{sec:outline-of-the-system}
 
-% TODO: DDPG-SAC?
-The development of the control system for Anki Cozmo was the main contribution of the thesis, together with the implementation of SAC algorithm.
+The development of the control system for Anki Cozmo was the main contribution of the thesis, together with the experiments carried on with the robot in the real world.
 The main aim of this work was to create an OpenAI Gym environment capable of interacting with a robot in the real world without any interaction, fine-tuning or prior knowledge obtained through the use of a simulator.
 OpenAI Gym usually provides plain and straightforward interfaces to interact with simulated environments: we decided to exploit these functions to allow the application of reinforcement learning algorithm directly in the real-world decision of the robot.
 
@@ -32,9 +31,7 @@ This fact, accompanied by the challenging prerogatives of this type of experimen
 
 We decided to export and implement these ideas in our project, adapting them to the specificities and particularities of the Cozmo setup.
 \Vref{fig:system} summarises the resulting system providing a schematic overview of every technology employed and interactions among them.
-This section aims to describe as clearly as possible all the components of the control system we designed.
-
-\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+This section aims to describe as clearly as possible all the components of the control system we designed.  
 
 \begin{figure}
     \centering
