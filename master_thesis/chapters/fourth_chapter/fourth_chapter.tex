@@ -1,33 +1,3 @@
-% \todomacaluso{
-% 	\begin{itemize}
-% 		\item Introduction to the chapter
-% 		\item General description of the control systems with a diagram representing all the technologies involved.
-%       \item Setup and implementation of CozmoDriver
-% 		      \begin{itemize}
-% 			      \item Technologies used to implement the interaction between the Cozmo SDK and OpenAI Gym.
-% 			      \item Differences from the simulated environment caused by the need for direct human interaction.
-% 			      \item Implementation of human interaction in the system.
-% 		      \end{itemize}
-% 		\item Setup of the algorithms (DDPG, SAC)
-% 		      \begin{itemize}
-% 			      \item We decided to rewrite both algorithms without using libraries directly.
-% The first motivation was didactical, implementing from scratch is helpful to understand the practical implementation of the algorithm better, but also to make it possible to implement the singularity of the real Cozmo environment.
-% 			      \item The interaction with OpenAI Gym and PyTorch
-% 			      \item Discussion about Hyper-Parameters and the problems faced in the real world situation in the selection of these parameters.
-% 		      \end{itemize}
-% 		\item Setup of the real Environment
-% 		      \begin{itemize}
-% 			      \item The Track design
-% 			      \item Analysis of the problems:
-% 			            \begin{itemize}
-% 				            \item Reflection
-% 				            \item Background and Horizon
-% 			            \end{itemize}
-% 			      \item (Single Line Track)
-% 		      \end{itemize}
-% 	\end{itemize}
-% }
-
 \chapter{Design of the control system}\label{ch:ch4}
 
 In the previous chapters, we outlined deep reinforcement learning fundamentals with its most critical underlying concepts, and then we discussed the choice made about the technologies to use as baselines for our experiments.
@@ -67,8 +37,8 @@ This section aims to describe as clearly as possible all the components of the c
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 
 \begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{img/cozmo-system.png}
+    \centering
+    \includegraphics[width=\textwidth]{img/cozmo-system.png}
     \caption[Outline of the control system]{The interaction between the user and Anki Cozmo has a crucial role in this system.
         The main Python script utilises OpenAI Gym for the reinforcement learning component and PyTorch for the deep learning one.
         The user can interact with the flow of the system through a simple web app that uses OpenAI Gym and the Cozmo SDK directly to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands).
@@ -102,7 +72,7 @@ Merely adding another image can intuitively improve the human perception of the 
 To verify this fact before starting the experiments with the application of the reinforcement learning algorithms to Cozmo, we firstly analysed the results of some experiments on the environment of the classic control problem of trying to keep a frictionless pendulum standing up (\textit{Pendulum-v0}).
 The original version of this environment utilises angle position and trigonometric results as observation to return to the agent.
 However, this environment offers to the user the access to the images provided by the OpenAI Gym \texttt{render} interface.
-It represents an entirely different kind of experiment from Cozmo driving task, but they have in common the improvement in trajectory inference brought by the presence of a number of pictures greater than one.
+It represents an entirely different kind of experiment from Cozmo driving task, but they have in common the improvement in trajectory inference brought by the presence of a number of pictures higher than one.
 In order to make this environment suitable for convolutional neural networks, we decided to appropriately modify it to exploit raw images as observations instead of the original information.
 Therefore, we noticed that the usage of a single picture as observation led to unstable and worse results than the ones obtained by combining two subsequential images to feed the algorithm.
 For this reason, we decided to use two consecutive raw images provided by Cozmo by using a queue data structure with size two.
@@ -193,7 +163,10 @@ We noticed that it could be an exciting future development trying to merge the s
 
     \centering
     \includegraphics[width=\textwidth]{img/dashboard.png}
-    \caption[Web Application implemented to Control Cozmo]{This image shows the web application we implemented to control Cozmo during reinforcement learning experiments. The focus is on the first two columns of the application since they provide the essential tools. The first one is entirely dedicated to the list of key the user can use to drive the robot or control the reinforcement learning algorithm flow. The second column consists of the live image coming from Cozmo front camera and some information about the current state of the RL system.}
+    \caption[Web Application implemented to Control Cozmo]{This image shows the web application we implemented to control Cozmo during reinforcement learning experiments.
+        The focus is on the first two columns of the application since they provide the essential tools.
+        The first one is entirely dedicated to the list of key the user can use to drive the robot or control the reinforcement learning algorithm flow.
+        The second column consists of the live image coming from Cozmo front camera and some information about the current state of the RL system.}
     \label{fig:dashboard}
 \end{figure}
 
@@ -209,7 +182,8 @@ We aimed to implement this kind of user-robot interaction also in our setup.
 The requirements were almost the same as the ones described in the paper, but this case could not rely on steering wheel, brakes and accelerator as in the car scenario where they are directly accessible by the user.
 The system needed an interface to allow the developer to stop the robot whenever it is approaching the side of the road and manoeuvre the robot just like a car.
 For this reason, we firstly implemented a straightforward interface using a web app implemented using plain HTML5, CSS3 and Javascript for the frontend and Flask \footnote{Flask Github Repository: \href{https://github.com/pallets/flask}{https://github.com/pallets/flask}}, a lightweight Web Server Gateway Interface (WSGI) web application framework, as backend.
-Therefore, we designed the web-app interface by using the Bootstrap framework \footnote{Bootstrap documentation: \href{https://getbootstrap.com/}{https://getbootstrap.com/}} to offer an easy-understandable and appealing user experience. A screenshot of the dashboard is available in \vref{fig:dashboard}.
+Therefore, we designed the web-app interface by using the Bootstrap framework \footnote{Bootstrap documentation: \href{https://getbootstrap.com/}{https://getbootstrap.com/}} to offer an easy-understandable and appealing user experience.
+A screenshot of the dashboard is available in \vref{fig:dashboard}.
 
 The aim of this application is allowing user interaction with Cozmo and Flask represented the right choice to allow the communication between this interface and the OpenAI Gym environment.
 The Flask backend interacts directly with the functions offered by Cozmo SDK to allow the user to see the live streaming from Cozmo camera directly in the web app.
@@ -228,7 +202,8 @@ The parameters of this function are the following:
           The default value is the equal to \texttt{r\_wheel\_speed}.
     \item \textbf{\texttt{duration}} (\textit{float}): it specifies the duration of the driving action of the robot.
           It calls \texttt{stop\_all\_motors()} after this duration has passed.
-          The default value is \texttt{None}. In this case, the behaviour of this function is equivalent to the non-async \texttt{drive\_wheel\_motors()} one: the wheels will continue to move at that speed until commanded to drive at a new speed.
+          The default value is \texttt{None}.
+          In this case, the behaviour of this function is equivalent to the non-async \texttt{drive\_wheel\_motors()} one: the wheels will continue to move at that speed until commanded to drive at a new speed.
 \end{itemize}
 
 This method is the same we used to implement the OpenAI Gym environment, allowing the algorithm to interact with the robot just like a human in the driving seat.
@@ -236,12 +211,16 @@ Just as examples, the user can start and stop the episode using the enter button
 
 \subsection{System Flow} \label{subsec:system-flow}
 
-The implementation of an algorithm flow to sustain the specific experimental need was necessary due to the continuous interactions between the human and the robot. Starting from the ideas of \cite{kendall2018learning,kendall2019learning}, we decided to divide the learning process in a series of phases highlighted in blue in \vref{fig:system-flow-chart}.
+The implementation of an algorithm flow to sustain the specific experimental need was necessary due to the continuous interactions between the human and the robot.
+Starting from the ideas of \cite{kendall2018learning,kendall2019learning}, we decided to divide the learning process in a series of phases highlighted in blue in \vref{fig:system-flow-chart}.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{img/system-flow.png}
-    \caption[Cozmo algorithm flow chart]{This image shows the flow chart of the system we implemented. The most crucial phases are highlighted in blue. This chart is deliberately drawn without an end, because, although there was the possibility, we never set a fixed maximum limit of experiments in Cozmo scenario. It is possible to retrieve the warm-up procedure by answering no to the last two decision branch.}
+    \caption[Cozmo algorithm flow chart]{This image shows the flow chart of the system we implemented.
+        The most crucial phases are highlighted in blue.
+        This chart is deliberately drawn without an end, because, although there was the possibility, we never set a fixed maximum limit of experiments in Cozmo scenario.
+        It is possible to retrieve the warm-up procedure by answering no to the last two decision branch.}
     \label{fig:system-flow-chart}
 \end{figure}
 
@@ -255,18 +234,30 @@ The phases we defined are the following:
           This last-mentioned part is still an episode phase, but testing or checkpoint phase never follows it.
           As reported in \vref{subsec:actions-duration}, the time between two subsequent actions is a parameter we set according to limitations of Cozmo SDK to avoid problems in the learning process.
 
-          The user is the main responsible for this phase. It can interact by toggling enter button on the keyboard. The first hit starts the episode, while the second one determines the end of the episode and attributes zero rewards to the last action taken.
+          The user is the main responsible for this phase.
+          It can interact by toggling enter button on the keyboard.
+          The first hit starts the episode, while the second one determines the end of the episode and attributes zero rewards to the last action taken.
 
-    \item \textbf{Undo Phase.} As described in \vref{subsec:error-management}, it is possible to invalidate experiments due to a human or a system error. For this reason, we implemented a procedure that the user can trigger to delete the knowledge acquired in the last training episode and restore the previous state. We positioned it right after the episode phase to delete faulty episodes as soon as possible.
+    \item \textbf{Undo Phase.} As described in \vref{subsec:error-management}, it is possible to invalidate experiments due to a human or a system error.
+          For this reason, we implemented a procedure that the user can trigger to delete the knowledge acquired in the last training episode and restore the previous state.
+          We positioned it right after the episode phase to delete faulty episodes as soon as possible.
 
-          In this case, the user has two possibilities to undo the last episode. The user can either hit the backspace button in substitution of the second enter button hit to stop the episode and start the undo phase or pressing it after the end of the episode and before the next one. Initially, the first choice led to a direct restore of the previous situation without executing the training phase, while the second one executed the training phase and only afterwards the undo phase.
-          After some tests, we decided to set the first approach as single behaviour for both options.
+          In this case, the user has two possibilities to undo the last episode.
+          The user can either hit the backspace button in substitution of the second enter button hit to stop the episode and start the undo phase or pressing it after the end of the episode and before the next one.
+          Initially, the first choice led to a direct restore of the previous situation without executing the training phase, while the second one executed the training phase and only afterwards the undo phase.
+          After some tests, we decided to set the first approach as unique behaviour for both options.
           This choice led to a delay increase between two consecutive episodes, but, thanks to the careful design of the network, the waiting time remained manageable.
-    \item \textbf{Training Phase.} This section starts its execution after the initial warm-up phase, and it is located after each Cozmo episode. It manages all neural networks updates with several optimisation steps, also known as epochs: the number of optimisation steps is set as a parameter by the developer.
-    \item \textbf{Testing Phase.} This phase disables noisy policies from the algorithm to allow the agent to take the action that the neural network decree as best in that specific iteration. It consists of a repetition of a finite set of episodes that triggers after every specified number of epochs, given as parameter of the system: the average reward calculated by the rewards obtained from each testing episode is the result of this phase. This value is crucial for the reinforcement learning experiments because we used them to build the average reward performance graph that shows how much the agent learned in the graphs of \vref{ch:ch5} and determines the quality of the learning process itself.
-    \item \textbf{Checkpoint Phase.} This phase is described in \vref{subsec:error-management}. It consists of saving all data to make the developer able to restart the experiment from the last available checkpoint. It is usually located right after the testing phase in order to save all values together with network weights and biases.
+    \item \textbf{Training Phase.} This section starts its execution after the initial warm-up phase, and it is located after each Cozmo episode.
+          It manages all neural networks updates with several optimisation steps, also known as epochs: the number of optimisation steps is set as a parameter by the developer.
+    \item \textbf{Testing Phase.} This phase disables noisy policies from the algorithm to allow the agent to take the action that the neural network decree as best in that specific iteration.
+          It consists of a repetition of a finite set of episodes that triggers after every specified number of epochs, given as parameter of the system: the average reward calculated by the rewards obtained from each testing episode is the result of this phase.
+          This value is crucial for the reinforcement learning experiments because we used them to build the average reward performance graph that shows how much the agent learned in the graphs of \vref{ch:ch5} and determines the quality of the learning process itself.
+    \item \textbf{Checkpoint Phase.} This phase is described in \vref{subsec:error-management}.
+          It consists of saving all data to make the developer able to restart the experiment from the last available checkpoint.
+          It is usually located right after the testing phase in order to save all values together with network weights and biases.
 
-          The user can also trigger this phase manually by toggling the C button before starting the next episode by hitting the enter button. It allows to virtually pause experiments, like the one with Cozmo, that could last tens of hours, and that can need multiple days to complete.
+          The user can also trigger this phase manually by toggling the C button before starting the next episode by hitting the enter button.
+          It allows to virtually pause experiments, like the one with Cozmo, that could last tens of hours, and that can need multiple days to complete.
 \end{itemize}
 
 
@@ -322,15 +313,19 @@ This fact underlines how the training duration depends not only on the data qual
 It is the primary motivation behind the complexity of an experiment carried out entirely in the real-world.
 
 After the analysis of the neural network used in the last-mentioned papers, we tried to modify these models after trying them on the modified Pendulum environment provided by the OpenAI Gym framework and analysing training and testing results.
-We exploited the network architectures that passed this selection to made experiments with \textit{Pendulum-v0} and, consequently, with the environment we designed with Cozmo. \Vref{ch:ch5} will show the results in question.
+We exploited the network architectures that passed this selection to made experiments with \textit{Pendulum-v0} and, consequently, with the environment we designed with Cozmo.
+\Vref{ch:ch5} will show the results in question.
 
 However, before finding a good architecture to exploit, we started little experiments with Cozmo to analyse changes in the behaviour policy of the robot.
 There we noticed a crucial factor to take into account to decide what network to use for our experiment: the optimisation phase duration.
 It is a vital parameter to make the experiment manageable for the user: in this thesis work, the agent is not in a simulation where the computer automatically decides when to restart the episode so that the human can let the experiment running by itself.
 In this context, the user must be ready to stop, reposition and restart the car at any moment.
 Given the evidence that an experiment like this could last thousands of episodes, we aimed to reduce the waiting time for the user to make the experiments last less, or, at least, obtain a good relationship between the duration of the episode and that of the optimisation steps.
-To avoid a long waiting time after each episode, we tried to spread the optimisation phase inserting a single learning step after each action taken by the agent. We found out this approach in some implementation of DDPG algorithm mainly applied to simulated environments. This choice seemed working with the \textit{Pendulum-v0} task because, in a simulated context, the environment stops itself waiting for the next action taken by the agent during the optimisation phase: the system flow is independent of the duration of the last-mentioned phase.
-It is noticeable that this fact does not apply to a real-world scenario like the one we implemented with Cozmo. As discussed in \vref{subsec:actions-duration}, the robot continues to drive even during the learning process.
+To avoid a long waiting time after each episode, we tried to spread the optimisation phase inserting a single learning step after each action taken by the agent.
+We found out this approach in some implementation of DDPG algorithm mainly applied to simulated environments.
+This choice seemed working with the \textit{Pendulum-v0} task because, in a simulated context, the environment stops itself waiting for the next action taken by the agent during the optimisation phase: the system flow is independent of the duration of the last-mentioned phase.
+It is noticeable that this fact does not apply to a real-world scenario like the one we implemented with Cozmo.
+As discussed in \vref{subsec:actions-duration}, the robot continues to drive even during the learning process.
 Therefore the system is highly unstable because this process not always has the same length and every action lasts differently: it depends on the specific network topology.
 After the analysis of this behaviour, we decided to maintain the optimisation phase among episodes and to fix a specific duration for each action of Cozmo.
 
@@ -351,10 +346,13 @@ In the network used as policy, there is no concatenation at the end of the convo
     \includegraphics[width=\textwidth]{img/cnn_cozmo.png}
     \caption[Convolutional Neural Network Architecture for Cozmo experiments]{ Convolutional Neural Network Architecture for Cozmo experiments.
         This particular example shows the model exploited as the Q-function with a single value as output and two consecutive grayscale images which represents the state of the environment as input.
-        The first part of the network consists of three convolutional layers with 16 features of 3$\times$3 dimensions. Each level is supplemented by a batch normalisation one.
-        The results are then flattened and concatenated with the vector of actions before entering the second part. This section consists of two fully-connected layers with 256 features.
+        The first part of the network consists of three convolutional layers with 16 features of 3$\times$3 dimensions.
+        Each level is supplemented by a batch normalisation one.
+        The results are then flattened and concatenated with the vector of actions before entering the second part.
+        This section consists of two fully-connected layers with 256 features.
         The output of this particular network is a single value that represents the Q-Value that refers to the action in question.
-        This network uses ReLu as non-linearity. Before starting experiments, the network is initialised with biases equal to zero and weights set utilising Xavier initialisation \cite{glorot2010understanding}.}
+        This network uses ReLu as non-linearity.
+        Before starting experiments, the network is initialised with biases equal to zero and weights set utilising Xavier initialisation \cite{glorot2010understanding}.}
     \label{fig:cnn_cozmo}
 \end{figure}
 
@@ -371,8 +369,9 @@ We found out that, in order to obtain results that could show as clearly as poss
 Furthermore, these experiments can not exploit the advantages of the simulated environment in which the researcher can set the parameter ranges at the beginning, leaving the computer to start and complete the search for each combination of the available parameters.
 The real-world approach we described in this chapter needs the constant presence of a human to carry out the learning process, and the whole procedure is further slowed down by the Cozmo battery lifetime and its charging time: both take about 30 minutes.
 It is noticeable that, in a real-world scenario like this, it is almost impossible to make a humanly manageable workflow capable of doing a sustainable grid search.
-For this reason, we decided to initialise these parameters following the guidelines provided by the DDPG paper. The results in this case were not as good as we expected: the robot showed no tangible progress even after numerous episodes.
-The policy learned led to strange behavior with sharp turns in a direction and episodes that ended almost immediately.
+For this reason, we decided to initialise these parameters following the guidelines provided by the DDPG paper.
+The results, in this case, were not as good as we expected: the robot showed no tangible progress even after numerous episodes.
+The policy learned led to strange behaviour with sharp turns in a direction and episodes that ended almost immediately.
 
 % TODO: DDPG SAC ?
 After this implementation, we started a search for a reinforcement learning algorithm more suitable for real-world problems.
@@ -384,7 +383,9 @@ Therefore, we also implemented this algorithm from scratch by using the implemen
 
 \section{Real-World experiments}
 
-The real-world nature of the approach we followed in the work of this thesis revealed more questions and problem than the corresponding simulated environment. This fact happens because executing a self-driving task in the real world is meaningfully more challenging. There are plenty of factors that inevitably emerge, and that can not be monitored and audited appropriately if not after making a large number of attempts.
+The real-world nature of the approach we followed in the work of this thesis revealed more questions and problem than the corresponding simulated environment.
+This fact happens because executing a self-driving task in the real world is meaningfully more challenging.
+There are plenty of factors that inevitably emerge, and that can not be monitored and audited appropriately if not after making a large number of attempts.
 
 This section aims to describe the most crucial and interesting problems we faced in the development of this control system together with a debate on possible countermeasures.
 
@@ -397,7 +398,7 @@ Therefore, the frequency of image requests was very high because the system did 
 These two factors led the system to retrieve the same image both before and after taking the current action.
 
 Consequently, the state of each environment step consisted of the concatenation of two images that were often the same picture.
-This consequence led to a conceptual error that may influence the process of learning if we observe that with a human perspective: a state of this kind represents an action that does not impact the environment of the system whilst it is modifying it.
+This consequence led to a conceptual error that may influence the process of learning if we observe that with a human perspective: a state of this kind represents an action that does not impact the environment of the system while it is modifying it.
 
 We noticed this problem because, in the first part of the experiments, where the agent takes random action to explore the surrounding environment, the robot continued to drive a straight path, even if shaky, without taking a definite step in a specific direction and with an almost constant speed.
 This symptom was strictly related to the robot's inability to have the right time to carry out a specific action before interacting with the environment with the next one.
@@ -406,14 +407,15 @@ After noting this problem, we fixed it by hard-coding a minimum interval between
 
 \subsection{Driving Bias}
 
-As we reported in \vref{subsec:human-robot-interaction}, the user has to interact with the robot to indicate how valuable is the last action taken by the robot agent. It is noticeable that, in this context, human-robot interaction has a crucial role in the learning process.
+As we reported in \vref{subsec:human-robot-interaction}, the user has to interact with the robot to indicate how valuable is the last action taken by the robot agent.
+It is noticeable that, in this context, human-robot interaction has a crucial role in the learning process.
 As the sole source of information for the algorithm, it is responsible for all improvements and imperfections of learning process results: the robot learns which actions are valuable and which are unprofitable or disadvantageous, but it is essential to remember that the human is the one who decides the correctness of each action by stopping the car in a dangerous situation.
 This fact inevitably leads to the introduction of unconscious bias in the algorithm that could affect final results.
 
 It emerged after many episodes, where the robot started to learn how to steer near a curve: sometimes the robot managed to make the curve correctly, without going out of the road line, other times it was able to steer with a tread slightly out of the track, then continuing to drive correctly in the next straight section.
 Since the reinforcement learning agent uses the reward received and the stack of images that represent the previous and next state in order to understand the value of a given action, the algorithm considers the last-mentioned approaches to the curve equally valuable.
 From a human perspective, imperfectly executing a curve can still be considered correct, but the risk is that experiences of this type may influence the experience replay memory and then the learning process in the long term.
-This factor is accentuated by the fact that, as the algorithm improves, borderline cases of this type tend to increase more and more and the user is more and more inclined to accept them.
+This factor is accentuated by the fact that, as the algorithm improves, borderline cases of this type tend to increase more and more, and the user is more and more inclined to accept them.
 
 However subjective the error may be, we have always tried in our experiments to be as severe as possible in accepting episodes to the limit of acceptability.
 We will discuss the experiments and their results thoroughly in \vref{ch:ch5,ch:ch6}.
@@ -426,7 +428,7 @@ Just to cite a few of them as an example, we can report the instability in the C
 These events can also be added to those caused directly by the distraction of the user who guides the learning process: sometimes it happened that the user sent the episode end signal when the error was over.
 The agent had already started to insert wrong and off-road experiences in the replay memory, invalidating the experiment carried out up to that moment.
 
-To try to solve the problem, we have implemented two types of rescue system.
+To try to solve the problem, we have implemented two types of rescue systems.
 The first is a volatile backup system for every single episode that is discarded after the start of the next one.
 Once the episode has ended, if the user believes that it has not been carried out correctly or a factor has occurred that risks compromising the entire learning process, there is the possibility to restore the previous state of the episode and start the process again from that point.
 
@@ -442,13 +444,15 @@ For this reason, we spent some time to search for the most reliable way to build
 \begin{figure}
     \centering
     \includegraphics[width=0.64\textwidth]{img/track.png}
-    \caption[CozmoDriver Racing Track]{ Picture from above of the track we designed and build to carry out experiments with Anki Cozmo robot. The route is a mixed track that includes two straights, a narrow hairpin and a wide one that, united by a curve elbow, make up a serpentine. The track length is about 3 metres.}
+    \caption[CozmoDriver Racing Track]{ Picture from above of the track we designed and build to carry out experiments with Anki Cozmo robot.
+        The route is a mixed track that includes two straights, a narrow hairpin and a wide one that, united by a curve elbow, make up a serpentine.
+        The track length is about 3 metres.}
     \label{fig:track_cozmo}
 \end{figure}
 
 
 Firstly, we opted for an easily transportable track to allow various attempt with different locations and environmental conditions that could affect the training phase.
-Furthermore, we noticed that the learning process might be influenced by the presence of reflections, then it was necessary to use a material to use as terrain for the track that was less reflective as possible to avoid such kind of problems.
+Furthermore, we noticed that the presence of reflections might influence the learning process, then it was necessary to use a material to use as terrain for the track that was less reflective as possible to avoid such kind of problems.
 The first choice was the black floor of the Data Science laboratory of Eurecom.
 It was useful only during the initial design and development of the control system to build small pieces of track in which testing functionalities.
 This solution had numerous drawbacks such as the impracticality to transport and high light reflection.
@@ -469,5 +473,8 @@ We opted for analysing the ratio of the size of a vehicle to the width of a road
 In our study, we utilised the width of a typical family car and utilised the average width of a typical Italian motorway for the lane dimension: we found out a value of about $160$-$170$cm for the first one and between $275$cm and $375$cm for the second one.
 Therefore, we measured the Cozmo width that was about $5.5$cm for a resulting ratio of $\frac{1}{30}$.
 Accordingly, the scaled lane width obtained was between $9$cm and $12.5$cm.
-The other component to take into account was the material to use to draw the lane. In this case, we used a simple paper tape of width equal to $2.5$cm. Because of the narrow and limited angle of vision provided by Cozmo camera, we opted for a total width of about $10$cm: the size of the road changes slightly throughout the path emulating what can happen in a hypothetical real road. Therefore, we chose this dimension because positioning the tape with a distance greater than $10$cm would result in a significant part of the tape outside the view of the camera.
+The other component to take into account was the material to use to draw the lane.
+In this case, we used a simple paper tape of width equal to $2.5$cm.
+Because of the narrow and limited angle of vision provided by Cozmo camera, we opted for a total width of about $10$cm: the size of the road changes slightly throughout the path emulating what can happen in a hypothetical real road.
+Therefore, we chose this dimension because positioning the tape with a distance greater than $10$cm would result in a significant part of the tape outside the view of the camera.
 A track picture is available in \vref{fig:track_cozmo}.
