@@ -15,7 +15,7 @@ This part will also contain a brief analysis of how reinforcement learning exper
 For this segment, we took inspiration by \cite{henderson2018deep}, an exciting publication where the authors investigated reproducibility challenges, proper experimental techniques, and reporting procedures of modern deep reinforcement learning to draw up guidelines from which to start in order to obtain better reports, not so much from the result perspective, but from how they are reported.
 
 The second and third sections of this chapter will, therefore, be devoted respectively to the two types of environments used.
-We have shown all the useful graphs in order to analyse and to comment on the obtained results.
+We will show all the useful graphs in order to analyse and to comment on the obtained results.
 
 \section{Experimental Methodology}
 
@@ -72,32 +72,16 @@ We collected the essential information about hardware and software that we have 
 
 \subsection{Pendulum-v0 Environment}
 
-OpenAI Gym \textit{Pendulum-v0} environment formalise the inverted pendulum swing-up problem, a classic problem in the control literature.
+OpenAI Gym \textit{Pendulum-v0} environment formalises the inverted pendulum swing-up problem, a classic problem in the control literature.
 In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up, so it stays upright.
 
 We have also decided to include in this thesis the experiments we have carried out on this simulated environment because the results obtained and the problems faced were essential to have a more prepared approach to deal with the real-world experiment and the environment we designed for Cozmo.
 
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[height=0.2\paperwidth]{img/pendulum.png}
-    \caption[Frame of Pendulum-v0 environment]{Frame of Pendulum-v0 environment.
-        We decided to use a set of two subsequent 64$\times$64 images.}
-    \label{fig:pendulum}
-\end{figure}
 
 \subsubsection{Observation}
 
 The original implementation of this environment is based on a state represented by a \texttt{Box(3)} type, a data structure defined by OpenAI Gym that extends functionalities of a standard array.
 It contains values related to the current angle of the pendulum as described in \vref{table:pendulum_obs}.
-
-Since the goal of our thesis was to apply deep reinforcement learning algorithms to a problem such as the autonomous driving one where input data is composed of images, we decided to build a wrapper (\texttt{gym.ObservationWrapper}) for the original environment in order to receive observations as raw pixels.
-Thanks to this approach, we were able to apply the same considerations and the same convolutional neural networks that we used in the Cozmo environment.
-
-We have started many experiments on this environment to find the most suitable number of images to use as a state, looking for a trade-off between the algorithm’s needs and the memory constraints imposed by the hardware we used.
-The agent revealed instability using a single frame, while it led to excellent results using two images.
-In the end, we decided to resize the image to 64$\times$64 pixels to overcome hardware limitations.
-
-A sample screenshot of the environment in action is shown in \vref{fig:pendulum}.
 
 \begin{table}[!h]
     \centering
@@ -112,6 +96,23 @@ A sample screenshot of the environment in action is shown in \vref{fig:pendulum}
         \bottomrule
     \end{tabular}
 \end{table}
+
+Since the goal of our thesis was to apply deep reinforcement learning algorithms to a problem such as the autonomous driving one where input data is composed of images, we decided to build a wrapper (\texttt{gym.ObservationWrapper}) for the original environment in order to receive observations as raw pixels.
+Thanks to this approach, we were able to apply the same considerations and the same convolutional neural networks that we used in the Cozmo environment.
+
+We have started many experiments on this environment to find the most suitable number of images to use as a state, looking for a trade-off between the algorithm’s needs and the memory constraints imposed by the hardware we used.
+The agent revealed instability using a single frame, while it led to excellent results using two images.
+In the end, we decided to resize the image to 64$\times$64 pixels to overcome hardware limitations.
+
+A sample screenshot of the environment in action is shown in \vref{fig:pendulum}.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[height=0.2\paperwidth]{img/pendulum.png}
+    \caption[Frame of Pendulum-v0 environment]{Frame of Pendulum-v0 environment.
+        We decided to use a set of two subsequent 64$\times$64 images.}
+    \label{fig:pendulum}
+\end{figure}
 
 \subsubsection{Actions}
 
@@ -187,7 +188,7 @@ An example of two subsequent frames received by Cozmo is available in \vref{fig:
     \end{minipage}
 
     \caption[Example of two subsequent frames of CozmoDriver-v0]{An example of a two subsequent frame of CozmoDriver-v0 environment.
-        We decided to resize the image returned by Cozmo to 64$\times$64 for memory reason: a higher resolution would lead to a further decrease in experience replay memory.}
+        We decided to resize the image returned by Cozmo to 64$\times$64 for memory consumption reason: a higher resolution would lead to a further decrease in experience replay memory.}
     \label{fig:cozmo_frames}
 \end{figure}
 
@@ -219,6 +220,8 @@ The reward we chose for our experiment was the second one provided by \vref{subs
 The decision has fallen on the \textit{Lane Distance Reward} because it describes with simplicity the final goal of the task, but above all because it allows the user to have a direct counterproof of the effectiveness of the algorithm, by matching the reward to the distance travelled.
 \Vref{eq:reward_fun} reports the calculation that is executed to every time step to calculate the reward to the carried out action.
 $c$ is the time expressed in seconds between one action and the next one, imposed as a system constant, while $v_t$ is the desired speed taken by the current action expressed in millimetres per second.
+
+Besides, we opted for setting the reward of the final episode step to zero because it occurs when the robot is approaching a harmful situation.
 
 \begin{equation}
     \label{eq:reward_fun}
