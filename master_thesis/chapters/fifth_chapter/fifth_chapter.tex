@@ -6,7 +6,7 @@ Indeed, this process has not been free from difficulties, both of implementation
 After completing the design of this architecture, our second goal was to look for an algorithm that could better adapt to a real context, exceeding the limits set by DDPG in hyper-parameter tuning.
 The ideal would have been to find a parameter agnostic algorithm: an enabling feature to achieve excellent performance regardless of the specific configuration and hyper-parameter selection.
 During our research, we came across the SAC algorithm and, after a careful analysis of the paper and having understood the considerations made by the authors about SAC real-world applications, we thought it might be the right choice to get better performance than the DDPG experiments.
-For this reason, this chapter aims to present a detailed comparison between DDPG and SAC experiments carried out with \textit{Pendulum-v0} environement and show the performance achieved by SAC with the experiments with Cozmo.
+For this reason, this chapter aims to present a detailed comparison between DDPG and SAC experiments carried out with \textit{Pendulum-v0} environment and show the performance achieved by SAC with the experiments with Cozmo.
 
 The first section of this chapter focuses on the experimental methodology.
 It will be an opportunity to describe the hardware of the development machine we used for the experiments and present in a more schematic and precise way the OpenAI Gym environments on which we will apply the algorithms.
@@ -19,112 +19,124 @@ We have shown all the useful graphs in order to analyse and to comment on the ob
 
 \section{Experimental Methodology}
 
-This preliminar section is essential to understand better the tasks we tried to solve throught the usage of reinforcement learning algorithms and what approach we used to evaluate experiments results.
+This preliminary section is essential to understand better the tasks we tried to solve through the usage of reinforcement learning algorithms and what approach we used to evaluate experiments results.
 
 \subsection{Hardware and Software details}
 
 In order to carry out the experiments contained in this chapter, we used a personal laptop.
 We chose this solution because the machine has excellent specifications to support the computational power required by the machine learning experiments both in terms of GPU and RAM.
 
-Despite these initial considerations, we still had problems in terms of RAM memory. This type of experiment requires a very large experience memory replay to allow optimal batch extraction. Despite the large amount of RAM present and the reduction of the size of the input image, we were still forced to reduce the maximum size of the replay memory to complete the experiments.
+Despite these initial considerations, we still had problems in terms of RAM.
+This type of experiment requires an extensive experience memory replay to allow optimal batch extraction.
+Despite the large RAM present and the reduction of the size of the input image, we were still forced to reduce the maximum size of the replay memory to complete the experiments.
 
 We collected the essential information about hardware and software that we have used to perform experiments in \vref{table:hw_spec,table:sw_spec}.
 
 \begin{table}[!h]
-	\centering
-	\caption{Development Machine Hardware Specifications}
-	\label{table:hw_spec}
-	\begin{tabular}{@{}lllll@{}}
-		\toprule
-		\textbf{Component} & \textbf{Details}                                                                      \\
-		\midrule
-		\textbf{Laptop}    & Dell Inspiron 15 7559                                                                 \\\midrule
-		\textbf{CPU}       & Intel\textsuperscript{\textregistered} Core\textsuperscript{\texttrademark} i7-6700HQ \\
-		                   & \# of Cores: 4                                                                        \\
-		                   & \# of Threads: 8                                                                      \\
-		                   & Processor Base Frequency: 2.60 GHz                                                    \\
-		                   & Max Turbo Frequency: 3.50 GHz                                                         \\\midrule
-		\textbf{GPU}       & NVIDIA GeForce GTX 960M                                                               \\
-		                   & CUDA Cores: 640                                                                       \\
-		                   & Memory: 4GB GDDR5, 2500 MHz                                                           \\\midrule
-		\textbf{RAM}       & 12GB DDR3L, 1600 MHz                                                                  \\
-		\bottomrule
-	\end{tabular}
+    \centering
+    \caption{Development Machine Hardware Specifications}
+    \label{table:hw_spec}
+    \begin{tabular}{@{}lllll@{}}
+        \toprule
+        \textbf{Component} & \textbf{Details}                                                                      \\
+        \midrule
+        \textbf{Laptop}    & Dell Inspiron 15 7559                                                                 \\\midrule
+        \textbf{CPU}       & Intel\textsuperscript{\textregistered} Core\textsuperscript{\texttrademark} i7-6700HQ \\
+                           & \# of Cores: 4                                                                        \\
+                           & \# of Threads: 8                                                                      \\
+                           & Processor Base Frequency: 2.60 GHz                                                    \\
+                           & Max Turbo Frequency: 3.50 GHz                                                         \\\midrule
+        \textbf{GPU}       & NVIDIA GeForce GTX 960M                                                               \\
+                           & CUDA Cores: 640                                                                       \\
+                           & Memory: 4GB GDDR5, 2500 MHz                                                           \\\midrule
+        \textbf{RAM}       & 12GB DDR3L, 1600 MHz                                                                  \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 \begin{table}[!h]
-	\centering
-	\caption{Development Machine Software Specifications}
-	\label{table:sw_spec}
-	\begin{tabular}{@{}lllll@{}}
-		\toprule
-		\textbf{Component}        & \textbf{Details}                   \\
-		\midrule
-		\textbf{Operating System} & Ubuntu 18.04.3 LTS (Bionic Beaver) \\\midrule
-		\textbf{Python}           & v.3.6.8                            \\\midrule
-		\textbf{PyTorch}          & v.1.4.0                            \\\midrule
-		\textbf{OpenAI Gym}       & v.0.15.4                           \\
-		\bottomrule
-	\end{tabular}
+    \centering
+    \caption{Development Machine Software Specifications}
+    \label{table:sw_spec}
+    \begin{tabular}{@{}lllll@{}}
+        \toprule
+        \textbf{Component}        & \textbf{Details}                   \\
+        \midrule
+        \textbf{Operating System} & Ubuntu 18.04.3 LTS (Bionic Beaver) \\\midrule
+        \textbf{Python}           & v.3.6.8                            \\\midrule
+        \textbf{PyTorch}          & v.1.4.0                            \\\midrule
+        \textbf{OpenAI Gym}       & v.0.15.4                           \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 \subsection{Pendulum-v0 Environment}
 
-OpenAI Gym \textit{Pendulum-v0} environment formalise the inverted pendulum swing-up problem, a classic problem in the control literature. In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up so it stays upright.
+OpenAI Gym \textit{Pendulum-v0} environment formalise the inverted pendulum swing-up problem, a classic problem in the control literature.
+In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up, so it stays upright.
 
-We have also decided to include in this thesis the experiments we have carried out on this simulated environment, because the results obtained and the problems faced were essential to have a more prepared approach to deal with the real-world experiment and the environment we designed for Cozmo.
+We have also decided to include in this thesis the experiments we have carried out on this simulated environment because the results obtained and the problems faced were essential to have a more prepared approach to deal with the real-world experiment and the environment we designed for Cozmo.
 
 \begin{figure}[ht!]
-	\centering
-	\includegraphics[height=0.2\paperwidth]{img/pendulum.png}
-	\caption[Frame of Pendulum-v0 environment]{Frame of Pendulum-v0 environment. We decided to use a set of two subsequent 64$\times$64 images.}
-	\label{fig:pendulum}
+    \centering
+    \includegraphics[height=0.2\paperwidth]{img/pendulum.png}
+    \caption[Frame of Pendulum-v0 environment]{Frame of Pendulum-v0 environment.
+        We decided to use a set of two subsequent 64$\times$64 images.}
+    \label{fig:pendulum}
 \end{figure}
 
 \subsubsection{Observation}
 
-The original implementation of this environment is based on a state represented by a \texttt{Box(3)} type, a data structure defined by OpenAI Gym that extends functionalities of a standard array. It contains values related to the current angle of the pendulum as described in \vref{table:pendulum_obs}.
+The original implementation of this environment is based on a state represented by a \texttt{Box(3)} type, a data structure defined by OpenAI Gym that extends functionalities of a standard array.
+It contains values related to the current angle of the pendulum as described in \vref{table:pendulum_obs}.
 
-Since the goal of our thesis was to apply deep reinforcement learning algorithms to a problem such as the autonomous driving one where input data is composed of images, we decided to build a wrapper (\texttt{gym.ObservationWrapper}) for the original environment in order to receive observations as raw pixels. Thanks to this approach, we were able to apply the same considerations and the same convolutional neural networks that we used in the Cozmo environment.
+Since the goal of our thesis was to apply deep reinforcement learning algorithms to a problem such as the autonomous driving one where input data is composed of images, we decided to build a wrapper (\texttt{gym.ObservationWrapper}) for the original environment in order to receive observations as raw pixels.
+Thanks to this approach, we were able to apply the same considerations and the same convolutional neural networks that we used in the Cozmo environment.
 
-We have started many experiments on this environment to find the most suitable number of images to use as a state, looking for a trade-off between the algorithm’s needs and the memory constraints imposed by the hardware we used. The agent revealed instability using a single frame, while it led to excellent results using two images. In the end, we decided to resize the image to 64$\times$64 pixels to overcome hardware limitations.
+We have started many experiments on this environment to find the most suitable number of images to use as a state, looking for a trade-off between the algorithm’s needs and the memory constraints imposed by the hardware we used.
+The agent revealed instability using a single frame, while it led to excellent results using two images.
+In the end, we decided to resize the image to 64$\times$64 pixels to overcome hardware limitations.
 
 A sample screenshot of the environment in action is shown in \vref{fig:pendulum}.
 
 \begin{table}[!h]
-	\centering
-	\caption{Original Observation \texttt{Pendulum-v0} environment}
-	\label{table:pendulum_obs}
-	\begin{tabular}{@{}lllll@{}}
-		\toprule
-		Index & Observation    & Min    & Max    \\ \midrule
-		0     & cos($\theta$)  & $-1.0$ & $+1.0$ \\
-		1     & sin($\theta$)  & $-1.0$ & $+1.0$ \\
-		2     & $\dot{\theta}$ & $-8.0$ & $+8.0$ \\
-		\bottomrule
-	\end{tabular}
+    \centering
+    \caption{Original Observation \texttt{Pendulum-v0} environment}
+    \label{table:pendulum_obs}
+    \begin{tabular}{@{}lllll@{}}
+        \toprule
+        Index & Observation    & Min    & Max    \\ \midrule
+        0     & cos($\theta$)  & $-1.0$ & $+1.0$ \\
+        1     & sin($\theta$)  & $-1.0$ & $+1.0$ \\
+        2     & $\dot{\theta}$ & $-8.0$ & $+8.0$ \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 \subsubsection{Actions}
 
-The actions that the agent can perform within this environment are described through a \texttt{Box(1)} object containing only one element. This value corresponds to the joint effort, which allows the agent to swing the pendulum. The action space has been maintained also in the modified environment.
+The actions that the agent can perform within this environment are described through a \texttt{Box(1)} object containing only one element.
+This value corresponds to the joint effort, which allows the agent to swing the pendulum.
+The action space has also been maintained in the modified environment.
 
 \begin{table}[!h]
-	\centering
-	\caption{Pendulum-v0 Actions }
-	\label{mountain_action}
-	\begin{tabular}{@{}lllll@{}}
-		\toprule
-		Index & Action       & Min    & Max    \\ \midrule
-		0     & Joint effort & $-2.0$ & $+2.0$ \\
-		\bottomrule
-	\end{tabular}
+    \centering
+    \caption{Pendulum-v0 Actions }
+    \label{mountain_action}
+    \begin{tabular}{@{}lllll@{}}
+        \toprule
+        Index & Action       & Min    & Max    \\ \midrule
+        0     & Joint effort & $-2.0$ & $+2.0$ \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 \subsubsection{Reward}
 The reward for each timestep $t$ is given by \[r_t = -(\theta_t^2 + 0.1 \dot{\theta}^2 + 0.001 a_t^2)\]
-where $\theta$ is normalized between $-\pi$ and $\pi$. Therefore, the lowest cost is $-(\pi^2 + 0.1*8^2 + 0.001*2^2) = -16.2736044$, and the highest cost is $0$. In essence, the goal is to remain at zero angle (vertical), with the least rotational velocity, and the least effort.
-The reward design has been maintained also in the modified environment.
+where $\theta$ is normalized between $-\pi$ and $\pi$.
+Therefore, the lowest cost is $-(\pi^2 + 0.1*8^2 + 0.001*2^2) = -16.2736044$, and the highest cost is $0$.
+In essence, the goal is to remain at zero angles (vertical), with the least rotational velocity, and the least effort.
+The reward design has also been maintained in the modified environment.
 
 \subsubsection{Starting State}
 
@@ -139,20 +151,20 @@ In our case, after some attempts, we decided to set a limit value of 200 steps f
 
 \subsubsection{Solved Requirements}
 
-Also in this case, OpenAI Gym documentation does not specify any indications in order to understand whether an episode has been solved.
+Even in this case, OpenAI Gym documentation does not specify any indications to understand whether an episode has been solved.
 Indeed, \textit{Pendulum-v0} is an unsolved environment, which means it does not have a specified reward threshold at which it is considered correctly completed.
 
 \subsection{CozmoDriver-v0 Environment}
 
-\textit{CozmoDriver-v0}, the reinforcement learning environment we implemented, is one of the contribution of this thesis.
-This section aims to present as schematically as possible the basic parameters that characterize the environment we have designed.
-Further details on the implementation choices, problems encountered and solutions we have adopted to solve them are available in \vref{ch:ch4}.
+\textit{CozmoDriver-v0}, the reinforcement learning environment we implemented, is one of the contributions of this thesis.
+This section aims to present as schematically as possible the basic parameters that characterise the environment we have designed.
+Further details on the implementation choices, problems encountered, and solutions we have adopted to solve them are available in \vref{ch:ch4}.
 
 \subsubsection{Observation}
 
 The observations we decided to use in \textit{CozmoDriver-v0} are the same as those we exploited in the \textit{Pendulum-v0} environment.
-In fact, our agent will obtain, for each action carried out, a queue composed of two images from the front camera of Cozmo resized to 64x64 pixels.
-As in the previous environment, we decided to resize the images obtained in order to remain within the limits placed by the RAM memory available in the development machine.
+Indeed, our agent will obtain, for each action carried out, a queue composed of two images from the front camera of Cozmo resized to 64x64 pixels.
+As in the previous environment, we decided to resize the images obtained in order to remain within limits placed by the RAM available in the development machine.
 
 The first image represents the state before the action, while the second represents the consequences of the action taken.
 The number of images was set to two after performing some experiments on \textit{Pendulum-v0} environment that revealed instability in the use of a single image.
@@ -160,54 +172,57 @@ We decided to limit ourselves to two images, as we would increase the size of a 
 This choice would have required a counterbalance such as the decrease of the maximum size of replay memory.
 
 As we mentioned in \vref{ch:ch3}, Anki Cozmo has a front camera inserted inside its tilting head and one forklift.
-In order to obtain more valuable images for our experiments we decided to tilt the head as much as possible down and raise the forklift: in this way, the image is focused as much as possible on the lane, leaving everything that could distract the learning process outside the view.
+To obtain more valuable images for our experiments, we decided to tilt the head as much as possible down and raise the forklift: in this way, the image is focused on the lane, leaving everything that could distract the learning process outside the view.
 
-An example of two subsequent frame received by Cozmo is available in \vref{fig:cozmo_frames}.
+An example of two subsequent frames received by Cozmo is available in \vref{fig:cozmo_frames}.
 \begin{figure}
 
-	\begin{minipage}[t]{0.5\linewidth}
-		\centering
-		\includegraphics[height=0.25\paperwidth]{img/cozmo_frame_1.jpg}
-	\end{minipage}
-	\begin{minipage}[t]{0.5\linewidth}
-		\centering
-		\includegraphics[height=0.25\paperwidth]{img/cozmo_frame_2.jpg}
-	\end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \includegraphics[height=0.25\paperwidth]{img/cozmo_frame_1.jpg}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \includegraphics[height=0.25\paperwidth]{img/cozmo_frame_2.jpg}
+    \end{minipage}
 
-	\caption[Example of two subsequent frame of CozmoDriver-v0]{An example of a two subsequent frame of CozmoDriver-v0 environment. We decided to resize the image returned by Cozmo to 64$\times$64 for memory reason: a higher resolution would lead to a further decrease in experience replay memory.}
-	\label{fig:cozmo_frames}
+    \caption[Example of two subsequent frames of CozmoDriver-v0]{An example of a two subsequent frame of CozmoDriver-v0 environment.
+        We decided to resize the image returned by Cozmo to 64$\times$64 for memory reason: a higher resolution would lead to a further decrease in experience replay memory.}
+    \label{fig:cozmo_frames}
 \end{figure}
 
 \subsubsection{Actions}
 
 We have already discussed in \vref{subsubsec:mdp_form} the decisions taken to implement the management of actions within the environment that we have built.
 
-To describe the actions that the agent can perform within this environment, we used a \texttt{Box(2)}. The first value of this object corresponds to the desired speed, while the second one represent the steering wheel position. \Vref{table:cozmo_actions} describes schematically this object.
+To describe the actions that the agent can perform within this environment, we used a \texttt{Box(2)}.
+The first value of this object corresponds to the desired speed, while the second one represents the steering wheel position.
+\Vref{table:cozmo_actions} describes schematically this object.
 
 \begin{table}[!h]
-	\centering
-	\caption{CozmoDriver-v0 Actions}
-	\label{table:cozmo_actions}
-	\begin{tabular}{@{}lllll@{}}
-		\toprule
-		Index & Action                        & Min    & Max    \\ \midrule
-		0     & Desired Speed ($v$)           & $0.0$  & $+1.0$ \\
-		1     & Steering Wheel Position ($w$) & $-1.0$ & $+1.0$ \\
+    \centering
+    \caption{CozmoDriver-v0 Actions}
+    \label{table:cozmo_actions}
+    \begin{tabular}{@{}lllll@{}}
+        \toprule
+        Index & Action                        & Min    & Max    \\ \midrule
+        0     & Desired Speed ($v$)           & $0.0$  & $+1.0$ \\
+        1     & Steering Wheel Position ($w$) & $-1.0$ & $+1.0$ \\
 
-		\bottomrule
-	\end{tabular}
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 \subsubsection{Reward}
 
 The reward we chose for our experiment was the second one provided by \vref{subsubsec:mdp_form}.
 The decision has fallen on the \textit{Lane Distance Reward} because it describes with simplicity the final goal of the task, but above all because it allows the user to have a direct counterproof of the effectiveness of the algorithm, by matching the reward to the distance travelled.
-\Vref{eq:reward_fun} reports the calculation that is executed to every timestep to calculate the reward to the carried out action.
-$c$ is the time expressed in seconds between one action and the next one, imposed as system constant, while $v_t$ is the desired speed taken by the current action expressed in millimetres per second.
+\Vref{eq:reward_fun} reports the calculation that is executed to every time step to calculate the reward to the carried out action.
+$c$ is the time expressed in seconds between one action and the next one, imposed as a system constant, while $v_t$ is the desired speed taken by the current action expressed in millimetres per second.
 
 \begin{equation}
-	\label{eq:reward_fun}
-	r_t = v_t \cdot c
+    \label{eq:reward_fun}
+    r_t = v_t \cdot c
 \end{equation}
 
 \subsubsection{Starting State}
@@ -215,17 +230,17 @@ $c$ is the time expressed in seconds between one action and the next one, impose
 The starting state position of the system is not constant, but changes from episode to episode.
 This approach was preferred over the one with a fixed starting position for two simple reasons:
 \begin{itemize}
-	\item Reduces the path that has to be traveled by the robot in order to be able to reposition, speeding up the experiments as it saves more battery.
-	      In this approach, the robot is repositioned on the road closest to where the previous episode ended.
-	\item It allows the agent to accumulate experiences that do not always refer to the same road segment.
-	      With this methodology, the experiences will most always begin and end in different states, leading the agent to put more effort in generalization.
+    \item Reduces the path that has to be travelled by the robot in order to be able to reposition, speeding up the experiments as it preserves battery consumption.
+          In this approach, the robot is repositioned on the road closest to where the previous episode ended.
+    \item It allows the agent to accumulate experiences that do not always refer to the same road segment.
+          With this methodology, the experiences will most always begin and end in different states, leading the agent to put more effort into generalisation.
 \end{itemize}
 
 The episode starts as soon as the agent receives the start signal.
 
 \subsubsection{Episode Termination}
 
-The episode ends when the robot goes off the road or reaches a a dangerous situation.
+The episode ends when the robot goes off the road or reaches a dangerous situation.
 Even this time, the episode ends when the agent receives the stop signal.
 
 \subsubsection{Solved Requirements}
@@ -233,8 +248,8 @@ Even this time, the episode ends when the agent receives the stop signal.
 We have not provided a well-defined parameter to understand whether the task has been solved or not, because it depends on the path and the particular needs of the programmer.
 Potentially the episode could last forever if the robot could learn to run an entire circuit.
 
-No mechanism has been implemented to communicate to the robot that the episode ended in a positive way.
-For this reason, we suggest to apply this environment to circuits and not paths where beginning and end do not coincide.
+No mechanism has been implemented to communicate to the robot that the episode ended positively.
+For this reason, we suggest applying this environment to circuits and not paths where beginning and end do not coincide.
 
 In our case, the route used is almost 3 meters long.
 So we decided to use this value as a target to reach to determine the resolution of the task.
@@ -242,89 +257,100 @@ So we decided to use this value as a target to reach to determine the resolution
 \subsection{Measuring Performance}
 
 In recent years, we have witnessed the rapid growth of interest in deep reinforcement learning by the entire scientific community.
-This growth has led to an increase in experiments and work on this subject, which are often easily available.
+This growth has led to an increase in experiments and works on this subject, which are often readily available.
 However, reproducing reinforcement learning experiments is not always as intuitive and straightforward as expected.
-Often, the measurements reported by papers and studies of this kind are difficult to interpret due to the non-determinism inherent in most environments in which these algorithms are applied.
-Without appropriate and meaningful metrics accompanied by standardization in presenting the results, it becomes difficult to determine conclusively the improvements made to the-state-of-the-art.
+Often, the measurements reported by papers and studies of this kind are difficult to interpret due to non-determinisms inherent in most environments in which these algorithms are applied.
+Without appropriate and meaningful metrics accompanied by standardisation in presenting the results, it becomes difficult to determine conclusively the improvements made to the state-of-the-art.
 
-Going through the literature, it is noticeable that reinforcement learning algorithms are often evaluated by presenting tables and graphs showing cumulative average rewards or the maximum reward achieved on a pre-set number of timesteps.
-But the combined features of environments and algorithms make these values typically inadequate for fair comparison.
-This is due to the fact that there are numerous factors that come into play, such as seeds and trials that lead to different performances and that do not contribute to make clearer the actual performance of an algorithm.
-However, when these are accompanied by confidence intervals, based on a fairly large number of attempts, then there are the premises to make decisions and formulate more informed considerations.
+By reviewing the available literature, it is noticeable that reinforcement learning algorithms are often evaluated by presenting tables and graphs showing cumulative average rewards or the maximum reward achieved on a pre-set number of timesteps.
+However, the combined features of environments and algorithms make these values typically inadequate for a fair comparison.
+The cause is that numerous factors come into play, such as seeds and trials that lead to different performances and that do not contribute to making more transparent the actual performance of an algorithm.
+However, when these are accompanied by confidence intervals, based on a reasonably large number of attempts, then there are the premises to make decisions and formulate more informed considerations.
 
 Once again, however, we have been forced to come to terms with reality.
-We were able to produce an analysis as honest and specific as possible regarding experiments on \textit{Pendulum-v0}.
-In this case, we could easily repeat the experiments 10 times for each algorithm, so that we could report graphs containing more useful information, such as confidence margins.
+We were able to produce analysis as honest and specific as possible regarding experiments on \textit{Pendulum-v0}.
+In this case, we could easily repeat the experiments ten times for each algorithm, so that we could report graphs containing more useful information, such as confidence margins.
 
 On the other hand, experiments with Cozmo took a much larger number of episodes before starting to show the first improvements.
-We managed to maintain an average of just under 750 episodes per day: this underlines how difficult it was to get to conclude even a single experiment.
-For this experiment, we reported the results obtained without any confidence margin, but focusing on the best training results as opposed to the results obtained during the test.
+We managed to maintain an average of just under 500-750 episodes per day: this underlines how difficult it was to get to conclude even a single experiment.
+For this experiment, we reported the results obtained without any confidence margin but focusing on the best training results as opposed to the results obtained during the test.
 
-Another crucial consideration is the one concerning loss functions results: the values reported in a loss graph should not be considered in the typical sense from supervised learning. There are two crucial differences in reinforcement learning loss functions:
+Another crucial consideration is the one concerning loss functions results: the values reported in a loss graph should not be considered in the typical sense from supervised learning.
+There are two crucial differences in reinforcement learning loss functions:
 
 \begin{itemize}
-	\item Data distribution depends on the current parameters. In supervised learning we are used to working with loss functions that are defined on a fixed data distribution. They are independent of the parameter that the process aims to optimise. In reinforcement learning, this characteristic does not apply, because the data must be sampled from the current and most recent policy.
-	\item A loss function can not determine and measure the performance of an algorithm. Even in this case, it could be useful to make a comparison with supervised learning: in this approach a loss function evaluates the performance metric that we want to optimise. On the other hand, in the reinforcement learning scenario, researchers are interested in the expected return. Therefore, the loss function can not be useful to approximate this value. It is useful only when evaluated with the current parameters, with data generated by the current parameters.
+    \item Data distribution depends on the current parameters.
+          In supervised learning, we are used to working with loss functions that are defined on fixed data distribution.
+          They are independent of the parameter that the process aims to optimise.
+          In reinforcement learning, this characteristic does not apply because the data must be sampled from the current and most recent policy.
+    \item A loss function can not determine and measure the performance of an algorithm.
+          Even in this case, it could be useful to make a comparison with supervised learning: in this approach, a loss function evaluates the performance metric that we want to optimise.
+          On the other hand, in the reinforcement learning scenario, researchers are interested in the expected return.
+          Therefore, the loss function can not be useful to approximate this value.
+          It is useful only when evaluated with the current parameters, with data generated by the current parameters.
 \end{itemize}
 
 The connection between loss function and performance does not apply immediately after the first step of gradient descent.
 Minimising a specific loss function for a given batch of data has no guarantee of improving expected return.
-Therefore, the word \textit{overfitting} must not be interpreted from the point of view of supervised learning: it should be merely considered as a descriptive word without any relationship with the generalisation error.
+Therefore, the word \textit{overfitting} must not be interpreted from a supervised learning perspective: it should be merely considered as a descriptive word without any relationship with the generalisation error.
 
 From a performance perspective, the loss function means nothing in reinforcement learning \cite{openai2018spinningup}.
-This is one of the fundamental points that distinguish supervised learning to reinforcement learning. The researcher should only care about average return.
+This fact is one of the fundamental points that distinguish supervised learning to reinforcement learning.
+The researcher should only care about the average return.
 For this reason, we decided to measure the performance of the experiments by using the deterministic policy with DDPG and the mean policy with SAC without any noise for ten episodes and reporting the average return.
 
-\Vref{sec:pendulum-exp,sec:cozmo-exp} will show the most important results and graphs obtained from the respective experiments.
-The final part of each section will be accompanied by a comment on the results obtained paying particular attention to the comparison between the two algorithms.
+\Vref{sec:pendulum-exp,sec:cozmo-exp} will show the most relevant results and graphs obtained from the respective experiments.
+The final part of each section will be accompanied by a comment on the results obtained, paying particular attention to the comparison between the two algorithms.
 
 \section{Pendulum-v0 Experiments} \label{sec:pendulum-exp}
 
 \subsection{DDPG Hyperparameters}
 
 The hyper-parameters we exploited in this experiment are shown in \vref{table:ddpg_pendulum}.
-The epsilon decay function is presented in \vref{eq:epsilon_decay} where $e$ is the current episode number. It is used to decrease the impact of the noise on the actions in function of the number of episode. When it reaches the $\epsilon_{\text{end}}$, it will become a constant.
+The epsilon decay function is presented in \vref{eq:epsilon_decay} where $e$ is the current episode number.
+It is used to decrease the noise impact on actions in function of the number of episodes.
+When it reaches the $\epsilon_{\text{end}}$, it will become a constant.
 
 \begin{table}[!h]
-	\centering
-	\caption{SAC Hyper-parameter setup for Pendulum-v0 environment}
-	\label{table:ddpg_pendulum}
-	\resizebox{0.9\textwidth}{!}{
-		\begin{tabular}{@{}lllll@{}}
-			\toprule
-			\textbf{Hyper-parameters}             & \textbf{Value}                                                    \\
-			\midrule
-			\textbf{Policy Network}               & \textbf{Learning Rate}: $1 \times 10^{-4}$                        \\
-			                                      & \textbf{Architecture}                                             \\
-			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0            \\
-			                                      & 2 FC Layer with hidden size = 256                                 \\
-			                                      & 1 Output value                                                    \\\midrule
-			\textbf{Q Network}                    & \textbf{Learning Rate}: $1 \times 10^{-4}$                        \\
-			                                      & \textbf{Architecture}                                             \\
-			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0            \\
-			                                      & 2 FC Layer with hidden size = 256                                 \\
-			                                      & 1 Output value                                                    \\\midrule
-			\textbf{Ornstein Uhlenbeck Noise}     & $\mu = 0.0 \;\; \sigma = 0.3 \;\; \theta = 0.15$                  \\\midrule
-			\textbf{Epsilon Decay Noise}          & \textbf{Start}: $0.9$, \textbf{End}: $0.2$, \textbf{Decay}: $200$ \\\midrule
-			\textbf{Gamma ($\gamma$)}             & 0.99                                                              \\\midrule
-			\textbf{Tau ($\tau$)}                 & $1 \times 10^{-3}$                                                \\\midrule
-			\textbf{Observation}                  & \textbf{Buffer Size}: 2                                           \\
-			                                      & \textbf{Image Size}: 64 $\times$ 64                               \\\midrule
-			\textbf{Batch Size}                   & 64                                                                \\\midrule
-			\textbf{Max Number of episode steps}  & 205                                                               \\\midrule
-			\textbf{Replay Memory Size}           & 10000                                                             \\\midrule
+    \centering
+    \caption{SAC Hyper-parameter setup for Pendulum-v0 environment}
+    \label{table:ddpg_pendulum}
+    \resizebox{0.9\textwidth}{!}{
+        \begin{tabular}{@{}lllll@{}}
+            \toprule
+            \textbf{Hyper-parameters}             & \textbf{Value}                                                    \\
+            \midrule
+            \textbf{Policy Network}               & \textbf{Learning Rate}: $1 \times 10^{-4}$                        \\
+                                                  & \textbf{Architecture}                                             \\
+                                                  & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0            \\
+                                                  & 2 FC Layer with hidden size = 256                                 \\
+                                                  & 1 Output value                                                    \\\midrule
+            \textbf{Q Network}                    & \textbf{Learning Rate}: $1 \times 10^{-4}$                        \\
+                                                  & \textbf{Architecture}                                             \\
+                                                  & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0            \\
+                                                  & 2 FC Layer with hidden size = 256                                 \\
+                                                  & 1 Output value                                                    \\\midrule
+            \textbf{Ornstein Uhlenbeck Noise}     & $\mu = 0.0 \;\; \sigma = 0.3 \;\; \theta = 0.15$                  \\\midrule
+            \textbf{Epsilon Decay Noise}          & \textbf{Start}: $0.9$, \textbf{End}: $0.2$, \textbf{Decay}: $200$ \\\midrule
+            \textbf{Gamma ($\gamma$)}             & 0.99                                                              \\\midrule
+            \textbf{Tau ($\tau$)}                 & $1 \times 10^{-3}$                                                \\\midrule
+            \textbf{Observation}                  & \textbf{Buffer Size}: 2                                           \\
+                                                  & \textbf{Image Size}: 64 $\times$ 64                               \\\midrule
+            \textbf{Batch Size}                   & 64                                                                \\\midrule
+            \textbf{Max Number of episode steps}  & 205                                                               \\\midrule
+            \textbf{Replay Memory Size}           & 10000                                                             \\\midrule
 
-			\textbf{\#Epoch per Episode}          & 250                                                               \\\midrule
-			\textbf{Soft Target Update per Epoch} & 1                                                                 \\\midrule
-			\textbf{Test Phase}                   & \textbf{Test frequency}: every 5000 epochs                        \\
-			                                      & \textbf{Test episodes}: 10                                        \\
-			\bottomrule
-		\end{tabular}}
+            \textbf{\#Epoch per Episode}          & 250                                                               \\\midrule
+            \textbf{Soft Target Update per Epoch} & 1                                                                 \\\midrule
+            \textbf{Test Phase}                   & \textbf{Test frequency}: every 5000 epochs                        \\
+                                                  & \textbf{Test episodes}: 10                                        \\
+            \bottomrule
+        \end{tabular}}
 \end{table}
 
 \begin{equation}
-	\label{eq:epsilon_decay}
-	\epsilon = \epsilon_{\text{start}} - (\epsilon_{\text{start}} -\epsilon_{\text{end}})\min(1.0, \frac{e}{\epsilon_{\text{decay}}})
+    \label{eq:epsilon_decay}
+    \epsilon = \epsilon_{\text{start}} - (\epsilon_{\text{start}} -\epsilon_{\text{end}})\min(1.0, \frac{e}{\epsilon_{\text{decay}}})
 \end{equation}
 
 \FloatBarrier
@@ -333,51 +359,51 @@ The epsilon decay function is presented in \vref{eq:epsilon_decay} where $e$ is 
 
 The hyper-parameters we exploited in this experiment are shown in \vref{table:sac_pendulum}.
 \begin{table}[!h]
-	\centering
-	\caption{SAC Hyper-parameter setup for Pendulum-v0 environment}
-	\label{table:sac_pendulum}
-	\resizebox{0.9\textwidth}{!}{
-		\begin{tabular}{@{}lllll@{}}
-			\toprule
-			\textbf{Hyper-parameters}             & \textbf{Value}                                         \\
-			\midrule
-			\textbf{Policy Network}               & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
-			                                      & \textbf{Type}: Gaussian Policy                         \\
-			                                      & \textbf{Architecture}                                  \\
-			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
-			                                      & 2 FC Layer with hidden size = 256                      \\
-			                                      & 1 Output value                                         \\\midrule
-			\textbf{Q Network}                    & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
-			                                      & \textbf{Architecture}                                  \\
-			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
-			                                      & 2 FC Layer with hidden size = 256                      \\
-			                                      & 1 Output value                                         \\\midrule
-			\textbf{Gamma ($\gamma$)}             & 0.99                                                   \\\midrule
-			\textbf{Tau ($\tau$)}                 & $5 \times 10^{-3}$                                     \\\midrule
-			\textbf{Entropy Autotune}             & Enabled                                                \\\midrule
-			\textbf{Observation}                  & \textbf{Buffer Size}: 2                                \\
-			                                      & \textbf{Image Size}: 64 $\times$ 64                    \\\midrule
-			\textbf{Batch Size}                   & 64                                                     \\\midrule
-			\textbf{Max Number of episode steps}  & 200                                                    \\\midrule
-			\textbf{Replay Memory Size}           & 10000                                                  \\\midrule
+    \centering
+    \caption{SAC Hyper-parameter setup for Pendulum-v0 environment}
+    \label{table:sac_pendulum}
+    \resizebox{0.9\textwidth}{!}{
+        \begin{tabular}{@{}lllll@{}}
+            \toprule
+            \textbf{Hyper-parameters}             & \textbf{Value}                                         \\
+            \midrule
+            \textbf{Policy Network}               & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
+                                                  & \textbf{Type}: Gaussian Policy                         \\
+                                                  & \textbf{Architecture}                                  \\
+                                                  & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
+                                                  & 2 FC Layer with hidden size = 256                      \\
+                                                  & 1 Output value                                         \\\midrule
+            \textbf{Q Network}                    & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
+                                                  & \textbf{Architecture}                                  \\
+                                                  & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
+                                                  & 2 FC Layer with hidden size = 256                      \\
+                                                  & 1 Output value                                         \\\midrule
+            \textbf{Gamma ($\gamma$)}             & 0.99                                                   \\\midrule
+            \textbf{Tau ($\tau$)}                 & $5 \times 10^{-3}$                                     \\\midrule
+            \textbf{Entropy Autotune}             & Enabled                                                \\\midrule
+            \textbf{Observation}                  & \textbf{Buffer Size}: 2                                \\
+                                                  & \textbf{Image Size}: 64 $\times$ 64                    \\\midrule
+            \textbf{Batch Size}                   & 64                                                     \\\midrule
+            \textbf{Max Number of episode steps}  & 200                                                    \\\midrule
+            \textbf{Replay Memory Size}           & 10000                                                  \\\midrule
 
-			\textbf{\#Epoch per Episode}          & 250                                                    \\\midrule
-			\textbf{Soft Target Update per Epoch} & 1                                                      \\\midrule
-			\textbf{Test Phase}                   & \textbf{Test frequency}: every 5000 epochs             \\
-			                                      & \textbf{Test episodes}: 10                             \\
-			\bottomrule
-		\end{tabular}}
+            \textbf{\#Epoch per Episode}          & 250                                                    \\\midrule
+            \textbf{Soft Target Update per Epoch} & 1                                                      \\\midrule
+            \textbf{Test Phase}                   & \textbf{Test frequency}: every 5000 epochs             \\
+                                                  & \textbf{Test episodes}: 10                             \\
+            \bottomrule
+        \end{tabular}}
 \end{table}
 
 \FloatBarrier
 
 \subsection{Comparative Analysis}
 
-This section aims to present the most important plots we obtained from the experiments carried out on Pendulum-v0 environment.
+This section aims to present the most critical plots we obtained from the experiments carried out on Pendulum-v0 environment.
 The results obtained exploiting SAC algorithm are presented in \vref{fig:sac_pendulum_reward,fig:sac_pendulum_test_reward}, while the ones gathered with DDPG algorithm are presented in \vref{fig:ddpg_pendulum_reward,fig:ddpg_pendulum_test_reward}.
 
 \Vref{fig:ddpg_pendulum_reward,fig:sac_pendulum_reward} shows the result of the training phase.
-These plots has the number of episodes in the abscissa and the reward obtained in the ordinate.
+These plots have the number of episodes in the abscissa and the reward obtained in the ordinate.
 
 The results of these graphs are unstable both in the average value and in margins sizes.
 This phenomenon is mainly caused by the noise introduced during training: it allows the agent to explore the space in the environment without focusing on the current best action but trying to explore entirely and randomly the totality of environment space.
@@ -386,20 +412,22 @@ Therefore, SAC algorithms exploit the \textit{entropy autotune} presented by its
 This lead to a more straightforward setup of the experiment without requiring manual optimal temperature setup, which is non-trivial and needs to be tuned for each task.
 
 It is possible to investigate about these two trends in \vref{fig:ddpg_noise,fig:sac_temperature}.
-We exploited \vref{eq:epsilon_decay} to manipulate the importance of the noise through the whole set of episode for each run.
-The contribution of the noise decreases directly proportional to the number of episodes completed to enhance exploration in the initial part of the experiment.
-On the other side, the auto-tuning approach of SAC influence the way the reward is calculated and used to train the network. The objective is to give more reward to actions that has an higher entropy, that is more unpredictable. This approach is motivated by the fact that an unpredictable situation can bring more information to the learning process than a more predictable one.
-In DDPG the noise is regulated by the combination of Ornstein Uhlenbeck noise process and an epsilon decay function that regulates how the noise influences actions with the growth in the number of episodes completed.
+We exploited \vref{eq:epsilon_decay} to manipulate the importance of the noise through the whole set of episodes for each run.
+The contribution of the noise decreases directly proportional to the number of episodes completed to enhance exploration in the first part of the experiment.
+On the other side, the autotuning approach of SAC influences the way the reward is calculated and used to train the network.
+The objective is to give more reward to actions that have higher entropy, that is more unpredictable.
+This approach is motivated by the fact that an unpredictable situation can bring more information to the learning process than a more predictable one.
+In DDPG, the noise is regulated by the combination of Ornstein Uhlenbeck noise process and an epsilon decay function that regulates how the noise influences actions with the growth in the number of episodes completed.
 
 It is noticeable that SAC results seem more valuable than DDPG ones: the SAC agent manages to touch the zero value after about 30 episodes and reaches a sort of asymptote between 100 and 200 after about 60 episodes.
 On the other hand, the DDPG agent obtained a worse performance by touching the zero value after about 100 episodes and the corresponding values of SAC asymptote only in the last part of the experiment.
-This fact is even more remarkable if we analyze the average of the previous 100 episodes carried out in training as shown in \vref{fig:ddpg_pendulum_last100,fig:sac_pendulum_last100}.
+This fact is even more remarkable if we analyse the average of the previous 100 episodes carried out in training, as shown in \vref{fig:ddpg_pendulum_last100,fig:sac_pendulum_last100}.
 
 A criticism that can be made to this analysis is represented by the different amounts of noise present in different episodes.
 If that were the case, the testing phase of the DDPG algorithm, where any noise is removed, should produce better performance or, at least, comparable to those of SAC.
 However, analysing the result of the test phase shown in \vref{fig:ddpg_pendulum_test_reward,fig:sac_pendulum_test_reward}, it is clear that the different trends described above remain unchanged.
 As mentioned before in this work, we decided to start a test phase every specified amount of epochs correctly executed.
-For this reason, these plots has the number of epochs in the abscissa and the average reward obtained from 10 testing episode in the ordinate.
+For this reason, these plots have the number of epochs in the abscissa and the average reward obtained from 10 testing episode in the ordinate.
 Even in the testing phase, the most important, the outstanding performance of SAC is not achieved by the DDPG one.
 
 \newpage
@@ -409,104 +437,106 @@ Even in the testing phase, the most important, the outstanding performance of SA
 %
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				xmin=1,
-				xmax=205,
-				ymax=0,
-				width=\textwidth*0.9,
-				height=\textheight*0.38,
-				set layers=standard,
-				cycle list name=train,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Episode,
-				ylabel style={align=center}, ylabel=Reward Value,
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=south east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                xmin=1,
+                xmax=205,
+                ymax=0,
+                width=\textwidth*0.9,
+                height=\textheight*0.38,
+                set layers=standard,
+                cycle list name=train,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Episode,
+                ylabel style={align=center}, ylabel=Reward Value,
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=south east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+            \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
 
-			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+            \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
 
-			\addplot [fill=train_color_3] fill between[of=upper and lower];
+            \addplot [fill=train_color_3] fill between[of=upper and lower];
 
-			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+            \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
 
-			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
+            \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_reward.csv};
 
-			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+            \addplot [fill=train_color_2] fill between[of=upper1 and lower1];
 
-			\addlegendentry{Mean $\mu$};
-			\addlegendentry{Area $[min, max]$};
-			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+            \addlegendentry{Mean $\mu$};
+            \addlegendentry{Area $[min, max]$};
+            \addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[DDPG Pendulum-v0 Reward Plot]{DDPG Pendulum-v0 Reward Plot. The graph reports mean, standard deviation range and min-max range of the reward of each episode over 10 runs with different seeds.}
-	\label{fig:ddpg_pendulum_reward}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[DDPG Pendulum-v0 Reward Plot]{DDPG Pendulum-v0 Reward Plot.
+        The graph reports mean, standard deviation range and min-max range of the reward of each episode over 10 runs with different seeds.}
+    \label{fig:ddpg_pendulum_reward}
 \end{figure}
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				xmin=1,
-				xmax=205,
-				ymax=0,
-				width=\textwidth*0.9,
-				height=\textheight*0.38,
-				set layers=standard,
-				cycle list name=train,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Episode,
-				ylabel style={align=center}, ylabel=Reward Value,
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=south east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                xmin=1,
+                xmax=205,
+                ymax=0,
+                width=\textwidth*0.9,
+                height=\textheight*0.38,
+                set layers=standard,
+                cycle list name=train,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Episode,
+                ylabel style={align=center}, ylabel=Reward Value,
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=south east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+            \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
 
-			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+            \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
 
-			\addplot [fill=train_color_3] fill between[of=upper and lower];
+            \addplot [fill=train_color_3] fill between[of=upper and lower];
 
-			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+            \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
 
-			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
+            \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_reward.csv};
 
-			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+            \addplot [fill=train_color_2] fill between[of=upper1 and lower1];
 
-			\addlegendentry{Mean $\mu$};
-			\addlegendentry{Area $[min, max]$};
-			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+            \addlegendentry{Mean $\mu$};
+            \addlegendentry{Area $[min, max]$};
+            \addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[SAC Pendulum-v0 Reward Plot]{SAC Pendulum-v0 Reward Plot. The graph reports mean, standard deviation range and min-max range of the reward of each episode over 10 runs with different seeds.}
-	\label{fig:sac_pendulum_reward}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[SAC Pendulum-v0 Reward Plot]{SAC Pendulum-v0 Reward Plot.
+        The graph reports mean, standard deviation range and min-max range of the reward of each episode over 10 runs with different seeds.}
+    \label{fig:sac_pendulum_reward}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -516,106 +546,110 @@ Even in the testing phase, the most important, the outstanding performance of SA
 %%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				width=\textwidth*0.9,
-				height=\textheight*0.38,
-				xmin=5000,
-				xmax=50000,
-				ymax=0,
-				set layers=standard,
-				cycle list name=test,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Epochs,
-				ylabel style={align=center}, ylabel=Average Reward Value,
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=south east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                width=\textwidth*0.9,
+                height=\textheight*0.38,
+                xmin=5000,
+                xmax=50000,
+                ymax=0,
+                set layers=standard,
+                cycle list name=test,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Epochs,
+                ylabel style={align=center}, ylabel=Average Reward Value,
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=south east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+            \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
 
-			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+            \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
 
-			\addplot [fill=test_color_3] fill between[of=upper and lower];
+            \addplot [fill=test_color_3] fill between[of=upper and lower];
 
-			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+            \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
 
-			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
+            \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_test.csv};
 
-			\addplot [fill=test_color_2] fill between[of=upper1 and lower1];
+            \addplot [fill=test_color_2] fill between[of=upper1 and lower1];
 
-			\addlegendentry{Mean $\mu$};
-			\addlegendentry{Area $[min, max]$};
-			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+            \addlegendentry{Mean $\mu$};
+            \addlegendentry{Area $[min, max]$};
+            \addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[DDPG Pendulum-v0 Test Average Reward Plot]{DDPG Pendulum-v0 Test Average Reward Plot. The graph reports mean, standard deviation range and min-max range of the average reward obtained from 10 test episodes every 5000 epochs. They are calculated on 10 runs with different seeds.
-	}
-	\label{fig:ddpg_pendulum_test_reward}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[DDPG Pendulum-v0 Test Average Reward Plot]{DDPG Pendulum-v0 Test Average Reward Plot.
+        The graph reports mean, standard deviation range and min-max range of the average reward obtained from 10 test episodes every 5000 epochs.
+        They are calculated on 10 runs with different seeds.
+    }
+    \label{fig:ddpg_pendulum_test_reward}
 \end{figure}
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				width=\textwidth*0.9,
-				height=\textheight*0.38,
-				xmin=5000,
-				xmax=50000,
-				ymax=0,
-				set layers=standard,
-				cycle list name=test,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Epochs,
-				ylabel style={align=center}, ylabel=Average Reward Value,
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=south east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                width=\textwidth*0.9,
+                height=\textheight*0.38,
+                xmin=5000,
+                xmax=50000,
+                ymax=0,
+                set layers=standard,
+                cycle list name=test,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Epochs,
+                ylabel style={align=center}, ylabel=Average Reward Value,
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=south east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+            \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
 
-			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+            \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
 
-			\addplot [fill=test_color_3] fill between[of=upper and lower];
+            \addplot [fill=test_color_3] fill between[of=upper and lower];
 
-			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+            \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
 
-			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
+            \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_test.csv};
 
-			\addplot [fill=test_color_2] fill between[of=upper1 and lower1];
+            \addplot [fill=test_color_2] fill between[of=upper1 and lower1];
 
-			\addlegendentry{Mean $\mu$};
-			\addlegendentry{Area $[min, max]$};
-			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+            \addlegendentry{Mean $\mu$};
+            \addlegendentry{Area $[min, max]$};
+            \addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[SAC Pendulum-v0 Test Average Reward Plot]{SAC Pendulum-v0 Test Average Reward Plot. The graph reports mean, standard deviation range and min-max range of the average reward obtained from 10 test episodes every 5000 epochs. They are calculated on 10 runs with different seeds.}
-	\label{fig:sac_pendulum_test_reward}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[SAC Pendulum-v0 Test Average Reward Plot]{SAC Pendulum-v0 Test Average Reward Plot.
+        The graph reports mean, standard deviation range and min-max range of the average reward obtained from 10 test episodes every 5000 epochs.
+        They are calculated on 10 runs with different seeds.}
+    \label{fig:sac_pendulum_test_reward}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -625,105 +659,107 @@ Even in the testing phase, the most important, the outstanding performance of SA
 %%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				width=\textwidth*0.9,
-				height=\textheight*0.4,
-				xmin=1,
-				xmax=205,
-				ymax=0,
-				set layers=standard,
-				cycle list name=train,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Epochs,
-				ylabel style={align=center}, ylabel=Average Reward Value,
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=south east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                width=\textwidth*0.9,
+                height=\textheight*0.4,
+                xmin=1,
+                xmax=205,
+                ymax=0,
+                set layers=standard,
+                cycle list name=train,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Epochs,
+                ylabel style={align=center}, ylabel=Average Reward Value,
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=south east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+            \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
 
-			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+            \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
 
-			\addplot [fill=train_color_3] fill between[of=upper and lower];
+            \addplot [fill=train_color_3] fill between[of=upper and lower];
 
-			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+            \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
 
-			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
+            \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_last100.csv};
 
-			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+            \addplot [fill=train_color_2] fill between[of=upper1 and lower1];
 
-			\addlegendentry{Mean $\mu$};
-			\addlegendentry{Area $[min, max]$};
-			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+            \addlegendentry{Mean $\mu$};
+            \addlegendentry{Area $[min, max]$};
+            \addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[DDPG Pendulum-v0 Last 100 Episode Average Reward Plot]{DDPG Pendulum-v0 Last 100 Episode Average Reward Plot. The graph reports mean, standard deviation range and min-max range of the last 100 episode average reward for each episode over 10 runs with different seeds.}
-	\label{fig:ddpg_pendulum_last100}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[DDPG Pendulum-v0 Last 100 Episode Average Reward Plot]{DDPG Pendulum-v0 Last 100 Episode Average Reward Plot.
+        The graph reports mean, standard deviation range and min-max range of the last 100 episode average reward for each episode over 10 runs with different seeds.}
+    \label{fig:ddpg_pendulum_last100}
 \end{figure}
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				width=\textwidth*0.9,
-				height=\textheight*0.4,
-				xmin=1,
-				xmax=205,
-				ymax=0,
-				set layers=standard,
-				cycle list name=train,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Epochs,
-				ylabel style={align=center}, ylabel=Average Reward Value,
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=south east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                width=\textwidth*0.9,
+                height=\textheight*0.4,
+                xmin=1,
+                xmax=205,
+                ymax=0,
+                set layers=standard,
+                cycle list name=train,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Epochs,
+                ylabel style={align=center}, ylabel=Average Reward Value,
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=south east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+            \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
 
-			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+            \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
 
-			\addplot [fill=train_color_3] fill between[of=upper and lower];
+            \addplot [fill=train_color_3] fill between[of=upper and lower];
 
-			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+            \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
 
-			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
+            \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_last100.csv};
 
-			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+            \addplot [fill=train_color_2] fill between[of=upper1 and lower1];
 
-			\addlegendentry{Mean $\mu$};
-			\addlegendentry{Area $[min, max]$};
-			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+            \addlegendentry{Mean $\mu$};
+            \addlegendentry{Area $[min, max]$};
+            \addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[SAC Pendulum-v0 Last 100 Episode Average Reward Plot]{SAC Pendulum-v0 Last 100 Episode Average Reward Plot. The graph reports mean, standard deviation range and min-max range of the last 100 episode average reward for each episode over 10 runs with different seeds.}
-	\label{fig:sac_pendulum_last100}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[SAC Pendulum-v0 Last 100 Episode Average Reward Plot]{SAC Pendulum-v0 Last 100 Episode Average Reward Plot.
+        The graph reports mean, standard deviation range and min-max range of the last 100 episode average reward for each episode over 10 runs with different seeds.}
+    \label{fig:sac_pendulum_last100}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -733,107 +769,109 @@ Even in the testing phase, the most important, the outstanding performance of SA
 %%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				width=\textwidth*0.9,
-				height=\textheight*0.4,
-				xmin=1,
-				xmax=205,
-				ymax=1,
-				ymin=0,
-				set layers=standard,
-				cycle list name=train,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Epochs,
-				ylabel style={align=center}, ylabel=Average Reward Value,
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=north east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                width=\textwidth*0.9,
+                height=\textheight*0.4,
+                xmin=1,
+                xmax=205,
+                ymax=1,
+                ymin=0,
+                set layers=standard,
+                cycle list name=train,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Epochs,
+                ylabel style={align=center}, ylabel=Average Reward Value,
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=north east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			% \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+            % \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
 
-			% \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+            % \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
 
-			% \addplot [fill=train_color_3] fill between[of=upper and lower];
+            % \addplot [fill=train_color_3] fill between[of=upper and lower];
 
-			% \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+            % \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
 
-			% \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
+            % \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/ddpg_pendulum_noise.csv};
 
-			% \addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+            % \addplot [fill=train_color_2] fill between[of=upper1 and lower1];
 
-			\addlegendentry{Epsilon value $\epsilon$};
-			\addlegendentry{Area $[min, max]$};
-			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+            \addlegendentry{Epsilon value $\epsilon$};
+            \addlegendentry{Area $[min, max]$};
+            \addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[DDPG Pendulum-v0 Noise Epsilon Decay]{DDPG Pendulum-v0 Noise Epsilon Decay. The graph shows the trend of the noise epsilon decay applied to the Ornstein Uhlenbeck noise in DDPG.}
-	\label{fig:ddpg_noise}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[DDPG Pendulum-v0 Noise Epsilon Decay]{DDPG Pendulum-v0 Noise Epsilon Decay.
+        The graph shows the trend of the noise epsilon decay applied to the Ornstein Uhlenbeck noise in DDPG.}
+    \label{fig:ddpg_noise}
 \end{figure}
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				width=\textwidth*0.9,
-				height=\textheight*0.4,
-				xmin=1,
-				xmax=50000,
-				ymax=1,
-				ymin=0,
-				set layers=standard,
-				cycle list name=train,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Epochs,
-				ylabel style={align=center}, ylabel=Temperature Value ($\alpha$),
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=north east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                width=\textwidth*0.9,
+                height=\textheight*0.4,
+                xmin=1,
+                xmax=50000,
+                ymax=1,
+                ymin=0,
+                set layers=standard,
+                cycle list name=train,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Epochs,
+                ylabel style={align=center}, ylabel=Temperature Value ($\alpha$),
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=north east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+            \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
 
-			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+            \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
 
-			\addplot [fill=train_color_3] fill between[of=upper and lower];
+            \addplot [fill=train_color_3] fill between[of=upper and lower];
 
-			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+            \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
 
-			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
+            \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/pendulum/sac_pendulum_temperature.csv};
 
-			\addplot [fill=train_color_2] fill between[of=upper1 and lower1];
+            \addplot [fill=train_color_2] fill between[of=upper1 and lower1];
 
-			\addlegendentry{Mean $\mu$};
-			\addlegendentry{Area $[min, max]$};
-			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+            \addlegendentry{Mean $\mu$};
+            \addlegendentry{Area $[min, max]$};
+            \addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[SAC Pendulum-v0 auto-tuning temperature]{SAC Pendulum-v0 auto-tuning temperature. The graph shows the trend of the temperature parameter learned through the auto-tune process proposed by SAC authors.}
-	\label{fig:sac_temperature}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[SAC Pendulum-v0 auto-tuning temperature]{SAC Pendulum-v0 auto-tuning temperature.
+        The graph shows the trend of the temperature parameter learned through the auto-tune process proposed by SAC authors.}
+    \label{fig:sac_temperature}
 \end{figure}
 
 \FloatBarrier
@@ -841,17 +879,30 @@ Even in the testing phase, the most important, the outstanding performance of SA
 \section{CozmoDriver-v0 Experiments} \label{sec:cozmo-exp}
 
 % TODO DDPG SAC
-After the completion of the experiments carried out with \textit{Pendulum-v0} environment, we started to implement an algorithm to work with the specific features of \textit{CozmoDriver-v0}. We decided to implement the SAC algorithm directly for this type of task after the great results reached in previous experiments and its adaptability to various kind of problems, especially real-world ones, reported by its authors.
+After the completion of the experiments carried out with \textit{Pendulum-v0} environment, we started to implement an algorithm to work with the specific features of \textit{CozmoDriver-v0}.
+We decided to implement the SAC algorithm directly for this type of task after the great results reached in previous experiments and its adaptability to various kind of problems, especially real-world ones, reported by its authors.
 
-In the first implementation we decided to maintain the number of epochs for each episode equal to 250. However, these decision revealed soon its fragility. In \textit{Pendulum-v0} environment the number of steps per episode were a constant number chosen in the initial setup of hyper-parameters. On the other hand, in \textit{CozmoDriver-v0} environment every episode can have a different number of steps because this value is not a constant, but it depends on the decision of the user that is teaching Cozmo how to drive by stopping episodes. The behavior of these two experiments also influences the filling of the replay memory. Considering the fact that each step results in a tuple to insert in this memory, it is noticeable that the agent performance in the \textit{CozmoDriver-v0} experiment has consequences in how fast the memory is filled. Therefore, starting 250 learning epochs after the completion of a short episode that inserted little information in the replay memory can lead the algorithm to learn by fetching batches of experiences from an almost identical group to the previous one.
-The performance of this learning setup resulted in a strange policy where the robot manages to perform correctly straight section of the track and steer in the wrong direction at each turn after almost 700 episodes. Furthermore, the temperature ($\alpha$) increased till an asymptote of 4: a very strange tendency considering the experiment carried out with the \textit{Pendulum-v0} environment.
+In the first implementation, we decided to maintain the number of epochs for each episode equal to 250.
+However, this decision revealed its fragility soon.
+In \textit{Pendulum-v0} environment, the number of steps per episode was a constant number chosen in the initial setup of hyper-parameters.
+On the other hand, in \textit{CozmoDriver-v0} environment every episode can have a different number of steps because this value is not a constant, but it depends on the decision of the user that is teaching Cozmo how to drive by stopping episodes.
+The behaviour of these two experiments also influences the filling of the replay memory.
+Because each step results in a tuple to insert in this memory, it is noticeable that the agent performance in the \textit{CozmoDriver-v0} experiment has consequences in how fast the memory is filled.
+Therefore, starting 250 learning epochs after the completion of a short episode that inserted little information in the replay memory can lead the algorithm to learn by fetching batches of experiences from an almost identical group to the previous one.
+The performance of this learning setup resulted in a bizarre policy where the robot manages to correctly perform straight sections of the track and steer in the wrong direction at each turn after almost 700 episodes.
+Furthermore, the temperature ($\alpha$) increased until an asymptote of 4: a bizarre tendency considering the experiment carried out with the \textit{Pendulum-v0} environment.
 
-After the analysis of the previous experiment, we decided to set a dynamic approach in the number of epoch to take for each timestep. We decided to work with multiples of 10 and follow \vref{eq:learning-step} to determine how many steps of learning to take after each episode. In \vref{eq:learning-step}, $x$ variable determines how many epochs the algorithm must do for each set of ten steps in the episode in question, while $y$ specify the minimum number of epochs of the learning phase for each episode, without depending on the number of steps. In the experiment in question we chose to set both values to 10. The results improved from the initial implementation leading to a reduction in the gap time between two consecutive episodes and a performance increase. Thanks to this method, the learning process depends on episodes lengths and led to a more manageable experiments flow.
+After the analysis of the previous experiment, we decided to set a dynamic approach in the number of epoch to take for each timestep.
+We decided to work with multiples of 10 and follow \vref{eq:learning-step} to determine how many steps of learning to take after each episode.
+In \vref{eq:learning-step}, $x$ variable determines how many epochs the algorithm must perform for each set of ten steps in the episode in question, while $y$ specify the minimum number of epochs of the learning phase for each episode, without depending on the number of steps.
+In the experiment in question, we chose to set both values to 10.
+The results improved from the initial implementation leading to a reduction in the gap time between two consecutive episodes and a performance increase.
+Thanks to this method, the learning process depends on episodes lengths and led to a more manageable experiments flow.
 
 
 \begin{equation}
-	\label{eq:learning-step}
-	\text{learning\_epochs} = \bigg\lfloor\frac{\text{episode\_steps}}{10}\bigg\rfloor \cdot x + y
+    \label{eq:learning-step}
+    \text{learning\_epochs} = \bigg\lfloor\frac{\text{episode\_steps}}{10}\bigg\rfloor \cdot x + y
 \end{equation}
 
 Since the number of learning epochs is not predictable a priori, we decided to manage the frequency of the test phases by starting them every 50 episodes, showing in the graphs the number of learning epochs carried out up to that moment.
@@ -864,39 +915,39 @@ Since the number of learning epochs is not predictable a priori, we decided to m
 The hyper-parameters we exploited in this experiment are shown in \vref{table:sac_cozmo}.
 
 \begin{table}[!h]
-	\centering
-	\caption{SAC Hyper-parameter setup for CozmoDriver-v0 environment}
-	\label{table:sac_cozmo}
-	\resizebox{\textwidth}{!}{
-		\begin{tabular}{@{}lllll@{}}
-			\toprule
-			\textbf{Hyper-parameters}             & \textbf{Value}                                         \\
-			\midrule
-			\textbf{Policy Network}               & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
-			                                      & \textbf{Type}: Gaussian Policy                         \\
-			                                      & \textbf{Architecture}                                  \\
-			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
-			                                      & 2 FC Layer with hidden size = 256                      \\
-			                                      & 2 Output value                                         \\\midrule
-			\textbf{Q Network}                    & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
-			                                      & \textbf{Architecture}                                  \\
-			                                      & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
-			                                      & 2 FC Layer with hidden size = 256                      \\
-			                                      & 1 Output value                                         \\\midrule
-			\textbf{Gamma ($\gamma$)}             & 0.99                                                   \\\midrule
-			\textbf{Tau ($\tau$)}                 & $5 \times 10^{-3}$                                     \\\midrule
-			\textbf{Entropy Autotune}             & Enabled                                                \\\midrule
-			\textbf{Observation}                  & \textbf{Buffer Size}: 2                                \\
-			                                      & \textbf{Image Size}: 64 $\times$ 64                    \\\midrule
-			\textbf{Batch Size}                   & 64                                                     \\\midrule
-			\textbf{Replay Memory Size}           & 10000                                                  \\\midrule
+    \centering
+    \caption{SAC Hyper-parameter setup for CozmoDriver-v0 environment}
+    \label{table:sac_cozmo}
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{@{}lllll@{}}
+            \toprule
+            \textbf{Hyper-parameters}             & \textbf{Value}                                         \\
+            \midrule
+            \textbf{Policy Network}               & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
+                                                  & \textbf{Type}: Gaussian Policy                         \\
+                                                  & \textbf{Architecture}                                  \\
+                                                  & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
+                                                  & 2 FC Layer with hidden size = 256                      \\
+                                                  & 2 Output value                                         \\\midrule
+            \textbf{Q Network}                    & \textbf{Learning Rate}: $3 \times 10^{-4}$             \\
+                                                  & \textbf{Architecture}                                  \\
+                                                  & 3 CONV Layer $3\times 3\times 16$, stride 2, padding 0 \\
+                                                  & 2 FC Layer with hidden size = 256                      \\
+                                                  & 1 Output value                                         \\\midrule
+            \textbf{Gamma ($\gamma$)}             & 0.99                                                   \\\midrule
+            \textbf{Tau ($\tau$)}                 & $5 \times 10^{-3}$                                     \\\midrule
+            \textbf{Entropy Autotune}             & Enabled                                                \\\midrule
+            \textbf{Observation}                  & \textbf{Buffer Size}: 2                                \\
+                                                  & \textbf{Image Size}: 64 $\times$ 64                    \\\midrule
+            \textbf{Batch Size}                   & 64                                                     \\\midrule
+            \textbf{Replay Memory Size}           & 10000                                                  \\\midrule
 
-			\textbf{\#Epoch per Episode}          & \Vref{eq:learning-step} with $x = y = 10$              \\\midrule
-			\textbf{Soft Target Update per Epoch} & 1                                                      \\\midrule
-			\textbf{Test Phase}                   & \textbf{Test frequency}: every 50 episodes             \\
-			                                      & \textbf{Test episodes}: 10                             \\
-			\bottomrule
-		\end{tabular}}
+            \textbf{\#Epoch per Episode}          & \Vref{eq:learning-step} with $x = y = 10$              \\\midrule
+            \textbf{Soft Target Update per Epoch} & 1                                                      \\\midrule
+            \textbf{Test Phase}                   & \textbf{Test frequency}: every 50 episodes             \\
+                                                  & \textbf{Test episodes}: 10                             \\
+            \bottomrule
+        \end{tabular}}
 \end{table}
 
 
@@ -906,62 +957,65 @@ After carrying out numerous experiments to fix bugs in the code and verify the c
 Taking into account waiting times between episodes and charging times, we managed to complete the experiments in almost one week, after almost $1.3\times 10^5$ epochs of learning.
 
 Unfortunately, the results we reached have not led to a stable resolution of the self-driving task.
-However, the graphs in \vref{fig:sac_cozmo_reward,fig:sac_cozmo_test} reports a continuous improvement in the behavior of the robot during the episodes.
+However, the graphs in \vref{fig:sac_cozmo_reward,fig:sac_cozmo_test} reports a continuous improvement in the behaviour of the robot during the episodes.
 
-The first 20 episodes were dedicated to the warm up: the agent gathered replay memory experiences by exploiting a random policy.
+The first 20 episodes were dedicated to the warm-up: the agent gathered replay memory experiences by exploiting a random policy.
 This process was essential to obtain a set large enough to allow a proper batch learning phase of the agent.
-Whereupon the agent started to exploit the randomly initialised policy network to make decision in the real-world environment.
-As we can see from both training and test graphs in \vref{fig:sac_cozmo_reward,fig:sac_cozmo_test}, the first 150 episodes were characterised by a very small reward.
-This fact was particularly clear in the first testing phases where both average reward and standard deviation were very low.
-Indeed, the robot was stuck in fixed actions steering to the left or to the right without considering the current surrounding environment: this behavior was caused by the fact that the neural network was not enough trained to provide a thoughtful decision.
-Furthermore, the dynamic increase of learning epochs which depends on the length of each episodes accentuated this phenomenon: at least in the first part of the experiment, short episodes lead to fewer learning steps and then to a slower improvement in the performance of the neural network.
+After that, the agent started to exploit the randomly initialised policy network to make decisions in the real-world environment.
+As we can see from both training and test graphs in \vref{fig:sac_cozmo_reward,fig:sac_cozmo_test}, the first 150 episodes were characterised by a minimal reward.
+This fact was particularly evident in the first testing phases, where both average reward and standard deviation were meagre.
+Indeed, the robot was stuck in fixed actions steering to the left or the right without considering the current surrounding environment: this behaviour was caused by the fact that the neural network was not enough trained to provide a thoughtful decision.
+Furthermore, the dynamic increase of learning epochs which depends on the length of each episode accentuated this phenomenon: at least in the first part of the experiment, short episodes lead to fewer learning steps and then to slower improvement in the performance of the neural network.
 
 As the number of episodes increases, it is noticeable the rising of episode rewards as we can see from the training and the last 100 episodes average plots in \vref{fig:sac_cozmo_reward,fig:sac_cozmo_last100} respectively.
 
 The training episodes plot shows an increase in the maximum reward obtained: it culminates in reaching almost 2.7 metres in episode 2764.
-Despite this fact, this particular increase is difficult to detect: this factor can be explained with the addition of the noise for exploration sake, introduced during the experiment by the random sampling from the output of the gaussian policy exploited and the presence of the temperature parameter $\alpha$ that manipulates the importance of the entropy during the learning phase. The presence of this kind of noise does not lead to a constant increase in the reward in parallel to the increase of completed episodes.
+Despite this fact, this particular increase is difficult to detect: this factor can be explained with the addition of the noise for exploration sake, introduced during the experiment by the random sampling from the output of the gaussian policy exploited, and the presence of the temperature parameter $\alpha$ that manipulates the importance of the entropy during the learning phase.
+The presence of this kind of noise did not lead to a parallel increase of both reward and completed episodes.
 
 Therefore, analysing average rewards calculated on the set of the last 100 episodes in \vref{fig:sac_cozmo_last100}, we noticed an increase until episode 900 and then an almost constant fluctuation between 350mm and 450mm.
-Even in this case, the results showed by this graph were not so high, but this fact can be motivated again by the presence of the noise in the training process.
+Even in this case, the results showed by this graph were not high, but this fact can be motivated again by the presence of the noise in the training process.
 
-However, the agent reached the most crucial results in the testing phase presented in \vref{fig:sac_cozmo_test}.
-To report the testing phase in a more appropriate way, we decided to calculate minimum and maximum values obtained in every set of ten episode together with the mean and the standard deviation.
-These values are reported in the graph by using confidence intervals.
-Following this approach we noticed a performance increase with a maximum mean reached of almost 1 metre as highlighted by \vref{fig:sac_cozmo_test_mean}.
+However, the agent reached the most significant results in the testing phase presented in \vref{fig:sac_cozmo_test}.
+To report the testing phase more appropriately, we decided to calculate the minimum and maximum values obtained in every set of ten episodes together with the mean and the standard deviation.
+The graph reports these values by using confidence intervals.
+Following this approach, we noticed a performance increase with a maximum mean of almost 1 metre, as highlighted by \vref{fig:sac_cozmo_test_mean}.
 Furthermore, the maximum value reached among all tests episodes was equal to almost 3.5 metres which equals more than one complete tour of the track.
 It is noticeable that the results are not stable as we expected after the experiments we carried with \textit{Pendulum-v0} environment: the reward values do not improve uniformly with increasing epochs.
-However, carrying out the experiments episode by episode, we noticed a marked improvement in the performance obtained in the tests. The robot learned to approach turns and to stay on the lane of a straight road.
+However, carrying out the experiments episode by episode, we noticed a marked improvement in the performance obtained in the tests.
+The robot learned to approach turns and to stay on the lane of a straight road.
 
-Despite these improvements, the agent was not able to learn how to drive in a secure and stable way.
-It was able to perform greatly for the most part of the track and to conclude its run with a sudden turn out of the road.
+Despite these improvements, the agent was not able to learn how to drive securely and stably.
+It manages to perform great for the most of the track, but it often concluded its run with a sudden turn out of the road.
 These facts made us reflect on the critic points of our experiment setup that may have had a role in the instability of the results obtained.
 
 \begin{itemize}
-	\item The length of the experience memory replay we designed was equal to $10^4$, even if the length suggested by literature is equal to $10^6$, two lower orders of magnitude.
-	      We made this decision because of the RAM memory available in the development machine. The learning process of the agent needs to store whole tuples of experience in the replay memory.
-	      They contains a total of four $64 \times 64$ images, two to represent the current state and two for the next state.
-	      As we discussed in \vref{ch:ch4}, another need that we had to satisfy to correctly recover the system from fault, was the implementation of a periodic backup phase.
-	      It was essential to complete long experiments like the one in question and to restart from the previous checkpoint in case of error.
-	      However, this process needed a lot of RAM memory to store a serialised version of the whole set of variables used in the learning process, such as neural network weights and biases or experience memory replay.
-	      To avoid problems with memory and slowdowns due to the usage of swap space, we had to reduce the dimension of the replay memory further.
-	      We think that this decision have influenced the flow of the learning process: the first motivation is the small dimension of the set used to do batch learning.
-	      This factor influences directly the experiment because only the latest experiences are available for the agent usage and this leads inexorably to a lack of generalisation.
-	\item Another problem that emerged from this experiment was the one concerning the behavior of the robot on straight road.
-	      Even after numerous learning epochs, the agent often showed a curvilinear approach.
-	      After noticing this fact, we started to analyse episode image to find out some correlation to understand this behavior better.
-	      We noticed that the image obtained from the view of one side of the straight road was very similar to the turning point situation.
-	      It was probably this similarity that caused the oddity in Cozmo behavior.
-	      Indeed, the viewing angle of the Cozmo camera was not large enough to detect both lane lines at the same time.
-	      It would be also difficult for a human to understand the best decision to make, using the images provided by Cozmo SDK.
-	      We tried to reduce the width of the road, but, instead of finding a considerable improvement, it became more difficult to keep the robot between the lines.
-	      In the end, we opted for maintaining the initial width of the lane to preserve the proportion with the autonomous driving problem with a real car.
-	\item Another particular behavior adopted by the reinforcement learning agent we trained was caused by the combination of two factor: the particular design of the track we build and the narrow viewing angle of the Cozmo camera.
-		  When the robot was too close to one of the two lines of the road, the agent often seemed to recognise that line as the opposite one and decided to take a sudden turn in the wrong direction.
+    \item The length of the experience memory replay we designed was equal to $10^4$, even if the length suggested by the literature is equal to $10^6$, two lower orders of magnitude.
+          We made this decision because of the RAM available in the development machine.
+          The learning process of the agent needs to store whole tuples of experience in the replay memory.
+          They contain a total of four $64 \times 64$ images, two to represent the current state and two for the next state.
+          As we discussed in \vref{ch:ch4}, another need that we had to satisfy to recover the system from fault correctly, was the implementation of a periodic backup phase.
+          This feature was essential to complete long experiments, like the one in question, to restart from the previous checkpoint in case of unexpected errors.
+          However, this process needed a lot of RAM to store a serialised version of the whole set of variables used in the learning process, such as neural network weights and biases or experience memory replay.
+          To avoid problems with memory and slowdowns due to the usage of swap space, we had to reduce the dimension of the replay memory further.
+          We think that this decision has influenced the flow of the learning process: the first motivation is the small dimension of the set used to do batch learning.
+          This factor influences the experiment directly because only the latest experiences are available for agent usage, and this leads inexorably to a lack of generalisation.
+    \item Another problem that emerged from this experiment was the one concerning the behaviour of the robot on straight roads.
+          Even after numerous learning epochs, the agent often showed a curvilinear approach.
+          After noticing this fact, we started to analyse episode images to find out some correlation to understand this behaviour better.
+          We noticed that the image obtained from the view of one side of the straight road was very similar to the turning point situation.
+          It was probably this similarity that caused the oddity in Cozmo behaviour.
+          Indeed, the viewing angle of the Cozmo camera was not large enough to detect both lane lines at the same time.
+          It would be also difficult for a human to understand the best decision to make, using the images provided by Cozmo SDK.
+          We tried to reduce the width of the road, but, instead of finding a considerable improvement, it became more challenging to keep the robot between the lines.
+          In the end, we opted for maintaining the initial width of the lane to preserve the proportion with the autonomous driving problem with a real car.
+    \item Another particular behaviour adopted by the reinforcement learning agent we trained was caused by the combination of two factors: the particular design of the track we build and the narrow viewing angle of the Cozmo camera.
+          When Cozmo was too close to one of the two road border, the agent often seemed to recognise that line as the opposite one and decided to take a sudden turn in the wrong direction.
 \end{itemize}
 
 In the end, we can report different results between the experiments in question.
-The obvious motivation is the different nature of these problems.
-The second one is in the real world, where observations and actions may be brittle and different because of many factor that starts from the uncontrollable changes in the surrounding environment.
+The evident motivation is the different nature of these problems.
+The second one is in the real world, where observations and actions may be brittle and different because of many factors that start from the uncontrollable changes in the surrounding environment.
 
 %%%%%%%%%%%%%%%%%%%%%%
 %
@@ -970,40 +1024,41 @@ The second one is in the real world, where observations and actions may be britt
 %%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				height=\textheight*0.38,
-				enlargelimits=false,
-				set layers=standard,
-				cycle list name=train,
-				ymin=0,
-				scaled x ticks=true,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Epochs,
-				ylabel style={align=center}, ylabel=Temperature Value ($\alpha$),
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=south east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                height=\textheight*0.38,
+                enlargelimits=false,
+                set layers=standard,
+                cycle list name=train,
+                ymin=0,
+                scaled x ticks=true,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Epochs,
+                ylabel style={align=center}, ylabel=Temperature Value ($\alpha$),
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=south east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Value, col sep=comma] {plots/cozmo/sac_cozmo_temperature.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Value, col sep=comma] {plots/cozmo/sac_cozmo_temperature.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
 
-			\addlegendentry{Temperature $\alpha$};
+            \addlegendentry{Temperature $\alpha$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[SAC CozmoDriver-v0 auto-tuning temperature]{SAC Pendulum-v0 auto-tuning temperature. The graph shows the trend of the temperature parameter learned through the auto-tune process proposed by SAC authors.}
-	\label{fig:sac_cozmo_temperature}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[SAC CozmoDriver-v0 auto-tuning temperature]{SAC Pendulum-v0 auto-tuning temperature.
+        The graph shows the trend of the temperature parameter learned through the auto-tune process proposed by SAC authors.}
+    \label{fig:sac_cozmo_temperature}
 \end{figure}
 
 
@@ -1014,39 +1069,40 @@ The second one is in the real world, where observations and actions may be britt
 %%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				enlargelimits=false,
-				height=\textheight*0.38,
-				width=\textwidth*0.97,
-				xtick distance=500,
-				set layers=standard,
-				cycle list name=train,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Episode,
-				ylabel style={align=center}, ylabel=Reward (mm),
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=north west,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                enlargelimits=false,
+                height=\textheight*0.38,
+                width=\textwidth*0.97,
+                xtick distance=500,
+                set layers=standard,
+                cycle list name=train,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Episode,
+                ylabel style={align=center}, ylabel=Reward (mm),
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=north west,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Value, col sep=comma] {plots/cozmo/sac_cozmo_train.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Value, col sep=comma] {plots/cozmo/sac_cozmo_train.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addlegendentry{Reward};
+            \addlegendentry{Reward};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[SAC CozmoDriver-v0 Reward Plot]{SAC CozmoDriver-v0 Reward Plot. The graph report the reward obtained from each episode.}
-	\label{fig:sac_cozmo_reward}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[SAC CozmoDriver-v0 Reward Plot]{SAC CozmoDriver-v0 Reward Plot.
+        The graph report the reward obtained from each episode.}
+    \label{fig:sac_cozmo_reward}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -1056,39 +1112,40 @@ The second one is in the real world, where observations and actions may be britt
 %%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				enlargelimits=false,
-				height=\textheight*0.38,
-				ymin=0,
-				set layers=standard,
-				xtick distance=500,
-				cycle list name=train,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Episode,
-				ylabel style={align=center}, ylabel=Average Reward (mm),
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=south east,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                enlargelimits=false,
+                height=\textheight*0.38,
+                ymin=0,
+                set layers=standard,
+                xtick distance=500,
+                cycle list name=train,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Episode,
+                ylabel style={align=center}, ylabel=Average Reward (mm),
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=south east,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Value, col sep=comma] {plots/cozmo/sac_cozmo_last100.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Value, col sep=comma] {plots/cozmo/sac_cozmo_last100.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addlegendentry{Last 100 average reward $\mu$};
+            \addlegendentry{Last 100 average reward $\mu$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[SAC CozmoDriver-v0 Last 100 Episode Average Reward Plot]{SAC CozmoDriver-v0 Last 100 Episode Average Reward Plot. The graph reports the last 100 episode average reward for each episode.}
-	\label{fig:sac_cozmo_last100}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[SAC CozmoDriver-v0 Last 100 Episode Average Reward Plot]{SAC CozmoDriver-v0 Last 100 Episode Average Reward Plot.
+        The graph reports the last 100 episode average reward for each episode.}
+    \label{fig:sac_cozmo_last100}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -1098,54 +1155,55 @@ The second one is in the real world, where observations and actions may be britt
 %%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				scaled ticks=true,
-				enlargelimits=false,
-				width=\textwidth*0.97,
-				height=\textheight*0.38,
-				ymin=0,
-				set layers=standard,
-				cycle list name=test,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Epochs,
-				ylabel style={align=center}, ylabel=Reward (mm),
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=north west,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                scaled ticks=true,
+                enlargelimits=false,
+                width=\textwidth*0.97,
+                height=\textheight*0.38,
+                ymin=0,
+                set layers=standard,
+                cycle list name=test,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Epochs,
+                ylabel style={align=center}, ylabel=Reward (mm),
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=north west,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
+            \addplot [name path=upper,draw=none, forget plot] table[x=Step,y expr=\thisrow{Max}, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
 
-			\addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
+            \addplot [name path=lower,draw=none, forget plot] table[x=Step,y expr=\thisrow{Min}, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
 
-			\addplot [fill=test_color_3] fill between[of=upper and lower];
+            \addplot [fill=test_color_3] fill between[of=upper and lower];
 
-			\addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
+            \addplot [name path=upper1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}+\thisrow{StDev}, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
 
-			\addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
+            \addplot [name path=lower1,draw=none, forget plot] table[x=Step,y expr=\thisrow{Mean}-\thisrow{StDev}, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
 
-			\addplot [fill=test_color_2] fill between[of=upper1 and lower1];
+            \addplot [fill=test_color_2] fill between[of=upper1 and lower1];
 
-			\addlegendentry{Mean $\mu$};
-			\addlegendentry{Area $[min, max]$};
-			\addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
+            \addlegendentry{Mean $\mu$};
+            \addlegendentry{Area $[min, max]$};
+            \addlegendentry{Area $[\mu-\sigma, \mu+\sigma]$};
 
-		\end{axis}
-	\end{tikzpicture}
-	\caption[SAC CozmoDriver-v0 Test Reward Plot]{SAC CozmoDriver-v0 Test Reward Plot. The graph reports mean, standard deviation range and min-max range of the average reward obtained from 10 test episodes every 50 episodes.}
-	\label{fig:sac_cozmo_test}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[SAC CozmoDriver-v0 Test Reward Plot]{SAC CozmoDriver-v0 Test Reward Plot.
+        The graph reports mean, standard deviation range and min-max range of the average reward obtained from 10 test episodes every 50 episodes.}
+    \label{fig:sac_cozmo_test}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -1155,37 +1213,38 @@ The second one is in the real world, where observations and actions may be britt
 %%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[axis on top,
-				scaled ticks=true,
-				enlargelimits=false,
-				width=\textwidth*0.97,
-				height=\textheight*0.38,
-				ymin=0,
-				set layers=standard,
-				cycle list name=test,
-				grid=both,
-				grid style={solid,gray!30!white},
-				% axis lines=middle,
-				xlabel=Epochs,
-				ylabel style={align=center}, ylabel=Reward (mm),
-				%legend style={at={(0.99,0.3)},anchor=east},
-				legend pos=north west,
-				% extra y ticks = {90},
-				% 	extra y tick style={grid=major, grid style={solid,green},y tick label style={
-				% 		/pgf/number format/.cd,precision=10
-				%}},
-				% x label style={at={(axis description cs:0.5,0)},anchor=north},
-				%y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
-			]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[axis on top,
+                scaled ticks=true,
+                enlargelimits=false,
+                width=\textwidth*0.97,
+                height=\textheight*0.38,
+                ymin=0,
+                set layers=standard,
+                cycle list name=test,
+                grid=both,
+                grid style={solid,gray!30!white},
+                % axis lines=middle,
+                xlabel=Epochs,
+                ylabel style={align=center}, ylabel=Reward (mm),
+                %legend style={at={(0.99,0.3)},anchor=east},
+                legend pos=north west,
+                % extra y ticks = {90},
+                %     extra y tick style={grid=major, grid style={solid,green},y tick label style={
+                %         /pgf/number format/.cd,precision=10
+                %}},
+                % x label style={at={(axis description cs:0.5,0)},anchor=north},
+                %y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south}
+            ]
 
-			\addplot table[x=Step,y=Mean, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
-			%\addlegendentry{Mean Reward of last 100 episode};
+            \addplot table[x=Step,y=Mean, col sep=comma] {plots/cozmo/sac_cozmo_test.csv};
+            %\addlegendentry{Mean Reward of last 100 episode};
 
-			\addlegendentry{Mean $\mu$};
-		\end{axis}
-	\end{tikzpicture}
-	\caption[SAC CozmoDriver-v0 Test Average Reward Plot]{SAC CozmoDriver-v0 Test Average Reward Plot. The graph reports with a focus on the average reward obtained from 10 test episodes every 50 episodes.}
-	\label{fig:sac_cozmo_test_mean}
+            \addlegendentry{Mean $\mu$};
+        \end{axis}
+    \end{tikzpicture}
+    \caption[SAC CozmoDriver-v0 Test Average Reward Plot]{SAC CozmoDriver-v0 Test Average Reward Plot.
+        The graph reports with a focus on the average reward obtained from 10 test episodes every 50 episodes.}
+    \label{fig:sac_cozmo_test_mean}
 \end{figure}
