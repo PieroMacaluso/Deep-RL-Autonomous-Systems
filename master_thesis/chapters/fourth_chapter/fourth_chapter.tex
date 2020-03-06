@@ -242,8 +242,8 @@ The phases we defined are the following:
           In this case, the user has two possibilities to undo the last episode.
           The user can either hit the backspace button in substitution of the second enter button hit to stop the episode and start the undo phase or pressing it after the end of the episode and before the next one.
           Initially, the first choice led to a direct restore of the previous situation without executing the training phase, while the second one executed the training phase and only afterwards the undo phase.
-          After some tests, we decided to set the first approach as unique behaviour for both options.
-          This choice led to a delay increase between two consecutive episodes, but, thanks to the careful design of the network, the waiting time remained manageable.
+          After some tests, we decided to set the first behaviour as unique for both possibilities.
+          This choice led to a delay increase between two consecutive episodes because of the addition of an indirect confirmation of the current episode before starting the training phase. However, thanks to the careful design of the network, the waiting time remained manageable.
     \item \textbf{Training Phase.} This section starts its execution after the initial warm-up phase, and it is located after each Cozmo episode.
           It manages all neural networks updates with several optimisation steps, also known as epochs: the number of optimisation steps is set as a parameter by the developer.
     \item \textbf{Testing Phase.} This phase disables noisy policies from the algorithm to allow the agent to take the action that the neural network decree as best in that specific iteration.
@@ -307,9 +307,9 @@ Therefore, they included some information about training time: the agent needed 
 
 The problems just outlined have relative differences, but the varying durations of the experiments are truly impressive.
 This fact underlines how the training duration depends not only on the data quality but also on hyper-parameters used, on the complexity of the problem and the available computational power.
-It is the primary motivation behind the complexity of an experiment carried out entirely in the real-world.
+It is the primary motivation behind the elaborateness of an experiment carried out entirely in the real-world.
 
-After the analysis of the neural network used in the last-mentioned papers, we tried to modify these models after trying them on the modified Pendulum environment provided by the OpenAI Gym framework and analysing training and testing results.
+After the analysis of the neural network used in the last-mentioned papers, we tried to modify these models after testing them on a modified version of the \textit{Pendulum-v0} environment, provided by the OpenAI Gym framework, with a variety of architectures.
 We exploited the network architectures that passed this selection to made experiments with \textit{Pendulum-v0} and, consequently, with the environment we designed with Cozmo.
 \Vref{ch:ch5} will show the results in question.
 
@@ -333,21 +333,21 @@ This decision aims to shorten the optimisation phase and obtain more manageable 
 We applied batch normalisation after each convolutional level to improve the speed, performance, and stability of neural networks \cite{ioffe2015batch}.
 Finally, we flattened the results and used them as input for the last part of the architecture, which consists of two fully-connected layers with a hidden size of 256 features.
 We decided to implement the network using the Rectified Linear Unit function (ReLU) as non-linearity, to initialise all network biases to 0 and all weights using Xavier initialisation \cite{glorot2010understanding}.
-\Vref{fig:cnn_cozmo} provides an overview of the network used as Q-Network.
-In this scenario, the outputs of the convolutional section were concatenated with actions, and there is one single output value after the fully-connected part.
-In the network used as policy, there is no concatenation at the end of the convolutional layers stack, and the output size depends on the dimensionality of the specific action space which, in the Cozmo scenario, is equal to 2.
+
+In the Q-Network implementation, the outputs of the convolutional section were concatenated with actions, and there is one single output value after the fully-connected part, which represents the value of the action-value function $Q$.
+In the policy scenario, as shown in \vref{fig:cnn_cozmo}, there is no concatenation at the end of the convolutional layers stack, and the output size depends on the dimensionality of the specific action space which, in the Cozmo scenario, is equal to 2.
 
 \begin{figure}
 
     \centering
     \includegraphics[width=\textwidth]{img/cnn_cozmo.png}
     \caption[Convolutional Neural Network Architecture for Cozmo experiments]{ Convolutional Neural Network Architecture for Cozmo experiments.
-        This particular example shows the model exploited as the Q-function with a single value as output and two consecutive grayscale images which represents the state of the environment as input.
+        This particular example shows the model exploited as the Policy with a tensor with dimension equal to the action space size as output and two consecutive grayscale images which represents the state of the environment as input.
         The first part of the network consists of three convolutional layers with 16 features of 3$\times$3 dimensions.
         Each level is supplemented by a batch normalisation one.
         The results are then flattened and concatenated with the vector of actions before entering the second part.
         This section consists of two fully-connected layers with 256 features.
-        The output of this particular network is a single value that represents the Q-Value that refers to the action in question.
+        The output of this particular network represent the action to take, given the input state.
         This network uses ReLu as non-linearity.
         Before starting experiments, the network is initialised with biases equal to zero and weights set utilising Xavier initialisation \cite{glorot2010understanding}.}
     \label{fig:cnn_cozmo}
@@ -374,7 +374,7 @@ The policy learned led to strange behaviour with sharp turns in a direction and 
 After this implementation, we started a search for a reinforcement learning algorithm more suitable for real-world problems.
 The ideal objective would be to find a hyperparameter agnostic algorithm capable of performing well regardless of algorithm configuration and ensuring the absence of unfairness introduced from external sources \cite{henderson2018deep}.
 The last-mentioned aim is still being researched today by the scientific community.
-Despite this fact, we found out an algorithm capable of automatically adapt itself to reduce the hyper-parameter dependency: SAC, an algorithm which was born precisely as an evolution of the DDPG approach to improve its performance in a real-world application and overcome hyper-parameters dependency.
+Despite this fact, we found out an algorithm capable of automatically adapt itself to reduce the hyper-parameter dependency: SAC, an algorithm which was born precisely as an evolution of the DDPG approach to improve its performance in real-world applications and overcome hyper-parameters dependencies.
 Therefore, we also implemented this algorithm from scratch by using the implementation of the so-called \textit{parameter auto-tuning} proposed in \cite{haarnoja2018soft, haarnoja2018alg}.
 \Vref{ch:ch5,ch:ch6} will present the performance comparison between these two algorithms in a \textit{Pendulum-v0} simulated environment and the performance of SAC in the real-world Cozmo one.
 
@@ -422,7 +422,7 @@ We will discuss the experiments and their results thoroughly in \vref{ch:ch5,ch:
 Despite the care taken in the design of the reinforcement learning system covered by this chapter, many factors sometimes invalidated the experiments launched.
 Just to cite a few of them as an example, we can report the instability in the Cozmo connection with its SDK caused by cable failure or the discharge of the robot battery in the middle of an experiment without any warning signal.
 
-These events can also be added to those caused directly by the distraction of the user who guides the learning process: sometimes it happened that the user sent the episode end signal when the error was over.
+These events can also be added to those caused directly by the distraction of the user who guides the learning process: sometimes it happened that the user sent the episode end signal when the error was already made and over.
 The agent had already started to insert wrong and off-road experiences in the replay memory, invalidating the experiment carried out up to that moment.
 
 To try to solve the problem, we have implemented two types of rescue systems.
