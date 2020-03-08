@@ -8,7 +8,7 @@ Although it achieved its best results in simulated environments such as video ga
 The first contribution of this thesis consists of the design of a control system to apply reinforcement learning algorithms in the real world.
 To achieve this aim, we decided to use the standardised approach provided by OpenAI Gym to project environments.
 We implemented the same interface used by simulated environments binding OpenAI Gym methods to features and functions offered from Anki Cozmo SDK.
-The approach used in the development of this system has allowed obtaining an environment in which any researcher can apply their algorithms interfacing directly with the reinforcement learning framework, without worrying about direct interfacing with the robot.
+The approach used in the development of this system has allowed obtaining an environment in which any researcher can apply his algorithms interfacing directly with the reinforcement learning framework, without worrying about direct interfacing with the robot.
 
 The designed system allowed us to perform reinforcement learning experiments straightforwardly, meeting the specifications required, such as the possibility to backup and restore their state.
 
@@ -23,7 +23,7 @@ After the conclusion of the experiments, as reported in \vref{ch5:results}, we f
 
 We localised two major problems which, in our opinion, have had a particular influence on the results obtained.
 The first factor was the amount of RAM available in the development machine.
-Off-policy reinforcement learning algorithms require a memory replay in which to store past experiences and, in particular in our implementation, a portion of free RAM to be able to back up disk easily.
+Off-policy reinforcement learning algorithms require a memory replay in which to store past experiences and, in particular in our implementation, a portion of free RAM to be able to backup variables easily.
 This limitation forced us to decrease the size of the replay memory and a consequent early deletion of less recent episodes.
 Analysing the plots, we noticed that this fact translated in the increase of the temperature: this symptom underlines the need for the algorithm to explore more the solution space.
 The second major problem was the limitation of the camera sensor on the robot, particularly its viewing angle.
@@ -38,14 +38,14 @@ However, Anki developers primarily designed the Cozmo camera for facial recognit
 
 Our proposals about future improvements to the project grow from the weakness in our approach that we just described.
 Our attempt to make the system data-efficient by decreasing the experience memory replay did not work.
-It could be interesting to execute these algorithms on a device with a bigger RAM, but also to design this approach with a Variational Auto-Encoder (VAE) \cite{kingma2013auto} to reduce the dimensionality of the information retrieved during experiments.
-This method revealed improvements in many applications and in particular in the one reported in \cite{kendall2018learning,kendall2019learning}.
+It could be interesting to execute these algorithms on a device with a bigger RAM, but also to design this approach with a Variational Auto-Encoder (VAE) \cite{kingma2013auto} to reduce the dimensionality of the information retrieved during experiments and compare the results with the ones obtained in this thesis.
+Indeed, this method revealed improvements in many applications and in particular in the one reported in \cite{kendall2018learning,kendall2019learning}.
 
 It may be useful to enhance sensors installed in the self-driving robot to improve SAC algorithm performances.
 We suggest, in particular, to substitute the camera with one that has a viewing angle large enough to visualise the whole width of the track.
-A possible alternative to Anki Cozmo could be Anki Vector, the successor of Cozmo which mounts a 720p camera with 120 Ultra Wide FOV or to build up a personal \textit{Donkey Car} with custom specifications.
-Using Anki Vector, it could be interesting to perform reinforcement learning algorithms with the usage of the renewed front camera together with the infrared laser scanner on-board to investigate approaches to data fusion with more sensors.
+In addition to the possibility to build up a personal \textit{Donkey Car} with custom specifications and sensors, we believe that one valuable alternative to Anki Cozmo could be Anki Vector, the successor of Cozmo which mounts a 720p camera with 120 Ultra Wide FOV.
+It could be interesting to use Anki Vector to perform reinforcement learning algorithms with the usage of the renewed front camera together with the infrared laser scanner on-board. This approach can lead to the attractive possibility to investigate approaches to data fusion with data provided by a set of sensors and see the reflections of these choices in the performance of the learning process.
 
-In this thesis, we focused on model-free reinforcement learning algorithms to solve the self-driving task we proposed.
-However, we think that another intriguing research to carry out is an investigation about the application of model-based reinforcement learning algorithms to autonomous driving.
-A more in-depth review of the literature to better understand the feasibility of this approach, focusing on its strengths and weaknesses compared to model-free ones can be the right starting point.
+In this thesis, we focused on model-free reinforcement learning algorithms to solve the self-driving task we proposed, developing our ideas starting from the intuitions provided by \cite{kendall2018learning,kendall2019learning}.
+However, taking into account the recent results obtained in this research field as reported in \cite{hawke2019urban,wayve2019learned}, we think that another intriguing research to carry out is an investigation about the application of model-based reinforcement learning algorithms to autonomous driving.
+A more in-depth review of the literature to better understand the feasibility of this approach compared to model-free ones, focusing on its strengths and weaknesses, can be the right starting point to make the next step towards the application of reinforcement learning algorithms to autonomous systems.
