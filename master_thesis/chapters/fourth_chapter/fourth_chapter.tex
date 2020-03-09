@@ -43,18 +43,18 @@ This section aims to describe as clearly as possible all the components of the c
     \label{fig:system}
 \end{figure}
 
-\subsection{OpenAI Gym Cozmo Environment}
+\subsection{OpenAI Gym Cozmo environment}
 
 Before starting the description of the system we designed to carry out reinforcement learning experiments it is necessary to outline the decisions we made about what to implement in \textit{CozmoDriver}, the OpenAI Gym environment we developed to apply, train and test reinforcement learning algorithms with Cozmo.
 
 The path of this section will follow the steps of a typical formalisation of the Markov Decision Process (MDP), bringing out the problems encountered, the reasoning behind them and solutions proposed as they go.
 
-\subsubsection{Markov Decision Process Formalisation} \label{subsubsec:mdp_form}
+\subsubsection{Markov Decision Process formalisation} \label{subsubsec:mdp_form}
 
 Starting from the definition of MDP that we already reported in~\vref{eq:mdp}, we studied and investigated the best configuration to provide an acceptable trade-off between performance and memory consumption, capable of making the system work on the development machine we used for our experiments.
 In the following paragraphs, we will analyse each MDP aspects paying particular attention to the problems we faced and the motivations behind every decision made to overcome them.
 
-\paragraph{State/Observation Space}
+\paragraph{State/Observation space}
 The environment observation is the group of information that the reinforcement learning agent can see and obtain from the interaction with the real world.
 Current autonomous driving technology usually works thanks to the presence of various sensor positioned in different points of the car body as we discussed in \vref{sec:related-work}.
 However, this approach is quite different from what human beings use to guide every day: the only input that the human receives is what he sees.
@@ -154,7 +154,7 @@ In the second option, the distance covered by the robot is equal to the reward, 
 For this reason, we decided to take the second reward proposal for this time.
 We noticed that it could be an exciting future development trying to merge the second alternative with the third one to obtain a brand new reward function that both penalises bad decisions proportionally to speed and maintain its correspondence with the track crossed.
 
-\subsection{Human-Robot Interaction} \label{subsec:human-robot-interaction}
+\subsection{Human-Robot interaction} \label{subsec:human-robot-interaction}
 
 \begin{figure}
 
@@ -206,7 +206,7 @@ The parameters of this function are the following:
 This method is the same we used to implement the OpenAI Gym environment, allowing the algorithm to interact with the robot just like a human in the driving seat.
 Just as examples, the user can start and stop the episode using the enter button, forget the previous episode with backspace and relocate the robot on the track using W, A, S and D buttons.
 
-\subsection{System Flow} \label{subsec:system-flow}
+\subsection{System flow} \label{subsec:system-flow}
 
 The implementation of an algorithm flow to sustain the specific experimental need was necessary due to the continuous interactions between the human and the robot.
 Starting from the ideas of \cite{kendall2018learning,kendall2019learning}, we decided to divide the learning process in a series of phases highlighted in blue in \vref{fig:system-flow-chart}.
@@ -224,7 +224,7 @@ Starting from the ideas of \cite{kendall2018learning,kendall2019learning}, we de
 The phases we defined are the following:
 
 \begin{itemize}
-    \item \textbf{Episode Phase.} This phase consists of a single episode take.
+    \item \textbf{Episode phase.} This phase consists of a single episode take.
           It represents the results of a series of action taken from the agent to solve the task.
           In the early part of the experiment, the algorithm has to perform a warm-up, a procedure where the agent makes random actions to explore the environment randomly and obtains an initial set of entries for experience replay memory.
           After the agent gathered the minimum amount of entries, which is usually equal to the batch size or a multiple thereof, the agent starts to exploit the neural network to act using a noisy policy for exploration purpose.
@@ -235,7 +235,7 @@ The phases we defined are the following:
           It can interact by toggling enter button on the keyboard.
           The first hit starts the episode, while the second one determines the end of the episode and attributes zero rewards to the last action taken.
 
-    \item \textbf{Undo Phase.} As described in \vref{subsec:error-management}, it is possible to invalidate experiments due to a human or a system error.
+    \item \textbf{Undo phase.} As described in \vref{subsec:error-management}, it is possible to invalidate experiments due to a human or a system error.
           For this reason, we implemented a procedure that the user can trigger to delete the knowledge acquired in the last training episode and restore the previous state.
           We positioned it right after the episode phase to delete faulty episodes as soon as possible.
 
@@ -244,12 +244,12 @@ The phases we defined are the following:
           Initially, the first choice led to a direct restore of the previous situation without executing the training phase, while the second one executed the training phase and only afterwards the undo phase.
           After some tests, we decided to set the first behaviour as unique for both possibilities.
           This choice led to a delay increase between two consecutive episodes because of the addition of an indirect confirmation of the current episode before starting the training phase. However, thanks to the careful design of the network, the waiting time remained manageable.
-    \item \textbf{Training Phase.} This section starts its execution after the initial warm-up phase, and it is located after each Cozmo episode.
+    \item \textbf{Training phase.} This section starts its execution after the initial warm-up phase, and it is located after each Cozmo episode.
           It manages all neural networks updates with several optimisation steps, also known as epochs: the number of optimisation steps is set as a parameter by the developer.
-    \item \textbf{Testing Phase.} This phase disables noisy policies from the algorithm to allow the agent to take the action that the neural network decree as best in that specific iteration.
+    \item \textbf{Testing phase.} This phase disables noisy policies from the algorithm to allow the agent to take the action that the neural network decree as best in that specific iteration.
           It consists of a repetition of a finite set of episodes that triggers after every specified number of epochs, given as parameter of the system: the average reward calculated by the rewards obtained from each testing episode is the result of this phase.
           This value is crucial for the reinforcement learning experiments because we used them to build the average reward performance graph that shows how much the agent learned in the graphs of \vref{ch:ch5} and determines the quality of the learning process itself.
-    \item \textbf{Checkpoint Phase.} This phase is described in \vref{subsec:error-management}.
+    \item \textbf{Checkpoint phase.} This phase is described in \vref{subsec:error-management}.
           It consists of saving all data to make the developer able to restart the experiment from the last available checkpoint.
           It is usually located right after the testing phase in order to save all values together with network weights and biases.
 
@@ -353,7 +353,7 @@ In the policy scenario, as shown in \vref{fig:cnn_cozmo}, there is no concatenat
     \label{fig:cnn_cozmo}
 \end{figure}
 
-\subsection{Algorithms implementations and Hyperparameters}
+\subsection{Algorithms implementations and hyperparameters}
 
 As already mentioned in this section, the experiments we made in this thesis were carried out in a real-world environment.
 At the beginning of this thesis work, we implemented the DDPG algorithm following the theory of the related paper and the hyperparameters suggested in \cite{lillicrap2015continuous,kendall2018learning,kendall2019learning}.
@@ -402,7 +402,7 @@ This symptom was strictly related to the robot's inability to have the right tim
 Accordingly, the robot ends up navigating with an average speed close to the half of the maximum speed and always going in a straight line only with small and temporary slopes to the right or left.
 After noting this problem, we fixed it by hard-coding a minimum interval between the execution of a specific action and the beginning of the next one in the OpenAI Gym environment: we selected this value according to the constraint given by the Cozmo SDK about robot camera device.
 
-\subsection{Driving Bias}
+\subsection{Driving bias}
 
 As we reported in \vref{subsec:human-robot-interaction}, the user has to interact with the robot to indicate how valuable is the last action taken by the robot agent.
 It is noticeable that, in this context, human-robot interaction has a crucial role in the learning process.
@@ -433,7 +433,7 @@ We implemented the second type of rescue as soon as the experiments proved to la
 Because the experiments could take many hours or even days, it was necessary to implement a checkpoint system to save the state of the experiment and to restore it in the following days.
 We decided to insert this process at the end of the periodic test phase: it serialises and stores in the secondary memory storage the values of the neural network and the data of the reinforcement learning algorithm.
 
-\subsection{Track Design}
+\subsection{Track design}
 
 In order to carry out real-world experiments with Cozmo, we need to build a track specifically designed for robot dimensions.
 For this reason, we spent some time to search for the most reliable way to build a path where to train Cozmo efficiently.

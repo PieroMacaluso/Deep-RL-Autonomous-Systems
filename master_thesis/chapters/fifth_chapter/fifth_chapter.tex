@@ -17,11 +17,11 @@ For this segment, we took inspiration by \cite{henderson2018deep}, an exciting p
 The second and third sections of this chapter will, therefore, be devoted respectively to the two types of environments used.
 We will show all the useful graphs in order to analyse and to comment on the obtained results.
 
-\section{Experimental Methodology}
+\section{Experimental methodology}
 
 This preliminary section is essential to understand better the tasks we tried to solve through the usage of reinforcement learning algorithms and what approach we used to evaluate experiments results.
 
-\subsection{Hardware and Software details}
+\subsection{Hardware and software details}
 
 In order to carry out the experiments contained in this chapter, we used a personal laptop.
 We chose this solution because the machine has excellent specifications to support the computational power required by the machine learning experiments both in terms of GPU and RAM.
@@ -70,7 +70,7 @@ We collected the essential information about hardware and software that we have 
 	\end{tabular}
 \end{table}
 
-\subsection{Pendulum-v0 Environment}
+\subsection{Pendulum-v0 environment}
 
 OpenAI Gym \textit{Pendulum-v0} environment formalises the inverted pendulum swing-up problem, a classic problem in the control literature.
 In this version of the problem, the pendulum starts in a random position, and the goal is to swing it up, so it stays upright.
@@ -139,23 +139,23 @@ Therefore, the lowest cost is $-(\pi^2 + 0.1*8^2 + 0.001*2^2) = -16.2736044$, an
 In essence, the goal is to remain at zero angles (vertical), with the least rotational velocity, and the least effort.
 The reward design has also been maintained in the modified environment.
 
-\subsubsection{Starting State}
+\subsubsection{Starting state}
 
 The initial state of the environment in question is chosen randomly.
 Two values are extracted: the first is an angle between  $-\pi$ to $\pi$, the second is a speed between -1 and 1.
 A zero angle corresponds to the standing pendulum.
 
-\subsubsection{Episode Termination}
+\subsubsection{Episode termination}
 
 OpenAI Gym documentation does not specify a particular episode termination for this environment: the choice is left to the user.
 In our case, after some attempts, we decided to set a limit value of 200 steps for each episode.
 
-\subsubsection{Solved Requirements}
+\subsubsection{Solved requirements}
 
 Even in this case, OpenAI Gym documentation does not specify any indications to understand whether an episode has been solved.
 Indeed, \textit{Pendulum-v0} is an unsolved environment, which means it does not have a specified reward threshold at which it is considered correctly completed.
 
-\subsection{CozmoDriver-v0 Environment}
+\subsection{CozmoDriver-v0 environment}
 
 \textit{CozmoDriver-v0}, the reinforcement learning environment we implemented, is one of the contributions of this thesis.
 This section aims to present as schematically as possible the basic parameters that characterise the environment we have designed.
@@ -228,7 +228,7 @@ Besides, we opted for setting the reward of the final episode step to zero becau
 	r_t = v_t \cdot c
 \end{equation}
 
-\subsubsection{Starting State}
+\subsubsection{Starting state}
 
 The starting state position of the system is not constant, but changes from episode to episode.
 This approach was preferred over the one with a fixed starting position for two simple reasons:
@@ -241,12 +241,12 @@ This approach was preferred over the one with a fixed starting position for two 
 
 The episode starts as soon as the agent receives the start signal.
 
-\subsubsection{Episode Termination}
+\subsubsection{Episode termination}
 
 The episode ends when the robot goes off the road or reaches a dangerous situation.
 Even this time, the episode ends when the agent receives the stop signal.
 
-\subsubsection{Solved Requirements}
+\subsubsection{Solved requirements}
 
 We have not provided a well-defined parameter to understand whether the task has been solved or not, because it depends on the path and the particular needs of the programmer.
 Potentially the episode could last forever if the robot could learn to run an entire circuit.
@@ -257,7 +257,7 @@ For this reason, we suggest applying this environment to circuits and not paths 
 In our case, the route used is almost 3 meters long.
 So we decided to use this value as a target to reach to determine the resolution of the task.
 
-\subsection{Measuring Performance}
+\subsection{Measuring performance}
 
 In recent years, we have witnessed the rapid growth of interest in deep reinforcement learning by the entire scientific community.
 This growth has led to an increase in experiments and works on this subject, which are often readily available.
@@ -305,9 +305,9 @@ For this reason, we decided to measure the performance of the experiments by usi
 \Vref{sec:pendulum-exp,sec:cozmo-exp} will show the most relevant results and graphs obtained from the respective experiments.
 The final part of each section will be accompanied by a comment on the results obtained, paying particular attention to the comparison between the two algorithms.
 
-\section{Pendulum-v0 Experiments} \label{sec:pendulum-exp}
+\section{Pendulum-v0 experiments} \label{sec:pendulum-exp}
 
-\subsection{DDPG Hyperparameters}
+\subsection{DDPG hyperparameters}
 
 The hyper-parameters we exploited in this experiment are shown in \vref{table:ddpg_pendulum}.
 The epsilon decay function is presented in \vref{eq:epsilon_decay} where $e$ is the current episode number.
@@ -358,7 +358,7 @@ When it reaches the $\epsilon_{\text{end}}$, it will become a constant.
 
 \FloatBarrier
 
-\subsection{SAC Hyperparameters}
+\subsection{SAC hyperparameters}
 
 The hyper-parameters we exploited in this experiment are shown in \vref{table:sac_pendulum}.
 \begin{table}[!h]
@@ -400,7 +400,7 @@ The hyper-parameters we exploited in this experiment are shown in \vref{table:sa
 
 \FloatBarrier
 
-\subsection{Comparative Analysis}
+\subsection{Comparative analysis}
 
 This section aims to present the most critical plots we obtained from \textit{Pendulum-v0} experiments.
 The results obtained exploiting SAC algorithm are presented in \vref{fig:sac_pendulum_reward,fig:sac_pendulum_test_reward}, while the ones gathered with DDPG algorithm are presented in \vref{fig:ddpg_pendulum_reward,fig:ddpg_pendulum_test_reward}.
@@ -878,7 +878,7 @@ Even in the testing phase, the most important, the outstanding performance of SA
 
 \FloatBarrier
 
-\section{CozmoDriver-v0 Experiments} \label{sec:cozmo-exp}
+\section{CozmoDriver-v0 experiments} \label{sec:cozmo-exp}
 
 After the completion of the experiments carried out with \textit{Pendulum-v0} environment, we started to implement both algorithm in parallel to work with the specific features of \textit{CozmoDriver-v0}.
 
@@ -928,7 +928,7 @@ Thanks to this method, the learning process depends on episodes lengths and led 
 
 Since the number of learning epochs is not predictable a priori as happened with \textit{Pendulum-v0} experiments, we decided to manage the frequency of the test phases by starting them every 50 episodes. To appropriately represent these values in the graph, we reported the number of learning epochs carried out up to that moment.
 
-\subsection{SAC Hyperparameters}
+\subsection{SAC hyperparameters}
 
 The hyper-parameters we exploited in this experiment are shown in \vref{table:sac_cozmo}.
 
@@ -969,7 +969,7 @@ The hyper-parameters we exploited in this experiment are shown in \vref{table:sa
 \end{table}
 
 
-\subsection{Results Analysis} \label{ch5:results}
+\subsection{Results analysis} \label{ch5:results}
 
 After carrying out numerous experiments to fix bugs in the code and verify the correct execution of the algorithm flow, we managed to complete a whole set of 3000 episodes exploiting the SAC algorithm to solve the autonomous driving task with Cozmo.
 Taking into account waiting times between episodes and charging times, we managed to complete the experiments in almost one week, after almost $1.3\times 10^5$ epochs of learning.

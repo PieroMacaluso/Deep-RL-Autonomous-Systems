@@ -198,7 +198,7 @@ The solution of the Bellman optimality equation is not linear and, in general, t
 For this reason, there are many iterative methods: \vref{dp,mfa} contain some of them.
 
 
-\subsection{Approaches to Reinforcement Learning} \label{approaches}
+\subsection{Approaches to reinforcement learning} \label{approaches}
 
 Every agent consists of an RL algorithm that it exploits to maximise the reward it receives from the environment.
 Every single algorithm has its singularity, and it could work with a specific application field which depends on the particular approach it supports.
@@ -487,9 +487,9 @@ One of the first steps towards Deep RL and general artificial intelligence -- an
 Because of the nature of this work, the focus of this section will be on model-free algorithms.
 This section aims to explain the state-of-the-art and the leading theory behind Deep RL framework together with an overview about deep learning and the presentation of two deep actor-critic algorithms used in the experiments of this thesis: Deep Deterministic Policy Gradient (DDPG) and Soft Actor-Critic (SAC).
 
-\subsection{Fundamentals of Deep Learning}
+\subsection{Fundamentals of deep learning}
 
-\subsubsection{Artificial Neural Networks}
+\subsubsection{Artificial neural networks}
 Deep learning (DL) is an approach to learning based on a function $f: \mathcal{X} \rightarrow \mathcal{Y}$ parametrised with $w \in \mathbb{R}^{n_w}\;|\;n_w \in \mathbb{N}$ such that $y = f(x;w)$.
 
 The starting point of this research field is the artificial neuron, inspired by the biological neuron from the brain of animals and human being.
@@ -912,7 +912,7 @@ However, when the action space is continuous, this process becomes highly non-tr
 Because the action space is continuous, the function $Q^*(s,a)$ is presumed to be differentiable concerning the action argument.
 For this reason, an efficient, gradient-based learning rule for a policy $\pi(s)$ which exploits that fact can be set up, approximating it with $\max_a Q(s,a) \approx Q(s,\pi(s))$.
 
-\subsubsection{Target Networks} \label{targetnet}
+\subsubsection{Target networks} \label{targetnet}
 
 DDPG algorithm exploits 4 neural networks: the \textit{local actor $\pi$}, the \textit{local critic $Q$}, the \textit{target actor $\pi'$} and the \textit{target critic $Q'$}.
 Actor networks aim to approximate the policy using parameters $\theta$ while critic networks approximate the Q-Value function using parameters $\phi$.
@@ -935,7 +935,7 @@ It is given by \vref{eq:softupdate} where $\tau \ll 1$.
 	\theta' \leftarrow \tau \theta + (1-\tau)\theta'
 \end{equation}
 
-\subsubsection{Learning Equations}
+\subsubsection{Learning equations}
 
 The two fundamental functions in reinforcement learning exploited in DDPG are the \textit{action-value function} -- see \vref{eq:actionvalue} -- and the correspondent \textit{Bellman equation} -- see \vref{eq:bellman}.
 If this policy is deterministic we can describe it as a function $ \pi : \mathcal{S} \leftarrow \mathcal{A}$ obtaining \vref{eq:bellman2} which depends only on the environment.
@@ -1086,7 +1086,7 @@ The policy is trained to maximise a trade-off between expected return and entrop
 This peculiarity is strongly related to the exploration-exploitation trade-off: increasing entropy results in more exploration, which can accelerate learning later on, but it can also prevent the policy from prematurely converging to a local optimum.
 
 
-\subsubsection{Target Networks}
+\subsubsection{Target networks}
 SAC algorithm exploits 5 neural networks: the local stochastic policy network with parameter $\theta$, two local Q-Networks with parameters  $\phi_1$, $\phi_2$ respectively, two target Q-Networks with parameters $\bar{\phi_1}$ and $\bar{\phi_2}$ respectively.
 Their behaviour is the same as the one of DDPG target network: the algorithm updates the target networks following \vref{eq:softupdate}.
 
@@ -1129,7 +1129,7 @@ From these equations is possible to derive the connection between state-value an
 	\end{aligned}
 \end{equation}
 
-\subsubsection{Learning Equations}
+\subsubsection{Learning equations}
 SAC algorithm learns a policy $\pi_\theta$ with $\theta$ parameter set and two Q-functions $Q_{\phi_1}$,  $Q_{\phi_2}$ with $\phi_1$ and $\phi_2$ parameter sets respectively.
 The state-value function is implicitly parametrised through the soft Q-function parameters thanks to \vref{eq:vsac}.
 In \cite{haarnoja2018soft} a function approximator for this function was introduced, but in \cite{haarnoja2018alg} the authors found it to be unnecessary.
@@ -1226,7 +1226,7 @@ Further details in \vref{alphasac}.
 \paragraph{Learning Update} See \vref{hpddpg}.
 
 
-\section{Related Work} \label{sec:related-work}
+\section{Related work} \label{sec:related-work}
 
 %\todomacaluso{
 %	\begin{itemize}

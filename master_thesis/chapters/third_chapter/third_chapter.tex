@@ -41,7 +41,7 @@ In \vref{ch:ch4} we will provide further information and details about our contr
 The importance related to the high quantity of environment is fundamental to build a reliable and sustainable framework for reinforcement learning algorithms.
 For this reason, OpenAI Gym contains a various and heterogeneous environment database, ready to be used.
 
-\subsubsection{Interface Functions}
+\subsubsection{Interface functions}
 
 Exploring OpenAI Gym, it is essential to focus on the most crucial interface functions that the agent will exploit to interact with the environment.
 The functions which constitute the skeleton of an OpenAI Gym environment are the following:
@@ -137,7 +137,7 @@ Anki developers produced a high-quality Python SDK that allows developers to tak
 This section aims to outline the hardware and software architecture hidden underneath the cute Cozmo bodyworks, together with a comparison with the alternatives available to design the reinforcement learning system of this thesis.
 An essential inspiration in the writing of this section came from \cite{mellon2017cognitive}, \cite{touretzky2018cozmopedia} and Anki Forums \footnote{Anki Cozmo SDK Forums: \href{https://forums.anki.com/}{https://forums.anki.com/}}.
 
-\subsection{Cozmo Architecture}
+\subsection{Cozmo architecture}
 
 It is possible to define Cozmo as a vision-guided mobile manipulator, one of the first consumer robot which can boast vision among its features.
 However, as reported before, the features it shows during the normal toy usage, do not equal the number of interfaces and functions made available to developers.
@@ -381,7 +381,7 @@ This characteristic means that the graph is built incrementally at runtime witho
 This feature supports projects where the author needs to change the computational graph on-the-fly avoiding the application restart.
 In this sense, PyTorch is more pythonic than TensorFlow \cite{builtin2019pytorch}.
 
-\subsubsection{Distributed Training}
+\subsubsection{Distributed training}
 
 Another key feature is the distributed training and data parallelism.
 PyTorch offers native support for asynchronous execution from Python, and then it could improve performances.
@@ -395,7 +395,7 @@ As discussed in the previous section, TensorFlow exploits TensorBoard to provide
 Facebook researchers developed \textit{Visdom} for this purpose, but it provides very minimalistic and limited features compared to the ones offered by TensorBoard.
 As reported before, it is possible to use TensorBoard with PyTorch thanks to the library TensorBoardX.
 
-\subsubsection{Production Deployment}
+\subsubsection{Production deployment}
 
 For what concerns the deployment of trained models into production, TensorFlow offers the best service via \textit{TensorFlow serving}, a framework that offers and uses REST Client API.
 The production deployment in PyTorch improved from its early releases, but, currently, it does not provide a framework to deploy the trained models on the web: the developers must use Flask or Django as backend server to provide the right environment to exploit the model.
