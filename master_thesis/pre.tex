@@ -64,16 +64,22 @@
 	Recent work has demonstrated that it is possible to rely on a comprehensive understanding of the immediate environment while following simple high-level directions, to obtain a more scalable approach that can make autonomous driving a ubiquitous technology.
 	However, to date, the majority of the methods concentrates on deterministic control optimisation algorithms to select the right action, while the usage of deep learning and machine learning is entirely dedicated to object detection and recognition.
 
-	Recently, we have witnessed a remarkable increase in interest in Reinforcement Learning (RL). It is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to make decisions by mapping situations and actions according to the information it gathers from the surrounding environment and from the reward it receives, trying to maximise it.
-	As researchers discovered, reinforcement learning can be surprisingly useful to solve tasks in simulated environments like games and computer games, and it showed encouraging performance in tasks with robotic manipulators. Furthermore, the great fervour produced by the widespread exploitation of deep learning opened the doors to function approximation with convolutional neural networks, developing what is nowadays known as deep reinforcement learning.
+	Recently, we have witnessed a remarkable increase in interest in Reinforcement Learning (RL).
+	It is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to make decisions by mapping situations and actions according to the information it gathers from the surrounding environment and from the reward it receives, trying to maximise it.
+	As researchers discovered, reinforcement learning can be surprisingly useful to solve tasks in simulated environments like games and computer games, and it showed encouraging performance in tasks with robotic manipulators.
+	Furthermore, the great fervour produced by the widespread exploitation of deep learning opened the doors to function approximation with convolutional neural networks, developing what is nowadays known as deep reinforcement learning.
 
 	In this thesis, we argue that the generality of reinforcement learning makes it a useful framework where to apply autonomous driving to inject artificial intelligence not only in the detection component but also in the decision-making one.
-	The focus of the majority of reinforcement learning projects is on a simulated environment. However, a more challenging approach of reinforcement learning consists of the application of this type of algorithms in the real world.
+	The focus of the majority of reinforcement learning projects is on a simulated environment.
+	However, a more challenging approach of reinforcement learning consists of the application of this type of algorithms in the real world.
 	For this reason, we designed and implemented a control system for Cozmo, a small toy robot developed by Anki company, by exploiting the Cozmo SDK, PyTorch and OpenAI Gym to build up a standardised environment in which to apply any reinforcement learning algorithm: it represents the first contribution of our thesis.
 
 	Furthermore, we designed a circuit where we were able to carry out experiments in the real world, the second contribution of our work.
 	We started from a simplified environment where to test algorithm functionalities to motivate and discuss our implementation choices.
-	Therefore, we implemented our version of Soft Actor-Critic (SAC), a model-free reinforcement learning algorithm suitable for real-world experiments, to solve the specific self-driving task with Cozmo. The agent managed to reach a maximum value of above 3.5 meters in the testing phase, which equals more than one complete tour of the track. Despite this significant result, it was not able to learn how to drive securely and stably. Thus, we focused on the analysis of the strengths and weaknesses of this approach outlining what could be the next steps to make this cutting-edge technology concrete and efficient.
+	Therefore, we implemented our version of Soft Actor-Critic (SAC), a model-free reinforcement learning algorithm suitable for real-world experiments, to solve the specific self-driving task with Cozmo.
+	The agent managed to reach a maximum value of above 3.5 meters in the testing phase, which equals more than one complete tour of the track.
+	Despite this significant result, it was not able to learn how to drive securely and stably.
+	Thus, we focused on the analysis of the strengths and weaknesses of this approach outlining what could be the next steps to make this cutting-edge technology concrete and efficient.
 
 \end{abstract}
 
@@ -83,22 +89,26 @@
 
 \ringraziamenti
 
-I would first like to thank my external thesis supervisor Prof. Pietro Michiardi for his guidance and support: he allowed me to autonomously work on a challenging and engaging project on an innovative research field, steering me in the right the direction whenever he thought I needed it. Furthermore, I would like to thank my internal supervisor Prof. Elena Baralis for her support.
+I would first like to thank my external thesis supervisor Prof. Pietro Michiardi for his guidance and support: he allowed me to autonomously work on a challenging and engaging project on an innovative research field, steering me in the right the direction whenever he thought I needed it.
+Furthermore, I would like to thank my internal supervisor Prof. Elena Baralis for her support.
 
-A profound thank goes to my mother Francesca, my father Salvatore and my whole family: they have always supported me in every choice and interest by teaching me the meaning of sacrifice, commitment and constancy. I reserve a heartfelt thank to my brother Antonio for his steady presence and support, but also our mutual inspiration and constructive confrontation.
+A profound thank goes to my mother Francesca, my father Salvatore and my whole family: they have always supported me in every choice and interest by teaching me the meaning of sacrifice, commitment and constancy.
+I reserve a heartfelt thank to my brother Antonio for his steady presence and support, but also our mutual inspiration and constructive confrontation.
 
-I would like to profoundly thank my Luisa for his continued support and encouragement, despite our being so far away: she followed me in every choice by motivating and encouraging me in the face of every difficulty encountered during these years.
+I would like to profoundly thank my Luisa for all her love, support and encouragement, despite our being so far away: she followed me in every choice by motivating and encouraging me in the face of every difficulty encountered during these years.
 
-A special thank goes to every people I met during my stay on the second floor of "Collegio Einaudi" in Turin, where I have lived since 2014. I would like to particularly thank Giordano, Pierluigi, Stella, Alessio and Elvira for their support during my thesis work.
+A special thank goes to every people I met during my stay on the second floor of "Collegio Einaudi" in Turin, where I have lived since 2014.
+Every person I met in my study path is essential, but I would like to particularly thank Giordano, Pierluigi, Stella, Alessio and Elvira for their support during my thesis work.
 
 Finally, I would like to thank for their constant support my lifelong friends Federico, Davide, Christian, Michele, Jacopo and Pietro.
 \begin{flushright}
-	\textit{Piero Macaluso, Torino, April 2020}
+    \textit{Piero Macaluso, Torino, March 2020}
 \end{flushright}
 
 \tablespagetrue\figurespagetrue % normalmente questa riga non serve ed e' commentata
 \indici
 
+\listofalgorithms
 %%%%%%%% Altro esperimento con l'opzione classica
 %%%%%%%% Non usare mai anche se qui lo si è fatto!
 %%%%%%%% Oltretutto funziona solo se si è specificata la lingua greca fra le opzioni.
