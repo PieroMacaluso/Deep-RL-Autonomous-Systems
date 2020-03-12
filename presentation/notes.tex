@@ -1,0 +1,660 @@
+%!TeX program = lualatex
+\documentclass[aspectratio=169]{beamer}
+\setbeameroption{show only notes}
+%\documentclass[aspectratio=169]{beamer}
+\usetheme[
+outer/progressbar=foot,
+outer/numbering=none
+]{metropolis} 
+
+\usepackage{pgfplots}
+\usepackage{multimedia}
+\usepackage[style=authortitle,backend=bibtex]{biblatex}
+\addbibresource{references.bib}
+\usepackage{tikz}
+\usepackage{media9}
+\usetikzlibrary{arrows,positioning}
+\usetikzlibrary{calc} % for manimulation of coordinates
+\usepgfplotslibrary{external} 
+\tikzexternalize
+
+\makeatletter
+\def\@makefnmark{}
+\makeatletter
+
+\tikzset{
+	%Define standard arrow tip
+	>=stealth',
+	%Define style for boxes
+	mylabel/.style={text width=7em, text centered},
+	mysmalllabel/.style={text width=7em, text centered},
+	punkt/.style={
+		rectangle,
+		rounded corners,
+		draw=black, very thick,
+		text width=8em,
+		minimum height=2.5em,
+		text centered},
+	punktt/.style={
+		rectangle,
+		draw=black, thick,
+		text width=8em,
+		minimum height=2.5em,
+		text centered},
+	% Define arrow style
+	pil/.style={
+		->,
+		thick,
+		shorten <=2pt,
+		shorten >=2pt,}
+}
+
+\newcommand{\sectiondark}[1]{
+	\metroset{background=dark} % change background theme according to manual
+	\usebeamercolor[fg]{normal text}
+	\section{#1}
+	\metroset{background=light} % change background theme according to manual
+	\usebeamercolor[fg]{normal text}
+}
+
+\makeatletter
+%\setbeamertemplate{title}{
+%	\raggedright%
+%	\linespread{1.0}%
+%	\inserttitle%
+%	\par%
+%	%\vspace*{0.5em}
+%}
+\setbeamertemplate{author}{
+	\vspace*{2em}
+	\begin{minipage}[t]{.2\textwidth}
+		{\textbf{Candidate:}}
+	\end{minipage}
+	\begin{minipage}[t]{.8\textwidth}
+		\insertauthor%
+		\par%
+	\end{minipage}
+	\vspace*{0.25em}
+}
+\setbeamertemplate{date}{
+	\hfill
+	\insertdate%
+	\par%
+}
+\setbeamertemplate{title page}{
+	\begin{minipage}[b][\paperheight]{\textwidth}
+		\vfill%
+		\ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+		\usebeamertemplate*{title separator}
+		\ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+		\ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
+		\ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+		
+		\ifx\inserttitlegraphic\@empty\else\inserttitlegraphic\fi
+		%\vspace*{1cm}
+		\begin{minipage}[t]{.2\textwidth}
+			{\small \textbf{Supervisors}:}%
+			\par%
+		\end{minipage}
+		\begin{minipage}[t]{.8\textwidth}
+			{\small Prof. Pietro Michiardi \hfill EURECOM, France}%
+			\par%
+			{\small Prof. Elena Baralis \hfill Politecnico di Torino, Italy}%
+			\par%
+		\end{minipage}
+		
+		\vfill
+		\ifx\insertdate\@empty\else\usebeamertemplate*{date}\fi
+		\vfill
+		\vspace*{0mm}
+	\end{minipage}
+}
+\makeatother
+
+%\titlegraphic{%
+%	\includegraphics[width=.2\textwidth]{example-image-a}\hfill\hfill
+%	\includegraphics[width=.2\textwidth]{example-image-b}
+%	
+%}          % Use metropolis theme
+\title{Deep Reinforcement Learning for Autonomous Systems}
+\subtitle{\small Designing a control system to exploit model-free deep reinforcement learning algorithms to solve a real-world autonomous driving task of a small robot.}
+\date{\today}
+\author{Piero Macaluso}
+\setbeamercolor{background canvas in title}{parent=palette primary}
+\setbeamercolor{progress bar}{use=palette primary}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+	\metroset{background=dark} % change background theme according to manual
+	\usebeamercolor[fg]{normal text}
+	\maketitle
+	\metroset{background=light} % change background theme according to manual
+	\usebeamercolor[fg]{normal text}
+	
+	\begin{frame}
+		\begin{center}
+			\begin{minipage}{0.4\linewidth}
+				\begin{center}
+					\includegraphics[width=1\linewidth]{img/eurecom.png}
+					\label{fig:eurecom}
+				\end{center}
+			\end{minipage}
+			\begin{minipage}{0.4\linewidth}
+				\begin{center}
+					\includegraphics[width=1\linewidth]{img/polito.png}
+					\label{fig:polito}
+				\end{center}
+			\end{minipage}
+			
+			This work of this thesis was developed at EURECOM (Sophia Antipolis, France)\\in collaboration with
+			
+			Prof. Pietro Michiardi (EURECOM)\\Prof. Elena Baralis (Politecnico di Torino)
+		\end{center}
+		\note{
+			Good morning,
+			
+			Today I am going to present you the work of my thesis project about Deep Reinforcement Learning algorithms applied to Autonomous Systems.
+			I developed this thesis during my stay at Eurecom in the south of France under the external supervision of Pietro Michiardi and the internal guidance of prof. Elena Baralis.
+		}
+	\end{frame}
+	
+	\begin{frame}{Table of contents}
+		\setbeamertemplate{section in toc}[sections numbered]
+		\tableofcontents[hideallsubsections]
+		\note{
+			This presentation consists of four main parts:
+			\begin{itemize}
+				
+				\item 		In the first part, I will outline the crucial concepts underlying autonomous system technology and the reinforcement learning approach. These two research fields are the baseline of this work.
+				\item	The second part will be dedicated to the description of the control system we design to make things work together to build up a solid foundation for the reinforcement learning experimentation part. This part represents the first contribution of this thesis.
+				\item In the third part, we will discuss the experimental methodology used with a showcase of the results obtained together with a constructive comment.
+				\item In the final part, we will analyse what we reached to be able to propose further improvement and research for future work.
+			\end{itemize}
+		}
+	\end{frame}
+	
+	%%%%%%%%%%
+	% SECTION: Reinforcement Learning Background
+	%%%%%%%%%%
+	
+	\sectiondark{Background}
+	
+	\subsection{State-of-the-art Autonomous Driving Systems}
+	
+	\begin{frame}{State-of-the-art Autonomous Driving Systems}
+		\begin{center}
+			\includegraphics[width=0.8\linewidth]{img/sensors.png}
+		\end{center}
+		\vspace{-5mm}
+		\footcite*{govtech2018aut}
+		
+		
+		
+		\note{
+			Autonomous systems and self-driving vehicles are attracting much attention from both the research community and industry due to their potential to revolutionise mobility and transport.
+			Nowadays, this technology is based on a comprehensive understanding of the surrounding environment. This fact is made possible thanks to the substantial usage of sensors and camera to gather useful information.
+			The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and GPS for coarse localisation.
+		}
+	\end{frame}
+	\begin{frame}{State-of-the-art Autonomous Driving Systems}
+		\begin{center}
+			\includegraphics[width=0.7\linewidth]{img/detection.jpg}
+			
+			
+			\textbf{Deep Learning} and \textbf{Machine Learning} are mainly exploited in\\ \alert{\textbf{object detection}} and \alert{\textbf{recognition}}.
+		\end{center}
+		\note{In this scenario, Deep Learning and Machine Learning are mainly exploited for object detection and recognition, while the implementation of the decision-making component is left to control optimisation algorithms.}
+	\end{frame}
+	
+	\begin{frame}{State-of-the-art Autonomous Driving Systems}
+		
+		\begin{center}
+			\scalebox{0.8}{
+				\begin{tikzpicture}
+				\node[outer sep=2pt] (knowledge) {\footnotesize \alert<1->{
+						\textbf{Knowledge}}};
+				\node[punktt,inner sep=5pt,outer sep=5pt,right=0.5cm of knowledge] (localization) {\footnotesize Localization Map Building};
+				\node[punktt,inner sep=5pt,outer sep=5pt,below=1cm of localization] (information) {\footnotesize Information Extraction};
+				\node[punktt,inner sep=5pt,outer sep=5pt,below=1cm of information] (sensing) {\footnotesize Sensing};
+				
+				\draw[->, thick](knowledge.east) -- (localization.west);
+				\draw[->, thick](sensing.north) -- (information.south) node [midway, right=0.2cm] {\scriptsize raw data};
+				\draw[->, thick](information.north) -- (localization.south) node [midway, above right=-0.5cm and 0.2cm] {\scriptsize {\begin{tabular}{c}
+						environmental model \\
+						local map           \\
+						\end{tabular} }};
+				\draw[->, thick](knowledge.south) |- ($(information.west) + (-0.2,0)$);
+				\draw[black,thick,dotted] ($(information.north west)+(-0.1,0.1)$)  rectangle ($(sensing.south east)+(0.1,-0.1)$);
+				
+				\node[outer sep=2pt, right=12cm of knowledge] (mission) {\footnotesize Mission goals};
+				\node[punktt,inner sep=5pt,outer sep=5pt,left=0.5cm of mission] (decision) {\footnotesize \alert<2->{\textbf{Decision Making}} \\ Motion Planning};
+				\node[punktt,inner sep=5pt,outer sep=5pt,below=1cm of decision] (trajectory) {\footnotesize Trajectory execution};
+				\node[punktt,inner sep=5pt,outer sep=5pt,below=1cm of trajectory] (actuation) {\footnotesize Actuation};
+				
+				\node[punkt,inner sep=5pt,outer sep=5pt,below right=0.5cm and 0.15cm of sensing] (environment) {\footnotesize Real World Environment};
+				
+				\draw[->, thick](mission.west) -- (decision.east);
+				\draw[->, thick](decision.south) -- (trajectory.north) node [midway, right=0.2cm] {\scriptsize trajectory};
+				\draw[->, thick](trajectory.south) -- (actuation.north) node [midway, above right=-0.5cm and 0.1cm] {\scriptsize {\begin{tabular}{c}
+						actuator \\
+						commands \\
+						\end{tabular} }};
+				\draw[->, thick](mission.south) |- ($(trajectory.east) + (+0.2,0)$);
+				\draw[black,thick,dotted] ($(trajectory.north west)+(-0.1,0.1)$)  rectangle ($(actuation.south east)+(0.1,-0.1)$);
+				
+				\draw[->, thick](localization.east) -- (decision.west) node [midway, above=0.1cm] {\scriptsize {\begin{tabular}{c}
+						position   \\
+						global map \\
+						\end{tabular} }};
+				
+				\draw[->, thick](actuation.south) |- (environment.east);
+				\draw[->, thick](environment.west) -| (sensing.south);
+				
+				\end{tikzpicture}}
+		\end{center}
+		\vspace{-7mm}
+		\footcite*{pavone2019veicoli}
+		
+		\note<1>{This schema outlines the crucial components of the modern autonomous driving car technology together with the interactions among them.
+			\begin{itemize}
+				\item At the bottom, we have the surrounding environment.
+				\item In the left section, we have a stack of components from the raw data to feature extraction.
+				\item The right section is the decision-making part, where the algorithm decided what action to make.
+			\end{itemize}
+			
+			Nowadays, we find the application of ML and DL only in the left part to extract features that a control optimisation algorithm will exploit to select what to do deterministically. }
+		\note<2>{The idea underlying this project is trying to implement artificial intelligence inside this decision-making part.}
+		
+	\end{frame}
+	
+	
+	\begin{frame}{Reinforcement Learning}
+		\onslide{Problems involving an \alert{\textbf{agent}}} interacting with an \alert{\textbf{environment}}, which provides numeric \alert{\textbf{reward signals}}.
+		
+		\textbf{Goal}: Learn how to take actions in order to maximize a reward function.
+		
+		\begin{center}
+			\scalebox{0.9}{
+				\begin{tikzpicture}
+				% node Agent
+				\node[punkt] (agent) {Agent};
+				% node Environment
+				\node[punkt, below=1cm of agent] (env) {Environment};
+				% node a_t
+				\node[mylabel, below right=0.25cm and 0cm of agent] (action) {$a_t$};
+				% node s_t
+				\node[mylabel, below left=0.25cm and 0.8cm of agent] (state) {$s_t$};
+				% node r_t
+				\node[mylabel, below left=0.25cm and -0.3cm of agent] (reward) {$r_t$};
+				% node s_t+1
+				\node[mylabel, above left=-1.3cm and -1cm of env] (state) {$s_{t+1}$};
+				% node r_t+1
+				\node[mylabel,above left=-.3cm and -1cm of env] (reward1) {$r_{t+1}$};
+				\draw[pil]   (agent.east) -- ($(agent.east) + (1.2cm,0cm)$)  |-  (env.east);
+				\draw[pil]   ($(env.west) + (0,-0.2cm)$) -- ($(env.west) + (-1.2cm,-0.2cm)$);
+				\draw[pil]   ($(env.west) + (-1.2cm,-0.2cm)$) -- ($(env.west) + (-2cm,-0.2cm)$) |-($(agent.west) + (0,0.2cm)$);
+				\draw[pil]   ($(env.west) + (0,+0.2cm)$) -- ($(env.west) + (-1.2cm,+0.2cm)$);
+				\draw[pil]   ($(env.west) + (-1.2cm,+0.2cm)$) -- ($(env.west) + (-1.6cm,+0.2cm)$) |-($(agent.west) + (0,-0.2cm)$);
+				\draw[dashed]  ($(env.west) - (1.2cm,-0.5cm)$) -- ($(env.west) - (1.2cm,0.5cm)$);
+				\end{tikzpicture}
+				\label{looprl}
+				\footcite*{sutton2018reinforcement}
+			}
+		\end{center}
+		
+		\note{
+			Reinforcement Learning is a paradigm of machine learning that formalises and tries to solve decision-making tasks. In this formalisation, we can find:
+			\begin{itemize}
+				\item The agent - the brain, the entity that makes decisions.
+				\item The environment: it is everything external to the agent.
+				\item The actions, the mean by which agent can interact and influence the environment.
+			\end{itemize}
+		}
+	\end{frame}
+	
+	\begin{frame}{From Data to Value}
+		\onslide<1->{}	\onslide<2->{}
+		\begin{center}
+			\includegraphics<1>[width=\linewidth]{img/reinforcement-learning-1.png}
+			\includegraphics<2>[width=\linewidth]{img/reinforcement-learning-2.png}
+		\end{center}
+		\footcite*{chara2018wild}
+	\end{frame}
+	
+	\begin{frame}{Components of the Agent}
+		\begin{itemize}
+			\item{\textbf{Policy}:  agent’s behaviour function}
+			\begin{equation*}
+			\begin{aligned}
+			\text{\textbf{Deterministic}: } & \pi(s) = a                               \\
+			\text{\textbf{Stochastic}: }    & \pi(a|s) = \mathbb{P}[A_t = a | S_t = s]
+			\end{aligned}
+			\end{equation*}
+			\item{\textbf{Value Function}:  policy evaluation function}
+			\begin{equation*}
+			\begin{aligned}
+			\text{\textbf{State Value}: }  & V^\pi(s) = \mathbb{E} \Bigg[\sum_{t \ge 0} \gamma^k r_t|s_0 = s, \pi\Bigg]                  \\
+			\text{\textbf{Action Value}: } & Q^\pi(s,a) = \mathbb{E} \Bigg[\sum_{t \ge 0} \gamma^k r_t \big| s_0 = s, a_0 = a, \pi\Bigg] \\
+			\end{aligned}
+			\end{equation*}
+			\item{\textbf{Model}:  agent’s representation of the environment}
+		\end{itemize}
+		
+	\end{frame}
+	
+	\begin{frame}{Categorizing Reinforcement Learning agents}
+		\begin{columns}
+			\begin{column}{0.5\linewidth}
+				\begin{itemize}
+					\item \textbf{Value Based}
+					\begin{itemize}
+						\item{\textcolor{lightgray}{No Policy (implicit)}}
+						\item{Value Function}
+					\end{itemize}
+					\item \textbf{Policy Based}
+					\begin{itemize}
+						\item{Policy}
+						\item{\textcolor{lightgray}{No value function}}
+					\end{itemize}
+					\item  \alert<2->{\textbf{Actor Critic}}
+					\begin{itemize}
+						\item{Policy}
+						\item{Value function}
+					\end{itemize}
+				\end{itemize}
+			\end{column}
+			\begin{column}{0.5\linewidth}
+				\begin{itemize}
+					\item \alert<2->{\textbf{Model Free}}
+					\begin{itemize}
+						\item{Policy and/or value function}
+						\item{\textcolor{lightgray}{No Model}}
+					\end{itemize}
+					\item \textbf{Model Based}
+					\begin{itemize}
+						\item{Policy and/or value function}
+						\item{Model}
+					\end{itemize}
+				\end{itemize}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Model-Free Actor Critic methods}
+		\begin{columns}
+			\begin{column}{0.5\linewidth}
+				\metroset{block=fill}
+				\begin{exampleblock}{Critic Network}
+					Estimates the value function. This could be the action value $Q$ or state value $V$.
+				\end{exampleblock}
+				\begin{exampleblock}{Actor Network}
+					Updates the policy distribution in the direction suggested by the Critic (such as with policy gradients).
+				\end{exampleblock}
+			\end{column}
+			\begin{column}{0.5\linewidth}
+				\centering
+				\includegraphics[width=0.8\linewidth]{img/actor_critic.png}
+			\end{column}
+		\end{columns}
+		\footcite*{sutton2018reinforcement}
+		
+	\end{frame}
+	
+	\begin{frame}{Deep Deterministic Policy Gradient (DDPG)}
+		\centering
+		\begin{itemize}
+			\item \textbf{Off-Policy}:\begin{itemize}
+				\item \alert{\textbf{Experience Replay Memory}} of $(s_t, a_t, r_t, s_t+1, d_t)$ tuples
+			\end{itemize}
+			\item \textbf{Action space}: Countinuous
+			\item \textbf{Policy}: \alert{\textbf{Deterministic}}
+			\item \textbf{Exploration}: \begin{itemize}
+				\item \alert{\textbf{Ornstein–Uhlenbeck}} process noise
+				\item Noise regulation with \alert{\textbf{$\epsilon$-decay function}}
+			\end{itemize}
+		\end{itemize}
+		\textbf{\underline{Needs accurate hyper-parameters fine-tuning}}
+		\footcite*{lillicrap2015continuous}
+	\end{frame}
+	
+	\begin{frame}{Deep Deterministic Policy Gradient (DDPG) - Neural Networks}
+		\centering
+		It uses \textbf{Target Networks} to minimise the instability MSBE loss
+		\vspace{10mm}
+		\begin{columns}
+			\begin{column}{0.5\linewidth}
+				\textbf{2 Local Neural Networks:}
+				\begin{itemize}
+					\item Actor $\pi(s \;|\; \theta)$ 
+					\item Critic $Q(s, a \;|\; \phi)$
+				\end{itemize}
+			\end{column}
+			\begin{column}{0.5\textwidth}
+				\textbf{2 Target Neural Networks:}
+				\begin{itemize}
+					\item Actor $\pi'(s \;|\; \bar{\theta})$
+					\item Critic $Q'(s, a \;|\; \bar{\phi})$
+				\end{itemize}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Deep Deterministic Policy Gradient (DDPG) - Learning Equations}
+		\centering
+		\Large
+		\begin{equation}\label{eq:ddpgloss}
+		\begin{gathered}
+		L(\phi) = \mathbb{E}_{s_t\sim \rho^\beta, a_t\sim \beta,r_t\sim E}[(Q(s_t, a_t|\phi)-y_t)^2] \\
+		y_t = r(s_t, a_t) + \gamma (1-d_t)Q'(s_{t+1}, \pi'(s_t+1|\bar{\theta})|\bar{\phi})
+		\end{gathered}
+		\end{equation}
+		\footcite*{lillicrap2015continuous}
+	\end{frame}
+	
+	\begin{frame}{Soft Actor-Critic (SAC)}
+		\centering
+		\begin{itemize}
+			\item \textbf{Off-Policy}
+			\item \textbf{Action space}: Countinuous
+			\item \textbf{Policy}: \alert{\textbf{Stochastic}}
+			\item \textbf{Exploration}: \alert{\textbf{Temperature} Parameter}
+			\item SAC is an off-policy algorithm which exploits entropy-regularized reinforcement learning
+			\item Auto-tune parameters: Less hyper-parameters, less tuning
+			\item Suitable for Real-World Experiments
+		\end{itemize}
+		\footcite*{haarnoja2018alg}
+	\end{frame}
+	
+	
+	
+	\sectiondark{Design of the control system}
+	
+	\sectiondark{Experimental methodology and results}
+	
+	\sectiondark{Conclusions and future work}
+	
+	
+	
+	%\begin{frame}{Reinforcement Learning Example}
+	%	
+	%	\onslide<1->{Problems involving a \alert{\textbf{Human}} interacting with \alert{\textbf{Earth}}, which provides \textbf{material reward}.}
+	%	\onslide<2->{}	\onslide<3->{}
+	%	
+	%\textbf{Goal}: Accumulate money for his/her future
+	%	\begin{center}
+	%		\scalebox{0.9}{
+	%			\begin{tikzpicture}
+	%			% node Agent
+	%			\node[punkt] (agent) {Human};
+	%			% node Environment
+	%			\node[punkt, below=1cm of agent] (env) {Earth};
+	%			% node a_t
+	%			\node<1-1>[mylabel, below right=0.25cm and 0.5cm of agent] (action) {Study};
+	%			\node<2-2>[mylabel, below right=0.25cm and 0.5cm of agent] (action) {Work};
+	%			\node<3-3>[mylabel, below right=0.25cm and 1.25cm of agent] (action) {Rob a Bank};
+	%			% node s_t
+	%			\node[mylabel, below left=-0.25cm and 1.75cm of agent] (state) {What the human sees and feels};
+	%			% node r_t
+	%			\node<1-1>[mylabel, below left=0.15cm and -1.1cm of agent] (reward) {$\{0,-10,10\}$€};			% node s_t+1
+	%			\node<2-2>[mylabel, below left=0.15cm and -1.1cm of agent] (reward) {$\{50,60\}$€};			% node s_t+1
+	%			\node<3-3>[mylabel, below left=0.15cm and -1.1cm of agent] (reward) {$100'000$€};			% node s_t+1
+	%			\node[mylabel, above left=-1.3cm and -1cm of env] (state) {};			% node r_t+1
+	%			\node[mylabel,above left=-.3cm and -1cm of env] (reward1) {};
+	%			\draw[pil]   (agent.east) -- ($(agent.east) + (1.2cm,0cm)$)  |-  (env.east);
+	%			\draw[pil]   ($(env.west) + (0,-0.2cm)$) -- ($(env.west) + (-1.2cm,-0.2cm)$);
+	%				\draw[pil]   ($(env.west) + (-1.2cm,-0.2cm)$) -- ($(env.west) + (-2cm,-0.2cm)$) |-($(agent.west) + (0,0.2cm)$);
+	%				\draw[pil]   ($(env.west) + (0,+0.2cm)$) -- ($(env.west) + (-1.2cm,+0.2cm)$);
+	%				\draw[pil]   ($(env.west) + (-1.2cm,+0.2cm)$) -- ($(env.west) + (-1.6cm,+0.2cm)$) |-($(agent.west) + (0,-0.2cm)$);
+	%				\draw[dashed]  ($(env.west) - (1.2cm,-0.5cm)$) -- ($(env.west) - (1.2cm,0.5cm)$);
+	%			\end{tikzpicture}
+	%		}
+	%	\end{center}
+	%	
+	%	
+	%\end{frame}
+	
+	
+	
+	%\begin{frame}{Main Objectives}
+	%	\begin{itemize}
+	%		\item<1-> {Building a \textbf{control system} and an \textbf{interface} between Cozmo robot and algorithms using OpenAI Gym.}
+	%		\item<2-> {\textbf{Real World} Reinforcement Learning experiments.}
+	%	\end{itemize}
+	%\end{frame}
+	%
+	%\begin{frame}{Anki Cozmo - Not just a toy robot}
+	%	\begin{columns}
+	%		\begin{column}{0.5\linewidth}
+	%			\begin{center}
+	%				\includegraphics[height=0.5\linewidth]{img/cozmo.png}
+	%				\includegraphics[height=0.5\linewidth]{img/cozmo_inside.png}
+	%			\end{center}
+	%		\end{column}
+	%		\begin{column}{0.5\linewidth}
+	%			\textbf<1->{Why Cozmo?}
+	%			\begin{itemize}
+	%				\item<1->{Small and portable}
+	%				\item<1->{30fps VGA Camera}
+	%				\item<1->{Powerful mechanics}
+	%				\item<1->{Python SDK and interfaces}
+	%			\end{itemize}
+	%		\end{column}
+	%	\end{columns}
+	%\end{frame}
+	%
+	%\begin{frame}{The Reinforcement Learning Control System Stack}
+	%	\begin{itemize}
+	%		\item<1->{ Human Level Control through a WebApp (\textbf{Flask}, \textbf{Python} and \textbf{Javascript})}
+	%		\item<1->{Algorithm written in \textbf{Python}}
+	%		\item<1->{\textbf{PyTorch} as Deep Learning Framework}
+	%		\item<1->{\textbf{OpenAI Gym} Framework for Reinforcement Learning}
+	%		\item<1->{\textbf{Cozmo SDK}}
+	%	\end{itemize}
+	%\end{frame}
+	%
+	%\begin{frame}{Human Control Panel}
+	%	\includegraphics[width=1\linewidth]{img/dashboard.png}
+	%\end{frame}
+	%
+	%\begin{frame}{The Track}
+	%
+	%	\begin{columns}
+	%		\begin{column}{0.5\linewidth}
+	%			\begin{itemize}
+	%				\item<1->{Contrast between lane and asphalt.}
+	%				\item<1->{Lane width comparable to the real one.}
+	%				\item<1->{Fewer Reflections.}
+	%				\item<1->{Easily Repeatable.}
+	%			\end{itemize}
+	%		\end{column}
+	%		\begin{column}{0.5\linewidth}
+	%			\centering
+	%			\includegraphics[width=0.9\linewidth]{img/track.png}
+	%		\end{column}
+	%	\end{columns}
+	%
+	%\end{frame}
+	%
+	%
+	%\begin{frame}{Best Episodes - Episode 2748 ans 2876}
+	%
+	%	\alert{\textbf{Reinforcement Learning Training Episode with Anki Cozmo}}
+	%
+	%	\url{https://pieromacaluso.github.io/episode}
+	%
+	%	%	\centering
+	%	%	\includemedia[
+	%	%	addresource=video/episode_2748.mp4,
+	%	%	activate=pageopen,transparent,
+	%	%	passcontext,
+	%	%	flashvars={source=video/episode_2748.mp4},
+	%	%	width=0.8\linewidth, height=0.45\linewidth
+	%	%	]{}{VPlayer.swf}%
+	%
+	%\end{frame}
+	%
+	%\begin{frame}{Considerations}
+	%	\centering
+	%	\includegraphics[width=0.5\linewidth]{img/baby.jpg}
+	%	\begin{itemize}
+	%		\item These results might appear not so extraordinary.
+	%		\item In reality, it is like teaching a \alert{\textbf{baby}} how to drive a car!
+	%		\item It is a process which starts from scratch. \textbf{From Zero to Hero!}
+	%	\end{itemize}
+	%\end{frame}
+	%
+	%%\begin{frame}{Best Episodes - Episode 2876}
+	%%	\centering
+	%%	\includemedia[
+	%%	addresource=video/episode_2876.mp4,
+	%%	activate=pageopen,transparent,
+	%%	passcontext,
+	%%	flashvars={source=video/episode_2876.mp4},
+	%%	width=0.8\linewidth, height=0.45\linewidth
+	%%	]{}{VPlayer.swf}%
+	%%\end{frame}
+	%
+	%\begin{frame}{Issues}
+	%	\begin{itemize}
+	%		\item Hunger for data.
+	%		\item Human Bias.
+	%		\item Narrow view of the camera.
+	%	\end{itemize}
+	%\end{frame}
+	%
+	%\begin{frame}{Possible improvements}
+	%	\begin{itemize}
+	%		\item Increase the number of epochs for each episode.
+	%		\item Apply gradient clipping.
+	%		\item Prioritized Experience Replay.
+	%		\item Improve Fault Recovery System.
+	%	\end{itemize}
+	%\end{frame}
+	%
+	%\begin{frame}{Possible developments}
+	%	\begin{itemize}
+	%		\item Increase the number of data (e.g\ sensors).
+	%		\item Overcome the limitations of Cozmo.
+	%		      \begin{itemize}
+	%			      \item Anki Vector
+	%			      \item Donkey Car
+	%		      \end{itemize}
+	%		\item Neural Network for object detection.
+	%	\end{itemize}
+	%\end{frame}
+	
+	{\setbeamercolor{palette primary}{fg=white, bg=orange}
+		\begin{frame}[standout]
+			Questions?
+		\end{frame}
+	}
+	\begin{frame}[standout]
+		Thank you!
+	\end{frame}
+	\begin{frame}[allowframebreaks]{References}
+		
+		\printbibliography
+		
+	\end{frame}
+	
+\end{document}
