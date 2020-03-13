@@ -1,6 +1,6 @@
 <h1 align="center">
-  <a href="https://github.com/pieromacaluso/RoomMonitor" title="RoomMonitor Documentation">
-    <img alt="RoomMonitor" src="stuff/logo.svg" width="200px" height="200px" />
+  <a href="https://github.com/pieromacaluso/Deep-RL-Autonomous-Systems" title="Deep Reinforcement Learning for autonomous systems Documentation">
+    <img alt="Deep Reinforcement Learning for autonomous systems" src="stuff/logo.svg" width="200px" height="200px" />
   </a>
   <br/>
   Deep Reinforcement Learning for autonomous systems
