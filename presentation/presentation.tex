@@ -6,8 +6,10 @@ outer/progressbar=foot,
 outer/numbering=none
 ]{metropolis} 
 
+\usepackage{amsmath}
 \usepackage{pgfplots}
 \usepackage{multimedia}
+\usepackage{appendixnumberbeamer}
 \usepackage[style=authortitle,backend=bibtex]{biblatex}
 \addbibresource{references.bib}
 \usepackage{tikz}
@@ -56,6 +58,30 @@ outer/numbering=none
 	\usebeamercolor[fg]{normal text}
 }
 
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{float}
+\usepackage{listings}
+
+
+\lstset{frame=tb,
+	language=Python,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3,
+	inputencoding=latin1
+}
+
+
 \makeatletter
 %\setbeamertemplate{title}{
 %	\raggedright%
@@ -80,17 +106,17 @@ outer/numbering=none
 	\insertdate%
 	\par%
 }
-\setbeamertemplate{title page}{
+\setbeamertemplate{title page}{	
 	\begin{minipage}[b][\paperheight]{\textwidth}
 		\vfill%
 		\ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
 		\usebeamertemplate*{title separator}
 		\ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
 		\ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
-		\ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
 		
+		\ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
 		\ifx\inserttitlegraphic\@empty\else\inserttitlegraphic\fi
-		%\vspace*{1cm}
+%		\vspace*{1cm}
 		\begin{minipage}[t]{.2\textwidth}
 	    	{\small \textbf{Supervisors}:}%
 	    	\par%
@@ -320,65 +346,6 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 	\footcite*{chara2018wild}
 \end{frame}
 
-\begin{frame}{Components of the Agent}
-	\begin{itemize}
-		\item{\textbf{Policy}:  agent’s behaviour function}
-		\begin{equation*}
-		\begin{aligned}
-		\text{\textbf{Deterministic}: } & \pi(s) = a                               \\
-		\text{\textbf{Stochastic}: }    & \pi(a|s) = \mathbb{P}[A_t = a | S_t = s]
-		\end{aligned}
-		\end{equation*}
-		\item{\textbf{Value Function}:  policy evaluation function}
-		\begin{equation*}
-		\begin{aligned}
-		\text{\textbf{State Value}: }  & V^\pi(s) = \mathbb{E} \Bigg[\sum_{t \ge 0} \gamma^k r_t|s_0 = s, \pi\Bigg]                  \\
-		\text{\textbf{Action Value}: } & Q^\pi(s,a) = \mathbb{E} \Bigg[\sum_{t \ge 0} \gamma^k r_t \big| s_0 = s, a_0 = a, \pi\Bigg] \\
-		\end{aligned}
-		\end{equation*}
-		\item{\textbf{Model}:  agent’s representation of the environment}
-	\end{itemize}
-	
-\end{frame}
-
-\begin{frame}{Categorizing Reinforcement Learning agents}
-	\begin{columns}
-		\begin{column}{0.5\linewidth}
-			\begin{itemize}
-				\item \textbf{Value Based}
-				\begin{itemize}
-					\item{\textcolor{lightgray}{No Policy (implicit)}}
-					\item{Value Function}
-				\end{itemize}
-				\item \textbf{Policy Based}
-				\begin{itemize}
-					\item{Policy}
-					\item{\textcolor{lightgray}{No value function}}
-				\end{itemize}
-				\item  \alert<2->{\textbf{Actor Critic}}
-				\begin{itemize}
-					\item{Policy}
-					\item{Value function}
-				\end{itemize}
-			\end{itemize}
-		\end{column}
-		\begin{column}{0.5\linewidth}
-			\begin{itemize}
-				\item \alert<2->{\textbf{Model Free}}
-				\begin{itemize}
-					\item{Policy and/or value function}
-					\item{\textcolor{lightgray}{No Model}}
-				\end{itemize}
-				\item \textbf{Model Based}
-				\begin{itemize}
-					\item{Policy and/or value function}
-					\item{Model}
-				\end{itemize}
-			\end{itemize}
-		\end{column}
-	\end{columns}
-\end{frame}
-
 \begin{frame}{Model-Free Actor Critic methods}
 	\begin{columns}
 		\begin{column}{0.5\linewidth}
@@ -402,7 +369,7 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 \begin{frame}{Deep Deterministic Policy Gradient (DDPG)}
 	\centering
 	\begin{itemize}
-		\item \textbf{Off-Policy}:\begin{itemize}
+		\item \textbf{Off-Policy}: \begin{itemize}
 			\item \alert{\textbf{Experience Replay Memory}} of $(s_t, a_t, r_t, s_t+1, d_t)$ tuples
 		\end{itemize}
 		\item \textbf{Action space}: Countinuous
@@ -412,55 +379,24 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 			\item Noise regulation with \alert{\textbf{$\epsilon$-decay function}}
 		\end{itemize}
 	\end{itemize}
-\textbf{\underline{Needs accurate hyper-parameters fine-tuning}}
-	\footcite*{lillicrap2015continuous}
-\end{frame}
-
-\begin{frame}{Deep Deterministic Policy Gradient (DDPG) - Neural Networks}
-	\centering
-	It uses \textbf{Target Networks} to minimise the instability MSBE loss
-	\vspace{10mm}
-	\begin{columns}
-	\begin{column}{0.5\linewidth}
-			\textbf{2 Local Neural Networks:}
-		\begin{itemize}
-			\item Actor $\pi(s \;|\; \theta)$ 
-			\item Critic $Q(s, a \;|\; \phi)$
-		\end{itemize}
-	\end{column}
-	\begin{column}{0.5\textwidth}
-\textbf{2 Target Neural Networks:}
-		\begin{itemize}
-			\item Actor $\pi'(s \;|\; \bar{\theta})$
-			\item Critic $Q'(s, a \;|\; \bar{\phi})$
-		\end{itemize}
-	\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}{Deep Deterministic Policy Gradient (DDPG) - Learning Equations}
-	\centering
-	\Large
-	\begin{equation}\label{eq:ddpgloss}
-	\begin{gathered}
-	L(\phi) = \mathbb{E}_{s_t\sim \rho^\beta, a_t\sim \beta,r_t\sim E}[(Q(s_t, a_t|\phi)-y_t)^2] \\
-	y_t = r(s_t, a_t) + \gamma (1-d_t)Q'(s_{t+1}, \pi'(s_t+1|\bar{\theta})|\bar{\phi})
-	\end{gathered}
-	\end{equation}
+	\textbf{\underline{Needs accurate hyper-parameters fine-tuning}}
 	\footcite*{lillicrap2015continuous}
 \end{frame}
 
 \begin{frame}{Soft Actor-Critic (SAC)}
 	\centering
 	\begin{itemize}
-		\item \textbf{Off-Policy}
+		\item \textbf{Off-Policy}: \begin{itemize}
+			\item \alert{\textbf{Experience Replay Memory}} of $(s_t, a_t, r_t, s_t+1, d_t)$ tuples
+		\end{itemize}
 		\item \textbf{Action space}: Countinuous
 		\item \textbf{Policy}: \alert{\textbf{Stochastic}}
-		\item \textbf{Exploration}: \alert{\textbf{Temperature} Parameter}
-		\item SAC is an off-policy algorithm which exploits entropy-regularized reinforcement learning
-		\item Auto-tune parameters: Less hyper-parameters, less tuning
-		\item Suitable for Real-World Experiments
+		\item \textbf{Exploration}: \begin{itemize}
+			\item \alert{\textbf{Temperature}} Parameter
+			\item \alert{\textbf{Auto-tuning}}
+		\end{itemize} 
 	\end{itemize}
+	\textbf{\underline{Suitable for Real-World Experiments}}
 	\footcite*{haarnoja2018alg}
 \end{frame}
 
@@ -468,9 +404,100 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 
 \sectiondark{Design of the control system}
 
+\begin{frame}{MDP Formalisation - Observation}
+		\begin{columns}
+			\begin{column}{0.5\linewidth}
+				\centering
+				\only<1>{\includegraphics[height=0.6\textheight]{img/obs1.png}}
+				
+				\only<2>{\includegraphics[height=0.6\textheight]{img/obs2.png}}
+			\end{column}
+			\begin{column}{0.5\linewidth}
+				\begin{itemize}
+					\item \textbf{Raw image size}: 64$\times$64 pixels
+					\item<2-> \textbf{Stack size}: 2
+				\end{itemize}
+			\end{column}
+		\end{columns}
+\end{frame}
+
+\begin{frame}{MDP Formalisation - Actions}
+	\includegraphics[width=1\textwidth]{img/array.png}
+	\begin{equation*}
+	s_t \in \{x \in \mathbb{R} \;|\; 0 \le x \le 1\} \;\;\;\;\;\;	
+	w_t \in \{x \in \mathbb{R} \;|\; -1 \le x \le 1\}
+	\end{equation*}
+	\begin{align*}
+	\text{\textbf{Maximum forward speed}} &\rightarrow s_{\text{forward\_max}} = 150\text{mm/s}\\
+	\text{\textbf{Maximum turning speed}} &\rightarrow s_{\text{turning\_max}} = 100\text{mm/s}
+	\end{align*}
+	\begin{align*}
+	\text{\textbf{Left tread speed}} &\leftarrow s_t \cdot s_{\text{forward\_max}} + w_t \cdot s_{\text{turning\_max}}\\
+	\text{\textbf{Right tread speed}} &\leftarrow s_t \cdot s_{\text{forward\_max}} - w_t \cdot s_{\text{turning\_max}}
+	\end{align*}
+	
+\end{frame}
+
+
+\begin{frame}{MDP Formalisation - Reward}
+\centering
+TODO
+\end{frame}
+
+\begin{frame}{Outline of the control system}
+	\centering
+	
+	\only<1>{\includegraphics[height=0.9\textheight]{img/cozmosys0.png}}
+	
+	\only<2>{\includegraphics[height=0.9\textheight]{img/cozmosys1.png}}
+	
+	\only<3>{\includegraphics[height=0.9\textheight]{img/cozmosys2.png}}
+	
+	\only<4>{\includegraphics[height=0.9\textheight]{img/cozmosys3.png}}
+	
+	\only<5>{\includegraphics[height=0.9\textheight]{img/cozmosys4.png}}
+	
+	\only<6>{\includegraphics[height=0.9\textheight]{img/cozmosys6.png}}
+				
+\end{frame}
+
+\begin{frame}{Convolutional Neural Network Architecture}
+	\centering
+	\includegraphics[width=0.9\textwidth]{img/cnn_cozmo.png}		
+\end{frame}
+
+\begin{frame}{System Features}
+	\begin{itemize}
+		\item TODO 1
+		\item TODO 2
+	\end{itemize}	
+\end{frame}
+
+
+
 \sectiondark{Experimental methodology and results}
 
+\begin{frame}{Pendulum-v0 Results}
+	\centering
+	TODO
+\end{frame}
+
+\begin{frame}{CozmoDriver-v0 Results}
+	\centering
+	TODO
+\end{frame}
+
 \sectiondark{Conclusions and future work}
+
+\begin{frame}{Conclusions}
+	\centering
+	TODO
+\end{frame}
+
+\begin{frame}{Future Work}
+	\centering
+	TODO
+\end{frame}
 
 
 
@@ -655,5 +682,104 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 	\printbibliography
 
 \end{frame}
+
+\appendix
+
+\sectiondark{Appendix - Background}
+
+\begin{frame}{Components of the Agent}
+	\begin{itemize}
+		\item{\textbf{Policy}:  agent’s behaviour function}
+		\begin{equation*}
+		\begin{aligned}
+		\text{\textbf{Deterministic}: } & \pi(s) = a                               \\
+		\text{\textbf{Stochastic}: }    & \pi(a|s) = \mathbb{P}[A_t = a | S_t = s]
+		\end{aligned}
+		\end{equation*}
+		\item{\textbf{Value Function}:  policy evaluation function}
+		\begin{equation*}
+		\begin{aligned}
+		\text{\textbf{State Value}: }  & V^\pi(s) = \mathbb{E} \Bigg[\sum_{t \ge 0} \gamma^k r_t|s_0 = s, \pi\Bigg]                  \\
+		\text{\textbf{Action Value}: } & Q^\pi(s,a) = \mathbb{E} \Bigg[\sum_{t \ge 0} \gamma^k r_t \big| s_0 = s, a_0 = a, \pi\Bigg] \\
+		\end{aligned}
+		\end{equation*}
+		\item{\textbf{Model}:  agent’s representation of the environment}
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{Categorizing Reinforcement Learning agents}
+	\begin{columns}
+		\begin{column}{0.5\linewidth}
+			\begin{itemize}
+				\item \textbf{Value Based}
+				\begin{itemize}
+					\item{\textcolor{lightgray}{No Policy (implicit)}}
+					\item{Value Function}
+				\end{itemize}
+				\item \textbf{Policy Based}
+				\begin{itemize}
+					\item{Policy}
+					\item{\textcolor{lightgray}{No value function}}
+				\end{itemize}
+				\item  \alert{\textbf{Actor Critic}}
+				\begin{itemize}
+					\item{Policy}
+					\item{Value function}
+				\end{itemize}
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.5\linewidth}
+			\begin{itemize}
+				\item \alert{\textbf{Model Free}}
+				\begin{itemize}
+					\item{Policy and/or value function}
+					\item{\textcolor{lightgray}{No Model}}
+				\end{itemize}
+				\item \textbf{Model Based}
+				\begin{itemize}
+					\item{Policy and/or value function}
+					\item{Model}
+				\end{itemize}
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Deep Deterministic Policy Gradient (DDPG) - Neural Networks}
+	\centering
+	It uses \textbf{Target Networks} to minimise the instability MSBE loss
+	\vspace{10mm}
+	\begin{columns}
+		\begin{column}{0.5\linewidth}
+			\textbf{2 Local Neural Networks:}
+			\begin{itemize}
+				\item Actor $\pi(s \;|\; \theta)$ 
+				\item Critic $Q(s, a \;|\; \phi)$
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\textbf{2 Target Neural Networks:}
+			\begin{itemize}
+				\item Actor $\pi'(s \;|\; \bar{\theta})$
+				\item Critic $Q'(s, a \;|\; \bar{\phi})$
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Deep Deterministic Policy Gradient (DDPG) - Learning Equations}
+	\centering
+	\Large
+	\begin{equation}\label{eq:ddpgloss}
+	\begin{gathered}
+	L(\phi) = \mathbb{E}_{s_t\sim \rho^\beta, a_t\sim \beta,r_t\sim E}[(Q(s_t, a_t|\phi)-y_t)^2] \\
+	y_t = r(s_t, a_t) + \gamma (1-d_t)Q'(s_{t+1}, \pi'(s_t+1|\bar{\theta})|\bar{\phi})
+	\end{gathered}
+	\end{equation}
+	\footcite*{lillicrap2015continuous}
+\end{frame}
+
+
 
 \end{document}
