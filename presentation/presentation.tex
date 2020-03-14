@@ -14,7 +14,7 @@ outer/numbering=none
 \addbibresource{references.bib}
 \usepackage{tikz}
 \usepackage{media9}
-\usetikzlibrary{arrows,positioning}
+\usetikzlibrary{arrows,positioning,shapes}
 \usetikzlibrary{calc} % for manimulation of coordinates
 \usepgfplotslibrary{external} 
 \tikzexternalize
@@ -368,35 +368,35 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 
 \begin{frame}{Deep Deterministic Policy Gradient (DDPG)}
 	\centering
-	\begin{itemize}
+	\begin{itemize}[<+- | alert@+>]
 		\item \textbf{Off-Policy}: \begin{itemize}
-			\item \alert{\textbf{Experience Replay Memory}} of $(s_t, a_t, r_t, s_t+1, d_t)$ tuples
+			\item\textbf{Experience Replay Memory} of $(s_t, a_t, r_t, s_t+1, d_t)$ tuples
 		\end{itemize}
 		\item \textbf{Action space}: Countinuous
-		\item \textbf{Policy}: \alert{\textbf{Deterministic}}
+		\item \textbf{Policy}: Deterministic
 		\item \textbf{Exploration}: \begin{itemize}
-			\item \alert{\textbf{Ornstein–Uhlenbeck}} process noise
-			\item Noise regulation with \alert{\textbf{$\epsilon$-decay function}}
+			\item \textbf{Ornstein–Uhlenbeck} process noise
+			\item Noise regulation with \textbf{$\epsilon$-decay function}
 		\end{itemize}
 	\end{itemize}
-	\textbf{\underline{Needs accurate hyper-parameters fine-tuning}}
+	\onslide<8->{\textbf{\alert{\underline{Needs accurate hyper-parameters fine-tuning}}}}
 	\footcite*{lillicrap2015continuous}
 \end{frame}
 
 \begin{frame}{Soft Actor-Critic (SAC)}
 	\centering
-	\begin{itemize}
-		\item \textbf{Off-Policy}: \begin{itemize}
-			\item \alert{\textbf{Experience Replay Memory}} of $(s_t, a_t, r_t, s_t+1, d_t)$ tuples
+	\begin{itemize}[<+- | alert@+>]
+		\item \textbf{Off-Policy}: \begin{itemize}[<+- | alert@+>]
+			\item \textbf{Experience Replay Memory} of $(s_t, a_t, r_t, s_t+1, d_t)$ tuples
 		\end{itemize}
 		\item \textbf{Action space}: Countinuous
-		\item \textbf{Policy}: \alert{\textbf{Stochastic}}
-		\item \textbf{Exploration}: \begin{itemize}
-			\item \alert{\textbf{Temperature}} Parameter
-			\item \alert{\textbf{Auto-tuning}}
+		\item \textbf{Policy}: Stochastic
+		\item \textbf{Exploration}: \begin{itemize}[<+- | alert@+>]
+			\item \textbf{Temperature} Parameter
+			\item \textbf{Auto-tuning}
 		\end{itemize} 
 	\end{itemize}
-	\textbf{\underline{Suitable for Real-World Experiments}}
+	\onslide<8->{\textbf{\alert{\underline{Suitable for Real-World Experiments}}}}
 	\footcite*{haarnoja2018alg}
 \end{frame}
 
@@ -404,18 +404,80 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 
 \sectiondark{Design of the control system}
 
+\begin{frame}{Anki Cozmo - Not just a toy robot}
+	\begin{columns}
+		\begin{column}{0.5\linewidth}
+			\begin{center}
+				\includegraphics[height=0.5\linewidth]{img/cozmo.png}
+				\includegraphics[height=0.5\linewidth]{img/cozmo_inside.png}
+			\end{center}
+		\end{column}
+		\begin{column}{0.5\linewidth}
+			\textbf<1->{Why Anki Cozmo?}
+			\begin{itemize}[<+- | alert@+>]
+				\item{Small and portable}
+				\item{30fps VGA Camera}
+				\item{Powerful mechanics}
+				\item{\textbf{Python SDK and interfaces}}
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Track Design}
+	\centering
+	\begin{columns}
+		\begin{column}{0.5\linewidth}
+			\begin{center}
+					\includegraphics[height=0.6\textheight]{img/track.png}
+			\end{center}
+		\end{column}
+		\begin{column}{0.5\linewidth}
+			\textbf<1->{Features:}
+			\begin{itemize}[<+- | alert@+>]
+				\item{Portable}
+				\item{Low-reflections}
+				\item{Scaled Reality}
+				\item{Reproducible}
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Main Goals}
+	\begin{columns}
+		\begin{column}{0.4\linewidth}
+			\centering
+			\includegraphics[width=0.6\linewidth]{img/goal.png}
+		\end{column}
+		\begin{column}{0.6\linewidth}
+				\begin{itemize}[<+- | alert@+>]
+					\item{Building a \textbf{control system} and an \textbf{interface} between Cozmo robot and algorithms using OpenAI Gym.}
+					\item \textbf{Real World} Reinforcement Learning experiments analysis.
+					\begin{itemize}
+						\item\textbf{No model} of the environment.
+						\item\textbf{No preliminary simulation} to tune hyper-parameters
+					\end{itemize}
+				\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
 \begin{frame}{MDP Formalisation - Observation}
 		\begin{columns}
 			\begin{column}{0.5\linewidth}
 				\centering
-				\only<1>{\includegraphics[height=0.6\textheight]{img/obs1.png}}
+				\only<1-4>{\includegraphics[height=0.6\textheight]{img/obs1.png}}
 				
-				\only<2>{\includegraphics[height=0.6\textheight]{img/obs2.png}}
+				\only<5>{\includegraphics[height=0.6\textheight]{img/obs2.png}}
 			\end{column}
 			\begin{column}{0.5\linewidth}
-				\begin{itemize}
-					\item \textbf{Raw image size}: 64$\times$64 pixels
-					\item<2-> \textbf{Stack size}: 2
+				\textbf{Configuration:}
+				\begin{itemize}[<+- | alert@+>]
+					\item\textbf{Gray-scale image}
+					\item\textbf{Frame Rate}: $\sim 15fps$
+					\item\textbf{Raw image size}: 64$\times$64 pixels
+					\item\textbf{Stack size}: 2
 				\end{itemize}
 			\end{column}
 		\end{columns}
@@ -427,21 +489,47 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 	s_t \in \{x \in \mathbb{R} \;|\; 0 \le x \le 1\} \;\;\;\;\;\;	
 	w_t \in \{x \in \mathbb{R} \;|\; -1 \le x \le 1\}
 	\end{equation*}
+	\onslide<2->{
 	\begin{align*}
 	\text{\textbf{Maximum forward speed}} &\rightarrow s_{\text{forward\_max}} = 150\text{mm/s}\\
 	\text{\textbf{Maximum turning speed}} &\rightarrow s_{\text{turning\_max}} = 100\text{mm/s}
 	\end{align*}
+}
+\onslide<3->{
 	\begin{align*}
 	\text{\textbf{Left tread speed}} &\leftarrow s_t \cdot s_{\text{forward\_max}} + w_t \cdot s_{\text{turning\_max}}\\
 	\text{\textbf{Right tread speed}} &\leftarrow s_t \cdot s_{\text{forward\_max}} - w_t \cdot s_{\text{turning\_max}}
 	\end{align*}
+}
 	
 \end{frame}
 
 
 \begin{frame}{MDP Formalisation - Reward}
-\centering
-TODO
+\begin{columns}
+		\begin{column}{0.4\linewidth}
+			\centering
+\includegraphics[width=0.8\linewidth]{img/reward.png}
+		\end{column}
+	\begin{column}{0.6\linewidth}
+		\centering
+\textbf{Distance Covered}
+
+\onslide<2->{\textbf{Fixed timing between actions}: $T_t$ [s] $\leftarrow \frac{1}{15 \;\text{fps}}$}
+
+\onslide<3->{\textbf{Desired Speed}: $s_t$ [mm/s]}
+
+\onslide<4->{{\Large
+		\begin{equation*}\boldsymbol{
+			R_t = s_t \cdot T_t}
+		\end{equation*}}}
+\vspace{-5mm}
+\onslide<5->{
+	\begin{equation*}
+	\text{if}\; t\; \text{is terminal} \rightarrow R_t = 0
+	\end{equation*}}
+	\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Outline of the control system}
@@ -463,14 +551,30 @@ TODO
 
 \begin{frame}{Convolutional Neural Network Architecture}
 	\centering
-	\includegraphics[width=0.9\textwidth]{img/cnn_cozmo.png}		
+	\includegraphics[width=0.9\textwidth]{img/cnn_cozmo.png}
+	\begin{itemize}[<+- | alert@+>]
+		\item 3 Convolutional Layers: 16 features ($3\times3$), Stride 2, Padding 0
+		\item 2 Fully Connected Layer with hidden size = 256
+	\end{itemize}		
 \end{frame}
 
 \begin{frame}{System Features}
-	\begin{itemize}
-		\item TODO 1
-		\item TODO 2
-	\end{itemize}	
+	\begin{columns}
+		\begin{column}{0.4\linewidth}
+			\centering
+			\includegraphics[width=0.6\linewidth]{img/feature.png}
+		\end{column}
+		\begin{column}{0.6\linewidth}
+			\begin{itemize}[<+- | alert@+>]
+				\item Backup/Restore feature:
+				\begin{itemize}[<+- | alert@+>]
+					\item Episode restore
+					\item Checkpoint restore
+				\end{itemize}
+				\item Playground Recording
+			\end{itemize}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 
@@ -490,13 +594,52 @@ TODO
 \sectiondark{Conclusions and future work}
 
 \begin{frame}{Conclusions}
-	\centering
-	TODO
+
+	\begin{columns}
+		\begin{column}{0.4\linewidth}
+			\centering
+			\includegraphics[width=0.6\linewidth]{img/conclusion.png}
+		\end{column}
+		\begin{column}{0.6\linewidth}
+			\begin{itemize}[<+- | alert@+>]
+				\item Promising approach:
+				\begin{itemize}
+					\item \textbf{Maximum reward reached}: $\sim 3.5$ meters
+					\item Visible improvements during experiments
+				\end{itemize}
+				\item Unstable for concrete application:
+				\begin{itemize}
+				\item \textbf{Average reward reached}: $\sim 1$ meter
+				\item Visible improvements during experiments
+				\item It needs time to improve
+				\end{itemize}
+			\end{itemize}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}{Future Work}
-	\centering
-	TODO
+	\begin{columns}
+		\begin{column}{0.4\linewidth}
+			\centering
+			\includegraphics[width=0.6\linewidth]{img/future.png}
+		\end{column}
+		\begin{column}{0.6\linewidth}
+			\begin{itemize}[<+- | alert@+>]
+				\item Improving Sensors
+				\begin{itemize}
+					\item Custom RC car (e.g.\ Donkey Car)
+					\item Anki Vector
+				\end{itemize}
+				\item Feature Extraction
+				\begin{itemize}
+					\item Variational Auto-Encoder (VAE)
+				\end{itemize}
+				\item Data fusion
+				\item Model-based approach
+			\end{itemize}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 
@@ -541,32 +684,7 @@ TODO
 
 
 
-%\begin{frame}{Main Objectives}
-%	\begin{itemize}
-%		\item<1-> {Building a \textbf{control system} and an \textbf{interface} between Cozmo robot and algorithms using OpenAI Gym.}
-%		\item<2-> {\textbf{Real World} Reinforcement Learning experiments.}
-%	\end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Anki Cozmo - Not just a toy robot}
-%	\begin{columns}
-%		\begin{column}{0.5\linewidth}
-%			\begin{center}
-%				\includegraphics[height=0.5\linewidth]{img/cozmo.png}
-%				\includegraphics[height=0.5\linewidth]{img/cozmo_inside.png}
-%			\end{center}
-%		\end{column}
-%		\begin{column}{0.5\linewidth}
-%			\textbf<1->{Why Cozmo?}
-%			\begin{itemize}
-%				\item<1->{Small and portable}
-%				\item<1->{30fps VGA Camera}
-%				\item<1->{Powerful mechanics}
-%				\item<1->{Python SDK and interfaces}
-%			\end{itemize}
-%		\end{column}
-%	\end{columns}
-%\end{frame}
+
 %
 %\begin{frame}{The Reinforcement Learning Control System Stack}
 %	\begin{itemize}
