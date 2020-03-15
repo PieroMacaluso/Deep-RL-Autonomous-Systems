@@ -8,16 +8,17 @@ outer/numbering=none
 
 \usepackage{amsmath}
 \usepackage{pgfplots}
-\usepackage{multimedia}
 \usepackage{appendixnumberbeamer}
 \usepackage[style=authortitle,backend=bibtex]{biblatex}
 \addbibresource{references.bib}
 \usepackage{tikz}
-\usepackage{media9}
 \usetikzlibrary{arrows,positioning,shapes}
 \usetikzlibrary{calc} % for manimulation of coordinates
 \usepgfplotslibrary{external} 
 \tikzexternalize
+\usepackage{animate}
+\makeatletter\def\@anim@pdfmdfivesum#1{#1}\makeatother
+\usepackage{graphicx}
 
 \makeatletter
 \def\@makefnmark{}
@@ -591,6 +592,18 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 	TODO
 \end{frame}
 
+\begin{frame}{Episode Showcase - 1}
+	\centering
+	%\href{run:/usr/bin/vlc ./video/epi2748.mp4}{Start Video}
+	\animategraphics[loop,controls,width=0.4\linewidth]{15}{video/try/epi1-}{0}{251}
+\end{frame}
+
+\begin{frame}{Episode Showcase - 2}
+	\centering
+	%\href{run:/usr/bin/vlc ./video/epi2748.mp4}{Start Video}
+	\animategraphics[loop,controls,width=0.4\linewidth]{15}{video/try/epi2-}{0}{255}
+\end{frame}
+
 \sectiondark{Conclusions and future work}
 
 \begin{frame}{Conclusions}
@@ -719,23 +732,6 @@ The most crucial sensors used are cameras, LIDAR, Short and Long-range Radar and
 %
 %\end{frame}
 %
-%
-%\begin{frame}{Best Episodes - Episode 2748 ans 2876}
-%
-%	\alert{\textbf{Reinforcement Learning Training Episode with Anki Cozmo}}
-%
-%	\url{https://pieromacaluso.github.io/episode}
-%
-%	%	\centering
-%	%	\includemedia[
-%	%	addresource=video/episode_2748.mp4,
-%	%	activate=pageopen,transparent,
-%	%	passcontext,
-%	%	flashvars={source=video/episode_2748.mp4},
-%	%	width=0.8\linewidth, height=0.45\linewidth
-%	%	]{}{VPlayer.swf}%
-%
-%\end{frame}
 %
 %\begin{frame}{Considerations}
 %	\centering
