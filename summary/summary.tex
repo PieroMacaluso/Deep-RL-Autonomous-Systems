@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{gensymb}
 
 \makeatletter
 \renewcommand{\paragraph}{%
@@ -80,13 +81,13 @@
 %%%%%%%%% BODY TEXT
 \section{Introduction}
 
-Because of its potential to thoroughly change mobility and transport, autonomous systems and self-driving vehicles are attracting much attention from both the research community and industry.
+Because of its potential to drastically change mobility and transport, autonomous systems and self-driving vehicles are attracting much attention from both the research community and industry.
 Recent work has demonstrated that it is possible to rely on a comprehensive understanding of the immediate environment while following simple high-level directions, to obtain a more scalable approach that can make autonomous driving a ubiquitous technology.
-However, to date, the majority of the methods concentrates on deterministic control optimisation algorithms to select the right action, while the usage of deep learning and machine learning is entirely dedicated to object detection and recognition.
+However, to date, the majority of the methods concentrate on deterministic control optimisation algorithms to select the right action, while the usage of deep learning and machine learning is entirely dedicated to object detection and recognition.
 
 Recently, we have witnessed a remarkable increase in interest in Reinforcement Learning (RL).
 It is a machine learning field focused on solving Markov Decision Processes (MDP), where an agent learns to make decisions by mapping situations and actions according to the information it gathers from the surrounding environment and from the reward it receives, trying to maximise it.
-As researchers discovered, it can be surprisingly useful to solve tasks in simulated environments like games and computer games, and it showed encouraging performance in tasks with robotic manipulators.
+As researchers discovered, it can be surprisingly useful to solve tasks in simulated environments like games and computer games, and RL showed encouraging performance in tasks with robotic manipulators.
 Furthermore, the great fervour produced by the widespread exploitation of deep learning opened the doors to function approximation with convolutional neural networks, developing what is nowadays known as deep reinforcement learning.
 
 \subsection{Objective}
@@ -95,8 +96,8 @@ In this thesis, we argue that the generality of reinforcement learning makes it 
 The focus of the majority of reinforcement learning projects is on a simulated environment.
 However, a more challenging approach of reinforcement learning consists of the application of this type of algorithms in the real world.
 
-After an initial phase where we studied the state-of-the-art literature about reinforcement learning and analysed the set of possible alternatives about technologies to use, we started our project starting from the ideas contained in \cite{kendall2019learning}, where the authors were able to train a self-driving vehicle by using Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous} by tuning hyper-parameters in simulation.
-Our approach was different: we researched an algorithm suitable for real-world experiments and capable of operating correctly without an expensive real-world hyper-parameter tuning made in simulators.
+After an initial phase where we studied the state-of-the-art literature about reinforcement learning and analysed the set of possible alternatives about technologies to use, we started our project from the ideas in \cite{kendall2019learning}, where the authors were able to train a self-driving vehicle by using Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous} by tuning hyper-parameters in simulation.
+Our approach was different: we researched an algorithm suitable for real-world experiments and capable of operating correctly without an expensive hyper-parameter tuning made in simulators.
 We found in Soft Actor-Critic (SAC) \cite{haarnoja2018soft} the algorithm we needed.
 
 Therefore, our thesis consisted of two main contributions:
@@ -117,7 +118,7 @@ Therefore, our thesis consisted of two main contributions:
 \section{Design of the control system}
 
 We based our project on Cozmo, a little toy robot produced by Anki, whose developers offered a granular and fully-featured Python SDK with many interfaces to allow direct control of the robot.
-We found it to be suitable for our experimental needs: it mounts a grayscale camera with 60 FOV and has two tracks to steer and drive.
+We found it to be suitable for our experimental needs: it mounts a grayscale camera with 60$\degree$ field of view (FoV) and has two tracks to steer and drive.
 We aimed to apply deep reinforcement learning algorithms, so we decided to use PyTorch as deep learning framework and the standardised approach provided by OpenAI Gym to build up the reinforcement learning environment for the experiment.
 
 Our idea was to build a system where the human holds complete control over the experiment progress: he can start the episode and suspend it when the robot reaches a fatal state to reposition it in the closest stable situation and restart the loop.
@@ -130,10 +131,10 @@ In this scenario, the human has total responsibility for the robot training: he 
     \label{system}
 \end{figure}
 
-To obtain this configuration, we managed to design a simple and intuitive user interface that prompts the user when a new experiment starts.
+To obtain this configuration, we designed a simple and intuitive user interface that prompts the user when a new experiment starts.
 This interface provides a live stream from Cozmo on-board camera and a set of keys with the related function.
 It works through Javascript to communicate to a Flask server that interfaces directly to Cozmo SDK and the OpenAI Gym environment to provide information for the user (e.g.\ images, learning information) and the robot (e.g.\ commands).
-We used TensorBoard to gather data for posterior analysis and representations.
+We used TensorBoard to gather data for analysis and representations.
 The outline of the system we obtained is available in figure \ref{system}.
 
 % TODO: Grammarly error
@@ -142,7 +143,7 @@ It represents the result of continuous development and testing to solve all the 
 We implemented all the requirements and needs dictated by the type of experiment, putting in place all the compromises to manage the available RAM and make experiments manageable by reducing the learning time between one episode and the next one.
 One of the most crucial features we implemented is the rescue system, useful in a context where experiments last tens of hours and unexpected errors can occur.
 It consists of two central parts.
-The first one is a volatile backup system: it stores the state status before the episode to allow the user to restore it in case of a broken episode.
+The first one is a volatile backup system: it stores the system state before each episode to allow the user to restore faulty ones.
 The second one is a checkpoint system to save the state of the experiment and allow the user to restore it in the following days.
 %
 
@@ -176,7 +177,7 @@ For this reason, we decided to build a wrapper for the original environment to r
 The results of the experiments carried out using hyper-parameters taken from the available literature showed that SAC algorithm has a better performance than the DDPG one, both in terms of stability and number of episodes to achieve a working policy.
 Therefore, we decided to implement the SAC algorithm to carry out experiments in the Cozmo environment.
 
-We opted for a neural network with three convolutional layers with 16 features of 3$\times$3 dimension, a stride of 2, zero padding and two fully-connected layers with 256 features.
+We opted for a neural network with three convolutional layers with 16 filters of 3$\times$3 dimension, a stride of 2, zero padding and two fully-connected layers with 256 features.
 We applied batch normalisation after each convolutional layer and used the Rectified Linear Unit function (ReLU) as non-linearity.
 
 We managed to complete a whole set of 3000 episodes exploiting the SAC algorithm to solve the autonomous driving task with Cozmo.
@@ -213,11 +214,11 @@ We noticed this fact after many episodes when the robot started to improve its p
 
 \subsection{Future Work}
 
-Our proposals about future improvements to the project grow from the weakness in our approach.
+Our proposals about future improvements to the project stem from the weakness in our approach.
 It could be interesting to execute these algorithms on a device with a bigger RAM, but also to design this approach with a Variational Auto-Encoder (VAE) to reduce the dimensionality of the information retrieved during experiments.
 
 It may be useful to enhance sensors installed in the self-driving robot.
-In addition to the possibility to build up a custom Donkey Car, we believe that one valuable alternative to Anki Cozmo could be Anki Vector, which mounts a 720p camera with 120 Ultra Wide FOV.
+In addition to the possibility to build up a custom Donkey Car, we believe that one valuable alternative to Anki Cozmo could be Anki Vector, which mounts a 720p camera with 120 Ultra Wide FoV.
 It could be interesting to perform reinforcement learning algorithms with the usage of the renewed front camera together with the infrared laser scanner on-board to investigate approaches to data fusion in reinforcement learning.
 
 Another intriguing research path consists of an investigation about the application of model-based reinforcement learning algorithms to autonomous driving.
