@@ -119,7 +119,7 @@ Therefore, our thesis consisted of two main contributions:
 
 We based our project on Cozmo, a little toy robot produced by Anki, whose developers offered a granular and fully-featured Python SDK with many interfaces to allow direct control of the robot.
 We found it to be suitable for our experimental needs: it mounts a grayscale camera with 60$\degree$ field of view (FoV) and has two tracks to steer and drive.
-We aimed to apply deep reinforcement learning algorithms, so we decided to use PyTorch as deep learning framework and the standardised approach provided by OpenAI Gym to build up the reinforcement learning environment for the experiment.
+We aimed to apply deep reinforcement learning algorithms, so we decided to use PyTorch as deep learning framework and the standardised approach provided by OpenAI Gym to build up the reinforcement learning environment for the experiments.
 
 Our idea was to build a system where the human holds complete control over the experiment progress: he can start the episode and suspend it when the robot reaches a fatal state to reposition it in the closest stable situation and restart the loop.
 In this scenario, the human has total responsibility for the robot training: he is the one who decides whether an action is dangerous or not by disengaging reinforcement learning algorithms decision.
@@ -181,7 +181,7 @@ We opted for a neural network with three convolutional layers with 16 filters of
 We applied batch normalisation after each convolutional layer and used the Rectified Linear Unit function (ReLU) as non-linearity.
 
 We managed to complete a whole set of 3000 episodes exploiting the SAC algorithm to solve the autonomous driving task with Cozmo.
-Taking into account waiting times between episodes and charging times, we managed to complete one experiment in almost one week, after almost $1.3\times 10^5$ epochs of learning.
+Taking into account waiting times between episodes and charging times, we managed to complete one experiment in almost one week, after about $1.3\times 10^5$ epochs of learning.
 
 \begin{figure}[tbp]
     \centering
@@ -218,7 +218,7 @@ Our proposals about future improvements to the project stem from the weakness in
 It could be interesting to execute these algorithms on a device with a bigger RAM, but also to design this approach with a Variational Auto-Encoder (VAE) to reduce the dimensionality of the information retrieved during experiments.
 
 It may be useful to enhance sensors installed in the self-driving robot.
-In addition to the possibility to build up a custom Donkey Car, we believe that one valuable alternative to Anki Cozmo could be Anki Vector, which mounts a 720p camera with 120 Ultra Wide FoV.
+In addition to the possibility to build up a custom Donkey Car, we believe that one valuable alternative to Anki Cozmo could be Anki Vector, which mounts a 720p camera with 120$\degree$ Ultra Wide FoV.
 It could be interesting to perform reinforcement learning algorithms with the usage of the renewed front camera together with the infrared laser scanner on-board to investigate approaches to data fusion in reinforcement learning.
 
 Another intriguing research path consists of an investigation about the application of model-based reinforcement learning algorithms to autonomous driving.
