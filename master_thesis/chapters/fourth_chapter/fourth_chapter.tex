@@ -301,7 +301,7 @@ This decision led to an improvement in the reliability of the algorithm.
 
 In \cite{haarnoja2018alg}, the authors reported the training of a real-world robotic task with a 3-finger dexterous robotic hand.
 The objective of the agent is to position a sink faucet in a specific position highlighted by a coloured end.
-The neural network exploited on this occasion consisted of two convolutional layers with 3$\times$3 filters and max-pool layers, four features and followed by two fully connected layers with 256 units.
+The neural network exploited on this occasion consisted of two convolutional layers with four 3$\times$3 filters and max-pool layers, followed by two fully connected layers with 256 units.
 Even in this case, the authors exploited RGB images to carry out real-world training of the agent.
 Therefore, they included some information about training time: the agent needed 300k environment interaction steps with an equivalent of 20 hours of training.
 
@@ -327,7 +327,7 @@ Therefore the system is highly unstable because this process not always has the 
 After the analysis of this behaviour, we decided to maintain the optimisation phase among episodes and to fix a specific duration for each action of Cozmo.
 
 The architecture we selected was a sort of merge of the ones we found in \cite{kendall2018learning,kendall2019learning,haarnoja2018alg}.
-We opted for a neural network with three convolutional layers with 16 features of 3$\times$3 dimension.
+We opted for a neural network with three convolutional layers with 16 filters of 3$\times$3 dimension.
 We decided to use a stride of 2 instead of using pooling layers with a stride of 1, following ideas of the authors of \cite{kendall2018learning,kendall2019learning}.
 This decision aims to shorten the optimisation phase and obtain more manageable experiments without impacting performance excessively \cite{springenberg2014striving}.
 We applied batch normalisation after each convolutional level to improve the speed, performance, and stability of neural networks \cite{ioffe2015batch}.
@@ -343,7 +343,7 @@ In the policy scenario, as shown in \vref{fig:cnn_cozmo}, there is no concatenat
     \includegraphics[width=\textwidth]{img/cnn_cozmo.png}
     \caption[Convolutional Neural Network Architecture for Cozmo experiments]{ Convolutional Neural Network Architecture for Cozmo experiments.
         This particular example shows the model exploited as the Policy with a tensor with dimension equal to the action space size as output and two consecutive grayscale images which represents the state of the environment as input.
-        The first part of the network consists of three convolutional layers with 16 features of 3$\times$3 dimensions.
+        The first part of the network consists of three convolutional layers with 16 filters of 3$\times$3 dimensions.
         Each level is supplemented by a batch normalisation one.
         The results are then flattened and concatenated with the vector of actions before entering the second part.
         This section consists of two fully-connected layers with 256 features.

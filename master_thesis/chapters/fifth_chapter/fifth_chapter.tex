@@ -85,7 +85,7 @@ It contains values related to the current angle of the pendulum as described in 
 
 \begin{table}[!h]
 	\centering
-	\caption{Original Observation \texttt{Pendulum-v0} environment}
+	\caption{Original Observation Pendulum-v0 environment}
 	\label{table:pendulum_obs}
 	\begin{tabular}{@{}lllll@{}}
 		\toprule
@@ -387,7 +387,7 @@ The hyper-parameters we exploited in this experiment are shown in \vref{table:sa
 			\textbf{Observation}                  & \textbf{Buffer Size}: 2                                \\
 			                                      & \textbf{Image Size}: 64 $\times$ 64                    \\\midrule
 			\textbf{Batch Size}                   & 64                                                     \\\midrule
-			\textbf{Max Number of episode steps}  & 200                                                    \\\midrule
+			\textbf{Max Number of episode steps}  & 205                                                    \\\midrule
 			\textbf{Replay Memory Size}           & 10000                                                  \\\midrule
 
 			\textbf{\#Epoch per Episode}          & 250                                                    \\\midrule
@@ -888,7 +888,7 @@ By following the DDPG approach, we exported the code already used in the prelimi
 For instance, we gathered the learning phase at the end of each episode instead of leaving it distributed on every action of each episode.
 
 However, the results were unexpectedly bizarre: the robot, right after the warm-up episodes phase, started to act by always selecting the same action. It kept steering to the right with the maximum velocity, even after hundreds of episodes.
-For this reason, we selected a range of possible algorithm components to modify in order to analyse any changes in agent behaviour: among these points, we find the neural network (e.g.\ weight initialisation, convolutional levels), the frequency and extent of the learning phase or the amount of noise used.
+For this reason, we selected a range of possible algorithm components to modify in order to analyse any changes in agent behaviour: among these points, we find the neural network (e.g.\ weight initialisation, convolutional layers), the frequency and extent of the learning phase or the amount of noise used.
 Therefore, we started a set of experiments to validate these changes in order to find a solution to proceed to carry out experiments on a broad set of episodes.
 This process has been complicated to carry forward since it is almost impossible to do an accurate analysis (e.g. grid-search) in the real world with such a large amount of parameters.
 
