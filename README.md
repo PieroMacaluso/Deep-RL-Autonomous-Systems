@@ -23,7 +23,7 @@
   - [Candidate](#candidate)
   - [Supervisors](#supervisors)
 - [Abstract](#abstract)
-- [Showcase of Results](#showcase-of-results)
+- [Showcase of some testing episode](#showcase-of-some-testing-episode)
 - [Repository Structure](#repository-structure)
   - [Master Thesis](#master-thesis)
   - [Source Code](#source-code)
@@ -70,11 +70,9 @@ Furthermore, we designed a circuit where we were able to carry out experiments i
 We started from a simplified environment where to test algorithm functionalities to motivate and discuss our implementation choices.
 Therefore, we implemented our version of Soft Actor-Critic (SAC), a model-free reinforcement learning algorithm suitable for real-world experiments, to solve the specific self-driving task with Cozmo. The agent managed to reach a maximum value of above 3.5 meters in the testing phase, which equals more than one complete tour of the track. Despite this significant result, it was not able to learn how to drive securely and stably. Thus, we focused on the analysis of the strengths and weaknesses of this approach outlining what could be the next steps to make this cutting-edge technology concrete and efficient.
 
-## Showcase of Results
-
-![Showcase Episode 1](stuff/epi1.gif)
-![Showcase Episode 1](stuff/epi2.gif)
-
+## Showcase of some testing episode
+<img alt="Episode 1" src="stuff/epi1.gif" width="49%" >  | 
+<img alt="Episode 2" src="stuff/epi2.gif" width="49%" >  
 ## Repository Structure
 
 ### Master Thesis
