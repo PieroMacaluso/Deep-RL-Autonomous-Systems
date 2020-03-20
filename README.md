@@ -23,6 +23,7 @@
   - [Candidate](#candidate)
   - [Supervisors](#supervisors)
 - [Abstract](#abstract)
+- [Showcase of Results](#showcase-of-results)
 - [Repository Structure](#repository-structure)
   - [Master Thesis](#master-thesis)
   - [Source Code](#source-code)
@@ -68,6 +69,11 @@ For this reason, we designed and implemented a control system for Cozmo, a small
 Furthermore, we designed a circuit where we were able to carry out experiments in the real world, the second contribution of our work.
 We started from a simplified environment where to test algorithm functionalities to motivate and discuss our implementation choices.
 Therefore, we implemented our version of Soft Actor-Critic (SAC), a model-free reinforcement learning algorithm suitable for real-world experiments, to solve the specific self-driving task with Cozmo. The agent managed to reach a maximum value of above 3.5 meters in the testing phase, which equals more than one complete tour of the track. Despite this significant result, it was not able to learn how to drive securely and stably. Thus, we focused on the analysis of the strengths and weaknesses of this approach outlining what could be the next steps to make this cutting-edge technology concrete and efficient.
+
+## Showcase of Results
+
+![Showcase Episode 1](stuff/epi1.gif)
+![Showcase Episode 1](stuff/epi2.gif)
 
 ## Repository Structure
 
