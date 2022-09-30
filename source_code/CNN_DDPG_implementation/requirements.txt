@@ -19,7 +19,7 @@ idna==2.8
 ipython==7.4.0
 ipython-genutils==0.2.0
 jedi==0.13.3
-joblib==0.13.2
+joblib==1.2.0
 Keras-Applications==1.0.7
 Keras-Preprocessing==1.0.9
 kiwisolver==1.0.1
